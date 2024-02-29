@@ -66,30 +66,59 @@
 
         @can('operator')
             <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Data Kelas</span>
-            </li>
-            <li class="menu-item {{ Request::segment(3) === 'kelas' ? 'active' : '' }}">
-                <a href="{{ url('/koordinator/create/kelas') }}" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                    <div data-i18n="Data Kelas">Data Kelas</div>
-                </a>
-            </li>
-            {{-- Menu Item --}}
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Create &amp; Auth</span>
+                <span class="menu-header-text">Data Pengguna</span>
             </li>
             {{-- Menu Item --}}
 
             <!-- Layouts -->
-            <li class="menu-item {{ Request::segment(3) == 'dosen' ? 'active open' : '' }}">
+            <li
+                class="menu-item {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons ti ti-user"></i>
-                    <div data-i18n="Create Account User">Create Account User</div>
+                    <div data-i18n="Kelola Pengguna">Kelola Pengguna</div>
                 </a>
                 <ul class="menu-sub">
-                    <li class="menu-item {{ Request::segment(3) == 'dosen' ? 'active' : '' }}">
-                        <a href="{{ url('/koordinator/create/dosen') }}" class="menu-link">
-                            <div data-i18n="Create Dosen">Create Dosen</div>
+                    <li class="menu-item {{ Request::segment(3) == 'pertanian' ? 'active' : '' }}">
+                        <a href="{{ url('/operator/user/pertanian') }}" class="menu-link">
+                            <div data-i18n="Pengguna Pertanian">Pengguna Pertanian</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ Request::segment(3) == 'uptd' ? 'active' : '' }}">
+                        <a href="{{ url('/operator/user/uptd') }}" class="menu-link">
+                            <div data-i18n="Pengguna UPTD">Pengguna UPTD</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ Request::segment(3) == 'penyuluh' ? 'active' : '' }}">
+                        <a href="{{ url('/operator/user/penyuluh') }}" class="menu-link">
+                            <div data-i18n="Pengguna Penyuluh">Pengguna Penyuluh</div>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            {{-- Menu Item --}}
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Master</span>
+            </li>
+            {{-- Menu Item --}}
+
+            <!-- Layouts -->
+            <li
+                class="menu-item {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons ti ti-database"></i>
+                    <div data-i18n="Master">Master</div>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item {{ Request::segment(3) == 'wilayah' ? 'active' : '' }}">
+                        <a href="{{ url('/operator/master/wilayah') }}" class="menu-link">
+                            <div data-i18n="Wilayah">Wilayah</div>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="menu-sub">
+                    <li class="menu-item {{ Request::segment(3) == 'role' ? 'active' : '' }}">
+                        <a href="{{ url('/operator/master/role') }}" class="menu-link">
+                            <div data-i18n="Role">Role</div>
                         </a>
                     </li>
                 </ul>

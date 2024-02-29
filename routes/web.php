@@ -3,6 +3,12 @@
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
+use App\Http\Controllers\WEB\Operator\Master\RoleController;
+use App\Http\Controllers\WEB\Operator\Master\WilayahController;
+use App\Http\Controllers\WEB\Operator\UserController;
+use App\Http\Controllers\WEB\Operator\User\PertanianController;
+use App\Http\Controllers\WEB\Operator\User\UptdController;
+use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
 use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +46,16 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:operator']], function () {
         Route::prefix('operator')->group(function () {
+            Route::prefix('user')->group(function () {
+                Route::resource('pertanian', PertanianController::class);
+                Route::resource('uptd', UptdController::class);
+                Route::resource('penyuluh', PenyuluhController::class);
+            });
+            Route::prefix('master')->group(function () {
+                Route::get('wilayah', [WilayahController::class, 'index']);
+                Route::get('wilayah/view/{id}', [WilayahController::class, 'view_desa']);
+                Route::resource('role', RoleController::class);
+            });
             Route::get('/dashboard', [DashboardController::class, 'operator']);
         });
     });
@@ -58,6 +74,7 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:penyuluh']], function () {
         Route::prefix('penyuluh')->group(function () {
+            Route::get('/getDesa', [LaporanPadiController::class, 'getDesa']);
             Route::prefix('create')->group(function () {
                 Route::resource('laporan_padi', LaporanPadiController::class);
             });

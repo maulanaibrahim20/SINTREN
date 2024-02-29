@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('laporan_padis', function (Blueprint $table) {
             $table->id();
+            $table->integer('desa_id');
+            $table->integer('kecamatan_id');
             $table->string('tanaman_akhir_bulan_lalu');
             $table->string('panen')->nullable();
             $table->string('luas_lahan')->nullable();
