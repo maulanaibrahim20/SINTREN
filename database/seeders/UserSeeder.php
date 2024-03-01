@@ -30,19 +30,14 @@ class UserSeeder extends Seeder
             'user_id' => $user->id,
             'no_telp' => '081272121'
         ]);
-        $users = User::factory()->create([
+        $uptd = User::factory()->create([
             'username' => 'uptd',
             'role_id' => Role::UPTD,
-        ]);
-        $uptd = Uptd::create([
-            'alamat' => 'indramayu',
-            'user_id' => $users->id,
-            'no_telp' => '085123123'
         ]);
         Uptd::create([
             'alamat' => 'indramayu',
             'user_id' => $uptd->id,
-            'no_telp' => '081272121'
+            'no_telp' => '085123123'
         ]);
         $penyuluh = User::factory()->create([
             'username' => 'penyuluh',

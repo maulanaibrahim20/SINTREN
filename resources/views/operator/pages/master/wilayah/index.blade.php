@@ -1,64 +1,70 @@
 @extends('index')
 @section('title', 'Pengguna Penyuluh | Operator')
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <div
-            class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row py-3 mb-4">
-            <h5 class="card-title mb-sm-0 me-2"><span class="text-muted fw-light">Dashboard / Master</span> / Wilayah
-            </h5>
-            {{-- <div class="action-btns">
-                <a href="{{ url('/operator/user/penyuluh/create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Add
-                    New User</a>
-            </div> --}}
+    <div class="page-header d-sm-flex d-block">
+        <ol class="breadcrumb mb-sm-0 mb-3">
+            <!-- breadcrumb -->
+            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
+            <li class="breadcrumb-item active" aria-current="page">Pengguna Penyuluh</li>
+        </ol><!-- End breadcrumb -->
+        <div class="ms-auto">
+            <div>
+                <a href="{{ url('/operator/user/penyuluh/create') }}" class="btn bg-primary-transparent"
+                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
+                    <span>
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    Add New User
+                </a>
+            </div>
         </div>
-        <div class="card">
-            @if (session('success'))
-                <div class="alert alert-successk">
-                    {{ session('success') }}
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ $title }}</h3>
                 </div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
+                <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+                            <thead>
+                                <tr>
+                                    <th class="wd-15p border-bottom-0">No</th>
+                                    <th class="wd-15p border-bottom-0">Nama</th>
+                                    <th class="wd-20p border-bottom-0">ID</th>
+                                    <th class="text-center wd-10p border-bottom-0">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($wilayah as $data)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $data->name }}</td>
+                                        <td>{{ $data->id }}</td>
+                                        <td class="text-center">
+                                            <a data-bs-toggle="tooltip" title="Lihat Desa" data-bs-placement="bottom"
+                                                href="{{ url('/operator/master/wilayah/view/' . $data->id) }}"
+                                                class="btn btn-primary"><i class="ti ti-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            @endif
-            <h5 class="card-header">{{ $title }}</h5>
-            <div class="table-responsive text-nowrap">
-                <table class="table">
-                    <thead class="table-light">
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>ID</th>
-                            <th class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        @forelse ($wilayah as $data)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $data->name }}</td>
-                                <td>{{ $data->id }}</td>
-                                <td class="text-center">
-                                    <a href="{{ url('/operator/master/wilayah/view/' . $data->id) }}"
-                                        class="btn btn-primary"><i class="ti ti-eye"></i></a>
-                                    <form id="deleteForm{{ $data->id }}"
-                                        action="{{ url('/operator/user/penyuluh/' . $data->id) }}" style="display: inline;"
-                                        method="POST">
-                                        @method('DELETE')
-                                        @csrf
-                                        <button type="button" class="btn btn-danger deleteBtn"
-                                            data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center">Data Kosong</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>

@@ -1,25 +1,27 @@
 @extends('index')
 @section('title', 'Create User | Operator')
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <div
-            class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row py-3 mb-4">
-            <h5 class="card-title mb-sm-0 me-2"><span class="text-muted fw-light">Create Account User /</span> Create Client
-                Table
-            </h5>
-        </div>
-        <div class="row">
-            <!-- FormValidation -->
-            <div class="col-12">
-                <div class="card">
-                    <h5 class="card-header">Masukan Data Pengguna</h5>
-                    <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if ($errors->any())
+    <div class="page-header d-sm-flex d-block">
+        <ol class="breadcrumb mb-sm-0 mb-3">
+            <!-- breadcrumb -->
+            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
+            <li class="breadcrumb-item" aria-current="page">Pengguna Pertanian</li>
+            <li class="breadcrumb-item active" aria-current="page">Buat Akun Pertanian</li>
+        </ol><!-- End breadcrumb -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Buat Akun Pertanian</h3>
+                </div>
+                <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                        @endif @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
                                     @foreach ($errors->all() as $error)
@@ -28,40 +30,45 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ url('/operator/user/pertanian') }}" method="post" id="formValidationExamples"
-                            class="row g-3" enctype="multipart/form-data">
+                        <form action="{{ url('/operator/user/pertanian') }}" method="post" class="needs-validation"
+                            novalidate>
                             @csrf
-                            <div class="col-12">
-                                <h6 class="fw-semibold">1. Data Pengguna</h6>
-                                <hr class="mt-0" />
+                            <div class="form-row">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <label for="validationCustom011">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="validationCustom011" name="name"
+                                        value="{{ old('name') }}" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <label for="validationCustom12">Email</label>
+                                    <input type="email" name="email" class="form-control" id="validationCustom12"
+                                        value="{{ old('email') }}" value="Otto" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="formValidationName">Nama Lengkap</label>
-                                <input type="text" id="formValidationName" class="form-control" placeholder="John Doe"
-                                    name="name" value="{{ old('name') }}" />
+                            <div class="form-row">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <label for="validationCustom13">Alamat</label>
+                                    <input type="text" class="form-control" id="validationCustom13" name="alamat"
+                                        value="{{ old('alamat') }}" required>
+                                    <div class="invalid-feedback">Please provide a valid address.</div>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                    <label for="validationCustom15">Nomor Telepon</label>
+                                    <input type="number" class="form-control" id="validationCustom15" name="no_telp"
+                                        value="{{ old('no_telp') }}" required>
+                                    <div class="invalid-feedback">Please provide a valid zip.</div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="formValidationEmail">Email</label>
-                                <input class="form-control" type="email" id="formValidationEmail" name="email"
-                                    placeholder="john.doe" value="{{ old('email') }}" />
+                            <div class="form-group">
+                                <label class="ckbox d-flex align-items-center">
+                                    <input type="checkbox" id="invalidCheck3" required>
+                                    <span>I agree terms and conditions</span>
+                                </label>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="formValidationEmail">Alamat</label>
-                                <input class="form-control" type="text" id="formValidationEmail" name="alamat"
-                                    placeholder="indramayuxx" value="{{ old('alamat') }}" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="formValidationEmail">Nomor Telepon</label>
-                                <input class="form-control" type="number" id="formValidationEmail" name="no_telp"
-                                    placeholder="08xxxxx" value="{{ old('no_telp') }}" />
-                            </div>
-                            <div class="col-12 d-flex justify-content-end">
-                                <a href="{{ url('/koordinator/create/dosen') }}" type="submit" class="btn btn-warning"><i
-                                        class="fa fa-arrow-left"></i>Back</a>
-                                <button type="submit" class="btn btn-primary ms-2">Submit</button>
-                            </div>
+                            <button class="btn btn-primary" type="submit">Submit </button>
                         </form>
-                    </div>
                 </div>
             </div>
         </div>

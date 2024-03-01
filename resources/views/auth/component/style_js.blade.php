@@ -1,31 +1,18 @@
- <!-- bui{{ url('/assets') }}/vendor/js/core.js -->
- <script src="{{ url('/assets') }}/vendor/libs/jquery/jquery.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/popper/popper.js"></script>
- <script src="{{ url('/assets') }}/vendor/js/bootstrap.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/node-waves/node-waves.js"></script>
+<!-- Jquery js-->
+<script src="{{ url('/assets') }}/js/vendors/jquery.min.js"></script>
 
- <script src="{{ url('/assets') }}/vendor/libs/hammer/hammer.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/i18n/i18n.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/typeahead-js/typeahead.js"></script>
+<!--Bootstrap.min js-->
+<script src="{{ url('/assets') }}/plugins/bootstrap/popper.min.js"></script>
+<script src="{{ url('/assets') }}/plugins/bootstrap/js/bootstrap.min.js"></script>
 
- <script src="{{ url('/assets') }}/vendor/js/menu.js"></script>
- <!-- endbuild -->
+<!--Moment js-->
+<script src="{{ url('/assets') }}/plugins/moment/moment.min.js"></script>
 
- <!-- Vendors JS -->
- <script src="{{ url('/assets') }}/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/cleavejs/cleave.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/cleavejs/cleave-phone.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/bs-stepper/bs-stepper.js"></script>
- <script src="{{ url('/assets') }}/vendor/libs/select2/select2.js"></script>
+<!-- Color Theme js -->
+<script src="{{ url('/assets') }}/js/themeColors.js"></script>
 
- <!-- Main JS -->
- <script src="{{ url('/assets') }}/js/main.js"></script>
+<!-- Sticky js -->
+<script src="{{ url('/assets') }}/js/sticky.js"></script>
 
- <!-- Page JS -->
- <script src="{{ url('/assets') }}/js/pages-auth.js"></script>
-
- <!-- Page JS -->
- <script src="{{ url('/assets') }}/js/pages-auth-multisteps.js"></script>
+<!-- Custom js-->
+<script src="{{ url('/assets') }}/js/custom.js"></script>
