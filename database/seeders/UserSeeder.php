@@ -46,7 +46,8 @@ class UserSeeder extends Seeder
         Penyuluh::create([
             'alamat' => 'indramayu',
             'user_id' => $penyuluh->id,
-            'no_telp' => '081272121'
+            'no_telp' => '081272121',
+            'kecamatan_id' =>  '3212170'
         ]);
     }
 }

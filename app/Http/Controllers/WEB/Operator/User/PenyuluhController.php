@@ -8,6 +8,7 @@ use App\Http\Requests\Operator\User\Penyuluh\UpdateRequest;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Wilayah\Kecamatan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -19,11 +20,13 @@ class PenyuluhController extends Controller
 {
     protected $user;
     protected $penyuluh;
+    protected $kecamatan;
 
-    public function __construct(User $user, Penyuluh $penyuluh)
+    public function __construct(User $user, Penyuluh $penyuluh, Kecamatan $kecamatan)
     {
         $this->user = $user;
         $this->penyuluh = $penyuluh;
+        $this->kecamatan = $kecamatan;
     }
     public function index()
     {
@@ -36,8 +39,11 @@ class PenyuluhController extends Controller
 
     public function create()
     {
-        return view('operator.pages.user.penyuluh.create');
+        $kecamatan = $this->kecamatan::all();
+        $selected = $this->penyuluh::pluck('kecamatan_id')->toArray(); // Mengonversi ke array agar dapat digunakan nanti
+        return view('operator.pages.user.penyuluh.create', compact('kecamatan', 'selected'));
     }
+
 
     public function store(CreateRequest $request)
     {
@@ -50,6 +56,7 @@ class PenyuluhController extends Controller
             ]);
             $this->penyuluh->create($request->all() + [
                 'user_id' => $user->id,
+                'kecamatan_id' => $request->kecamatan,
             ]);
             $user->setAttribute('email_verified_at', Carbon::now());
             $user->setAttribute('remember_token', Str::random(10));

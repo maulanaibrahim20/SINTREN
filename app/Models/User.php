@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Penyuluh\Penyuluh;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -53,5 +54,10 @@ class User extends Authenticatable
     public function getAkses()
     {
         return $this->belongsTo(Role::class, "role_id");
+    }
+
+    public function penyuluh()
+    {
+        return $this->hasOne(Penyuluh::class);
     }
 }

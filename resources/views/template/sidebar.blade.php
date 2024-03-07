@@ -181,32 +181,9 @@
                         <a class="side-menu__item {{ Request::segment(3) == 'laporan_padi' ? 'active' : '' }}"
                             href="{{ url('/penyuluh/create/laporan_padi') }}"><i
                                 class="side-menu__icon mdi mdi-barley"></i><span class="side-menu__label">Laporan
-                                Padi</span></a>
+                                Padi</span>
+                        </a>
                     </li>
-                    <li class="sub-category">
-                        <h3>Master</h3>
-                    </li>
-                    <li class="slide {{ Request::segment(3) == 'jenis_padi' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'jenis_padi' ? 'active' : '' }}"
-                            data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon mdi mdi-database"></i><span
-                                class="side-menu__label">Master</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu">
-                            <li class="panel sidetab-menu">
-                                <div class="panel-body tabs-menu-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side33">
-                                            <ul class="sidemenu-list">
-                                                <li><a href="{{ url('/penyuluh/master/jenis_padi') }}"
-                                                        class="slide-item {{ Request::segment(3) == 'jenis_padi' ? 'active' : '' }}">Jenis
-                                                        Padi</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             @endcan

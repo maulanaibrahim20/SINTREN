@@ -61,6 +61,22 @@
                                     <div class="invalid-feedback">Please provide a valid zip.</div>
                                 </div>
                             </div>
+                            <div class="form-row">
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                    <label for="validationCustom15">Kecamatan</label>
+                                    <select name="kecamatan" id="kecamatan" class="form-control form-select select2">
+                                        <option value="">-- pilih --</option>
+                                        @foreach ($kecamatan as $data)
+                                            @php
+                                                $isdisabled = in_array($data->id, $selected); // Menggunakan in_array untuk memeriksa apakah id ada dalam array $selected
+                                            @endphp
+                                            <option value="{{ $data->id }}" {{ $isdisabled ? 'disabled' : '' }}>
+                                                {{ $data->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label class="ckbox d-flex align-items-center">
                                     <input type="checkbox" id="invalidCheck3" required>

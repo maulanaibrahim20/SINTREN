@@ -419,6 +419,11 @@
                                         <div class="text-center">
                                             <h5 class="text-dark mb-0 fw-semibold">{{ Auth::user()->name }}</h5>
                                             <span class="text-muted fs-12">{{ Auth::user()->getAkses->name }}</span>
+                                            @if (Auth::user()->role_id == '4')
+                                                <span class="text-muted fs-12">
+                                                    {{ Auth::user()->penyuluh->kecamatan->name }}
+                                                </span>
+                                            @endif
                                         </div>
                                     </div>
                                     <a class="dropdown-item text-dark fw-semibold border-top" href="profile.html">

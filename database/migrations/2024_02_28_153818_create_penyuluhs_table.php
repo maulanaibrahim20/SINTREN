@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('penyuluhs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->integer('kecamatan_id');
             $table->string('alamat');
             $table->string('no_telp');
             $table->timestamps();

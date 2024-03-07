@@ -45,6 +45,7 @@
                                     <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-20p border-bottom-0">Email</th>
                                     <th class="wd-15p border-bottom-0">Role</th>
+                                    <th class="wd-15p border-bottom-0">Kecamatan</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -55,6 +56,7 @@
                                         <td>{{ $data->user->name }}</td>
                                         <td>{{ $data->user->email }}</td>
                                         <td>{{ $data->user->getAkses->name }}</td>
+                                        <td><span class="badge bg-primary">{{ $data->kecamatan->name }}</span></td>
                                         <td class="text-center">
                                             <a href="{{ url('/operator/user/penyuluh/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
@@ -80,7 +82,7 @@
             </div>
         </div>
     </div>
-    {{-- @foreach ($users as $view)
+    @foreach ($users as $view)
         <div class="modal fade" id="modalCenter{{ $view->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -108,6 +110,10 @@
                                     <td>{{ $view->user->getAkses->name }}</td>
                                 </tr>
                                 <tr>
+                                    <th scope="row">Kecamatan</th>
+                                    <td> <span class="badge bg-primary">{{ $view->kecamatan->name }}</span></td>
+                                </tr>
+                                <tr>
                                     <th scope="row">Status</th>
                                     <td>
                                         @if ($view->user->email_verified_at)
@@ -127,7 +133,7 @@
                 </div>
             </div>
         </div>
-    @endforeach --}}
+    @endforeach
 @endsection
 @section('script')
 @section('script')
