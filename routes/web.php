@@ -9,6 +9,7 @@ use App\Http\Controllers\WEB\Operator\Tanaman\PalawijaController;
 use App\Http\Controllers\WEB\Operator\Master\WilayahController;
 use App\Http\Controllers\WEB\Operator\User\PertanianController;
 use App\Http\Controllers\WEB\Operator\Master\KategoriTanamanController;
+use App\Http\Controllers\WEB\Operator\Master\KategoriTanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
@@ -60,6 +61,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('palawija', PalawijaController::class);
             });
             Route::prefix('master')->group(function () {
+                Route::resource('kategori_tanaman_palawija', KategoriTanamanPalawijaController::class);
                 Route::get('wilayah', [WilayahController::class, 'index']);
                 Route::get('wilayah/view/{id}', [WilayahController::class, 'view_desa']);
                 Route::resource('role', RoleController::class);

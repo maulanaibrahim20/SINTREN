@@ -118,8 +118,8 @@
                         <h3>Master</h3>
                     </li>
                     <li
-                        class="slide {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' || Request::segment(3) == 'kategori_tanaman' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' || Request::segment(3) == 'kategori_tanaman' ? 'active' : '' }}"
+                        class="slide {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' || Request::segment(3) == 'kategori_tanaman_palawija' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' || Request::segment(3) == 'kategori_tanaman_palawija' ? 'active' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon mdi mdi-database"></i><span class="side-menu__label">Master</span><i
                                 class="angle fe fe-chevron-right"></i></a>
@@ -134,6 +134,10 @@
                                                 </li>
                                                 <li><a href="{{ url('/operator/master/role') }}"
                                                         class="slide-item {{ Request::segment(3) == 'role' ? 'active' : '' }}">Role</a>
+                                                </li>
+                                                <li><a href="{{ url('/operator/master/kategori_tanaman_palawija') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'kategori_tanaman_palawija' ? 'active' : '' }}">Kategori
+                                                        Tanaman Palawija</a>
                                                 </li>
                                             </ul>
                                         </div>

@@ -16,17 +16,17 @@ class KategoriTanamanSeeder extends Seeder
         KategoriTanamanPalawija::create([
             'name' => 'kacang-kacangan',
             'description' => 'Kacang-kacangan adalah tanaman yang memiliki biji yang dapat dimakan. Kacang-kacangan merupakan sumber protein nabati yang baik untuk tubuh.',
-            'image' => ('kategori_tanaman_image/kacang-kacangan.png'),
+            'image' => ('image_kategori_palawija/kacan-kacangan.png'),
         ]);
         KategoriTanamanPalawija::create([
             'name' => 'biji-bijian',
             'description' => 'Biji-bijian adalah tanaman yang memiliki biji yang dapat dimakan. Biji-bijian merupakan sumber karbohidrat yang baik untuk tubuh.',
-            'image' => ('kategori_tanaman/kbiji-bijian.png'),
+            'image' => ('image_kategori_palawija/biji-bijian.jpg'),
         ]);
         KategoriTanamanPalawija::create([
             'name' => 'umbi-umbian',
             'description' => 'Umbi-umbian adalah tanaman yang memiliki umbi yang dapat dimakan. Umbi-umbian merupakan sumber karbohidrat yang baik untuk tubuh.',
-            'image' => ('kategori_tanaman/umbi-umbian.jpg'),
+            'image' => ('image_kategori_palawija/umbi-umbian.png'),
         ]);
     }
 }
