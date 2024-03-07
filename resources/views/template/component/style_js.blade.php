@@ -63,3 +63,16 @@
 
 <!-- Sticky js -->
 <script src="{{ url('/assets') }}/js/sticky.js"></script>
+<!-- Bootstarp Max-lenght js -->
+<script src="../assets/plugins/bootstrap-maxlength/dist/bootstrap-maxlength.min.js"></script>
+
+<script src="{{ url('/assets') }}/plugins/fancyuploder/jquery.ui.widget.js"></script>
+<script src="{{ url('/assets') }}/plugins/fancyuploder/jquery.fileupload.js"></script>
+<script src="{{ url('/assets') }}/plugins/fancyuploder/jquery.iframe-transport.js"></script>
+<script src="{{ url('/assets') }}/plugins/fancyuploder/jquery.fancy-fileupload.js"></script>
+<script src="{{ url('/assets') }}/plugins/fancyuploder/fancy-uploader.js"></script>
+
+<script src="{{ url('/assets') }}/plugins/fileuploads/js/fileupload.js"></script>
+<script src="{{ url('/assets') }}/plugins/fileuploads/js/file-upload.js"></script>
+
+<script src="{{ url('/assets') }}/js/formelementadvnced.js"></script>

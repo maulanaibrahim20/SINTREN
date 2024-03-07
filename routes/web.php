@@ -5,9 +5,10 @@ use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
 use App\Http\Controllers\WEB\Operator\Master\RoleController;
 use App\Http\Controllers\WEB\Operator\Tanaman\PadiController;
+use App\Http\Controllers\WEB\Operator\Tanaman\PalawijaController;
 use App\Http\Controllers\WEB\Operator\Master\WilayahController;
-use App\Http\Controllers\WEB\Operator\UserController;
 use App\Http\Controllers\WEB\Operator\User\PertanianController;
+use App\Http\Controllers\WEB\Operator\Master\KategoriTanamanController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
@@ -52,8 +53,11 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('uptd', UptdController::class);
                 Route::resource('penyuluh', PenyuluhController::class);
             });
+            Route::prefix('kategori')->group(function () {
+            });
             Route::prefix('tanaman')->group(function () {
                 Route::resource('padi', PadiController::class);
+                Route::resource('palawija', PalawijaController::class);
             });
             Route::prefix('master')->group(function () {
                 Route::get('wilayah', [WilayahController::class, 'index']);

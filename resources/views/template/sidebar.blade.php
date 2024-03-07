@@ -87,11 +87,12 @@
                     <li class="sub-category">
                         <h3>Tanaman</h3>
                     </li>
-                    <li class="slide {{ Request::segment(3) == 'padi' ? 'is-expanded' : '' }}">
+                    <li
+                        class="slide {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' ? 'is-expanded' : '' }}">
                         <a class="side-menu__item {{ Request::segment(3) == 'padi' ? 'active' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)"><i
-                                class="side-menu__icon mdi mdi-barley"></i><span class="side-menu__label">Tanaman
-                                Padi</span><i class="angle fe fe-chevron-right"></i></a>
+                                class="side-menu__icon mdi mdi-barley"></i><span class="side-menu__label">Jenis
+                                Tanaman</span><i class="angle fe fe-chevron-right"></i></a>
                         <ul class="slide-menu">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
@@ -101,6 +102,11 @@
                                                 <li><a href="{{ url('/operator/tanaman/padi') }}"
                                                         class="slide-item {{ Request::segment(3) == 'padi' ? 'active' : '' }}">Tanaman
                                                         Padi</a></li>
+                                            </ul>
+                                            <ul class="sidemenu-list">
+                                                <li><a href="{{ url('/operator/tanaman/palawija') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}">Tanaman
+                                                        Palawija</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -112,8 +118,8 @@
                         <h3>Master</h3>
                     </li>
                     <li
-                        class="slide {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' ? 'active' : '' }}"
+                        class="slide {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' || Request::segment(3) == 'kategori_tanaman' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' || Request::segment(3) == 'kategori_tanaman' ? 'active' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)"><i
                                 class="side-menu__icon mdi mdi-database"></i><span class="side-menu__label">Master</span><i
                                 class="angle fe fe-chevron-right"></i></a>
@@ -124,8 +130,8 @@
                                         <div class="tab-pane active" id="side33">
                                             <ul class="sidemenu-list">
                                                 <li><a href="{{ url('/operator/master/wilayah') }}"
-                                                        class="slide-item {{ Request::segment(3) == 'wilayah' ? 'active' : '' }}">Tanaman
-                                                        Padi</a></li>
+                                                        class="slide-item {{ Request::segment(3) == 'wilayah' ? 'active' : '' }}">Wilayah</a>
+                                                </li>
                                                 <li><a href="{{ url('/operator/master/role') }}"
                                                         class="slide-item {{ Request::segment(3) == 'role' ? 'active' : '' }}">Role</a>
                                                 </li>
