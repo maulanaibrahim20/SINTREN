@@ -85,6 +85,16 @@
                         </ul>
                     </li>
                     <li class="sub-category">
+                        <h3>Pengairan</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'pengairan' ? 'active' : '' }}"
+                            href="{{ url('/operator/master/pengairan') }}"><i class="side-menu__icon fa fa-tint"></i><span
+                                class="side-menu__label">Pengairan</span>
+                        </a>
+                    </li>
+                    </li>
+                    <li class="sub-category">
                         <h3>Tanaman</h3>
                     </li>
                     <li

@@ -76,3 +76,10 @@
 <script src="{{ url('/assets') }}/plugins/fileuploads/js/file-upload.js"></script>
 
 <script src="{{ url('/assets') }}/js/formelementadvnced.js"></script>
+
+<script src="{{ url('/assets') }}/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js"></script>
+<script src="{{ url('/assets') }}/js/advancedform.js"></script>
+
+<!-- Forn-wizard js-->
+<script src="{{ url('/assets') }}/plugins/formwizard/jquery.smartWizard.js"></script>
+<script src="{{ url('/assets') }}/plugins/formwizard/fromwizard.js"></script>

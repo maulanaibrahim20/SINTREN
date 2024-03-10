@@ -317,6 +317,8 @@
     <!-- page End-->
 
     @include('auth.component.style_js')
+    @include('sweetalert::alert')
+
 
 </body>
 
