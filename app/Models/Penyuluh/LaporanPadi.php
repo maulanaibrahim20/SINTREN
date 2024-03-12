@@ -9,16 +9,19 @@ class LaporanPadi extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'tanaman_akhir_bulan_lalu',
-        'panen',
-        'luas_lahan',
-        'tanam',
-        'padi_rusak',
-        'jenis_lahan',
-        'jenis_padi',
-        'jenis_bantuan',
-        'jenis_pengairan',
-        'petani',
-    ];
+    protected $table = 'laporan_padis';
+
+    protected $guarded = [''];
+
+    // protected $fillable = [
+    //     'tanaman_akhir_bulan_lalu',
+    //     'nama_pengumpul',
+    //     'jabatan',
+    //     'jenis_lahan',
+    // ];
+    // protected $guarded = [
+    //     'desa_id',
+    //     'kecamatan_id',
+    //     'id_rehab_jaringan_irigasi_tersier',
+    // ];
 }

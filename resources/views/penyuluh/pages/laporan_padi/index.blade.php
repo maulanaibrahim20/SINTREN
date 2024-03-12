@@ -41,17 +41,46 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Nama</th>
-                                    <th class="wd-20p border-bottom-0">Email</th>
-                                    <th class="wd-15p border-bottom-0">Role</th>
-                                    <th class="text-center wd-10p border-bottom-0">Actions</th>
+                                    <th class="wd-15p border-bottom-0">Uraian1</th>
+                                    <th class="wd-15p border-bottom-0">Tanaman Akhir Bulan Yang Lalu</th>
+                                    <th class="wd-20p border-bottom-0">Panen</th>
+                                    <th class="wd-15p border-bottom-0">Puso/Rusak</th>
+                                    <th class="text-center wd-10p border-bottom-0">Tanaman Akhir Laporan</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach ($users as $data)
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Jumlah Padi</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>A. Hibrida</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.) Bantuan Pemerintah</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>2.) Bantuan Non Pemerintah</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>B.Inbrida</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>1.) Bantuan Pemerintah</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>2.) Bantuan Non Pemerintah</td>
+                                </tr>
+                                {{-- @foreach ($padi as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->user->name }}</td>
+                                        <td>{{ $data->getPadi->nama_pengumpul }}</td>
                                         <td>{{ $data->user->email }}</td>
                                         <td>{{ $data->user->getAkses->name }}</td>
                                         <td class="text-center">
