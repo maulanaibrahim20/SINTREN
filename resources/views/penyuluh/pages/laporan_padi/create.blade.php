@@ -171,11 +171,24 @@
     @endsection
 
     @section('script')
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function() {
                 $('input, select').on('change', function() {
                     showSummary();
+                });
+                $('input[name="jenis_lahan"]').on('change', function() {
+                    if ($(this).val() === 'lahan_sawah') {
+                        $('#lahan_sawah').show();
+                        $('#non_sawah').hide();
+                        $('#pengairan').closest('.list-group-item')
+                            .show(); // Menampilkan bagian pengairan kembali jika sebelumnya disembunyikan
+                    } else {
+                        $('#lahan_sawah').hide();
+                        $('#non_sawah').show();
+                        $('#pengairan').closest('.list-group-item')
+                            .hide(); // Menyembunyikan bagian pengairan jika jenis lahan adalah non sawah
+                    }
+                    showSummary(); // Memanggil kembali fungsi showSummary() saat jenis lahan berubah
                 });
             });
 
@@ -192,14 +205,19 @@
                     'tanam_akhir_bulan_laporan': $('input[name="tanam_akhir_bulan_laporan"]').val(),
                 };
 
-                const inputDataPengairan = {
-                    'jenis_padi_pengairan': $('#pengairan option:selected').text(),
-                    'tanaman_akhir_bulan_lalu_pengairan': $('input[name="tanaman_akhir_bulan_lalu_pengairan"]').val(),
-                    'panen_pengairan': $('input[name="panen_pengairan"]').val(),
-                    'tanam_pengairan': $('input[name="tanam_pengairan"]').val(),
-                    'rusak_pengairan': $('input[name="rusak_pengairan"]').val(),
-                    'tanam_akhir_bulan_laporan_pengairan': $('input[name="tanam_akhir_bulan_laporan_pengairan"]').val(),
-                };
+                let inputDataPengairan = {}; // Inisialisasi objek inputDataPengairan
+
+                // Memeriksa jenis lahan yang dipilih
+                if ($('input[name="jenis_lahan"]:checked').val() === 'lahan_sawah') {
+                    inputDataPengairan = {
+                        'jenis_padi_pengairan': $('#pengairan option:selected').text(),
+                        'tanaman_akhir_bulan_lalu_pengairan': $('input[name="tanaman_akhir_bulan_lalu_pengairan"]').val(),
+                        'panen_pengairan': $('input[name="panen_pengairan"]').val(),
+                        'tanam_pengairan': $('input[name="tanam_pengairan"]').val(),
+                        'rusak_pengairan': $('input[name="rusak_pengairan"]').val(),
+                        'tanam_akhir_bulan_laporan_pengairan': $('input[name="tanam_akhir_bulan_laporan_pengairan"]').val(),
+                    };
+                }
 
                 let summaryHTML = '<table class="table">';
                 summaryHTML += '<tr><th colspan="5">Laporan Lahan Sawah</th></tr>';
@@ -221,23 +239,26 @@
                 // Menambahkan tabel laporan lahan sawah ke dalam summary
                 $('#summary').html(summaryHTML);
 
-                // Membuat ringkasan dalam format tabel untuk pengairan
-                summaryHTML = '<table class="table">';
-                summaryHTML += '<tr><th colspan="5">Laporan Pengairan</th></tr>';
-                summaryHTML +=
-                    '<tr><td>Jenis Padi</td><td>Tanaman Akhir Bulan Lalu</td><td>Panen</td><td>Tanam</td><td>Puso/Rusak</td><td>Tanaman Akhir Bulan Laporan</td></tr>';
-                summaryHTML += '<tr>';
-                summaryHTML += '<td>' + inputDataPengairan.jenis_padi_pengairan + '</td>';
-                summaryHTML += '<td>' + inputDataPengairan.tanaman_akhir_bulan_lalu_pengairan + '</td>';
-                summaryHTML += '<td>' + inputDataPengairan.panen_pengairan + '</td>';
-                summaryHTML += '<td>' + inputDataPengairan.tanam_pengairan + '</td>';
-                summaryHTML += '<td>' + inputDataPengairan.rusak_pengairan + '</td>';
-                summaryHTML += '<td>' + inputDataPengairan.tanam_akhir_bulan_laporan_pengairan + '</td>';
-                summaryHTML += '</tr>';
-                summaryHTML += '</table>';
+                // Mengondisikan pembuatan ringkasan laporan pengairan berdasarkan jenis lahan yang dipilih
+                if ($('input[name="jenis_lahan"]:checked').val() === 'lahan_sawah') {
+                    summaryHTML = '<table class="table">';
+                    summaryHTML += '<tr><th colspan="5">Laporan Pengairan</th></tr>';
+                    summaryHTML +=
+                        '<tr><td>Jenis Padi</td><td>Tanaman Akhir Bulan Lalu</td><td>Panen</td><td>Tanam</td><td>Puso/Rusak</td><td>Tanaman Akhir Bulan Laporan</td></tr>';
+                    summaryHTML += '<tr>';
+                    summaryHTML += '<td>' + inputDataPengairan.jenis_padi_pengairan + '</td>';
+                    summaryHTML += '<td>' + inputDataPengairan.tanaman_akhir_bulan_lalu_pengairan + '</td>';
+                    summaryHTML += '<td>' + inputDataPengairan.panen_pengairan + '</td>';
+                    summaryHTML += '<td>' + inputDataPengairan.tanam_pengairan + '</td>';
+                    summaryHTML += '<td>' + inputDataPengairan.rusak_pengairan + '</td>';
+                    summaryHTML += '<td>' + inputDataPengairan.tanam_akhir_bulan_laporan_pengairan + '</td>';
+                    summaryHTML += '</tr>';
+                    summaryHTML += '</table>';
 
-                // Menambahkan tabel laporan pengairan ke dalam summary
-                $('#summary').append(summaryHTML);
+                    // Menambahkan tabel laporan pengairan lahan sawah ke dalam summary
+                    $('#summary').append(summaryHTML);
+                }
             }
         </script>
+
     @endsection

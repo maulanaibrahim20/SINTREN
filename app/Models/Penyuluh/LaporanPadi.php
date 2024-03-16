@@ -2,6 +2,8 @@
 
 namespace App\Models\Penyuluh;
 
+use App\Models\Wilayah\Desa;
+use App\Models\Wilayah\Kecamatan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,4 +26,15 @@ class LaporanPadi extends Model
     //     'kecamatan_id',
     //     'id_rehab_jaringan_irigasi_tersier',
     // ];
+
+
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class, 'desa_id');
+    }
+
+    public function kecamatan()
+    {
+        return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
+    }
 }

@@ -136,7 +136,6 @@
     @endforeach
 @endsection
 @section('script')
-@section('script')
     <script>
         $('.deleteBtn').on('click', function(e) {
             e.preventDefault();
@@ -158,5 +157,4 @@
             });
         });
     </script>
-@endsection
 @endsection

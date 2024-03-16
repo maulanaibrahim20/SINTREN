@@ -14,6 +14,7 @@ use App\Http\Controllers\WEB\Operator\Master\PengairanController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
+use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +90,7 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/getDesa', [LaporanPadiController::class, 'getDesa']);
             Route::prefix('create')->group(function () {
                 Route::resource('laporan_padi', LaporanPadiController::class);
+                Route::resource('laporan_palawija', LaporanPalawijaController::class);
             });
             // Route::prefix('master')->group(function () {
             //     Route::resource('jenis_padi', JenisPadiController::class);

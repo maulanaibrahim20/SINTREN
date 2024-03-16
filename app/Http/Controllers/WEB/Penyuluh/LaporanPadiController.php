@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Penyuluh\LaporanPadiRequest;
 use App\Models\Operator\Padi;
 use App\Models\Penyuluh\DetailLaporanPadi;
 use App\Models\Penyuluh\DetailLaporanPengairan;
@@ -48,18 +49,20 @@ class LaporanPadiController extends Controller
     public function index()
     {
         $data = [
-            'padi' => $this->detailpadi::all(),
+            'padi' => $this->laporanpadi::orderBy('created_at', 'asc')->get(),
         ];
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
 
     public function create()
     {
-        $jenis_padi = $this->jenis_padi::orderBy('created_at', 'asc')->get();
         $kecamatanId = Auth::user()->penyuluh->kecamatan->id;
-        $desa = $this->desa::where('district_id', $kecamatanId)->get();
-        $pengairan = $this->pengairan::all();
-        return view('penyuluh.pages.laporan_padi.create', compact('jenis_padi', 'desa', 'pengairan'));
+        $data = [
+            'jenis_padi' => $this->jenis_padi::orderBy('created_at', 'asc')->get(),
+            'desa' => $this->desa::where('district_id', $kecamatanId)->get(),
+            'pengairan' => $this->pengairan::all(),
+        ];
+        return view('penyuluh.pages.laporan_padi.create', $data);
     }
 
     public function store(Request $request)
@@ -105,6 +108,35 @@ class LaporanPadiController extends Controller
             DB::rollback();
             Alert::error('error', 'Data Laporan Padi Gagal DIbuat!' . $e->getMessage());
             return back()->with('error', 'Data Laporan Padi Gagal Dibuat!');
+        }
+    }
+
+    public function show($id)
+    {
+        $padi = $this->laporanpadi::findOrFail($id);
+        $data = [
+            'padi' => $padi->all(),
+            'detail_padi' => $this->detailpadi::where('id_laporan_padi', $id)->get(),
+            'detail_pengairan' => $this->detailpengairan::where('id_laporan_padi', $id)->get(),
+        ];
+        // dd($data);
+
+        return view('penyuluh.pages.laporan_padi.show', $data);
+    }
+
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+            $penyuluh = $this->laporanpadi->findOrfail($id);
+            $penyuluh->delete();
+            DB::commit();
+            Alert::success('success', 'Data Berhasil Dihapus!');
+            return back()->with('success', 'Data Berhasil Dihapus!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Alert::error('Error', 'Terjadi Kesalahan Saat Menghapus Data!' . $e->getMessage());
+            return back()->with('error', 'Terjadi Kesalahan Saat Menghapus Data!' . $e->getMessage());
         }
     }
 

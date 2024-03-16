@@ -4,7 +4,7 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/penyuluh/dashboard') }}">Dashboard</a></li>
             <li class="breadcrumb-item active" aria-current="page">Laporan Padi</li>
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
@@ -14,7 +14,7 @@
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
-                    Add New User
+                    Tambah Laporan Padi
                 </a>
             </div>
         </div>
@@ -41,56 +41,29 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Uraian1</th>
-                                    <th class="wd-15p border-bottom-0">Tanaman Akhir Bulan Yang Lalu</th>
-                                    <th class="wd-20p border-bottom-0">Panen</th>
-                                    <th class="wd-15p border-bottom-0">Puso/Rusak</th>
-                                    <th class="text-center wd-10p border-bottom-0">Tanaman Akhir Laporan</th>
+                                    <th class="wd-15p border-bottom-0">Desa</th>
+                                    <th class="wd-15p border-bottom-0">Kecamatan</th>
+                                    <th class="wd-20p border-bottom-0">Nama Pengumpul</th>
+                                    <th class="wd-20p border-bottom-0">Tanggal</th>
+                                    <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1.</td>
-                                    <td>Jumlah Padi</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>A. Hibrida</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.) Bantuan Pemerintah</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2.) Bantuan Non Pemerintah</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>B.Inbrida</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>1.) Bantuan Pemerintah</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2.) Bantuan Non Pemerintah</td>
-                                </tr>
-                                {{-- @foreach ($padi as $data)
+                                @foreach ($padi as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->getPadi->nama_pengumpul }}</td>
-                                        <td>{{ $data->user->email }}</td>
-                                        <td>{{ $data->user->getAkses->name }}</td>
+                                        <td>{{ $data->desa->name }}</td>
+                                        <td>{{ $data->kecamatan->name }}</td>
+                                        <td>{{ $data->nama_pengumpul }}</td>
+                                        <td>{{ $data->created_at }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('/operator/user/penyuluh/' . $data->id . '/edit') }}"
+                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#modalCenter{{ $data->id }}">
-                                                <i class="ti ti-eye"></i></button>
+                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/operator/user/penyuluh/' . $data->id) }}"
+                                                action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
@@ -99,7 +72,7 @@
                                             </form>
                                         </td>
                                     </tr>
-                                @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -107,4 +80,27 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        $('.deleteBtn').on('click', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var deleteForm = $('#deleteForm' + id);
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Data akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            });
+        });
+    </script>
 @endsection

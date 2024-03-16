@@ -29,4 +29,9 @@ class DetailLaporanPengairan extends Model
     //     'tanaman_akhir_bulan_laporan',
 
     // ];
+
+    public function pengairan()
+    {
+        return $this->belongsTo(Pengairan::class, 'jenis_pengairan');
+    }
 }

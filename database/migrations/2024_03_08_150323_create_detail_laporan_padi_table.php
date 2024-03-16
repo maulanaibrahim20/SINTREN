@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('detail_laporan_padi', function (Blueprint $table) {
             $table->id();
-            $table->string('id_laporan_padi');
+            $table->unsignedBigInteger('id_laporan_padi');
             $table->string('jenis_padi');
             $table->string('jenis_bantuan');
             $table->string('tanaman_akhir_bulan_lalu');
@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('tanam');
             $table->string('puso_rusak');
             $table->string('tanaman_akhir_bulan_laporan');
+            $table->foreign('id_laporan_padi')->references('id')->on('laporan_padis')->onDelete('cascade');
             $table->timestamps();
         });
     }

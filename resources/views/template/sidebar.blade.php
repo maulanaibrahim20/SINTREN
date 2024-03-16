@@ -194,6 +194,12 @@
                                 Padi</span>
                         </a>
                     </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'laporan_palawija' ? 'active' : '' }}"
+                            href="{{ url('/penyuluh/create/laporan_palawija') }}"><i
+                                class="side-menu__icon fa fa-leaf"></i><span class="side-menu__label">Laporan
+                                Palawija</span>
+                        </a>
                     </li>
                 </ul>
             @endcan

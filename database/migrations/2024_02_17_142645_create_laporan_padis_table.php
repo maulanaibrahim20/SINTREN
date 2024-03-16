@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('desa_id', '25');
             $table->string('kecamatan_id', '25');
             $table->string('tanaman_akhir_bulan_lalu', '25');
-            $table->string('nama_pengumpul');
-            $table->string('jabatan');
+            $table->string('nama_pengumpul', '25');
+            $table->string('jabatan', '25');
             $table->string('jenis_lahan', '25');
-            $table->string('id_rehab_jaringan_irigasi_tersier', '25')->nullable();
+            $table->bigInteger('id_rehab_jaringan_irigasi_tersier')->default('0');
             $table->timestamps();
         });
     }
