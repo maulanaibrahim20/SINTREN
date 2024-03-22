@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return view('landing');
     });
     Route::prefix('login')->name('login.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])
