@@ -1,22 +1,38 @@
-<section class="py-0" id="header">
-    <div class="bg-holder d-none d-md-block"
-        style="background-image:url({{ url('/landing/assets/') }}/img/illustrations/hero-header.png);background-position:right top;background-size:contain;">
-    </div>
-    <!--/.bg-holder-->
-
-    <div class="bg-holder d-md-none"
-        style="background-image:url({{ url('/landing/assets/') }}/img/illustrations/hero-bg.png);background-position:right top;background-size:contain;">
-    </div>
-    <!--/.bg-holder-->
-    <div class="container">
-        <div class="row align-items-center min-vh-75 min-vh-lg-100">
-            <div class="col-md-7 col-lg-6 col-xxl-5 py-6 text-sm-start text-center">
-                <h1 class="mt-6 mb-sm-4 fw-semi-bold lh-sm fs-4 fs-lg-5 fs-xl-6">A New Way to Invest <br
-                        class="d-block d-lg-block" />in Agriculture</h1>
-                <p class="mb-4 fs-1">Zou provides farmes, ranchers, private foresters, and agricultural
-                    producers with online self service applications and educational materials.</p><a
-                    class="btn btn-lg btn-success" href="#" role="button">Invest Now</a>
+<header class="header-area">
+    <div class="container-fluid">
+        <div class="row d_flex">
+            <div class=" col-md-2 col-sm-3">
+                <div class="logo">
+                    <a href="index.html">Sin<span>Tren</span></a>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-9">
+                <div class="navbar-area">
+                    <nav class="site-navbar">
+                        <ul>
+                            <li><a class="active" href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="service.html">Service</a></li>
+                            <li><a href="Javascript:void(0)">Projects</a></li>
+                            <li><a href="testimonail.html">Testimonail</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                        <button class="nav-toggler">
+                            <span></span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-2 padd_0 d_none">
+                <ul class="email text_align_right">
+                    <li><a href="{{ route('login.index') }}" style="color: black;">Login</a>
+                    </li>
+                    <li><a href="Javascript:void(0)"><i class="fa fa-search" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-</section>
+</header>
