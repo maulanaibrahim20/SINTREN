@@ -36,16 +36,28 @@ class DashboardController extends Controller
             'CountLaporanPadi' => $this->laporanPadi::count(),
             'CountLaporanPalawija' => $this->laporanPalawija::count(),
         ];
+
+        foreach ($data as $key => $value) {
+            if ($value === null) {
+                $data[$key] = 0;
+            }
+        }
         return view('pertanian.pages.dashboard.index', $data);
     }
 
     public function uptd()
     {
         $data = [
-            'countPenyuluh' => $this->penyuluh::count(),
-            'CountLaporanPadi' => $this->laporanPadi::count(),
-            'CountLaporanPalawija' => $this->laporanPalawija::count(),
+            'countPenyuluh' => $this->penyuluh->count(),
+            'CountLaporanPadi' => $this->laporanPadi->count(),
+            'CountLaporanPalawija' => $this->laporanPalawija->count(),
         ];
+
+        foreach ($data as $key => $value) {
+            if ($value === null) {
+                $data[$key] = 0;
+            }
+        }
         return view('uptd.pages.dashboard.index', $data);
     }
 
