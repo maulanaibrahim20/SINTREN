@@ -16,11 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('id_laporan_padi');
             $table->string('jenis_padi');
             $table->string('jenis_bantuan');
-            $table->string('tanaman_akhir_bulan_lalu');
-            $table->string('panen');
-            $table->string('tanam');
-            $table->string('puso_rusak');
-            $table->string('tanaman_akhir_bulan_laporan');
+            $table->double('tanaman_akhir_bulan_lalu')->default(0);
+            $table->double('panen')->default(0);
+            $table->double('tanam')->default(0);
+            $table->double('puso_rusak')->default(0);
+            $table->double('tanaman_akhir_bulan_laporan')->default(0);
             $table->foreign('id_laporan_padi')->references('id')->on('laporan_padis')->onDelete('cascade');
             $table->timestamps();
         });

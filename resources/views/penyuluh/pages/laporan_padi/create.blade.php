@@ -88,41 +88,48 @@
                                         <div class="my-3">
                                             <div class="form-group">
                                                 <label>Tanaman Akhir Bulan Lalu : </label>
-                                                <input type="number" name="tanaman_akhir_bulan_lalu" class="form-control">
+                                                <input type="text" name="tanaman_akhir_bulan_lalu" class="form-control"
+                                                    id="tanaman_akhir_bulan_lalu">
                                             </div>
                                             <div class="form-group form-row">
                                                 <div class="col-sm-4">
                                                     <label>Panen:</label>
-                                                    <input type="number" name="panen" class="form-control">
+                                                    <input type="text" name="panen" class="form-control"
+                                                        id="panen">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Tanam : </label>
-                                                    <input type="number" name="tanam" class="form-control">
+                                                    <input type="text" name="tanam" class="form-control"
+                                                        id="tanam">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Puso/Rusak : </label>
-                                                    <input type="number" name="rusak" class="form-control">
+                                                    <input type="text" name="rusak" class="form-control"
+                                                        id="puso_rusak">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label>Tanaman Akhir Bulan Laporan : </label>
-                                                <input type="number" name="tanam_akhir_bulan_laporan" class="form-control">
+                                                <input type="text" name="tanam_akhir_bulan_laporan" class="form-control"
+                                                    id="tanaman_akhir_bulan_laporan" readonly>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Bagian Pengairan -->
                                 <div class="list-group-item py-3" data-acc-step>
                                     <h5 class="mb-0" data-acc-title>Pengairan</h5>
                                     <div data-acc-content>
                                         <div class="my-3">
                                             <div class="form-group form-row">
-                                                <label for="select2Basic" class="form-label">Jenis Padi</label>
+                                                <label for="select2Basic" class="form-label">Jenis Pengairan</label>
                                                 <select id="pengairan" class="form-control form-select select2"
                                                     aria-label="Default select example" name="pengairan">
                                                     <option value="">-- Pilih --</option>
-                                                    @foreach ($pengairan as $data)
-                                                        <option value="{{ $data->id }}" name="pengairan">
-                                                            {{ $data->name }}
+                                                    @foreach ($pengairan as $pengairans)
+                                                        <option value="{{ $pengairans->id }}" name="pengairan">
+                                                            {{ $pengairans->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -130,26 +137,30 @@
                                             <div class="form-group form-row">
                                                 <div class="col-sm-4">
                                                     <label>Tanaman Akhir bulan lalu:</label>
-                                                    <input type="number" name="tanaman_akhir_bulan_lalu_pengairan"
-                                                        class="form-control">
+                                                    <input type="text" name="tanaman_akhir_bulan_lalu_pengairan"
+                                                        class="form-control" id="tanaman_akhir_bulan_lalu_pengairan">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Panen:</label>
-                                                    <input type="number" name="panen_pengairan" class="form-control">
+                                                    <input type="text" name="panen_pengairan" class="form-control"
+                                                        id="panen_pengairan">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Tanam : </label>
-                                                    <input type="number" name="tanam_pengairan" class="form-control">
+                                                    <input type="text" name="tanam_pengairan" class="form-control"
+                                                        id="tanam_pengairan">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label>Puso/Rusak : </label>
-                                                    <input type="number" name="rusak_pengairan" class="form-control">
+                                                    <input type="text" name="rusak_pengairan" class="form-control"
+                                                        id="rusak_pengairan">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label>Tanaman Akhir Bulan Laporan : </label>
-                                                <input type="number" name="tanam_akhir_bulan_laporan_pengairan"
-                                                    class="form-control">
+                                                <input type="text" name="tanam_akhir_bulan_laporan_pengairan"
+                                                    class="form-control" id="tanam_akhir_bulan_laporan_pengairan"
+                                                    readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -173,6 +184,76 @@
     @section('script')
         <script>
             $(document).ready(function() {
+                var tanamanAkhirBulanLalu = 0;
+                var panen = 0;
+                var tanam = 0;
+                var puso = 0;
+                var tanamanAkhirBulanIni = 0;
+
+                var tanamanAkhirBulanLaluPengairan = 0;
+                var panen_pengairan = 0;
+                var tanam_pengairan = 0;
+                var puso_pengairan = 0;
+                var tanamanAkhirBulanIniPengairan = 0;
+
+                $("#tanaman_akhir_bulan_lalu").change(function() {
+                    tanamanAkhirBulanLalu = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIni();
+                });
+
+                $("#panen").change(function() {
+                    panen = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIni();
+                });
+
+                $("#tanam").change(function() {
+                    tanam = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIni();
+                });
+
+                $("#puso_rusak").change(function() {
+                    puso = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIni();
+                });
+
+                function hitungTanamanAkhirBulanIni() {
+                    tanamanAkhirBulanIni = tanamanAkhirBulanLalu - panen + tanam - puso;
+                    $("#tanaman_akhir_bulan_laporan").val(tanamanAkhirBulanIni);
+                    console.log("tanaman akhir bulan ini: " + tanamanAkhirBulanIni);
+                }
+
+                $("#tanaman_akhir_bulan_lalu_pengairan").change(function() {
+                    tanamanAkhirBulanLaluPengairan = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIniPengairan();
+                });
+
+                $("#panen_pengairan").change(function() {
+                    panen_pengairan = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIniPengairan();
+                });
+
+                $("#tanam_pengairan").change(function() {
+                    tanam_pengairan = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIniPengairan();
+                });
+
+
+                $("#rusak_pengairan").change(function() {
+                    puso_pengairan = parseInt($(this).val());
+                    hitungTanamanAkhirBulanIniPengairan();
+                });
+
+                function hitungTanamanAkhirBulanIniPengairan() {
+                    tanamanAkhirBulanIniPengairan = tanamanAkhirBulanLaluPengairan - panen_pengairan + tanam_pengairan -
+                        puso_pengairan;
+                    $("#tanam_akhir_bulan_laporan_pengairan").val(tanamanAkhirBulanIniPengairan);
+                    console.log("tanaman akhir bulan ini: " + tanamanAkhirBulanIniPengairan);
+                }
+
+                $('input[type="text"]').on('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+
                 $('input, select').on('change', function() {
                     showSummary();
                 });
@@ -181,14 +262,14 @@
                         $('#lahan_sawah').show();
                         $('#non_sawah').hide();
                         $('#pengairan').closest('.list-group-item')
-                            .show(); // Menampilkan bagian pengairan kembali jika sebelumnya disembunyikan
+                            .show();
                     } else {
                         $('#lahan_sawah').hide();
                         $('#non_sawah').show();
                         $('#pengairan').closest('.list-group-item')
-                            .hide(); // Menyembunyikan bagian pengairan jika jenis lahan adalah non sawah
+                            .hide();
                     }
-                    showSummary(); // Memanggil kembali fungsi showSummary() saat jenis lahan berubah
+                    showSummary();
                 });
             });
 
@@ -207,7 +288,6 @@
 
                 let inputDataPengairan = {}; // Inisialisasi objek inputDataPengairan
 
-                // Memeriksa jenis lahan yang dipilih
                 if ($('input[name="jenis_lahan"]:checked').val() === 'lahan_sawah') {
                     inputDataPengairan = {
                         'jenis_padi_pengairan': $('#pengairan option:selected').text(),
@@ -255,7 +335,6 @@
                     summaryHTML += '</tr>';
                     summaryHTML += '</table>';
 
-                    // Menambahkan tabel laporan pengairan lahan sawah ke dalam summary
                     $('#summary').append(summaryHTML);
                 }
             }

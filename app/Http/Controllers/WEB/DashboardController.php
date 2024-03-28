@@ -3,11 +3,24 @@
 namespace App\Http\Controllers\WEB;
 
 use App\Http\Controllers\Controller;
+use App\Models\Penyuluh\LaporanPadi;
+use App\Models\Penyuluh\LaporanPalawija;
+use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    protected $penyuluh;
+    protected $laporanPadi;
+    protected $laporanPalawija;
+
+    public function __construct(Penyuluh $penyuluh, LaporanPalawija $laporanPalawija, LaporanPadi $laporanPadi)
+    {
+        $this->penyuluh = $penyuluh;
+        $this->laporanPadi = $laporanPadi;
+        $this->laporanPalawija = $laporanPalawija;
+    }
     public function operator()
     {
         $user = User::count();
@@ -18,12 +31,22 @@ class DashboardController extends Controller
 
     public function pertanian()
     {
-        return view('pertanian.pages.dashboard.index');
+        $data = [
+            'countPenyuluh' => $this->penyuluh::count(),
+            'CountLaporanPadi' => $this->laporanPadi::count(),
+            'CountLaporanPalawija' => $this->laporanPalawija::count(),
+        ];
+        return view('pertanian.pages.dashboard.index', $data);
     }
 
     public function uptd()
     {
-        return view('uptd.pages.dashboard.index');
+        $data = [
+            'countPenyuluh' => $this->penyuluh::count(),
+            'CountLaporanPadi' => $this->laporanPadi::count(),
+            'CountLaporanPalawija' => $this->laporanPalawija::count(),
+        ];
+        return view('uptd.pages.dashboard.index', $data);
     }
 
     public function penyuluh()

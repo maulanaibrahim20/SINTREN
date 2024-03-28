@@ -79,7 +79,7 @@ class LaporanPadiController extends Controller
                 'id_rehab_jaringan_irigasi_tersier' => 0,
             ]);
 
-            $detailPadiId = $this->detailpadi->create([
+            $this->detailpadi->create([
                 'id_laporan_padi' => $laporanPadiId->id,
                 'jenis_padi' => $request->jenis_padi,
                 'jenis_bantuan' => $request->jenis_bantuan,
@@ -91,8 +91,7 @@ class LaporanPadiController extends Controller
             ]);
 
             $this->detailpengairan->create([
-                'id_laporan_padi' => $detailPadiId->id,
-                'id_laporan' => $laporanPadiId->id,
+                'id_laporan_padi' => $laporanPadiId->id,
                 'jenis_pengairan' => $request->pengairan,
                 'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu_pengairan,
                 'panen' => $request->panen_pengairan,
@@ -119,7 +118,6 @@ class LaporanPadiController extends Controller
             'detail_padi' => $this->detailpadi::where('id_laporan_padi', $id)->get(),
             'detail_pengairan' => $this->detailpengairan::where('id_laporan_padi', $id)->get(),
         ];
-        // dd($data);
 
         return view('penyuluh.pages.laporan_padi.show', $data);
     }

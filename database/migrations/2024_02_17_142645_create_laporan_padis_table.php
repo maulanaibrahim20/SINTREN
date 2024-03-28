@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('desa_id', '25');
             $table->string('kecamatan_id', '25');
-            $table->string('tanaman_akhir_bulan_lalu', '25');
+            $table->string('tanaman_akhir_bulan_lalu', '25')->default(0);
             $table->string('nama_pengumpul', '25');
             $table->string('jabatan', '25');
             $table->string('jenis_lahan', '25');

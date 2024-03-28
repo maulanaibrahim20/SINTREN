@@ -41,6 +41,7 @@
                         <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
+                                    <th class="wd-15p border-bottom-0">No.</th>
                                     <th class="wd-15p border-bottom-0">ID Laporan</th>
                                     <th class="wd-20p border-bottom-0">Jenis Padi</th>
                                     <th class="wd-15p border-bottom-0">Jenis Bantuan</th>
@@ -49,12 +50,13 @@
                                     <th class="wd-20p border-bottom-0">Tanam</th>
                                     <th class="wd-20p border-bottom-0">Puso/Rusak</th>
                                     <th class="wd-20p border-bottom-0">Tanaman Akhir Bulan Laporan</th>
-                                    <th class="wd-20p border-bottom-0">Tanggal</th>
+                                    <th class="wd-20p border-bottom-0">Hari/Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($detail_padi as $data)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->id_laporan_padi }}</td>
                                         <td>{{ $data->padi->name }}</td>
                                         <td>{{ $data->jenis_bantuan }}</td>
@@ -63,7 +65,8 @@
                                         <td>{{ $data->tanam }}</td>
                                         <td>{{ $data->puso_rusak }}</td>
                                         <td>{{ $data->tanaman_akhir_bulan_laporan }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM YYYY') }}
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM YYYY') }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -91,6 +94,7 @@
                         <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
+                                    <th class="wd-15p border-bottom-0">No.</th>
                                     <th class="wd-15p border-bottom-0">ID laporan Padi</th>
                                     <th class="wd-15p border-bottom-0">Jenis Pengairan</th>
                                     <th class="wd-15p border-bottom-0">Tanaman Akhir Bulan Lalu</th>
@@ -98,12 +102,13 @@
                                     <th class="wd-20p border-bottom-0">Tanam</th>
                                     <th class="wd-20p border-bottom-0 text-center">Puso/Rusak</th>
                                     <th class="wd-20p border-bottom-0 text-center">Tanaman Akhir Bulan Laporan</th>
-                                    <th class="wd-20p border-bottom-0 text-center">Tanggal</th>
+                                    <th class="wd-20p border-bottom-0 text-center">Hari/Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($detail_pengairan as $peng)
                                     <tr>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $peng->id_laporan_padi }}</td>
                                         <td>{{ $peng->pengairan->name }}</td>
                                         <td>{{ $peng->tanaman_akhir_bulan_lalu }}</td>

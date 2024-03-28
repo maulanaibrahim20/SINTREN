@@ -21,6 +21,13 @@
 <!--Select2 js -->
 <script src="{{ url('/assets') }}/plugins/select2/select2.full.min.js"></script>
 
+<!-- Charts js-->
+<script src="{{ url('/assets') }}/plugins/chart/chart.bundle.js"></script>
+<script src="{{ url('/assets') }}/plugins/chart/utils.js"></script>
+
+<!-- Custom-charts js-->
+<script src="{{ url('/assets') }}/js/index3.js"></script>
+
 <!-- FORMVALIDATION JS -->
 <script src="{{ url('/assets') }}/js/form-validation.js"></script>
 
@@ -64,7 +71,7 @@
 <!-- Sticky js -->
 <script src="{{ url('/assets') }}/js/sticky.js"></script>
 <!-- Bootstarp Max-lenght js -->
-<script src="../assets/plugins/bootstrap-maxlength/dist/bootstrap-maxlength.min.js"></script>
+<script src="{{ url('/assets') }}/plugins/bootstrap-maxlength/dist/bootstrap-maxlength.min.js"></script>
 
 <script src="{{ url('/assets') }}/plugins/fancyuploder/jquery.ui.widget.js"></script>
 <script src="{{ url('/assets') }}/plugins/fancyuploder/jquery.fileupload.js"></script>
@@ -83,3 +90,5 @@
 <!-- Forn-wizard js-->
 <script src="{{ url('/assets') }}/plugins/formwizard/jquery.smartWizard.js"></script>
 <script src="{{ url('/assets') }}/plugins/formwizard/fromwizard.js"></script>
+<!-- Cart js-->
+<script src="{{ url('/assets') }}/js/cart.js"></script>
