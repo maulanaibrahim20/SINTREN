@@ -1,0 +1,89 @@
+@extends('index')
+@section('title', 'View User Pertanian')
+@section('content')
+    <div class="page-header d-sm-flex d-block">
+        <ol class="breadcrumb mb-sm-0 mb-3">
+            <!-- breadcrumb -->
+            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
+            <li class="breadcrumb-item" aria-current="page">Pengguna Pertanian</li>
+            <li class="breadcrumb-item active" aria-current="page">Detail Pengguna Pertanian</li>
+        </ol><!-- End breadcrumb -->
+    </div>
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Detail User : {{ $user->user->name }}</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" style="width: 100%">
+                        <tr>
+                            <td class="text-right">Nama</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->user->name }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Username</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->user->username }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Email</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->user->email }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Role</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->user->getAkses->name }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Alamat</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->alamat }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url('/operator/user/pertanian') }}" class="btn btn-warning">
+                        <i class="fa fa-arrow-left"></i> Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Gambar</h3>
+                </div>
+                <div class="card-body">
+                    <div class="">
+                        <div class="d-flex overflow-visible">
+                            <a href="blog-details.html" class="card-recent-post cover-image">
+                                <img src="{{ url('/assets') }}/images/photos/9.jpg" class="br-7" alt="image">
+                            </a>
+                            <div class="ps-3 flex-column">
+                                <span class="badge bg-primary me-1 mb-1 mt-1">{{ $user->user->name }}</span>
+                                <h6 class="fw-semibold"><a href=""> Role
+                                        {{ $user->user->getAkses->name }}</a>
+                                </h6>
+                                <div class="text-muted-dark">{{ $user->user->alamat }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

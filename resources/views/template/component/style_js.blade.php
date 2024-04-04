@@ -92,3 +92,7 @@
 <script src="{{ url('/assets') }}/plugins/formwizard/fromwizard.js"></script>
 <!-- Cart js-->
 <script src="{{ url('/assets') }}/js/cart.js"></script>
+
+<!-- INTERNAL WYSIWYG Editor js -->
+<script src="{{ url('/assets') }}/plugins/wysiwyag/jquery.richtext.js"></script>
+<script src="{{ url('/assets') }}/plugins/wysiwyag/wysiwyag.js"></script>

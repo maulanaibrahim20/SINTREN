@@ -62,16 +62,34 @@
                                     <div class="invalid-feedback">Please provide a valid zip.</div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="ckbox d-flex align-items-center">
-                                    <input type="checkbox" id="invalidCheck3" required>
-                                    <span>I agree terms and conditions</span>
-                                </label>
-                            </div>
                             <button class="btn btn-primary" type="submit">Submit </button>
                         </form>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('.needs-validation').submit(function(event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah data yang Anda isi sudah benar?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, kirim!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).unbind('submit')
+                            .submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

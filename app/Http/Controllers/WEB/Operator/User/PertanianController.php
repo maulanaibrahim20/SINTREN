@@ -29,9 +29,12 @@ class PertanianController extends Controller
     {
         $data = [
             'title' => 'Data Pengguna Pertanian',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_active' => 'Data Pengguna Pertanian',
+            'add_button' => 'Tambah Data Pengguna',
+            'users' => $this->pertanian::orderBy('created_at', 'asc')->get(),
         ];
-        $users = $this->pertanian::orderBy('created_at', 'asc')->get();
-        return view('operator.pages.user.pertanian.index', compact('users'), $data);
+        return view('operator.pages.user.pertanian.index', $data);
     }
 
     public function create()
@@ -76,6 +79,14 @@ class PertanianController extends Controller
         return view('operator.pages.user.pertanian.update', compact('user'));
     }
 
+    public function show($id)
+    {
+        $data = [
+            'user'  => $this->pertanian->findOrFail($id),
+        ];
+        return view('operator.pages.user.pertanian.show', $data);
+    }
+
     public function update(UpdatedRequest $request, $id)
     {
         try {
@@ -88,7 +99,7 @@ class PertanianController extends Controller
                 'updated_at' => now(),
             ]);
             DB::commit();
-            Alert::success('success', 'Data berhasil diubah1');
+            Alert::success('success', 'Data berhasil diubah!');
             return redirect('/operator/user/pertanian')->with('success', 'Success data berhasil diubah!');
         } catch (ValidationException $e) {
             DB::rollback();
