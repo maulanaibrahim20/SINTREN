@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('uptds', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->string('user_id');
             $table->string('alamat');
             $table->string('no_telp');
             $table->timestamps();

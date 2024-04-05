@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pertanians', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->string('user_id');
             $table->string('alamat');
             $table->string('no_telp', 20);
             $table->timestamps();

@@ -84,7 +84,7 @@ class PertanianController extends Controller
         $data = [
             'title' => 'Detail Data Pengguna Pertanian',
             'breadcrumb' => 'Dashboard',
-            'breadcrumbg_1' => 'Data Pengguna Pertanian',
+            'breadcrumb_1' => 'Data Pengguna Pertanian',
             'breadcrumb_active' => 'Detail Data Pengguna Pertanian',
             'user'  => $this->pertanian->findOrFail($id),
         ];
