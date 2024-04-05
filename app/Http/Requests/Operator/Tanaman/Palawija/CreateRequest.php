@@ -26,8 +26,6 @@ class CreateRequest extends FormRequest
             'name' => 'required|string',
             'description' => 'required|string',
             'category' => 'required|string',
-            'masa_panen' => 'required|string',
-            'kegunaan' => 'required|string',
         ];
     }
 }

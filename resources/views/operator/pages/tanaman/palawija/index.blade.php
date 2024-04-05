@@ -45,8 +45,6 @@
                                     <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-20p border-bottom-0">kategori</th>
                                     <th class="wd-15p border-bottom-0">Description</th>
-                                    <th class="wd-15p border-bottom-0">Musim Panen</th>
-                                    <th class="wd-15p border-bottom-0">Kegunaan</th>
                                     <th class="wd-15p border-bottom-0">Gambar</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
@@ -58,15 +56,13 @@
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->kategori->name }}</td>
                                         <td>{{ $data->description }}</td>
-                                        <td>{{ $data->musim_panen }}</td>
-                                        <td>{{ $data->kegunaan }}</td>
                                         <td><img src="{{ asset('' . $data->gambar) }}" style="width:60px;height:60"></td>
                                         <td class="text-center">
                                             <a href="{{ url('/operator/tanaman/palawija/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#modalCenter{{ $data->id }}">
-                                                <i class="ti ti-eye"></i></button>
+                                            <a href="{{ url('/operator/tanaman/palawija/' . $data->id) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/operator/tanaman/palawija/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
