@@ -4,9 +4,8 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Jenis Tanaman</li>
-            <li class="breadcrumb-item active" aria-current="page">Tanaman Padi</li>
+            <li class="breadcrumb-item"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
@@ -14,7 +13,7 @@
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
-                    Buat Jenis Padi
+                    {{ $button_create }}
                 </button>
             </div>
         </div>

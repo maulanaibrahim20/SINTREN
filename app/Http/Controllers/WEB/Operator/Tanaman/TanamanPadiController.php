@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\WEB\Operator\Tanaman;
 
 use App\Http\Controllers\Controller;
-use App\Models\Operator\Padi;
+use App\Models\Operator\TanamanPadi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PadiController extends Controller
+class TanamanPadiController extends Controller
 {
     protected $padi;
 
-    public function __construct(Padi $padi)
+    public function __construct(TanamanPadi $padi)
     {
         $this->padi = $padi;
     }
@@ -21,6 +21,9 @@ class PadiController extends Controller
     {
         $data = [
             'title' => 'Tanaman Padi',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_active' => 'Tanaman Padi',
+            'button_create' => 'Tambah Data Padi',
         ];
         $padi = $this->padi::all();
         return view('operator.pages.tanaman.padi.index', compact('padi'), $data);
@@ -51,7 +54,6 @@ class PadiController extends Controller
         }
     }
 
-    //please make update function here
     public function update(Request $request, $id)
     {
         try {

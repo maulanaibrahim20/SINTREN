@@ -4,8 +4,8 @@ use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
 use App\Http\Controllers\WEB\Operator\Master\RoleController;
-use App\Http\Controllers\WEB\Operator\Tanaman\PadiController;
-use App\Http\Controllers\WEB\Operator\Tanaman\PalawijaController;
+use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPadiController;
+use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\Master\WilayahController;
 use App\Http\Controllers\WEB\Operator\User\PertanianController;
 use App\Http\Controllers\WEB\Operator\Master\KategoriTanamanController;
@@ -57,13 +57,13 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('penyuluh', PenyuluhController::class);
             });
             Route::prefix('kategori')->group(function () {
+                Route::resource('tanaman_palawija', KategoriTanamanPalawijaController::class);
             });
             Route::prefix('tanaman')->group(function () {
-                Route::resource('padi', PadiController::class);
-                Route::resource('palawija', PalawijaController::class);
+                Route::resource('padi', TanamanPadiController::class);
+                Route::resource('palawija', TanamanPalawijaController::class);
             });
             Route::prefix('master')->group(function () {
-                Route::resource('kategori_tanaman_palawija', KategoriTanamanPalawijaController::class);
                 Route::get('wilayah', [WilayahController::class, 'index']);
                 Route::get('wilayah/view/{id}', [WilayahController::class, 'view_desa']);
                 Route::resource('role', RoleController::class);
