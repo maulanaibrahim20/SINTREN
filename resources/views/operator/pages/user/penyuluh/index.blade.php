@@ -57,9 +57,9 @@
                                         <td>{{ $data->user->getAkses->name }}</td>
                                         <td><span class="badge bg-primary">{{ $data->kecamatan->name }}</span></td>
                                         <td class="text-center">
-                                            <a href="{{ url('/operator/user/penyuluh/' . $data->id . '/edit') }}"
+                                            <a href="{{ url('/operator/user/penyuluh/' . encrypt($data->id) . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/operator/user/penyuluh/' . $data->id) }}"
+                                            <a href="{{ url('/operator/user/penyuluh/' . encrypt($data->id)) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"

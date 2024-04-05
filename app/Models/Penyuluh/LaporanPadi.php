@@ -15,18 +15,6 @@ class LaporanPadi extends Model
 
     protected $guarded = [''];
 
-    // protected $fillable = [
-    //     'tanaman_akhir_bulan_lalu',
-    //     'nama_pengumpul',
-    //     'jabatan',
-    //     'jenis_lahan',
-    // ];
-    // protected $guarded = [
-    //     'desa_id',
-    //     'kecamatan_id',
-    //     'id_rehab_jaringan_irigasi_tersier',
-    // ];
-
 
     public function desa()
     {

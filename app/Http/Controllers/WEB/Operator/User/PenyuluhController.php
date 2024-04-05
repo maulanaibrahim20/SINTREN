@@ -52,7 +52,6 @@ class PenyuluhController extends Controller
         ];
         return view('operator.pages.user.penyuluh.create', $data);
     }
-
     public function store(CreateRequest $request)
     {
         try {
@@ -86,7 +85,7 @@ class PenyuluhController extends Controller
     public function show($id)
     {
         $data = [
-            'user' => $this->penyuluh::findOrFail($id),
+            'user' => $this->penyuluh::findOrFail(decrypt($id)),
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna Penyuluh',
             'breadcrumb_active' => 'Detail Data Pengguna Penyuluh',
@@ -97,7 +96,7 @@ class PenyuluhController extends Controller
     public function edit($id)
     {
         $data = [
-            'user' => $this->penyuluh::findOrFail($id),
+            'user' => $this->penyuluh::findOrFail(decrypt($id)),
         ];
         return view('operator.pages.user.penyuluh.update', $data);
     }
