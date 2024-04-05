@@ -4,9 +4,8 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
-            <li class="breadcrumb-item active" aria-current="page">Pengguna UPTD</li>
+            <li class="breadcrumb-item"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
@@ -15,7 +14,7 @@
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
-                    Add New User
+                    {{ $add_button }}
                 </a>
             </div>
         </div>
@@ -58,9 +57,8 @@
                                         <td class="text-center">
                                             <a href="{{ url('/operator/user/uptd/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#modalCenter{{ $data->id }}">
-                                                <i class="ti ti-eye"></i></button>
+                                            <a href="{{ url('/operator/user/uptd/' . $data->id) }}" class="btn btn-primary">
+                                                <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/operator/user/uptd/' . $data->id) }}"
                                                 style="display: inline;" method="POST">

@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'User Pertanian | Operator')
+@section('title', 'Pertanian | Operator')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">

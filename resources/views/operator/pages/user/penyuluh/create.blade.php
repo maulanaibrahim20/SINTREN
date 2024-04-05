@@ -4,17 +4,16 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
-            <li class="breadcrumb-item" aria-current="page">Pengguna Penyuluh</li>
-            <li class="breadcrumb-item active" aria-current="page">Buat Akun Penyuluh</li>
+            <li class="breadcrumb-item"><a href="index.html">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Buat Akun Penyuluh</h3>
+                    <h3 class="card-title">{{ $title }}</h3>
                 </div>
                 <div class="card-body">
                     @if (session('success'))
@@ -54,7 +53,7 @@
                                         value="{{ old('alamat') }}" required>
                                     <div class="invalid-feedback">Please provide a valid address.</div>
                                 </div>
-                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                                     <label for="validationCustom15">Nomor Telepon</label>
                                     <input type="number" class="form-control" id="validationCustom15" name="no_telp"
                                         value="{{ old('no_telp') }}" required>
@@ -68,20 +67,13 @@
                                         <option value="">-- pilih --</option>
                                         @foreach ($kecamatan as $data)
                                             @php
-                                                $isdisabled = in_array($data->id, $selected); // Menggunakan in_array untuk memeriksa apakah id ada dalam array $selected
+                                                $isdisabled = in_array($data->id, $selected);
                                             @endphp
                                             <option value="{{ $data->id }}" {{ $isdisabled ? 'disabled' : '' }}>
                                                 {{ $data->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="ckbox d-flex align-items-center">
-                                    <input type="checkbox" id="invalidCheck3" required>
-                                    <span>I agree terms and conditions</span>
-                                </label>
                             </div>
                             <button class="btn btn-primary" type="submit">Submit </button>
                         </form>

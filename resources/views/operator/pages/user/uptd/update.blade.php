@@ -4,17 +4,16 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
-            <li class="breadcrumb-item" aria-current="page">Pengguna UPTD</li>
-            <li class="breadcrumb-item active" aria-current="page">Buat Akun UPTD</li>
+            <li class="breadcrumb-item"><a href="{{ url('/operator/user/penyuluh') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Buat Akun UPTD</h3>
+                    <h3 class="card-title">{{ $title }}</h3>
                 </div>
                 <div class="card-body">
                     @if (session('success'))

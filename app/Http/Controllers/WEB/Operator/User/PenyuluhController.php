@@ -32,18 +32,26 @@ class PenyuluhController extends Controller
     {
         $data = [
             'title' => 'Data Pengguna Penyuluh',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_active' => 'Data Pengguna Penyuluh',
+            'button_create' => 'Tambah Data Pengguna',
+            'users' => $this->penyuluh::orderBy('created_at', 'asc')->get(),
         ];
-        $users = $this->penyuluh::orderBy('created_at', 'asc')->get();
-        return view('operator.pages.user.penyuluh.index', compact('users'), $data);
+        return view('operator.pages.user.penyuluh.index', $data);
     }
 
     public function create()
     {
-        $kecamatan = $this->kecamatan::all();
-        $selected = $this->penyuluh::pluck('kecamatan_id')->toArray(); // Mengonversi ke array agar dapat digunakan nanti
-        return view('operator.pages.user.penyuluh.create', compact('kecamatan', 'selected'));
+        $data = [
+            'title' => 'Tambah Data Pengguna Penyuluh',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Penyuluh',
+            'breadcrumb_active' => 'Tambah Data Pengguna Penyuluh',
+            'kecamatan' => $this->kecamatan::all(),
+            'selected' => $this->penyuluh::pluck('kecamatan_id')->toArray(),
+        ];
+        return view('operator.pages.user.penyuluh.create', $data);
     }
-
 
     public function store(CreateRequest $request)
     {
@@ -75,10 +83,23 @@ class PenyuluhController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $data = [
+            'user' => $this->penyuluh::findOrFail($id),
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Penyuluh',
+            'breadcrumb_active' => 'Detail Data Pengguna Penyuluh',
+        ];
+        return view('operator.pages.user.penyuluh.show', $data);
+    }
+
     public function edit($id)
     {
-        $user = $this->penyuluh->findOrFail($id);
-        return view('operator.pages.user.penyuluh.update', compact('user'));
+        $data = [
+            'user' => $this->penyuluh::findOrFail($id),
+        ];
+        return view('operator.pages.user.penyuluh.update', $data);
     }
 
     public function update(UpdateRequest $request, $id)

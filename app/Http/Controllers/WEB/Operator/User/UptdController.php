@@ -28,14 +28,23 @@ class UptdController extends Controller
     {
         $data = [
             'title' => 'Data Pengguna UPTD',
+            'users' => $this->uptd::orderBy('created_at', 'asc')->get(),
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_active' => 'Data Pengguna UPTD',
+            'add_button' => 'Tambah Data Pengguna',
         ];
-        $users = $this->uptd::orderBy('created_at', 'asc')->get();
-        return view('operator.pages.user.uptd.index', $data, compact('users'));
+        return view('operator.pages.user.uptd.index', $data);
     }
 
     public function create()
     {
-        return view('operator.pages.user.uptd.create');
+        $data = [
+            'title' => 'Tambah Data Pengguna UPTD',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna UPTD',
+            'breadcrumb_active' => 'Tambah Data Pengguna UPTD',
+        ];
+        return view('operator.pages.user.uptd.create', $data);
     }
     public function store(CreateRequest $request)
     {
@@ -63,10 +72,27 @@ class UptdController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $data = [
+            'user' => $this->uptd::findOrFail($id),
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna UPTD',
+            'breadcrumb_active' => 'Detail Data Pengguna UPTD',
+        ];
+        return view('operator.pages.user.uptd.show', $data);
+    }
+
     public function edit($id)
     {
-        $user = $this->uptd->findOrFail($id);
-        return view('operator.pages.user.uptd.update', compact('user'));
+        $data = [
+            'user' => $this->uptd->findOrFail($id),
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna UPTD',
+            'breadcrumb_active' => 'Edit Data Pengguna UPTD',
+            'title' => 'Edit Data Pengguna UPTD',
+        ];
+        return view('operator.pages.user.uptd.update', $data);
     }
 
     public function update(UpdateRequest $request, $id)

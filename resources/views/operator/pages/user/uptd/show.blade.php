@@ -1,10 +1,10 @@
 @extends('index')
-@section('title', 'View User Pertanian')
+@section('title', 'View User UPTD')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operator/user/pertanian') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('/operato/user/uptd') }}">{{ $breadcrumb }}</a></li>
             <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
             <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
@@ -55,7 +55,7 @@
                     </table>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ url('/operator/user/pertanian') }}" class="btn btn-warning">
+                    <a href="{{ url('/operator/user/uptd') }}" class="btn btn-warning">
                         <i class="fa fa-arrow-left"></i> Kembali
                     </a>
                 </div>

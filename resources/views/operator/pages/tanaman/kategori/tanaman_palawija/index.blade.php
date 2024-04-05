@@ -59,7 +59,7 @@
                                                 data-bs-target="#modalCenter1{{ $data->id }}"><i
                                                     class="fa fa-edit"></i></button>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/operator/master/kategori_tanaman_palawija/' . $data->id) }}"
+                                                action="{{ url('/operator/kategori/tanaman_palawija/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
@@ -82,7 +82,7 @@
     <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form action="{{ url('/operator/master/kategori_tanaman_palawija') }}" enctype="multipart/form-data"
+                <form action="{{ url('/operator/kategori/tanaman_palawija') }}" enctype="multipart/form-data"
                     method="post">
                     @csrf
                     <div class="modal-header">
@@ -117,12 +117,12 @@
         <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <form action="{{ url('/operator/master/kategori_tanaman_palawija') }}" enctype="multipart/form-data"
-                        method="post">
+                    <form action="{{ url('/operator/kategori/tanaman_palawija/' . $item->id) }}"
+                        enctype="multipart/form-data" method="post">
                         @method('PUT')
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Tambah kategori tanaman palawija</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">Edit kategori tanaman palawija</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
@@ -132,7 +132,7 @@
                                 <input type="text" value="{{ $item->name }}" name="name" class="form-control"
                                     placeholder="Masukkan Nama Kategori" />
                             </div>
-                            v<div class="col mb-3">
+                            <div class="col mb-3">
                                 <label for="descriptionBasic" class="form-label">Deskripsi</label>
                                 <textarea name="description" class="form-control" placeholder="Masukkan Deskripsi">{{ $item->description }}</textarea>
                             </div>

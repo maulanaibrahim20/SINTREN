@@ -82,6 +82,10 @@ class PertanianController extends Controller
     public function show($id)
     {
         $data = [
+            'title' => 'Detail Data Pengguna Pertanian',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumbg_1' => 'Data Pengguna Pertanian',
+            'breadcrumb_active' => 'Detail Data Pengguna Pertanian',
             'user'  => $this->pertanian->findOrFail($id),
         ];
         return view('operator.pages.user.pertanian.show', $data);
