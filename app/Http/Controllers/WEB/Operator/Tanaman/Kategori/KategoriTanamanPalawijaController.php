@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\WEB\Operator\Master;
+namespace App\Http\Controllers\WEB\Operator\Tanaman\Kategori;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Operator\Tanaman\KategoriTanaman\CreateRequest;
@@ -26,7 +26,7 @@ class KategoriTanamanPalawijaController extends Controller
             'title' => 'Kategori Tanaman Palawija',
         ];
         $tanaman = $this->kategori::all();
-        return view('operator.pages.master.kategori_tanaman_palawija.index', compact('tanaman'), $data);
+        return view('operator.pages.tanaman.kategori.tanaman_palawija.index', compact('tanaman'), $data);
     }
 
     public function store(CreateRequest $request)
