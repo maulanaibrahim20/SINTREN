@@ -10,16 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 class LaporanPalawija extends Model
 {
     use HasFactory;
-
-    // protected $table = 'laporan_palawijas';
-
-    // protected $fillable = [
-    //     'jenis_lahan',
-    //     'desa_id',
-    //     'kecamatan_id',
-    //     'nama_pengumpul',
-    // ];
-
     protected $guarded = [''];
 
     public function detailLaporanPalawija()

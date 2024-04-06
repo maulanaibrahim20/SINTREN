@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama_pengumpul', 25);
             $table->string('desa_id', 30);
             $table->string('kecamatan_id', 30);
+            $table->enum('status', ['belum_terkirim', 'terkirim'])->default('belum_terkirim');
             $table->timestamps();
         });
     }

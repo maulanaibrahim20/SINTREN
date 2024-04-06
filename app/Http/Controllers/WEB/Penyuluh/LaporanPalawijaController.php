@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
-use App\Models\Operator\Palawija;
+use App\Models\Operator\TanamanPalawija;
 use App\Models\Penyuluh\DetailLaporanPalawija;
 use App\Models\Penyuluh\JenisPalawija;
 use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Wilayah\Desa;
-use App\Models\Wilayah\Kecamatan;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +25,7 @@ class LaporanPalawijaController extends Controller
         LaporanPalawija $laporanPalawija,
         DetailLaporanPalawija $detailPalawija,
         Desa $desa,
-        Palawija $tanamanPalawija,
+        TanamanPalawija $tanamanPalawija,
         JenisPalawija $jenisPalawija,
     ) {
         $this->laporanPalawija = $laporanPalawija;
@@ -34,6 +33,20 @@ class LaporanPalawijaController extends Controller
         $this->desa = $desa;
         $this->tanamanPalawija = $tanamanPalawija;
         $this->jenisPalawija = $jenisPalawija;
+    }
+
+    public function kirimkan(Request $request)
+    {
+        try {
+            $this->laporanPalawija::where('id', $request->id)->update([
+                'status' => 'terkirim',
+            ]);
+            Alert::success('success', 'Success Data Berhasil Dikirimkan!');
+            return back()->with('success', 'Data Berhasil DiKirimkan!');
+        } catch (\Exception $e) {
+            Alert::error('error', 'Error' . $e->getMessage());
+            return back()->with('error' . $e->getMessage());
+        }
     }
     /**
      * Display a listing of the resource.
@@ -105,7 +118,12 @@ class LaporanPalawijaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $laporanPalawija = $this->laporanPalawija::findOrFail($id);
+        $data = [
+            'laporanPalawija' => $laporanPalawija,
+            'detailPalawija' => $this->detailPalawija::where('id_laporan_palawija', $id)->get(),
+        ];
+        return view('penyuluh.pages.laporan_palawija.show', $data);
     }
 
     /**

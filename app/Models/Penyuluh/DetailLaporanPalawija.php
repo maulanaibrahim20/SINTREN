@@ -32,4 +32,9 @@ class DetailLaporanPalawija extends Model
     {
         return $this->belongsTo(LaporanPalawija::class, 'id_laporan_palawija');
     }
+
+    public function jenisPalawija()
+    {
+        return $this->belongsTo(JenisPalawija::class, 'id_jenis_palawija');
+    }
 }

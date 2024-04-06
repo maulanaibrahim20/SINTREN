@@ -129,7 +129,7 @@
                             <div class="form-group" id="tanaman_akhir_bulan_laporan_input">
                                 <label for="exampleFormControlInput2">Tanaman akhir bulan laporan</label>
                                 <input type="text" class="form-control" id="tanaman_akhir_bulan_laporan"
-                                    name="tanaman_akhir_bulan_laporan">
+                                    name="tanaman_akhir_bulan_laporan" readonly>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -188,6 +188,53 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+            var panen_muda = 0;
+            var panen_pakan_ternak = 0;
+            var tanaman_akhir_bulan_lalu = 0;
+            var panen = 0;
+            var tanam = 0;
+            var puso_rusak = 0;
+            var tanaman_akhir_bulan_laporan = 0;
+
+            $("#panen_muda").change(function() {
+                panen_muda = parseInt($(this).val());
+                console.log("panen muda : " + panen_muda);
+                hitungTanamanAkhirBulanIni();
+            });
+            $("#panen_pakan_ternak").change(function() {
+                panen_pakan_ternak = parseInt($(this).val());
+                console.log("pakan ternak: " + panen_pakan_ternak);
+                hitungTanamanAkhirBulanIni();
+            });
+            $("#tanaman_akhir_bulan_lalu").change(function() {
+                tanaman_akhir_bulan_lalu = parseInt($(this).val());
+                console.log('tanaman akhir bula lalu:' + tanaman_akhir_bulan_lalu);
+                hitungTanamanAkhirBulanIni();
+            });
+            $("#panen").change(function() {
+                panen = parseInt($(this).val());
+                console.log('panen' + panen);
+                hitungTanamanAkhirBulanIni();
+            });
+            $("#tanam").change(function() {
+                tanam = parseInt($(this).val());
+                console.log('tanam' + tanam);
+                hitungTanamanAkhirBulanIni();
+            });
+            $("#puso_rusak").change(function() {
+                puso_rusak = parseInt($(this).val());
+                console.log('puso/rusak:' + puso_rusak);
+                hitungTanamanAkhirBulanIni();
+            });
+
+            function hitungTanamanAkhirBulanIni() {
+                tanaman_akhir_bulan_laporan = tanaman_akhir_bulan_lalu - panen - panen_muda - panen_pakan_ternak +
+                    tanam -
+                    puso_rusak;
+                $("#tanaman_akhir_bulan_laporan").val(tanaman_akhir_bulan_laporan);
+                console.log("tanaman akhir bulan ini: " + tanaman_akhir_bulan_laporan);
+            }
 
             $('#exampleModalToggle').on('show.bs.modal', function(event) {
                 var selectedDesa = $('#desa option:selected').val();

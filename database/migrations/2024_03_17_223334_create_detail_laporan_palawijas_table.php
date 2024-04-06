@@ -19,7 +19,7 @@ return new class extends Migration
             $table->double('tanaman_akhir_bulan_lalu')->default(0);
             $table->double('panen')->default(0);
             $table->double('panen_muda')->default(0);
-            $table->double('panen_pakan_ternak')->default(0);
+            $table->double('panen_pakan_ternak')->default(0)->nullable();
             $table->double('tanam')->default(0);
             $table->double('puso_rusak')->default(0);
             $table->double('tanaman_akhir_bulan_laporan')->default(0);

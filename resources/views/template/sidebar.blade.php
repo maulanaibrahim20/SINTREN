@@ -208,6 +208,40 @@
                 @can('pertanian')
                 @endcan
                 @can('uptd')
+                    <li class="sub-category">
+                        <h3>Laporan</h3>
+                    </li>
+                    <li
+                        class="slide {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' ? 'active open' : '' }}"
+                            data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fa fa-files-o"></i>
+                            <span class="side-menu__label">Laporan</span><i class="angle fe fe-chevron-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side29">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">Laporan</a></li>
+                                                <li><a href="{{ url('/uptd/laporan/padi') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'padi' ? 'active' : '' }}">
+                                                        Laporan Padi
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('/uptd/laporan/palawija') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}">
+                                                        Laporan Palawija
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
                 @endcan
                 @can('penyuluh')
                     <li class="sub-category">
