@@ -2,7 +2,7 @@
 
 namespace App\Models\Penyuluh;
 
-use App\Models\Operator\Padi;
+use App\Models\Operator\TanamanPadi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,6 +36,6 @@ class DetailLaporanPadi extends Model
 
     public function padi()
     {
-        return $this->belongsTo(Padi::class, 'jenis_padi');
+        return $this->belongsTo(TanamanPadi::class, 'jenis_padi');
     }
 }

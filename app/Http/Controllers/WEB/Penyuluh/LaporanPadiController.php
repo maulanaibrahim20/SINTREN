@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Penyuluh\LaporanPadiRequest;
-use App\Models\Operator\Padi;
+use App\Models\Operator\TanamanPadi;
 use App\Models\Penyuluh\DetailLaporanPadi;
 use App\Models\Penyuluh\DetailLaporanPengairan;
 use App\Models\Penyuluh\LaporanPadi;
-use App\Models\Penyuluh\Master\JenisPadi;
 use App\Models\Penyuluh\Pengairan;
 use App\Models\Wilayah\Kecamatan;
 use App\Models\Wilayah\Desa;
@@ -30,7 +28,7 @@ class LaporanPadiController extends Controller
 
 
     public function __construct(
-        Padi $jenis_padi,
+        TanamanPadi $jenis_padi,
         Desa $desa,
         Kecamatan $kecamatan,
         Pengairan $pengairan,
@@ -118,7 +116,6 @@ class LaporanPadiController extends Controller
             'detail_padi' => $this->detailpadi::where('id_laporan_padi', $id)->get(),
             'detail_pengairan' => $this->detailpengairan::where('id_laporan_padi', $id)->get(),
         ];
-
         return view('penyuluh.pages.laporan_padi.show', $data);
     }
 

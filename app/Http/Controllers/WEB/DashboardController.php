@@ -8,6 +8,7 @@ use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
