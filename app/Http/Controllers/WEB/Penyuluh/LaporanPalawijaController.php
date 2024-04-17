@@ -91,14 +91,14 @@ class LaporanPalawijaController extends Controller
             $this->detailPalawija->create([
                 'id_laporan_palawija' => $palawija->id,
                 'id_jenis_palawija' => $request->jenis_palawija,
-                'jenis_bantuan' => $request->jenis_bantuan,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu,
-                'panen' => $request->panen,
-                'panen_muda' => $request->panen_muda,
-                'panen_pakan_ternak' => $request->panen_pakan_ternak,
-                'tanam' => $request->tanam,
-                'puso_rusak' => $request->puso_rusak,
-                'tanaman_akhir_bulan_laporan' => $request->tanaman_akhir_bulan_laporan,
+                'jenis_bantuan' => $request->jenis_bantuan ?? 0,
+                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu ?? 0,
+                'panen' => $request->panen ?? 0,
+                'panen_muda' => $request->panen_muda ?? 0,
+                'panen_pakan_ternak' => $request->panen_pakan_ternak ?? 0,
+                'tanam' => $request->tanam ?? 0,
+                'puso_rusak' => $request->puso_rusak ?? 0,
+                'tanaman_akhir_bulan_laporan' => $request->tanaman_akhir_bulan_laporan ?? 0,
                 'total_produksi' => 0,
             ]);
             DB::commit();

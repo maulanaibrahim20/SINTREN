@@ -134,7 +134,7 @@
                                                             class="sub-angle fe fe-chevron-right"></i></a>
                                                     <ul class="sub-slide-menu">
                                                         <li><a class="sub-slide-item {{ Request::segment(3) == 'pengairan' ? 'active' : '' }}"
-                                                                href="{{ url('/operator/tanaman/padi') }}">Pengairan</a>
+                                                                href="{{ url('/operator/master/pengairan') }}">Pengairan</a>
                                                         </li>
                                                     </ul>
                                                 </li>

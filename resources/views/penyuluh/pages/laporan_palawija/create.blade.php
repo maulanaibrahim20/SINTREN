@@ -48,8 +48,8 @@
                 </div>
                 <div class="card-footer">
                     <div class="col-md-12 mt-3">
-                        <button type="button" class="btn ripple btn-primary" data-bs-target="#exampleModalToggle"
-                            data-bs-toggle="modal">Tambah Data Laporan</button>
+                        <button type="button" class="btn ripple btn-primary" id="tambahDataLaporanBtn">Tambah Data
+                            Laporan</button>
                     </div>
                 </div>
             </div>
@@ -188,6 +188,21 @@
 @section('script')
     <script>
         $(document).ready(function() {
+
+            $('#tambahDataLaporanBtn').click(function() {
+                var desa = $('#desa').val();
+                var jenisLahan = $('#jenis_lahan').val();
+
+                if (!desa || !jenisLahan) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: 'Silakan pilih Desa dan Jenis Lahan terlebih dahulu.',
+                    });
+                } else {
+                    $('#exampleModalToggle').modal('show');
+                }
+            });
 
             var panen_muda = 0;
             var panen_pakan_ternak = 0;

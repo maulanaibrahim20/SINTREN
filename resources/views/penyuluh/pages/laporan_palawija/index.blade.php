@@ -131,7 +131,7 @@
                                                 <td class="text-right">Jenis Bantuan</td>
                                                 <td>:</td>
                                                 <td>
-                                                    {{ $item->laporanPalawija->jenis_bantuan }}
+                                                    {{ $item->jenis_bantuan }}
                                                 </td>
                                             </tr>
                                             <tr>
