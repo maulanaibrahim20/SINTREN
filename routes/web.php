@@ -104,4 +104,11 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'penyuluh']);
         });
     });
+
+    // yuan diana
+    Route::group(['middleware' => ['can:dinas_pangan']], function () {
+        Route::prefix('dinas_pangan')->group(function () {
+            Route::get('/dashboard', [DashboardController::class, 'dinas_pangan']);
+        });
+    });
 });

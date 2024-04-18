@@ -13,7 +13,15 @@ use Illuminate\Support\Facades\DB;
 
 class PadiController extends Controller
 {
-    public function getPengairan(){
+
+    protected $pengairan;
+
+    public function __construct(Pengairan $pengairan)
+    {
+        $this->pengairan = $pengairan;
+    }
+    public function getPengairan()
+    {
         $pengairan = Pengairan::all();
         $responseData = [
             'status' => 'success',
@@ -35,7 +43,8 @@ class PadiController extends Controller
         return response()->json($responseData);
     }
 
-    public function showDetailPadiByIdLaporanPadi(Request $request){
+    public function showDetailPadiByIdLaporanPadi(Request $request)
+    {
         $detail = DetailLaporanPadi::where('id_laporan_padi', $request->id)->get();
 
         $responseData = [
@@ -46,7 +55,8 @@ class PadiController extends Controller
         return response()->json($responseData);
     }
 
-    public function showDetailPengairanByIdLaporanPadi(Request $request){
+    public function showDetailPengairanByIdLaporanPadi(Request $request)
+    {
         $detail = DetailLaporanPengairan::where('id_laporan_padi', $request->id)->get();
 
         $responseData = [
@@ -81,7 +91,7 @@ class PadiController extends Controller
         } catch (QueryException $e) {
             $responseData = [
                 'status' => 'error',
-                'message' => 'Failed to store data. Database error : '.$e,
+                'message' => 'Failed to store data. Database error : ' . $e,
                 'data' => null
             ];
             return response()->json($responseData, 500);
@@ -95,7 +105,8 @@ class PadiController extends Controller
         }
     }
 
-    public function deletePadiById(Request $request){
+    public function deletePadiById(Request $request)
+    {
         try {
             $laporanPadi = LaporanPadi::findOrFail($request->id);
             $laporanPadi->delete();
@@ -115,7 +126,8 @@ class PadiController extends Controller
         }
     }
 
-    public function deleteDetailPadiById(Request $request){
+    public function deleteDetailPadiById(Request $request)
+    {
         try {
             $detailPadi = DetailLaporanPadi::findOrFail($request->id);
             $detailPadi->delete();
@@ -135,7 +147,8 @@ class PadiController extends Controller
         }
     }
 
-    public function deleteDetailPengairanById(Request $request){
+    public function deleteDetailPengairanById(Request $request)
+    {
         try {
             $detailPadi = DetailLaporanPengairan::findOrFail($request->id);
             $detailPadi->delete();

@@ -49,5 +49,9 @@ class UserSeeder extends Seeder
             'no_telp' => '081272121',
             'kecamatan_id' =>  '3212170'
         ]);
+        User::factory()->create([
+            'username' => 'dinas_pangan',
+            'role_id' => Role::DINAS_PANGAN,
+        ]);
     }
 }

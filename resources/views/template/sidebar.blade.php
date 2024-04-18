@@ -47,6 +47,12 @@
                                 href="{{ url('/penyuluh/dashboard') }}"><i class="side-menu__icon fa fa-home"></i><span
                                     class="side-menu__label">Dashboard</span></a>
                         </li>
+                    @elseif(Auth::user()->role_id == 5)
+                        <li>
+                            <a class="side-menu__item {{ Request::segment(2) == 'dashboard' ? 'active' : '' }}"
+                                href="{{ url('/dinas_pangan/dashboard') }}"><i class="side-menu__icon fa fa-home"></i><span
+                                    class="side-menu__label">Dashboard</span></a>
+                        </li>
                     @endif
                 @endauth
                 @can('operator')
@@ -277,6 +283,10 @@
                             </li>
                         </ul>
                     </li>
+                @endcan
+
+                {{-- yuan diana --}}
+                @can('dinas_pangan')
                 @endcan
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"

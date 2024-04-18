@@ -66,4 +66,9 @@ class DashboardController extends Controller
     {
         return view('penyuluh.pages.dashboard.index');
     }
+
+    public function dinas_pangan()
+    {
+        return view('pangan.views.dashboard.index');
+    }
 }
