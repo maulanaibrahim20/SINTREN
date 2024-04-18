@@ -12,7 +12,7 @@ class LaporanPalawija extends Model
     use HasFactory;
     protected $guarded = [''];
 
-    public function detailLaporanPalawija()
+    public function details()
     {
         return $this->belongsTo(DetailLaporanPalawija::class, 'id_laporan_palawija');
     }

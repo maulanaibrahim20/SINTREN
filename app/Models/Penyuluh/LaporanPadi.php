@@ -25,4 +25,14 @@ class LaporanPadi extends Model
     {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
+
+    public function details()
+    {
+        return $this->hasMany(DetailLaporanPadi::class, 'id_laporan_padi');
+    }
+
+    public function pengairan()
+    {
+        return $this->hasMany(DetailLaporanPengairan::class, 'id_laporan_padi');
+    }
 }
