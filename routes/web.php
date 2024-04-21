@@ -3,6 +3,7 @@
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
+use App\Http\Controllers\WEB\Operator\Master\LuasLahanWilayahController;
 use App\Http\Controllers\WEB\Operator\Master\RoleController;
 use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPadiController;
 use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPalawijaController;
@@ -67,6 +68,7 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::prefix('master')->group(function () {
                 Route::get('wilayah', [WilayahController::class, 'index']);
                 Route::get('wilayah/view/{id}', [WilayahController::class, 'view_desa']);
+                Route::resource('luas_lahan_wilayah', LuasLahanWilayahController::class);
                 Route::resource('role', RoleController::class);
                 Route::resource('pengairan', PengairanController::class);
             });

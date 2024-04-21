@@ -152,6 +152,15 @@
                         </ul>
                     </li>
                     <li class="sub-category">
+                        <h3>Master Luas Lahan Wilayah</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'luas_lahan_wilayah' ? 'active' : '' }}"
+                            href="{{ url('/operator/master/luas_lahan_wilayah') }}"><i
+                                class="side-menu__icon fa fa-map"></i><span class="side-menu__label">Luas Lahan
+                                Wilayah</span></a>
+                    </li>
+                    <li class="sub-category">
                         <h3>Master</h3>
                     </li>
                     <li
