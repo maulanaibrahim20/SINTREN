@@ -16,6 +16,7 @@ use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
+use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,9 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
             });
+            Route::prefix('master')->group(function () {
+                Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);
+            });
             Route::get('/dashboard', [DashboardController::class, 'uptd']);
         });
     });
@@ -101,7 +105,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::post('/laporan_palawija/kirim', [LaporanPalawijaController::class, 'kirimkan']);
             });
             // Route::prefix('master')->group(function () {
-            //     Route::resource('jenis_padi', JenisPadiController::class);
+            //     Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);
             // });
             Route::get('/dashboard', [DashboardController::class, 'penyuluh']);
         });

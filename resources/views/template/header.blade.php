@@ -264,6 +264,10 @@
                                                 <span class="text-muted fs-12">
                                                     {{ Auth::user()->penyuluh->kecamatan->name }}
                                                 </span>
+                                            @elseif (Auth::user()->role_id == '3')
+                                                <span class="text-muted fs-12">
+                                                    {{ Auth::user()->uptd->kecamatan->name }}
+                                                </span>
                                             @endif
                                         </div>
                                     </div>

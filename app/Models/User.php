@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Penyuluh\Penyuluh;
+use App\Models\Uptd\Uptd;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -61,5 +62,10 @@ class User extends Authenticatable
     public function penyuluh()
     {
         return $this->hasOne(Penyuluh::class);
+    }
+
+    public function uptd()
+    {
+        return $this->hasOne(Uptd::class);
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PadiController extends Controller
@@ -71,13 +72,20 @@ class PadiController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                $padi = LaporanPadi::create($request->only(['desa_id', 'kecamatan_id', 'nama_pengumpul', 'jabatan', 'jenis_lahan', 'id_rehab_jaringan_irigasi_tersier']));
+                $padi = LaporanPadi::create([
+                    'desa_id' => $request->desa_id,
+                    'kecamatan_id' => "123",
+                    'nama_pengumpul' => "sama",
+                    'jabatan' => 'penyuluh',
+                    'jenis_lahan' => $request->jenis_lahan,
+                    // 'id_rehab_jaringan_irigasi_tersier' => $irigasitersier->id,
+                ]);
 
-                foreach ($request->details as $detailData) {
+                foreach ($request->detailPadi as $detailData) {
                     $padi->details()->create($detailData);
                 }
 
-                foreach ($request->pengairan as $pengairan) {
+                foreach ($request->detailPengairan as $pengairan) {
                     $padi->pengairan()->create($pengairan);
                 }
             });
@@ -98,7 +106,7 @@ class PadiController extends Controller
         } catch (\Exception $e) {
             $responseData = [
                 'status' => 'error',
-                'message' => 'Failed to store data.',
+                'message' => 'Failed to store data.' . $e->getMessage(),
                 'data' => null
             ];
             return response()->json($responseData, 500);

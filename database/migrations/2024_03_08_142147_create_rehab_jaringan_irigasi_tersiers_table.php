@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('uptds', function (Blueprint $table) {
+        Schema::create('rehab_jaringan_irigasi_tersiers', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->integer('kecamatan_id');
-            $table->string('alamat');
-            $table->string('no_telp');
+            $table->unsignedBigInteger('panen');
+            $table->unsignedBigInteger('tanam');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('uptds');
+        Schema::dropIfExists('rehab_jaringan_irigasi_tersiers');
     }
 };

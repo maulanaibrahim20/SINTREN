@@ -37,7 +37,8 @@ class UserSeeder extends Seeder
         Uptd::create([
             'alamat' => 'indramayu',
             'user_id' => $uptd->id,
-            'no_telp' => '085123123'
+            'no_telp' => '085123123',
+            'kecamatan_id' => '3212170',
         ]);
         $penyuluh = User::factory()->create([
             'username' => 'penyuluh',

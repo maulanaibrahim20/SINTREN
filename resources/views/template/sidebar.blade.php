@@ -2,14 +2,24 @@
     <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
     <div class="app-sidebar">
         <div class="side-header">
-            <a class="header-brand1" href="index.html">
-                <img src="{{ url('/assets') }}/images/brand/logo.png" class="header-brand-img main-logo" alt="Sparic logo">
-                <img src="{{ url('/assets') }}/images/brand/logo-light.png" class="header-brand-img darklogo"
-                    alt="Sparic logo">
-                <img src="{{ url('/assets') }}/images/brand/icon.png" class="header-brand-img icon-logo"
-                    alt="Sparic logo">
-                <img src="{{ url('/assets') }}/images/brand/icon2.png" class="header-brand-img icon-logo2"
-                    alt="Sparic logo">
+            @auth
+                @if (Auth::user()->role_id == 1)
+                    <a class="header-brand1" href="{{ url('/operator/dashboard') }}">
+                    @elseif (Auth::user()->role_id == 2)
+                        <a class="header-brand1" href="{{ url('/pertanian/dashboard') }}">
+                        @elseif(Auth::user()->role_id == 3)
+                            <a class="header-brand1" href="{{ url('/uptd/dashboard') }}">
+                            @elseif (Auth::user()->role_id == 4)
+                                <a class="header-brand1" href="{{ url('/penyuluh/dashboard') }}">
+                @endif
+            @endauth
+
+            <img src="{{ url('/assets') }}/images/brand/logo.png" class="header-brand-img main-logo" alt="Sparic logo">
+            <img src="{{ url('/assets') }}/images/brand/logo-light.png" class="header-brand-img darklogo"
+                alt="Sparic logo">
+            <img src="{{ url('/assets') }}/images/brand/icon.png" class="header-brand-img icon-logo" alt="Sparic logo">
+            <img src="{{ url('/assets') }}/images/brand/icon2.png" class="header-brand-img icon-logo2"
+                alt="Sparic logo">
             </a>
         </div>
         <!-- logo-->
@@ -256,6 +266,33 @@
                                 </div>
                             </li>
                         </ul>
+                    </li>
+                    <li class="sub-category">
+                        <h3>Master Luas Lahan Wilayah</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'luas_lahan_wilayah' ? 'active' : '' }}"
+                            href="{{ url('/uptd/master/luas_lahan_wilayah') }}"><i
+                                class="side-menu__icon fa fa-map"></i><span class="side-menu__label">Luas Lahan
+                                Wilayah</span></a>
+                    </li>
+                    <li class="sub-category">
+                        <h3>Pengaturan</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
+                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
+                                class="side-menu__label">Profil Saya</span></a>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
+                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
+                                class="side-menu__label">Change Password</span></a>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
+                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
+                                class="side-menu__label">Logout</span></a>
                     </li>
                 @endcan
                 @can('penyuluh')

@@ -8,6 +8,7 @@ use App\Models\Penyuluh\DetailLaporanPadi;
 use App\Models\Penyuluh\DetailLaporanPengairan;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
+use App\Models\Penyuluh\RehabJaringanIrigasiTersier;
 use App\Models\Wilayah\Kecamatan;
 use App\Models\Wilayah\Desa;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class LaporanPadiController extends Controller
     protected $detailpadi;
     protected $laporanpadi;
     protected $detailpengairan;
+    protected $irigasitersier;
 
 
     public function __construct(
@@ -34,7 +36,8 @@ class LaporanPadiController extends Controller
         Pengairan $pengairan,
         DetailLaporanPadi $detailpadi,
         LaporanPadi $laporanpadi,
-        DetailLaporanPengairan $detailpengairan
+        DetailLaporanPengairan $detailpengairan,
+        RehabJaringanIrigasiTersier $irigasitersier,
     ) {
         $this->jenis_padi = $jenis_padi;
         $this->kecamatan = $kecamatan;
@@ -43,11 +46,12 @@ class LaporanPadiController extends Controller
         $this->detailpadi = $detailpadi;
         $this->laporanpadi = $laporanpadi;
         $this->detailpengairan = $detailpengairan;
+        $this->irigasitersier = $irigasitersier;
     }
     public function index()
     {
         $data = [
-            'padi' => $this->laporanpadi::orderBy('created_at', 'asc')->get(),
+            'padi' => $this->laporanpadi::where('kecamatan_id', Auth::user()->penyuluh->kecamatan->id)->orderBy('created_at', 'asc')->get(),
         ];
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
@@ -65,38 +69,46 @@ class LaporanPadiController extends Controller
 
     public function store(Request $request)
     {
+        $data_padi = json_decode($request->data_padi, true);
         try {
-            DB::beginTransaction();
+            $irigasitersier = $this->irigasitersier->create([
+                'panen' => $data_padi['detailPadi'][0]['tanam_akhir_bulan_lalu'] ?? 0,
+                'tanam' => $data_padi['detailPadi'][0]['panen'] ?? 0,
+            ]);
+
             $laporanPadiId = $this->laporanpadi->create([
-                'desa_id' => $request->desa,
+                'desa_id' => $data_padi['desa_id'],
                 'kecamatan_id' => Auth::user()->penyuluh->kecamatan->id,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu,
+                'tanaman_akhir_bulan_lalu' => $data_padi['detailPadi'][0]['tanam_akhir_bulan_lalu'],
                 'nama_pengumpul' => Auth::user()->name,
                 'jabatan' => 'penyuluh',
-                'jenis_lahan' => $request->jenis_lahan,
-                'id_rehab_jaringan_irigasi_tersier' => 0,
+                'jenis_lahan' => $data_padi['jenis_lahan'],
+                'id_rehab_jaringan_irigasi_tersier' => $irigasitersier->id,
             ]);
 
-            $this->detailpadi->create([
-                'id_laporan_padi' => $laporanPadiId->id,
-                'jenis_padi' => $request->jenis_padi,
-                'jenis_bantuan' => $request->jenis_bantuan,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu,
-                'panen' => $request->panen,
-                'tanam' => $request->tanam,
-                'puso_rusak' => $request->rusak,
-                'tanaman_akhir_bulan_laporan' => $request->tanam_akhir_bulan_laporan,
-            ]);
-
-            $this->detailpengairan->create([
-                'id_laporan_padi' => $laporanPadiId->id,
-                'jenis_pengairan' => $request->pengairan,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu_pengairan,
-                'panen' => $request->panen_pengairan,
-                'tanam' => $request->tanam_pengairan,
-                'puso_rusak' => $request->rusak_pengairan,
-                'tanaman_akhir_bulan_laporan' => $request->tanam_akhir_bulan_laporan_pengairan,
-            ]);
+            foreach ($data_padi['detailPadi'] as $padi) {
+                $this->detailpadi->create([
+                    'id_laporan_padi' => $laporanPadiId->id,
+                    'jenis_padi' => $padi['jenis_padi'],
+                    'jenis_bantuan' => $padi['jenis_bantuan'],
+                    'tanaman_akhir_bulan_lalu' => $padi['tanam_akhir_bulan_lalu'],
+                    'panen' => $padi['panen'],
+                    'tanam' => $padi['tanam'],
+                    'puso_rusak' => $padi['puso_rusak'],
+                    'tanaman_akhir_bulan_laporan' => $padi['tanam_akhir_bulan_laporan'],
+                ]);
+            }
+            foreach ($data_padi['detailPengairan'] as $pengairan) {
+                $this->detailpengairan->create([
+                    'id_laporan_padi' => $laporanPadiId->id,
+                    'jenis_pengairan' => $pengairan['jenis_pengairan'],
+                    'tanaman_akhir_bulan_lalu' => $pengairan['tanaman_akhir_bulan_lalu'],
+                    'panen' => $pengairan['panen'],
+                    'tanam' => $pengairan['tanam'],
+                    'puso_rusak' => $pengairan['puso_rusak'],
+                    'tanaman_akhir_bulan_laporan' => $pengairan['tanaman_akhir_bulan_laporan'],
+                ]);
+            }
 
             DB::commit();
             Alert::success('success', 'Data Laporan Padi Berhasil Dibuat!');
