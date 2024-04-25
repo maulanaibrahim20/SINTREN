@@ -53,5 +53,9 @@ class UserSeeder extends Seeder
             'username' => 'dinas_pangan',
             'role_id' => Role::DINAS_PANGAN,
         ]);
+        User::factory()->create([
+            'username' => 'user_pasar',
+            'role_id' => Role::PASAR,
+        ]);
     }
 }

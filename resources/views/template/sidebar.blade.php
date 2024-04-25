@@ -287,6 +287,33 @@
 
                 {{-- yuan diana --}}
                 @can('dinas_pangan')
+                <li class="sub-category">
+                    <h3>Data Pengguna</h3>
+                </li>
+                <li
+                    class="slide {{ Request::segment(3) == 'pasar' ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ Request::segment(3) == 'pasar' ? 'active open' : '' }}"
+                        data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="side-menu__icon ti ti-user"></i>
+                        <span class="side-menu__label">Data Pengguna</span><i class="angle fe fe-chevron-right"></i></a>
+                    <ul class="slide-menu">
+                        <li class="panel sidetab-menu">
+                            <div class="panel-body tabs-menu-body p-0 border-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="side29">
+                                        <ul class="sidemenu-list">
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">Data Pengguna</a>
+                                            </li>
+                                            <li><a href="{{ url('/dinas_pangan/user/pasar') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'pasar' ? 'active' : '' }}">Pengguna Pasar</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
                 @endcan
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"

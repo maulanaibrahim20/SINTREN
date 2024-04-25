@@ -13,6 +13,7 @@ class Role extends Model
     const UPTD = 3;
     const PENYULUH = 4;
     const DINAS_PANGAN = 5;
+    const PASAR = 6;
 
 
     protected $fillable = ['name'];
