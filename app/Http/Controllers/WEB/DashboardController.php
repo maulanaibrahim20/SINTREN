@@ -25,9 +25,7 @@ class DashboardController extends Controller
     public function operator()
     {
         $user = User::count();
-        $verifiedUsersCount = User::whereNotNull('email_verified_at')->count();
-        $unverifiedUsersCount = $user - $verifiedUsersCount;
-        return view('operator.pages.dashboard.index', compact('user', 'verifiedUsersCount', 'unverifiedUsersCount'));
+        return view('operator.pages.dashboard.index', compact('user'));
     }
 
     public function pertanian()

@@ -66,7 +66,7 @@
                                 <div>
                                     <p class="mb-0 fw-semibold text-dark lh-1">Task</p>
                                     <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1">{{ $unverifiedUsersCount }}
+                                    <div class="fs-30 fw-semibold mb-0 lh-1">1
                                     </div>
                                 </div>
                                 <div class="text-end d-flex flex-column align-items-center">
@@ -92,8 +92,7 @@
                                 <div>
                                     <p class="mb-0 fw-semibold text-dark lh-1">Earnings</p>
                                     <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1">{{ $verifiedUsersCount }} <i
-                                            class=""></i>
+                                    <div class="fs-30 fw-semibold mb-0 lh-1"> <i class=""></i>
                                     </div>
                                 </div>
                                 <div class="text-end d-flex flex-column align-items-center">

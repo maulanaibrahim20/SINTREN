@@ -36,14 +36,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($luas_wilayah as $data)
+                                @forelse ($luas_wilayah as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->getKecamatan->name }}</td>
                                         <td>{{ $data->jenis_lahan }}</td>
                                         <td>{{ number_format($data->luas_lahan_wilayah, 0, ',', '.') }} ha</td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">
+                                            <p>Data belum tersedia untuk akun Anda.</p>
+                                        </td>
+                                    </tr>
+                                @endforelse
                                 <tr>
                                     <td colspan="3" style="text-align: right;"><strong>Lahan Yang Sudah Disuluh:</strong>
                                     </td>
@@ -80,6 +86,7 @@
                         </table>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('rehab_jaringan_irigasi_tersiers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('panen');
-            $table->unsignedBigInteger('tanam');
+            $table->bigInteger('panen');
+            $table->bigInteger('tanam');
             $table->timestamps();
         });
     }

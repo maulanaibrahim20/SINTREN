@@ -510,7 +510,6 @@
             });
 
             // $('#kirim').click(function() {
-
             //     // var id = $('#id').val();
             //     var desa = $("#desa").val();
             //     var jenis_lahan = $("#jenis_lahan").val();
@@ -541,7 +540,6 @@
             //             console.error(error);
             //         }
             //     });
-
             // });
         });
         document.getElementById("kirim").addEventListener("click", function() {

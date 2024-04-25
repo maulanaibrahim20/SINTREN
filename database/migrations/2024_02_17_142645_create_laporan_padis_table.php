@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('nama_pengumpul', '25');
             $table->string('jabatan', '25');
             $table->string('jenis_lahan', '25');
-            $table->bigInteger('id_rehab_jaringan_irigasi_tersier')->default('0');
+            $table->integer('id_rehab_jaringan_irigasi_tersier')->default('0');
             $table->timestamps();
         });
     }

@@ -36,10 +36,6 @@ class LoginController extends Controller
             Alert::error('Maaf Pasword Anda Salah!');
             return redirect(route('login.index'))->with('error', 'Password Anda Salah');
         }
-        if (!$user->email_verified_at) {
-            Alert::warning('Maaf Akun Anda Belum Terverifikasi');
-            return back()->with('error', 'Maaf Akun Anda Belum Terverifikasi');
-        }
         if (Auth::attempt(["username" => $request->username, "password" => $request->password])) {
             $request->session()->regenerate();
 

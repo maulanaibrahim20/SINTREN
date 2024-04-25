@@ -44,23 +44,10 @@ class TanamanPalawijaController extends Controller
     {
         try {
             DB::beginTransaction();
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('image_palawija'), $imageName);
-
-            $data = $request->all();
-            $data['gambar'] = '/image_palawija/' . $imageName;
-
-            $this->palawija->create($data);
-
+            $this->palawija->create($request->all());
             DB::commit();
             Alert::success('success', 'Data Palawija Berhasil Dibuat!');
             return redirect('/operator/tanaman/palawija')->with('success', 'Data Palawija Berhasil Dibuat!');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors($e->errors());
         } catch (\Exception $th) {
             DB::rollback();
             Alert::error('Error', 'Data Palawija Gagal Dibuat!' . $th->getMessage());
@@ -82,41 +69,21 @@ class TanamanPalawijaController extends Controller
 
     public function edit($id)
     {
-        $kategori = $this->kategoritanaman::all();
-        $palawija = $this->palawija::find($id);
-        return view('operator.pages.tanaman.palawija.update', compact('palawija', 'kategori'));
+        $data = [
+            'kategori' => $this->kategoritanaman::all(),
+            'palawija' => $this->palawija::find($id),
+        ];
+
+        return view('operator.pages.tanaman.palawija.update', $data);
     }
 
     public function update(UpdateRequest $request, $id)
     {
         try {
             DB::beginTransaction();
-            $request->validate([
-                'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-
             $palawija = $this->palawija->find($id);
-            $dataToUpdate = [
-                'name' => $request->name,
-                'category' => $request->category,
-                'description' => $request->description,
-                'updated_at' => Carbon::now(),
-            ];
-
-            if ($request->hasFile('gambar')) {
-                if (File::exists(public_path($palawija->gambar))) {
-                    File::delete(public_path($palawija->gambar));
-                }
-
-                $imageName = time() . '.' . $request->gambar->extension();
-                $request->gambar->move(public_path('image_palawija'), $imageName);
-                $palawija->gambar = '/image_palawija/' . $imageName;
-            }
-
-            $palawija->update($dataToUpdate);
-
+            $palawija->update($request->all());
             DB::commit();
-
             Alert::success('success', 'Data Palawija Berhasil Diubah!');
             return redirect('/operator/tanaman/palawija')->with('success', 'Data Palawija Berhasil Diubah!');
         } catch (\Exception $th) {
@@ -130,19 +97,9 @@ class TanamanPalawijaController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $palawija = $this->palawija->find($id);
-
-            $imagePath = public_path('image_palawija/' . basename($palawija->gambar));
-
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
-
             $palawija->delete();
-
             DB::commit();
-
             Alert::success('success', 'Data Palawija Berhasil Dihapus!');
             return redirect('/operator/tanaman/palawija')->with('success', 'Data Palawija Berhasil Dihapus!');
         } catch (\Exception $th) {

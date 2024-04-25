@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('detail_laporan_pengairan', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_laporan_padi');
-            $table->string('jenis_pengairan');
-            $table->string('tanaman_akhir_bulan_lalu');
-            $table->string('panen');
-            $table->string('tanam');
-            $table->string('puso_rusak');
-            $table->string('tanaman_akhir_bulan_laporan');
+            $table->string('jenis_pengairan', 25);
+            $table->double('tanaman_akhir_bulan_lalu');
+            $table->double('panen');
+            $table->double('tanam');
+            $table->double('puso_rusak');
+            $table->double('tanaman_akhir_bulan_laporan');
             $table->foreign('id_laporan_padi')->references('id')->on('laporan_padis')->onDelete('cascade');
             $table->timestamps();
         });

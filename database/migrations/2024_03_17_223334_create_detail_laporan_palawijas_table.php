@@ -15,16 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_laporan_palawija');
             $table->unsignedBigInteger('id_jenis_palawija');
-            $table->string('jenis_bantuan')->nullable();
-            $table->double('tanaman_akhir_bulan_lalu')->default(0);
-            $table->double('panen')->default(0);
-            $table->double('panen_muda')->default(0);
+            $table->string('jenis_bantuan', 25)->nullable();
+            $table->double('tanaman_akhir_bulan_lalu')->default(0)->nullable();
+            $table->double('panen')->default(0)->nullable();
+            $table->double('panen_muda')->default(0)->nullable();
             $table->double('panen_pakan_ternak')->default(0)->nullable();
-            $table->double('tanam')->default(0);
-            $table->double('puso_rusak')->default(0);
-            $table->double('tanaman_akhir_bulan_laporan')->default(0);
+            $table->double('tanam')->default(0)->nullable();
+            $table->double('puso_rusak')->default(0)->nullable();
+            $table->double('tanaman_akhir_bulan_laporan')->default(0)->nullable();
             $table->string('total_produksi')->nullable();
-
             $table->foreign('id_laporan_palawija')->references('id')->on('laporan_palawijas')->onDelete('cascade');
 
             // $table->foreign('id_jenis_palawija')->references('id')->on('jenis_palawijas')->onDelete('restrict');

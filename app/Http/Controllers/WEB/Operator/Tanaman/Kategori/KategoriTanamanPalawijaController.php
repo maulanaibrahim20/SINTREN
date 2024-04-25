@@ -33,13 +33,7 @@ class KategoriTanamanPalawijaController extends Controller
     {
         try {
             DB::beginTransaction();
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('image_kategori_palawija'), $imageName);
-
-            $data = $request->all();
-            $data['image'] = '/image_kategori_palawija/' . $imageName;
-
-            $this->kategori->create($data);
+            $this->kategori->create($request->all());
             DB::commit();
             Alert::success('success', ' Data Kategori Palawija Berhasil Ditambahkan!');
             return back()->with('success', 'Data Kategori Palawija Berhasil Ditambahkan!');
@@ -54,22 +48,8 @@ class KategoriTanamanPalawijaController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $kategori = $this->kategori->find($id);
-
-            $data = $request->all();
-
-            if ($request->hasFile('image')) {
-                $oldImagePath = public_path($kategori->image);
-                if (File::exists($oldImagePath)) {
-                    File::delete($oldImagePath);
-                }
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('image_kategori_palawija'), $imageName);
-                $data['image'] = '/image_kategori_palawija/' . $imageName;
-            }
-            $kategori->update($data);
-
+            $kategori->update($request->all());
             DB::commit();
             Alert::success('success', 'Data Kategori Palawija Berhasil Diubah!');
             return back()->with('success', 'Data Kategori Palawija Berhasil Diubah!');

@@ -41,8 +41,6 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No.</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
-                                    <th class="wd-15p border-bottom-0">Kategori</th>
-                                    <th class="wd-15p border-bottom-0">Deskripsi</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -51,8 +49,6 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
-                                        <td>{{ $data->category }}</td>
-                                        <td>{{ $data->description }}</td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                                 data-bs-target="#modalCenter1{{ $data->id }}"><i
@@ -78,43 +74,7 @@
     </div>
 
     {{-- start modal tambah Jenis Padi --}}
-    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form action="{{ url('/operator/tanaman/padi') }}" enctype="multipart/form-data" method="post">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalCenterTitle">Tambah kategori tanaman padi</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">Nama</label>
-                            <input type="text" name="name" class="form-control"
-                                placeholder="Masukkan Nama Kategori" />
-                        </div>
-                        <div class="col mb-3">
-                            <label for="kategori" class="form-label">Kategori</label>
-                            <select name="kategori" class="form-control" id="kategori">
-                                <option value="">-- Pilih --</option>
-                                <option value="unggul">Unggul</option>
-                                <option value="lokal">Lokal</option>
-                            </select>
-                        </div>
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">Description</label>
-                            <input type="text" name="description" class="form-control"
-                                placeholder="Masukkan Nama Deskripsi" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('operator.pages.tanaman.padi.modal_tambah')
     @foreach ($padi as $item)
         <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -125,28 +85,13 @@
                         @method('PUT')
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalCenterTitle">Edit kategori tanaman palawija</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="col mb-3">
                                 <label for="nameBasic" class="form-label">Nama</label>
                                 <input type="text" value="{{ $item->name }}" name="name" class="form-control"
                                     placeholder="Masukkan Nama Kategori" />
-                            </div>
-                            <div class="col mb-3">
-                                <label for="kategori" class="form-label">Kategori</label>
-                                <select name="kategori" class="form-control" id="kategori">
-                                    <option value="">-- Pilih --</option>
-                                    <option value="unggul" {{ $item->category == 'unggul' ? 'selected' : '' }}>Unggul
-                                    </option>
-                                    <option value="lokal" {{ $item->category == 'lokal' ? 'selected' : '' }}>Lokal
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col mb-3">
-                                <label for="descriptionBasic" class="form-label">Deskripsi</label>
-                                <textarea name="description" class="form-control" placeholder="Masukkan Deskripsi">{{ $item->description }}</textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

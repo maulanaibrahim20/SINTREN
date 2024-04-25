@@ -44,8 +44,6 @@
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-20p border-bottom-0">kategori</th>
-                                    <th class="wd-15p border-bottom-0">Description</th>
-                                    <th class="wd-15p border-bottom-0">Gambar</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -55,8 +53,6 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->kategori->name }}</td>
-                                        <td>{{ $data->description }}</td>
-                                        <td><img src="{{ asset('' . $data->gambar) }}" style="width:60px;height:60"></td>
                                         <td class="text-center">
                                             <a href="{{ url('/operator/tanaman/palawija/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>

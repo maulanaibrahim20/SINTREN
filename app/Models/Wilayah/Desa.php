@@ -9,6 +9,9 @@ class Desa extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+    protected $keyType = 'string';
+
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'district_id', 'id');

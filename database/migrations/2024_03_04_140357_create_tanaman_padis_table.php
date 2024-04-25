@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('tanaman_padis', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->text('description');
+            $table->string('name', 25);
             $table->timestamps();
         });
     }
