@@ -66,7 +66,7 @@ class UserPasarController extends Controller
 
             DB::commit();
             Alert::success('Success', 'Success Data Berhasil Ditambahkan');
-            return redirect('/dinas_pangan/user/pasar')->with('success', 'Data User Pertanian Berhasil Ditambahkan');
+            return redirect('/dinas_pangan/user/pasar')->with('success', 'Data User Pasar Berhasil Ditambahkan');
         } catch (ValidationException $e) {
             DB::rollback();
             Alert::warning('kesalahan' . $e->errors());
@@ -84,7 +84,14 @@ class UserPasarController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $data = [
+            'title' => 'Detail Data Pengguna Pasar',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Pasar',
+            'breadcrumb_active' => 'Detail Data Pengguna Pasar',
+            'user'  => $this->pasar->findOrFail($id),
+        ];
+        return view('pangan.views.user.pasar.show', $data);
     }
 
     /**
@@ -92,7 +99,8 @@ class UserPasarController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = $this->pasar->findOrFail($id);
+        return view('pangan.views.user.pasar.update', compact('user'));
     }
 
     /**
@@ -100,7 +108,28 @@ class UserPasarController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $user = $this->pasar->findOrFail($id);
+            $user->update($request->all() + [
+                'updated_at' => now(),
+            ]);
+            $user->user->update($request->all() + [
+                'updated_at' => now(),
+            ]);
+            DB::commit();
+            Alert::success('success', 'Data berhasil diubah!');
+            return redirect('/dinas_pangan/user/pasar')->with('success', 'Success data berhasil diubah!');
+        } catch (ValidationException $e) {
+            DB::rollback();
+            Alert::warning('kesalahan' . $e->errors());
+            return redirect()->back()->withInput()->withErrors($e->errors());
+        } catch (\Exception $er) {
+            DB::rollback();
+            $errorMessage = 'Gagal Menambahkan Data: ' . $er->getMessage();
+            Alert::error('Error', $errorMessage);
+            return back()->withInput()->withErrors($errorMessage);
+        }
     }
 
     /**
@@ -108,6 +137,20 @@ class UserPasarController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $user = $this->pasar->findOrFail($id);
+            $user->user->delete();
+            $user->delete();
+
+            DB::commit();
+
+            Alert::success('success', 'Data Berhasil Dihapus!');
+            return back()->with('success', 'Data Berhasil Dihapus');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Alert::error('error', 'Data Gagal Dihapus' . $e->getMessage());
+            return back()->with('error', 'Data GagalDihapus!');
+        }
     }
 }
