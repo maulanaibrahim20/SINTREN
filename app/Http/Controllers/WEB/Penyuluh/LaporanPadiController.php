@@ -63,6 +63,7 @@ class LaporanPadiController extends Controller
             'jenis_padi' => $this->jenis_padi::orderBy('created_at', 'asc')->get(),
             'desa' => $this->desa::where('district_id', $kecamatanId)->get(),
             'pengairan' => $this->pengairan::all(),
+            'selected' => $this->laporanpadi::pluck('desa_id')->first(),
         ];
         return view('penyuluh.pages.laporan_padi.create', $data);
     }

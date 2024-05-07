@@ -26,7 +26,7 @@
                                     aria-label="Default select example" name="desa">
                                     <option value="">-- Pilih --</option>
                                     @foreach ($desa as $item)
-                                        <option value="{{ $item->id }}" name="desa">
+                                        <option value="{{ $item->id }}" {{ $selected == $item->id ? 'disabled' : '' }}>
                                             {{ $item->name }}
                                         </option>
                                     @endforeach
@@ -380,6 +380,25 @@
                 var tanam = $("#tanam").val() || 0;
                 var puso_rusak = $("#puso_rusak").val() || 0;
                 var tanamAkhirBulanLaporan = $("#tanaman_akhir_bulan_laporan").val() || 0;
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Apakah data yakin sudah benar untuk input data desa dan jenis lahannya? Jika sudah ditekan OK, tidak bisa diubah lagi.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Data Tersimpan!',
+                            'Data Anda telah berhasil disimpan.',
+                            'success'
+                        );
+                    }
+                });
 
                 addRow(jenisPadi, jenisBantuan, tanamAkhirBulanLalu, panen, tanam, puso_rusak,
                     tanamAkhirBulanLaporan);
