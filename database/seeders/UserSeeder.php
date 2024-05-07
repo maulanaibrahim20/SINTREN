@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
         ]);
         Pertanian::create([
             'alamat' => 'indramayu',
-            'user_id' => $user->id,
+            'user_id' => $user['id'],
             'no_telp' => '081272121'
         ]);
         $uptd = User::factory()->create([
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
         ]);
         Uptd::create([
             'alamat' => 'indramayu',
-            'user_id' => $uptd->id,
+            'user_id' => $uptd['id'],
             'no_telp' => '085123123',
             'kecamatan_id' => '3212170',
         ]);
@@ -46,9 +46,10 @@ class UserSeeder extends Seeder
         ]);
         Penyuluh::create([
             'alamat' => 'indramayu',
-            'user_id' => $penyuluh->id,
+            'user_id' => $penyuluh['id'],
             'no_telp' => '081272121',
-            'kecamatan_id' =>  '3212170'
+            'kecamatan_id' =>  '3212170',
+            'desa_id' =>  '3212170009'
         ]);
         User::factory()->create([
             'username' => 'dinas_pangan',

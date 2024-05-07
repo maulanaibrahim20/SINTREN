@@ -29,8 +29,8 @@ class LoginController extends Controller
     {
         $user = $this->user->where('username', $request->username)->first();
         if (!$user) {
-            Alert::error('Maaf Akun Anda Tidak Terdaftar');
-            return redirect(route('login.index'))->with('error', 'Maaf Akun Anda Tidak Terdaftar');
+            Alert::error('Maaf, Akun Anda Tidak Ditemukan');
+            return redirect(route('login.index'))->with('error', 'Maaf, Akun Anda Tidak Ditemukan');
         }
         if (!Hash::check($request->password, $user->password)) {
             Alert::error('Maaf Pasword Anda Salah!');

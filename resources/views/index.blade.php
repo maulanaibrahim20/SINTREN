@@ -15,7 +15,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ url('/assets') }}/images/brand/favicon.ico">
 
     <!-- Title -->
-    <title>@yield('title')</title>
+    <title>{{ config('app.name') }} | @yield('title')</title>
 
     @include('template.component.style_css')
     @yield('css')
