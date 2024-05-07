@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('luas_lahan_wilayah', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('kecamatan_id');
-            $table->enum('jenis_lahan', ['sawah', 'non_sawah']);
-            $table->double('luas_lahan_wilayah');
+            $table->bigInteger('desa_id');
+            $table->double('lahan_sawah');
+            $table->double('lahan_non_sawah');
             $table->timestamps();
         });
     }

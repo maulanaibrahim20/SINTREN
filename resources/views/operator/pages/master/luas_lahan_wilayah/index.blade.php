@@ -42,8 +42,9 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No.</th>
                                     <th class="wd-15p border-bottom-0">Kecamatan</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
-                                    <th class="wd-15p border-bottom-0">Luas Lahan</th>
+                                    <th class="wd-15p border-bottom-0">Desa</th>
+                                    <th class="wd-15p border-bottom-0">Luas Lahan Sawah</th>
+                                    <th class="wd-15p border-bottom-0">Luas Lahan Non Sawah</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -52,8 +53,9 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->getKecamatan->name }}</td>
-                                        <td>{{ $data->jenis_lahan }}</td>
-                                        <td>{{ number_format($data->luas_lahan_wilayah, 0, ',', '.') }} ha</td>
+                                        <td>{{ $data->getDesa->name }}</td>
+                                        <td>{{ number_format($data->lahan_sawah, 0, ',', '.') }} ha</td>
+                                        <td>{{ number_format($data->lahan_non_sawah, 0, ',', '.') }} ha</td>
                                         <td class="text-center">
                                             <a href="{{ url('/operator/master/luas_lahan_wilayah/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
