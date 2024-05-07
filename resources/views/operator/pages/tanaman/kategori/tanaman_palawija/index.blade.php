@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Kategori Tanaman Palawija | Operator')
+@section('title', 'Kategori Tanaman Palawija ')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">

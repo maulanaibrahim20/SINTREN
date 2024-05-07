@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_id', 50);
             $table->integer('kecamatan_id');
+            $table->bigInteger('desa_id');
             $table->string('alamat', 50);
             $table->string('no_telp', 15);
             $table->timestamps();

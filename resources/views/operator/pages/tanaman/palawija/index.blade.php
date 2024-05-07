@@ -2,21 +2,18 @@
 @section('title', 'Tanaman Palawija')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Kategori Tanaman</li>
-            <li class="breadcrumb-item active" aria-current="page">Tanaman Palawwija</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol>
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/operator/tanaman/palawija/create') }}" class="btn bg-primary-transparent"
-                    data-bs-toggle="tooltip" title="Add Palawija" data-bs-placement="bottom">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
-                    Add Palawija
-                </a>
+                    {{ $button_create }}
+                </button>
             </div>
         </div>
     </div>
@@ -54,11 +51,14 @@
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->kategori->name }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('/operator/tanaman/palawija/' . $data->id . '/edit') }}"
-                                                class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/operator/tanaman/palawija/' . $data->id) }}"
-                                                class="btn btn-primary">
-                                                <i class="ti ti-eye"></i></a>
+                                            <button class="btn btn-warning" data-bs-toggle="modal"
+                                                data-bs-target="#modalCenterEdit{{ $data->id }}">
+                                                <span<i class="fa fa-edit"></i></span>
+                                            </button>
+                                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#modalCenterShow{{ $data->id }}">
+                                                <span<i class="fa fa-eye"></i></span>
+                                            </button>
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/operator/tanaman/palawija/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
@@ -77,6 +77,53 @@
             </div>
         </div>
     </div>
+
+    @include('operator.pages.tanaman.palawija.modal_create')
+
+    @foreach ($palawija as $edit)
+        <div class="modal fade" id="modalCenterEdit{{ $edit['id'] }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form action="{{ url('/operator/tanaman/palawija/ ' . $edit['id']) }}" enctype="multipart/form-data"
+                        method="post">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalCenterTitle">Edit Kategori Tanaman Palawija</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col mb-3">
+                                <label class="form-label">Nama Tanaman Palawija</label>
+                                <input type="text" name="name" value="{{ $edit['name'] }}" class="form-control"
+                                    placeholder="Masukkan Nama Kategori" />
+                            </div>
+                            <div class="col mb-3">
+                                <label class="form-label">Nama Tanaman Palawija</label>
+                                <select id="category" class="form-control select2 form-select" name="category"
+                                    data-placeholder="Pilih Kategori Palawija">
+                                    <option value="">-- Pilih --</option>
+                                    @foreach ($kategori as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $item['id'] == $edit['category'] ? 'selected' : '' }} name="category">
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            @include('template.component.button_modal')
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @include('operator.pages.tanaman.palawija.modal_show')
+
+
 @endsection
 @section('script')
     <script>
