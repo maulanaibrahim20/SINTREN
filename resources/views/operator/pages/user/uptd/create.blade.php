@@ -1,13 +1,12 @@
 @extends('index')
-@section('title', 'Create User UPTD | Operator')
+@section('title', 'Tambah User UPTD')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/user/uptd') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12">
@@ -20,49 +19,85 @@
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
-                        @endif @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
+                    @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="{{ url('/operator/user/uptd') }}" method="post">
+                        @csrf
+                        <div class="form-row">
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                <label class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" name="name" value="{{ old('name') }}"
+                                    required>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" value="{{ old('email') }}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                <label class="form-label">Alamat</label>
+                                <input type="text" class="form-control" name="alamat" value="{{ old('alamat') }}"
+                                    required>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                <label class="form-label">Nomor Telepon</label>
+                                <input type="number" class="form-control" name="no_telp" value="{{ old('no_telp') }}"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                                <label class="form-label">Pilih Kecamatan</label>
+                                <select class="form-control select2 form-select" name="kecamatan"
+                                    data-placeholder="Pilih Kecamatan">
+                                    <option label="Pilih Kecamatan"></option>
+                                    @foreach ($kecamatan as $kec)
+                                        <option value="{{ $kec->id }}"
+                                            {{ in_array($kec->id, $disabled) ? 'disabled' : '' }}>
+                                            {{ $kec->name }}
+                                        </option>
                                     @endforeach
-                                </ul>
+                                </select>
                             </div>
-                        @endif
-                        <form action="{{ url('/operator/user/uptd') }}" method="post" class="needs-validation" novalidate>
-                            @csrf
-                            <div class="form-row">
-                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
-                                    <label for="validationCustom011">Nama Lengkap</label>
-                                    <input type="text" class="form-control" id="validationCustom011" name="name"
-                                        value="{{ old('name') }}" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
-                                    <label for="validationCustom12">Email</label>
-                                    <input type="email" name="email" class="form-control" id="validationCustom12"
-                                        value="{{ old('email') }}" value="Otto" required>
-                                    <div class="valid-feedback">Looks good!</div>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
-                                    <label for="validationCustom13">Alamat</label>
-                                    <input type="text" class="form-control" id="validationCustom13" name="alamat"
-                                        value="{{ old('alamat') }}" required>
-                                    <div class="invalid-feedback">Please provide a valid address.</div>
-                                </div>
-                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
-                                    <label for="validationCustom15">Nomor Telepon</label>
-                                    <input type="number" class="form-control" id="validationCustom15" name="no_telp"
-                                        value="{{ old('no_telp') }}" required>
-                                    <div class="invalid-feedback">Please provide a valid zip.</div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary" type="submit">Submit </button>
-                        </form>
+                        </div>
+                        @include('template.component.button')
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('.needs-validation').submit(function(event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah data yang Anda isi sudah benar?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, kirim!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).unbind('submit')
+                            .submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

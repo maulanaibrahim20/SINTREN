@@ -1,13 +1,13 @@
 @extends('index')
-@section('title', 'View User UPTD')
+@section('title', 'View Pengguna UPTD')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operato/user/uptd') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+            <ol class="breadcrumb1 br-7">
+                <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+                <li class="breadcrumb-item1"><a href="{{ url('/operator/user/uptd') }}">{{ $breadcrumb_1 }}</a></li>
+                <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+            </ol>
     </div>
     <div class="row">
         <div class="col-xl-8">
