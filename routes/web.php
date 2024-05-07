@@ -3,6 +3,7 @@
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
+use App\Http\Controllers\WEB\GetWilayahController;
 use App\Http\Controllers\WEB\Operator\Master\LuasLahanWilayahController;
 use App\Http\Controllers\WEB\Operator\Master\RoleController;
 use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPadiController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
+use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,6 +53,8 @@ Route::middleware(['auth'])->name('web.')->group(function () {
 
 
 Route::middleware(['autentikasi'])->group(function () {
+
+    Route::get('ambil_desa', [GetWilayahController::class, 'ambil_desa']);
 
     Route::group(['middleware' => ['can:operator']], function () {
         Route::prefix('operator')->group(function () {
@@ -85,6 +89,7 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
+            Route::resource('user/penyuluh', UptdPenyuluhController::class);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
