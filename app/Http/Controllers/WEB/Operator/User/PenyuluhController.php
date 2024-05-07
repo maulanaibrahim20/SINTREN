@@ -8,6 +8,7 @@ use App\Http\Requests\Operator\User\Penyuluh\UpdateRequest;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -21,12 +22,14 @@ class PenyuluhController extends Controller
     protected $user;
     protected $penyuluh;
     protected $kecamatan;
+    protected $desa;
 
-    public function __construct(User $user, Penyuluh $penyuluh, Kecamatan $kecamatan)
+    public function __construct(User $user, Penyuluh $penyuluh, Kecamatan $kecamatan, Desa $desa)
     {
         $this->user = $user;
         $this->penyuluh = $penyuluh;
         $this->kecamatan = $kecamatan;
+        $this->desa = $desa;
     }
     public function index()
     {
@@ -49,6 +52,7 @@ class PenyuluhController extends Controller
             'breadcrumb_active' => 'Tambah Data Pengguna Penyuluh',
             'kecamatan' => $this->kecamatan::all(),
             'selected' => $this->penyuluh::pluck('kecamatan_id')->toArray(),
+            'desa' => $this->desa::where('district_id', 'kecamatan')->get(),
         ];
         return view('operator.pages.user.penyuluh.create', $data);
     }
@@ -64,17 +68,12 @@ class PenyuluhController extends Controller
             $this->penyuluh->create($request->all() + [
                 'user_id' => $user->id,
                 'kecamatan_id' => $request->kecamatan,
+                'desa_id' => $request->desa
             ]);
-            $user->setAttribute('email_verified_at', Carbon::now());
-            $user->setAttribute('remember_token', Str::random(10));
-            $user->save();
+
             DB::commit();
             Alert::success('success', 'User penyuluh berhasil ditambahkan!');
             return redirect('/operator/user/penyuluh')->with('success', 'User Penyuluh Berhasil Ditambahkan!');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            Alert::warning('kesalahan' . $e->errors());
-            return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $er) {
             DB::rollback();
             Alert::error('error', 'User penyuluh gagal ditambahkan!' . $er->getMessage());
@@ -95,10 +94,19 @@ class PenyuluhController extends Controller
 
     public function edit($id)
     {
+        $user = $this->penyuluh::findOrFail(decrypt($id));
+        $desa = $this->desa::all();
+        $kec = $this->kecamatan::all();
         $data = [
-            'user' => $this->penyuluh::findOrFail(decrypt($id)),
+            'kecamatan' => $this->kecamatan::where('id', $user->kecamatan_id)->get(),
+            'selected_kec' => $user->kecamatan_id,
+            'selected_desa' => $user->desa_id,
+            'title' => 'Edit Data Pengguna Penyuluh',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Penyuluh',
+            'breadcrumb_active' => 'Edit Data Pengguna Penyuluh',
         ];
-        return view('operator.pages.user.penyuluh.update', $data);
+        return view('operator.pages.user.penyuluh.update', $data, compact('user', 'desa', 'kec'));
     }
 
     public function update(UpdateRequest $request, $id)
@@ -108,6 +116,8 @@ class PenyuluhController extends Controller
             $user = $this->penyuluh->findOrFail($id);
             $user->update($request->all() + [
                 'updated_at' => Carbon::now(),
+                'desa_id' => $request->desa,
+                'kecamatan_id' => $request->kecamatan
             ]);
             $user->user->update($request->all() + [
                 'updated_at' => Carbon::now(),

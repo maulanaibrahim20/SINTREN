@@ -1,13 +1,12 @@
 @extends('index')
-@section('title', 'View User Penyuluh')
+@section('title', 'View Pengguna Penyuluh')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operator/user/penyuluh') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/user/penyuluh') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol>
     </div>
     <div class="row">
         <div class="col-xl-8">
@@ -28,6 +27,11 @@
                             <td class="text-right">Kecamatan</td>
                             <td>:</td>
                             <td><span class="badge bg-primary">{{ $user->kecamatan->name }}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Desa</td>
+                            <td>:</td>
+                            <td><span class="badge bg-primary">{{ $user->desa->name }}</span></td>
                         </tr>
                         <tr>
                             <td class="text-right">Username</td>
@@ -75,7 +79,8 @@
                     <div class="">
                         <div class="d-flex overflow-visible">
                             <a href="blog-details.html" class="card-recent-post cover-image">
-                                <img src="{{ url('/assets') }}/images/photos/9.jpg" class="br-7" alt="image">
+                                <img src="{{ url('/assets') }}/images/photos/9.jpg" style="height: 200px; width: auto"
+                                    class="br-7" alt="image">
                             </a>
                             <div class="ps-3 flex-column">
                                 <span class="badge bg-primary me-1 mb-1 mt-1">{{ $user->user->name }}</span>
