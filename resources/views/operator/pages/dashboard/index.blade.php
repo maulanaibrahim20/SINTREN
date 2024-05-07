@@ -2,11 +2,9 @@
 @section('title', 'Dashboard Operator')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Dashboard01</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1 active">Dashboard</li>
+        </ol><!-- Eneadcrumb -->
         <div class="ms-auto">
             <div>
                 <a href="#" class="btn bg-secondary-transparent text-secondary btn-sm" data-bs-toggle="tooltip"

@@ -3,6 +3,7 @@
 namespace App\Models\Penyuluh;
 
 use App\Models\Wilayah\Kecamatan;
+use App\Models\Wilayah\Desa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,5 +20,10 @@ class LuasLahanWilayah extends Model
     public function getKecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
+    }
+
+    public function getDesa()
+    {
+        return $this->belongsTo(Desa::class, 'desa_id');
     }
 }

@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Kelola Pengairan | Operator')
+@section('title', 'Kelola Pengairan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -84,19 +84,18 @@
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Edit Pengairan</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">Edit Data Pengairan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="col mb-3">
-                                <label for="nameBasic" class="form-label">Nama</label>
+                                <label for="nameBasic" class="form-label">Nama Pengairan</label>
                                 <input type="text" value="{{ $item->name }}" name="name" class="form-control"
                                     placeholder="Masukkan Nama Kategori" />
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            @include('template.component.button_modal')
                         </div>
                     </form>
                 </div>

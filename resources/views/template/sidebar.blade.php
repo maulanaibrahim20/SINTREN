@@ -13,7 +13,6 @@
                                 <a class="header-brand1" href="{{ url('/penyuluh/dashboard') }}">
                 @endif
             @endauth
-
             <img src="{{ url('/assets') }}/images/brand/logo.png" class="header-brand-img main-logo" alt="Sparic logo">
             <img src="{{ url('/assets') }}/images/brand/logo-light.png" class="header-brand-img darklogo"
                 alt="Sparic logo">
@@ -67,7 +66,7 @@
                 @endauth
                 @can('operator')
                     <li class="sub-category">
-                        <h3>Data Pengguna</h3>
+                        <h3>Kelola Data Pengguna</h3>
                     </li>
                     <li
                         class="slide {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' ? 'is-expanded' : '' }}">
@@ -103,14 +102,15 @@
                         </ul>
                     </li>
                     <li class="sub-category">
-                        <h3>Data Tanaman</h3>
+                        <h3>Master Data</h3>
                     </li>
                     <li
-                        class="slide  {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' || Request::segment(3) == 'pengairan' || Request::segment(3) == 'tanaman_palawija' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' || Request::segment(3) == 'pengairan' || Request::segment(3) == 'tanaman_palawija' ? 'active open' : '' }}"
+                        class="slide  {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' || Request::segment(3) == 'tanaman_palawija' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' || Request::segment(3) == 'tanaman_palawija' ? 'active open' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon fa fa-pagelines"></i>
-                            <span class="side-menu__label">Data Tanaman</span><i class="angle fe fe-chevron-right"></i></a>
+                            <span class="side-menu__label">Data Tanaman</span><i class="angle fe fe-chevron-right"></i>
+                        </a>
                         <ul class="slide-menu ">
                             <li class="panel sidetab-menu">
                                 <div class="panel-body tabs-menu-body p-0 border-0">
@@ -127,6 +127,7 @@
                                                         class="slide-item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}">Tanaman
                                                         Palawija</a>
                                                 </li>
+
                                                 <li
                                                     class="sub-slide {{ Request::segment(3) == 'tanaman_palawija' ? 'is-expanded' : '' }}">
                                                     <a class="sub-side-menu__item {{ Request::segment(3) == 'tanaman_palawija' ? 'active' : '' }} "
@@ -142,18 +143,6 @@
                                                         </li>
                                                     </ul>
                                                 </li>
-                                                <li
-                                                    class="sub-slide {{ Request::segment(3) == 'pengairan' ? 'is-expanded' : '' }}">
-                                                    <a class="sub-side-menu__item {{ Request::segment(3) == 'pengairan' ? 'active' : '' }} "
-                                                        data-bs-toggle="sub-slide" href="javascript:void(0)"><span
-                                                            class="sub-side-menu__label">Pengairan</span><i
-                                                            class="sub-angle fe fe-chevron-right"></i></a>
-                                                    <ul class="sub-slide-menu">
-                                                        <li><a class="sub-slide-item {{ Request::segment(3) == 'pengairan' ? 'active' : '' }}"
-                                                                href="{{ url('/operator/master/pengairan') }}">Pengairan</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -161,8 +150,26 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="sub-category">
-                        <h3>Master Luas Lahan Wilayah</h3>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'pengairan' ? 'active' : '' }}"
+                            href="{{ url('/operator/master/pengairan') }}"><i
+                                class="side-menu__icon fe fe-droplet"></i><span
+                                class="side-menu__label">Pengairan</span></a>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'wilayah' ? 'active' : '' }}"
+                            href="{{ url('/operator/master/wilayah') }}"><i class="side-menu__icon fa fa-globe"></i><span
+                                class="side-menu__label">Wilayah</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'role' ? 'active' : '' }}"
+                            href="{{ url('/operator/master/role') }}"><i class="side-menu__icon fa fa-cogs"></i><span
+                                class="side-menu__label">Role</span>
+                        </a>
+                    </li>
+                    <li class="sub-category mt-4">
+                        <h3>Kelola Luas Lahan Wilayah</h3>
                     </li>
                     <li>
                         <a class="side-menu__item {{ Request::segment(3) == 'luas_lahan_wilayah' ? 'active' : '' }}"
@@ -170,69 +177,19 @@
                                 class="side-menu__icon fa fa-map"></i><span class="side-menu__label">Luas Lahan
                                 Wilayah</span></a>
                     </li>
-                    <li class="sub-category">
-                        <h3>Master</h3>
-                    </li>
-                    <li
-                        class="slide  {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'role' || Request::segment(3) == 'wilayah' ? 'active open' : '' }}"
-                            data-bs-toggle="slide" href="javascript:void(0)">
-                            <i class="side-menu__icon fa fa-database"></i>
-                            <span class="side-menu__label">Master</span><i class="angle fe fe-chevron-right"></i></a>
-                        <ul class="slide-menu ">
-                            <li class="panel sidetab-menu">
-                                <div class="panel-body tabs-menu-body p-0 border-0">
-                                    <div class="tab-content">
-                                        <div class="tab-pane active" id="side29">
-                                            <ul class="sidemenu-list">
-                                                <li class="side-menu-label1"><a href="javascript:void(0)">Master</a></li>
-                                                <li><a href="{{ url('/operator/master/role') }}"
-                                                        class="slide-item {{ Request::segment(3) == 'role' ? 'active' : '' }}">Role</a>
-                                                </li>
-                                                <li><a href="{{ url('/operator/master/wilayah') }}"
-                                                        class="slide-item {{ Request::segment(3) == 'wilayah' ? 'active' : '' }}">Wilayah</a>
-                                                </li>
-                                                {{-- <li
-                                                    class="sub-slide {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' ? 'is-expanded' : '' }}">
-                                                    <a class="sub-side-menu__item {{ Request::segment(3) == 'padi' || Request::Segment(3) == 'palawija' ? 'active' : '' }} "
-                                                        data-bs-toggle="sub-slide" href="javascript:void(0)"><span
-                                                            class="sub-side-menu__label">Jenis
-                                                            Tanaman</span><i class="sub-angle fe fe-chevron-right"></i></a>
-                                                    <ul class="sub-slide-menu">
-                                                        <li><a class="sub-slide-item {{ Request::segment(3) == 'padi' ? 'active' : '' }}"
-                                                                href="{{ url('/operator/tanaman/padi') }}">Tanaman
-                                                                Padi</a></li>
-                                                        <li><a class="sub-slide-item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}"
-                                                                href="{{ url('/operator/tanaman/palawija') }}">Tanaman
-                                                                Palawija</a>
-                                                        </li>
-                                                        <li class="sub-slide2">
-                                                            <a class="sub-side-menu__item2" href="javascript:void(0)"
-                                                                data-bs-toggle="sub-slide2"><span
-                                                                    class="sub-side-menu__label2">Submenu-2.3</span><i
-                                                                    class="sub-angle2 fe fe-chevron-right"></i></a>
-                                                            <ul class="sub-slide-menu2">
-                                                                <li><a href="javascript:void(0)"
-                                                                        class="sub-slide-item2">Submenu-2.3.1</a></li>
-                                                                <li><a href="javascript:void(0)"
-                                                                        class="sub-slide-item2">Submenu-2.3.2</a></li>
-                                                                <li><a href="javascript:void(0)"
-                                                                        class="sub-slide-item2">Submenu-2.3.3</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li> --}}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
                 @endcan
                 @can('pertanian')
                 @endcan
                 @can('uptd')
+                    <li class="sub-category">
+                        <h3>Kelola Akun</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'penyuluh' ? 'active' : '' }}"
+                            href="{{ url('/uptd/user/penyuluh') }}"><i class="side-menu__icon fa fa-user"></i><span
+                                class="side-menu__label">Akun
+                                Penyuluh</span></a>
+                    </li>
                     <li class="sub-category">
                         <h3>Laporan</h3>
                     </li>

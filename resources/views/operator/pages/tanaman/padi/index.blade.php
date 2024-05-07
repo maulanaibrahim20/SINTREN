@@ -1,12 +1,11 @@
 @extends('index')
-@section('title', 'Kelola Kategori Tanaman Padi || Operator')
+@section('title', 'Tanaman Padi ')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol>
         <div class="ms-auto">
             <div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter">
@@ -84,7 +83,7 @@
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Edit kategori tanaman palawija</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">Edit tanaman Padi</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -95,8 +94,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            @include('template.component.button_modal')
                         </div>
                     </form>
                 </div>
