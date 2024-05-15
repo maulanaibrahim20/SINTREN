@@ -186,7 +186,7 @@
                     </li>
                     <li>
                         <a class="side-menu__item {{ Request::segment(3) == 'penyuluh' ? 'active' : '' }}"
-                            href="{{ url('/uptd/user/penyuluh') }}"><i class="side-menu__icon fa fa-user"></i><span
+                            href="{{ url('/uptd/pengguna/penyuluh') }}"><i class="side-menu__icon fa fa-user"></i><span
                                 class="side-menu__label">Akun
                                 Penyuluh</span></a>
                     </li>
@@ -233,7 +233,7 @@
                                 class="side-menu__icon fa fa-map"></i><span class="side-menu__label">Luas Lahan
                                 Wilayah</span></a>
                     </li>
-                    <li class="sub-category">
+                    {{-- <li class="sub-category">
                         <h3>Pengaturan</h3>
                     </li>
                     <li>
@@ -245,12 +245,7 @@
                         <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
                             href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
                                 class="side-menu__label">Change Password</span></a>
-                    </li>
-                    <li>
-                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
-                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
-                                class="side-menu__label">Logout</span></a>
-                    </li>
+                    </li> --}}
                 @endcan
                 @can('penyuluh')
                     <li class="sub-category">
@@ -287,10 +282,15 @@
                         </ul>
                     </li>
                 @endcan
-
                 {{-- yuan diana --}}
                 @can('dinas_pangan')
                 @endcan
+                <li>
+                    <a class="side-menu__item" href="#" id="logoutButton">
+                        <i class="side-menu__icon fa fa-sign-in"></i>
+                        <span class="side-menu__label">Logout</span>
+                    </a>
+                </li>
             </ul>
             <div class="slide-right" id="slide-right"><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191"
                     width="24" height="24" viewBox="0 0 24 24">

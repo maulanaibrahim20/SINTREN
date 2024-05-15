@@ -89,7 +89,8 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
-            Route::resource('user/penyuluh', UptdPenyuluhController::class);
+            Route::resource('pengguna/penyuluh', UptdPenyuluhController::class);
+            Route::post('pengguna/penyuluh/penugasan', [UptdPenyuluhController::class, 'penugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);

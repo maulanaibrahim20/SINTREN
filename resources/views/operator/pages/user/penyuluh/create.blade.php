@@ -67,13 +67,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-3">
-                                <label class="form-label">Desa</label>
-                                <select name="desa" id="desa" class="form-control select2 form-select"
-                                    data-placeholder="Pilih Desa">
-                                    <option value="">-- pilih --</option>
-                                </select>
-                            </div>
                         </div>
                         @include('template.component.button')
                     </form>

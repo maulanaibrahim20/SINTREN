@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
             'user_id' => $penyuluh['id'],
             'no_telp' => '081272121',
             'kecamatan_id' =>  '3212170',
-            'desa_id' =>  '3212170009'
+            'createdBy' => 'admin',
         ]);
         User::factory()->create([
             'username' => 'dinas_pangan',

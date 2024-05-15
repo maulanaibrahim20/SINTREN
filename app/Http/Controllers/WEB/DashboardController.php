@@ -8,6 +8,7 @@ use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Uptd\PenugasanPenyuluh;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -15,12 +16,14 @@ class DashboardController extends Controller
     protected $penyuluh;
     protected $laporanPadi;
     protected $laporanPalawija;
+    protected $penugasan;
 
-    public function __construct(Penyuluh $penyuluh, LaporanPalawija $laporanPalawija, LaporanPadi $laporanPadi)
+    public function __construct(Penyuluh $penyuluh, LaporanPalawija $laporanPalawija, LaporanPadi $laporanPadi, PenugasanPenyuluh $penugasan)
     {
         $this->penyuluh = $penyuluh;
         $this->laporanPadi = $laporanPadi;
         $this->laporanPalawija = $laporanPalawija;
+        $this->penugasan = $penugasan;
     }
     public function operator()
     {
@@ -62,7 +65,8 @@ class DashboardController extends Controller
 
     public function penyuluh()
     {
-        return view('penyuluh.pages.dashboard.index');
+        $data['penugasan'] = $this->penugasan::where('user_id', Auth::user()->id)->get();
+        return view('penyuluh.pages.dashboard.index', $data);
     }
 
     public function dinas_pangan()

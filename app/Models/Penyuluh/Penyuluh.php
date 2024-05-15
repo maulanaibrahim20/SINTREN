@@ -5,6 +5,7 @@ namespace App\Models\Penyuluh;
 use App\Models\User;
 use App\Models\Wilayah\Kecamatan;
 use App\Models\Wilayah\Desa;
+use App\Models\Uptd\PenugasanPenyuluh;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,5 +28,10 @@ class Penyuluh extends Model
     public function desa()
     {
         return $this->belongsTo(Desa::class, 'desa_id');
+    }
+
+    public function penugasan()
+    {
+        return $this->belongsTo(PenugasanPenyuluh::class, 'user_id', 'user_id');
     }
 }

@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Create User Penyuluh | Operator')
+@section('title', 'Tambah Pengguna Penyuluh')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -25,7 +25,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ url('/uptd/user/penyuluh') }}" method="post" class="needs-validation" novalidate>
+                    <form action="{{ url('/uptd/pengguna/penyuluh') }}" method="post" class="needs-validation" novalidate>
                         @csrf
                         <div class="form-row">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
@@ -67,7 +67,7 @@
                                 </select>
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit">Submit </button>
+                        @include('template.component.button')
                     </form>
                 </div>
             </div>

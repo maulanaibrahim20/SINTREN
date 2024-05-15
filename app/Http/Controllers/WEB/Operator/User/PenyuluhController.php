@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PenyuluhController extends Controller
 {
@@ -52,7 +53,6 @@ class PenyuluhController extends Controller
             'breadcrumb_active' => 'Tambah Data Pengguna Penyuluh',
             'kecamatan' => $this->kecamatan::all(),
             'selected' => $this->penyuluh::pluck('kecamatan_id')->toArray(),
-            'desa' => $this->desa::where('district_id', 'kecamatan')->get(),
         ];
         return view('operator.pages.user.penyuluh.create', $data);
     }
@@ -68,15 +68,13 @@ class PenyuluhController extends Controller
             $this->penyuluh->create($request->all() + [
                 'user_id' => $user->id,
                 'kecamatan_id' => $request->kecamatan,
-                'desa_id' => $request->desa
+                'createdBy' => Auth::user()->id,
             ]);
 
             DB::commit();
-            Alert::success('success', 'User penyuluh berhasil ditambahkan!');
             return redirect('/operator/user/penyuluh')->with('success', 'User Penyuluh Berhasil Ditambahkan!');
         } catch (\Exception $er) {
             DB::rollback();
-            Alert::error('error', 'User penyuluh gagal ditambahkan!' . $er->getMessage());
             return back()->with('error', 'Gagal Menambahkan User Penyuluh' . $er->getMessage());
         }
     }
