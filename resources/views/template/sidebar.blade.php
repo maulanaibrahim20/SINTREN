@@ -285,6 +285,9 @@
                 {{-- yuan diana --}}
                 @can('dinas_pangan')
                 @endcan
+                <li class="sub-category">
+                    <h3>Pengaturan</h3>
+                </li>
                 <li>
                     <a class="side-menu__item" href="#" id="logoutButton">
                         <i class="side-menu__icon fa fa-sign-in"></i>

@@ -74,7 +74,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::get('wilayah', [WilayahController::class, 'index']);
                 Route::get('wilayah/view/{id}', [WilayahController::class, 'view_desa']);
                 Route::resource('luas_lahan_wilayah', LuasLahanWilayahController::class);
-                Route::resource('role', RoleController::class);
+                Route::get('role', [RoleController::class, 'index']);
                 Route::resource('pengairan', PengairanController::class);
             });
             Route::get('/dashboard', [DashboardController::class, 'operator']);
