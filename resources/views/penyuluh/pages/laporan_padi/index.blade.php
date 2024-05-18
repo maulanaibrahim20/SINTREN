@@ -41,9 +41,8 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Desa</th>
-                                    <th class="wd-15p border-bottom-0">Kecamatan</th>
-                                    <th class="wd-20p border-bottom-0">Nama Pengumpul</th>
+                                    <th class="wd-15p border-bottom-0">Alamat</th>
+                                    <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-20p border-bottom-0">Tanggal</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
@@ -52,9 +51,15 @@
                                 @foreach ($padi as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->desa->name }}</td>
-                                        <td>{{ $data->kecamatan->name }}</td>
-                                        <td>{{ $data->nama_pengumpul }}</td>
+                                        <td>
+                                            <div class="d-flex contact-image">
+                                                <div class="d-flex mt-1 flex-column ms-2">
+                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">{{ $data->desa->name }}
+                                                    </h6>
+                                                    <span class="fs-12 text-muted">{{ $data->kecamatan->name }}</span>
+                                                </div>
+                                            </div>
+                                        <td>{{ $data->user->name }}</td>
                                         <td>{{ $data->created_at }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"

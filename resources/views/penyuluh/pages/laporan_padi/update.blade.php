@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Tambah Laporan Padi | Penyuluh')
+@section('title', 'Edit Laporan Padi | Penyuluh')
 @section('content')
     <div class="main-container container-fluid">
         <div class="page-header d-sm-flex d-block">
@@ -17,8 +17,10 @@
                 <div class="card-header">
                     <h3 class="mb-0 card-title">Tambah Data Laporan Padi</h3>
                 </div>
-                <form action="{{ url('/penyuluh/create/laporan_padi') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ url('/penyuluh/create/laporan_padi/' . $edit['id']) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
@@ -28,7 +30,8 @@
                                         aria-label="Default select example" data-placeholder="Pilih Desa" name="desa">
                                         <option value="">-- Pilih Desa --</option>
                                         @foreach ($penugasanDesa as $item)
-                                            <option value="{{ $item->desa_id }}">
+                                            <option value="{{ $item->desa_id }}"
+                                                {{ $edit['desa_id'] == $item->desa_id ? 'selected' : '' }}>
                                                 {{ $item->desa->name }}
                                             </option>
                                         @endforeach
@@ -42,8 +45,12 @@
                                         data-placeholder="Pilih Jenis Lahan" aria-label="Default select example"
                                         name="jenis_lahan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="lahan_sawah">Lahan Sawah</option>
-                                        <option value="non_sawah">Bukan Sawah/Non Sawah</option>
+                                        <option value="lahan_sawah"
+                                            {{ $edit['jenis_lahan'] == 'lahan_sawah' ? 'selected' : '' }}>Lahan Sawah
+                                        </option>
+                                        <option value="non_sawah"
+                                            {{ $edit['jenis_lahan'] == 'non_sawah' ? 'selected' : '' }}>Bukan Sawah/Non
+                                            Sawah</option>
                                     </select>
                                 </div>
                             </div>
@@ -54,10 +61,12 @@
                                         data-placeholder="Pilih Jenis Bantuan" aria-label="Default select example"
                                         name="jenis_bantuan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="bantuan_pemerintah">Bantuan Pemerintah</option>
-                                        <option value="non_bantuan_pemerintah">Bukan Bantuan Pemerintah/Non Bantuan
-                                            Pemerintah
-                                        </option>
+                                        <option value="bantuan_pemerintah"
+                                            {{ $edit['jenis_bantuan'] == 'bantuan_pemerintah' ? 'selected' : '' }}>Bantuan
+                                            Pemerintah</option>
+                                        <option value="non_bantuan_pemerintah"
+                                            {{ $edit['jenis_bantuan'] == 'non_bantuan_pemerintah' ? 'selected' : '' }}>Bukan
+                                            Bantuan Pemerintah/Non Bantuan Pemerintah</option>
                                     </select>
                                 </div>
                             </div>
@@ -71,7 +80,9 @@
                                         name="jenis_pengairan">
                                         <option value="">-- Pilih Pengairan --</option>
                                         @foreach ($pengairan as $peng)
-                                            <option value="{{ $peng['id'] }}">{{ $peng['name'] }}</option>
+                                            <option value="{{ $peng['id'] }}"
+                                                {{ $edit['id_jenis_pengairan'] == $peng['id'] ? 'selected' : '' }}>
+                                                {{ $peng['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -83,16 +94,19 @@
                                         data-placeholder="Pilih Jenis Data" aria-label="Default select example"
                                         name="jenis_data">
                                         <option value="">-- Pilih --</option>
-                                        <option value="tanam">Tanam</option>
-                                        <option value="panen">Panen</option>
-                                        <option value="puso_rusak">Puso/Rusak</option>
+                                        <option value="tanam" {{ $edit['tipe_data'] == 'tanam' ? 'selected' : '' }}>Tanam
+                                        </option>
+                                        <option value="panen" {{ $edit['tipe_data'] == 'panen' ? 'selected' : '' }}>Panen
+                                        </option>
+                                        <option value="puso_rusak"
+                                            {{ $edit['jenis_data'] == 'puso_rusak' ? 'selected' : '' }}>Puso/Rusak</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Nilai</label>
-                                    <input class="form-control" type="text" name="nilai">
+                                    <input class="form-control" type="text" name="nilai" value="{{ $edit['nilai'] }}">
                                 </div>
                             </div>
                         </div>

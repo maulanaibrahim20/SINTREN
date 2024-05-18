@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('laporan_padis', function (Blueprint $table) {
             $table->id();
-            $table->string('desa_id', '25');
-            $table->string('kecamatan_id', '25');
-            $table->string('tanaman_akhir_bulan_lalu', '25')->default(0);
-            $table->string('nama_pengumpul', '25');
-            $table->string('jabatan', '25');
-            $table->string('jenis_lahan', '25');
-            $table->integer('id_rehab_jaringan_irigasi_tersier')->default('0');
+            $table->string('user_id', 50);
+            $table->string('desa_id', 50);
+            $table->string('kecamatan_id', 25);
+            $table->string('jenis_lahan', 50);
+            $table->string('jenis_bantuan', 50);
+            $table->integer('id_jenis_pengairan',)->nullable();
+            $table->enum('tipe_data', ['panen', 'tanam', 'puso_rusak']);
+            $table->string('nilai')->default('0');
             $table->timestamps();
         });
     }

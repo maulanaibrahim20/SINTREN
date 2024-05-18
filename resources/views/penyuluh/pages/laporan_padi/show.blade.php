@@ -8,17 +8,6 @@
             <li class="breadcrumb-item" aria-current="page">Laporan Padi</li>
             <li class="breadcrumb-item active" aria-current="page">Detail Laporan Padi</li>
         </ol><!-- End breadcrumb -->
-        <div class="ms-auto">
-            {{-- <div>
-                <a href="{{ url('/penyuluh/create/laporan_padi/create') }}" class="btn bg-primary-transparent"
-                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
-                    <span>
-                        <i class="fa fa-plus"></i>
-                    </span>
-                    Tambah Laporan Padi
-                </a>
-            </div> --}}
-        </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
@@ -41,11 +30,10 @@
                         <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
-                                    <th class="wd-15p border-bottom-0">No.</th>
-                                    <th class="wd-15p border-bottom-0">ID Laporan</th>
-                                    <th class="wd-20p border-bottom-0">Jenis Padi</th>
+                                    <th class="wd-15p border-bottom-0">Nama Pengumpul</th>
+                                    <th class="wd-20p border-bottom-0">Alamat</th>
+                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
                                     <th class="wd-15p border-bottom-0">Jenis Bantuan</th>
-                                    <th class="wd-15p border-bottom-0">Tanaman Akhir Bulan Lalu</th>
                                     <th class="wd-20p border-bottom-0">Panen</th>
                                     <th class="wd-20p border-bottom-0">Tanam</th>
                                     <th class="wd-20p border-bottom-0">Puso/Rusak</th>
@@ -54,72 +42,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($detail_padi as $data)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->id_laporan_padi }}</td>
-                                        <td>{{ $data->padi->name }}</td>
-                                        <td>{{ $data->jenis_bantuan }}</td>
-                                        <td>{{ $data->tanaman_akhir_bulan_lalu }}</td>
-                                        <td>{{ $data->panen }}</td>
-                                        <td>{{ $data->tanam }}</td>
-                                        <td>{{ $data->puso_rusak }}</td>
-                                        <td>{{ $data->tanaman_akhir_bulan_laporan }}</td>
-                                        <td>
-                                            {{ \Carbon\Carbon::parse($data->created_at)->isoFormat('dddd, D MMMM YYYY') }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-                <div class="card-header">
-                    <h3 class="card-title">Detail Laporan Pengairan</h3>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
-                            <thead>
                                 <tr>
-                                    <th class="wd-15p border-bottom-0">No.</th>
-                                    <th class="wd-15p border-bottom-0">ID laporan Padi</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Pengairan</th>
-                                    <th class="wd-15p border-bottom-0">Tanaman Akhir Bulan Lalu</th>
-                                    <th class="wd-20p border-bottom-0">Panen</th>
-                                    <th class="wd-20p border-bottom-0">Tanam</th>
-                                    <th class="wd-20p border-bottom-0 text-center">Puso/Rusak</th>
-                                    <th class="wd-20p border-bottom-0 text-center">Tanaman Akhir Bulan Laporan</th>
-                                    <th class="wd-20p border-bottom-0 text-center">Hari/Tanggal</th>
+                                    <td>{{ $show->user->name }}</td> <!-- Jika user memiliki relasi dengan user -->
+                                    <td>
+                                        <div class="d-flex contact-image">
+                                            <div class="d-flex mt-1 flex-column ms-2">
+                                                <h6 class="mb-0 fs-14 fw-semibold text-dark">{{ $show->desa->name }}
+                                                </h6>
+                                                <span class="fs-12 text-muted">{{ $show->kecamatan->name }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ $show->jenis_lahan }}</td>
+                                    <td>{{ $show->jenis_bantuan }}</td>
+                                    <td>{{ $show->pengairan->name ?? 'N/A' }}</td>
+                                    <td>{{ $show->tipe_data }}</td>
+                                    <td>{{ $show->nilai }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($show->created_at)->isoFormat('dddd, D MMMM YYYY') }}
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($detail_pengairan as $peng)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $peng->id_laporan_padi }}</td>
-                                        <td>{{ $peng->pengairan->name }}</td>
-                                        <td>{{ $peng->tanaman_akhir_bulan_lalu }}</td>
-                                        <td>{{ $peng->panen }}</td>
-                                        <td>{{ $peng->tanam }}</td>
-                                        <td>{{ $peng->puso_rusak }}</td>
-                                        <td>{{ $peng->tanaman_akhir_bulan_laporan }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($peng->created_at)->isoFormat('dddd, D MMMM YYYY') }}
-                                        </td>
-                                    </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
