@@ -1,0 +1,60 @@
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+class PenyuluhDatabaseHelper {
+  static final PenyuluhDatabaseHelper _instance =
+      PenyuluhDatabaseHelper._internal();
+  static Database? _database;
+
+  factory PenyuluhDatabaseHelper() {
+    return _instance;
+  }
+
+  PenyuluhDatabaseHelper._internal();
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDatabase();
+    return _database!;
+  }
+
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'sintren.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+    );
+  }
+
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE desa (
+        id TEXT PRIMARY KEY,
+        name TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE pengairan (
+        id TEXT PRIMARY KEY,
+        name TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE detailPadi (
+        id INTEGER PRIMARY KEY,
+        user_id TEXT,
+        desa_id TEXT,
+        desa_name TEXT,
+        kecamatan_id TEXT,
+        jenis_lahan TEXT,
+        jenis_padi TEXT,
+        jenis_bantuan TEXT,
+        id_jenis_pengairan TEXT,
+        pengairan_name TEXT,
+        tipe_data TEXT,
+        nilai INTEGER
+      )
+    ''');
+  }
+}
