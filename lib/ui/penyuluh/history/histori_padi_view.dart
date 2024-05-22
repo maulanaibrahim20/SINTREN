@@ -188,7 +188,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(
-                                              "1/5/2024",
+                                              data.date,
                                               style: StyleTheme().styleBlack,
                                             ),
                                           ],

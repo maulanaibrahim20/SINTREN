@@ -9,26 +9,31 @@ import 'package:sintren_mobile/models/pengairan_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/padi_service.dart';
 
-class PadiController {
+class PalawijaController {
   late String selectedJenisLahanValue;
   late String selectedBantuanValue;
-  late PengairanModel? selectedJenisPengairanValue;
   late DesaModel? selectedDesaValue;
-  late String selectedJenisPadiValue;
+  late String selectedJenisPalawijaValue;
   late String selectedTipeDataValue;
   TextEditingController value = TextEditingController();
-  TextEditingController date = TextEditingController();
-  late Future<List<DetailPadiModel>> detailPadi;
+  late Future<List<DetailPadiModel>> detailPalawija;
 
   List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
   List<String> bantuan = ["Bantuan Pemerintah", "Bantuan Non-Pemerintah"];
   List<String> tipeData = ["panen", "tanam", "puso/rusak"];
-  late Future<List<PengairanModel>> jenisPengairan;
   late Future<List<DesaModel>> desa;
-  List<String> jenisPadi = [
+  List<String> jenisPalawija = [
     "Hibrida",
     "Inhibrida",
   ];
+
+  PalawijaController() {
+    selectedJenisLahanValue = '';
+    selectedBantuanValue = '';
+    selectedDesaValue = null;
+    selectedJenisPalawijaValue = '';
+    selectedTipeDataValue = '';
+  }
 
   String toCamelCase(String input) {
     if (input.isEmpty) {
@@ -56,11 +61,7 @@ class PadiController {
       "kecamatan_id": kecamatanId,
       "jenis_lahan": selectedJenisLahanValue,
       "jenis_bantuan": selectedBantuanValue,
-      "jenis_padi": selectedJenisPadiValue,
-      "date": date.text,
-      "id_jenis_pengairan": selectedJenisLahanValue == 'Lahan Non-Sawah'
-          ? null
-          : selectedJenisPengairanValue?.id,
+      "jenis_palawija": selectedJenisPalawijaValue,
       "tipe_data": selectedTipeDataValue,
       "nilai": value.text
     };
@@ -87,11 +88,7 @@ class PadiController {
       "kecamatan_id": kecamatanId,
       "jenis_lahan": selectedJenisLahanValue,
       "jenis_bantuan": selectedBantuanValue,
-      "jenis_padi": selectedJenisPadiValue,
-      "date": date.text,
-      "id_jenis_pengairan": selectedJenisLahanValue == 'Lahan Non-Sawah'
-          ? null
-          : selectedJenisPengairanValue?.id,
+      "jenis_padi": selectedJenisPalawijaValue,
       "tipe_data": selectedTipeDataValue,
       "nilai": value.text
     };
@@ -138,6 +135,8 @@ class PadiController {
   }
 
   Future<List<PengairanModel>> getPengiran() async {
+    await PadiService().getPengairan();
+
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('pengairan');
 
@@ -153,6 +152,8 @@ class PadiController {
   }
 
   Future<List<DetailPadiModel>> getDetailPadiByUser() async {
+    await PadiService().getDetailPadiByUser();
+
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('detailPadi');
 

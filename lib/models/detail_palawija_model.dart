@@ -1,67 +1,55 @@
-class DetailPadiModel {
+class DetailPalawijaModel {
   final int id;
   final String userId;
   final String desaId;
   final String desaName;
   final String kecamatanId;
   final String jenisLahan;
-  final String jenisPadi;
+  final String jenisPalawija;
   final String jenisBantuan;
-  final String idJenisPengairan;
-  final String pengairanName;
-  final String date;
   final String tipeData;
   final int nilai;
 
-  DetailPadiModel({
+  DetailPalawijaModel({
     required this.desaName,
-    required this.pengairanName,
     required this.id,
     required this.userId,
     required this.desaId,
     required this.kecamatanId,
     required this.jenisLahan,
-    required this.jenisPadi,
+    required this.jenisPalawija,
     required this.jenisBantuan,
-    required this.idJenisPengairan,
     required this.tipeData,
     required this.nilai,
-    required this.date,
   });
 
-  factory DetailPadiModel.fromJson(Map<String, dynamic> json) {
-    return DetailPadiModel(
+  factory DetailPalawijaModel.fromJson(Map<String, dynamic> json) {
+    return DetailPalawijaModel(
       id: json['id'],
       userId: json['user_id'],
       desaId: json['desa_id'],
       kecamatanId: json['kecamatan_id'],
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPengairan: json['id_jenis_pengairan'].toString(),
       tipeData: json['tipe_data'],
       nilai: json['nilai'],
       desaName: json['desa']['name'],
-      pengairanName: json['pengairan'] == null ? '' : json['pengairan']['name'],
-      jenisPadi: json['jenis_padi'],
-      date: json['date'],
+      jenisPalawija: json['jenis_padi'],
     );
   }
 
-  factory DetailPadiModel.fromMap(Map<String, dynamic> json) {
-    return DetailPadiModel(
+  factory DetailPalawijaModel.fromMap(Map<String, dynamic> json) {
+    return DetailPalawijaModel(
       id: json['id'],
       userId: json['user_id'],
       desaId: json['desa_id'],
       kecamatanId: json['kecamatan_id'],
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPengairan: json['id_jenis_pengairan'].toString(),
       tipeData: json['tipe_data'],
       nilai: json['nilai'],
       desaName: json['desa_name'],
-      pengairanName: json['pengairan_name'],
-      jenisPadi: json['jenis_padi'],
-      date: json['date'],
+      jenisPalawija: json['jenis_padi'],
     );
   }
 
@@ -73,13 +61,10 @@ class DetailPadiModel {
       'desa_name': desaName,
       'kecamatan_id': kecamatanId,
       'jenis_lahan': jenisLahan,
-      'jenis_padi': jenisPadi,
+      'jenis_padi': jenisPalawija,
       'jenis_bantuan': jenisBantuan,
-      'id_jenis_pengairan': idJenisPengairan,
-      'pengairan_name': pengairanName,
       'tipe_data': tipeData,
-      'nilai': nilai,
-      'date': date,
+      'nilai': nilai
     };
   }
 }

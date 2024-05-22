@@ -53,6 +53,7 @@ class PenyuluhDatabaseHelper {
         id_jenis_pengairan TEXT,
         pengairan_name TEXT,
         tipe_data TEXT,
+        date TEXT,
         nilai INTEGER
       )
     ''');

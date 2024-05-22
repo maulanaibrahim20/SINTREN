@@ -11,26 +11,27 @@ class TextFormFieldComponent extends StatelessWidget {
   final TextInputType inputType;
   final bool obsecure;
   final dynamic maxLine;
-  final String? initialValue;
+  final bool readOnly;
+  final dynamic onTap;
 
   const TextFormFieldComponent({
     super.key,
-    this.controller,
+    required this.controller,
     required this.icon,
     required this.hint,
     required this.label,
     required this.validator,
-    required this.inputType,
-    required this.obsecure,
+    this.inputType = TextInputType.name,
+    this.obsecure = false,
     this.maxLine,
     this.onSaved,
-    this.initialValue,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initialValue,
       maxLines: maxLine,
       obscureText: obsecure,
       controller: controller,
@@ -52,6 +53,8 @@ class TextFormFieldComponent extends StatelessWidget {
       ),
       validator: validator,
       onSaved: onSaved,
+      readOnly: readOnly,
+      onTap: onTap,
     );
   }
 }

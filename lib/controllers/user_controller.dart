@@ -92,8 +92,6 @@ class UserController {
   }
 
   Future<List<DesaModel>> getAssignment() async {
-    await UserService().getAssignment();
-    
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('desa');
 

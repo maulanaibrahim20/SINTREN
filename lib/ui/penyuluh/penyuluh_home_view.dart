@@ -223,7 +223,9 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const FormPalawijaView()));
+                                    builder: (_) => const FormPalawijaView(
+                                          onCreate: true,
+                                        )));
                           },
                           icon: Icon(Icons.add, color: ColorTheme().whiteColor),
                           label: Text(

@@ -50,9 +50,30 @@ class _FormPadiViewState extends State<FormPadiView> {
         padiC.selectedJenisPengairanValue = PengairanModel(
             id: widget.detail!.idJenisPengairan,
             name: widget.detail!.pengairanName);
+      } else {
+        padiC.selectedJenisLahanValue = '';
+        padiC.selectedBantuanValue = '';
+        padiC.selectedJenisPengairanValue = null;
+        padiC.selectedDesaValue = null;
+        padiC.selectedJenisPadiValue = '';
+        padiC.selectedTipeDataValue = '';
       }
       _isLoading = false;
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        padiC.date.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
   }
 
   @override
@@ -65,7 +86,7 @@ class _FormPadiViewState extends State<FormPadiView> {
         ),
         foregroundColor: ColorTheme().whiteColor,
         title: Text(
-          "Tambah Padi",
+          widget.onCreate ? "Tambah Padi" : "Edit Padi",
           style: StyleTheme()
               .styleWhite
               .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
@@ -150,6 +171,23 @@ class _FormPadiViewState extends State<FormPadiView> {
                         },
                       ),
                       const SizedBox(height: 10),
+                      TextFormFieldComponent(
+                        readOnly: true,
+                        icon: Icons.date_range_rounded,
+                        hint: "Pilih Tanggal",
+                        label: "Tanggal Penyuluhan",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a date';
+                          }
+                          return null;
+                        },
+                        obsecure: false,
+                        controller: padiC.date,
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                      ),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",

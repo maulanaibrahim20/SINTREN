@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
+import 'package:sintren_mobile/services/padi_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/admin/admin_landing_view.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
@@ -19,6 +21,12 @@ class MyApp extends StatelessWidget {
 
   const MyApp({super.key, this.isLogin, this.role});
 
+  Future<void> _initializeData() async {
+    await UserService().getAssignment();
+    await PadiService().getPengairan();
+    await PadiService().getDetailPadiByUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +34,7 @@ class MyApp extends StatelessWidget {
       title: "Application",
       builder: EasyLoading.init(),
       home: FutureBuilder(
-        future: Future.delayed(const Duration(seconds: 3)),
+        future: _initializeData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SplashScreen();

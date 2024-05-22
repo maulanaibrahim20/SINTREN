@@ -1,44 +1,56 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
+import 'package:sintren_mobile/models/desa_model.dart';
+import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.dart';
+import 'package:sintren_mobile/ui/penyuluh/histori_penyuluhan_view.dart';
 
 class FormPalawijaView extends StatefulWidget {
-  const FormPalawijaView({super.key});
+  const FormPalawijaView({super.key, this.detail, required this.onCreate});
+
+  final DetailPalawijaModel? detail;
+  final bool onCreate;
 
   @override
   State<FormPalawijaView> createState() => _FormPalawijaViewState();
 }
 
 class _FormPalawijaViewState extends State<FormPalawijaView> {
-  List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
-  List<String> bantuan = [
-    "Tidak Ada",
-    "Bantuan Pemerintah",
-    "Bantuan Non-Pemerintah"
-  ];
-  List<String> jenisPengairan = [
-    "Sawah Irigasi",
-    "Sawah Tadah Hujan",
-    "Sawah Rawa Pasang Surut",
-    "Sawah Rawa Lebak"
-  ];
-  List<String> jenisPadi = [
-    "Hibrida",
-    "Inhibrida",
-  ];
+  final formKey = GlobalKey<FormState>();
+  final palawijaC = PalawijaController();
+  late List<DesaModel> _desaList;
+  bool _isLoading = true;
 
-  final formKeyCP = GlobalKey<FormState>();
+  @override
+  void initState() {
+    _initializeData();
+    super.initState();
+  }
+
+  Future<void> _initializeData() async {
+    _desaList = await palawijaC.getAssignment();
+    setState(() {
+      if (widget.detail != null) {
+        palawijaC.value =
+            TextEditingController(text: widget.detail!.nilai.toString());
+        palawijaC.selectedDesaValue =
+            DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
+        palawijaC.selectedBantuanValue = widget.detail!.jenisBantuan;
+        palawijaC.selectedJenisLahanValue = widget.detail!.jenisLahan;
+        palawijaC.selectedJenisPalawijaValue = widget.detail!.jenisPalawija;
+        palawijaC.selectedTipeDataValue = widget.detail!.tipeData;
+      }
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    String? selectedJenisLahanValue =
-        jenisLahan.isNotEmpty ? jenisLahan[0] : null;
-    String? selectedBantuanValue = bantuan.isNotEmpty ? bantuan[0] : null;
-    String? selectedJenisPengairanValue =
-        jenisPengairan.isNotEmpty ? jenisPengairan[0] : null;
-    String? selectedJenisPadiValue = jenisPadi.isNotEmpty ? jenisPadi[0] : null;
-
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       appBar: AppBar(
@@ -47,7 +59,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
         ),
         foregroundColor: ColorTheme().whiteColor,
         title: Text(
-          "Tambah Padi",
+          widget.onCreate ? "Tambah Palawija" : "Edit Palawija",
           style: StyleTheme()
               .styleWhite
               .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
@@ -60,10 +72,31 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
           borderRadius: BorderRadius.circular(10),
           gradient: ColorTheme().linearColor,
         ),
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: () {
-            // Aksi yang akan dilakukan ketika tombol ditekan
+            if (formKey.currentState!.validate()) {
+              if (widget.onCreate) {
+                palawijaC.store().then((value) => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HistoriPenyuluhanView()),
+                      (Route<dynamic> route) => route.isFirst,
+                    ));
+              } else {
+                palawijaC
+                    .update(widget.detail!.id.toString())
+                    .then((value) => Navigator.pop(context));
+              }
+            }
           },
+          icon: Icon(Icons.save_rounded, color: ColorTheme().whiteColor),
+          label: Text(
+            'SIMPAN',
+            style: StyleTheme().styleWhite.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
             side: BorderSide(color: ColorTheme().primaryColor, width: 2),
@@ -71,122 +104,190 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize
-                .min, // Menentukan agar Row menyesuaikan ukuran minimum yang diperlukan
-            children: [
-              Text(
-                'SIMPAN',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: ColorTheme().whiteColor,
+        ),
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Card(
+              surfaceTintColor: ColorTheme().whiteColor,
+              margin: const EdgeInsets.all(10),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      DropdownButtonComponent(
+                        icon: Icons.villa,
+                        label: 'Desa',
+                        selectedItem: palawijaC.selectedDesaValue,
+                        items: _desaList.map((desa) {
+                          return DropdownMenuItem<DesaModel>(
+                            value: desa,
+                            child: Text(palawijaC.toCamelCase(desa.name)),
+                          );
+                        }).toList(),
+                        hint: 'Pilih Desa',
+                        validator: (value) =>
+                            value == null ? 'Pilih desa terlebih dahulu' : null,
+                        onChanged: (newValue) {
+                          log(newValue!.id.toString());
+                          setState(() {
+                            palawijaC.selectedDesaValue = newValue;
+                          });
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            palawijaC.selectedDesaValue = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButtonComponent(
+                        icon: Icons.date_range,
+                        label: "Jenis Lahan",
+                        selectedItem: palawijaC.selectedJenisLahanValue.isEmpty
+                            ? null
+                            : palawijaC.selectedJenisLahanValue,
+                        items: palawijaC.jenisLahan.map(
+                          (value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          },
+                        ).toList(),
+                        hint: "Pilih Jenis Lahan",
+                        validator: (value) => value == null
+                            ? "Pilih jenis lahan terlebih dahulu"
+                            : null,
+                        onChanged: (newValue) {
+                          setState(() {
+                            palawijaC.selectedJenisLahanValue = newValue!;
+                          });
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            palawijaC.selectedJenisLahanValue = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButtonComponent(
+                        icon: Icons.date_range,
+                        label: "Jenis Padi",
+                        selectedItem: palawijaC.selectedJenisPalawijaValue.isEmpty
+                            ? null
+                            : palawijaC.selectedJenisPalawijaValue,
+                        items: palawijaC.jenisPalawija.map(
+                          (value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          },
+                        ).toList(),
+                        hint: "Pilih Jenis Palawija",
+                        validator: (value) => value == null
+                            ? "Pilih jenis padi terlebih dahulu"
+                            : null,
+                        onChanged: (newValue) {
+                          setState(() {
+                            palawijaC.selectedJenisPalawijaValue = newValue!;
+                          });
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            palawijaC.selectedJenisPalawijaValue = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButtonComponent(
+                        icon: Icons.date_range,
+                        label: "Jenis Bantuan",
+                        selectedItem: palawijaC.selectedBantuanValue.isEmpty
+                            ? null
+                            : palawijaC.selectedBantuanValue,
+                        items: palawijaC.bantuan.map(
+                          (value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          },
+                        ).toList(),
+                        hint: "Pilih Jenis Bantuan",
+                        validator: (value) => value == null
+                            ? "Pilih jenis bantuan terlebih dahulu"
+                            : null,
+                        onChanged: (newValue) {
+                          setState(() {
+                            palawijaC.selectedBantuanValue = newValue!;
+                          });
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            palawijaC.selectedBantuanValue = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButtonComponent(
+                        icon: Icons.type_specimen,
+                        label: "Jenis Data",
+                        selectedItem: palawijaC.selectedTipeDataValue.isEmpty
+                            ? null
+                            : palawijaC.selectedTipeDataValue,
+                        items: palawijaC.tipeData.map(
+                          (value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(palawijaC.toCamelCase(value)),
+                            );
+                          },
+                        ).toList(),
+                        hint: "Pilih Jenis Data",
+                        validator: (value) => value == null
+                            ? "Pilih jenis data terlebih dahulu"
+                            : null,
+                        onChanged: (newValue) {
+                          setState(() {
+                            palawijaC.selectedTipeDataValue = newValue!;
+                          });
+                        },
+                        onSaved: (newValue) {
+                          setState(() {
+                            palawijaC.selectedTipeDataValue = newValue!;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormFieldComponent(
+                        controller: palawijaC.value = TextEditingController(
+                            text: widget.detail == null
+                                ? ""
+                                : widget.detail!.nilai.toString()),
+                        icon: Icons.numbers,
+                        hint: "Masukkan Nilai",
+                        label: "Nilai",
+                        validator: (value) => value == null
+                            ? "Masukkan nilai terlebih dahulu"
+                            : null,
+                        inputType: TextInputType.number,
+                        obsecure: false,
+                        onSaved: (value) {
+                          setState(() {
+                            palawijaC.value.text = value!;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(width: 8), // Jarak antara label dan ikon
-              Icon(
-                Icons.send,
-                color: ColorTheme().whiteColor,
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          children: [
-            // DropdownButtonComponent(
-            //   icon: Icons.date_range,
-            //   label: "Jenis Lahan",
-            //   selectedItem: selectedJenisLahanValue!,
-            //   items: jenisLahan.map(
-            //     (value) {
-            //       return DropdownMenuItem<String>(
-            //         value: value,
-            //         child: Text(value),
-            //       );
-            //     },
-            //   ).toList(),
-            //   hint: "Jenis Lahan",
-            //   validator: (value) =>
-            //       value == null ? "Pilih jenis lahan terlebih dahulu" : null,
-            //   onChanged: (newValue) {
-            //     setState(() {
-            //       selectedJenisLahanValue = newValue!;
-            //     });
-            //   },
-            // ),
-            // const SizedBox(height: 10),
-            // DropdownButtonComponent(
-            //   icon: Icons.date_range,
-            //   label: "Jenis Pengairan",
-            //   selectedItem: selectedJenisPengairanValue!,
-            //   items: jenisPengairan.map(
-            //     (value) {
-            //       return DropdownMenuItem<String>(
-            //         value: value,
-            //         child: Text(value),
-            //       );
-            //     },
-            //   ).toList(),
-            //   hint: "Jenis Pengairan",
-            //   validator: (value) => value == null
-            //       ? "Pilih jenis pengairan terlebih dahulu"
-            //       : null,
-            //   onChanged: (newValue) {
-            //     setState(() {
-            //       selectedJenisPengairanValue = newValue!;
-            //     });
-            //   },
-            // ),
-            // const SizedBox(height: 10),
-            // DropdownButtonComponent(
-            //   icon: Icons.date_range,
-            //   label: "Jenis Padi",
-            //   selectedItem: selectedJenisPadiValue!,
-            //   items: jenisPadi.map(
-            //     (value) {
-            //       return DropdownMenuItem<String>(
-            //         value: value,
-            //         child: Text(value),
-            //       );
-            //     },
-            //   ).toList(),
-            //   hint: "Jenis Padi",
-            //   validator: (value) =>
-            //       value == null ? "Pilih jenis padi terlebih dahulu" : null,
-            //   onChanged: (newValue) {
-            //     setState(() {
-            //       selectedJenisPadiValue = newValue!;
-            //     });
-            //   },
-            // ),
-            // const SizedBox(height: 10),
-            // DropdownButtonComponent(
-            //   icon: Icons.date_range,
-            //   label: "Bantuan",
-            //   selectedItem: selectedBantuanValue!,
-            //   items: bantuan.map(
-            //     (value) {
-            //       return DropdownMenuItem<String>(
-            //         value: value,
-            //         child: Text(value),
-            //       );
-            //     },
-            //   ).toList(),
-            //   hint: "Bantuan",
-            //   validator: (value) =>
-            //       value == null ? "Pilih bantuan terlebih dahulu" : null,
-            //   onChanged: (newValue) {
-            //     setState(() {
-            //       selectedBantuanValue = newValue!;
-            //     });
-            //   },
-            // ),
-          ],
-        ),
-      ),
+            ),
     );
   }
 }
