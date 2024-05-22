@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('luas_lahan_wilayah', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('kecamatan_id');
-            $table->bigInteger('desa_id');
+            $table->unsignedBigInteger('kecamatan_id');
+            $table->string('desa_id',25);
             $table->double('lahan_sawah');
             $table->double('lahan_non_sawah');
             $table->timestamps();
