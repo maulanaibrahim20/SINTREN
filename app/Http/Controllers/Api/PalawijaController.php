@@ -80,7 +80,7 @@ class PalawijaController extends Controller
             'date' => 'required|string|max:255',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'jenis_palawija' => 'required|string|max:255',
+            'id_jenis_palawija' => 'required|string|max:255',
             'tipe_data' => 'required|string|max:255',
             'nilai' => 'required|numeric',
         ]);
@@ -122,7 +122,7 @@ class PalawijaController extends Controller
             'date' => 'required|string|max:255',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'jenis_palawija' => 'required|string|max:255',
+            'id_jenis_palawija' => 'required|string|max:255',
             'tipe_data' => 'required|string|max:255',
             'nilai' => 'required|numeric',
         ]);
