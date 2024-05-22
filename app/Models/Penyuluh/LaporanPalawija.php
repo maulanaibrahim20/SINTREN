@@ -2,6 +2,7 @@
 
 namespace App\Models\Penyuluh;
 
+use App\Models\Operator\Palawija;
 use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,11 +13,6 @@ class LaporanPalawija extends Model
     use HasFactory;
     protected $guarded = [''];
 
-    public function details()
-    {
-        return $this->belongsTo(DetailLaporanPalawija::class, 'id_laporan_palawija');
-    }
-
     public function desa()
     {
         return $this->belongsTo(Desa::class, 'desa_id');
@@ -25,5 +21,10 @@ class LaporanPalawija extends Model
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
+    }
+
+    public function palawija()
+    {
+        return $this->belongsTo(Palawija::class, 'id_jenis_palawija');
     }
 }

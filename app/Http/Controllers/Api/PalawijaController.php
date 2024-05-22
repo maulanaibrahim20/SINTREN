@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class PalawijaController extends Controller
 {
-    public function getJenisPalawija(){
+    public function getJenisPalawija()
+    {
         $pengairan = JenisPalawija::all();
         $responseData = [
             'status' => 'success',
@@ -22,97 +23,130 @@ class PalawijaController extends Controller
         return response()->json($responseData);
     }
 
-    public function showAllByUser(Request $request)
+    public function showAllByUser($id)
     {
-        $laporanPadi = LaporanPalawija::where('nama_pengumpul', $request->name)->get();
+        try {
+            $laporanPalawija = LaporanPalawija::where('user_id', $id)->with(['desa', 'palawija'])->get();
 
-        $responseData = [
-            'status' => 'success',
-            'message' => 'Create successful',
-            'data' => $laporanPadi
-        ];
-        return response()->json($responseData);
+            if ($laporanPalawija->isEmpty()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Data kosong.',
+                    'data' => null
+                ], 201);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil mendapatkan data',
+                'data' => $laporanPalawija
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan ketika mendapatkan data: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
     }
 
-    public function showDetailPalawijaByIdLaporanPalawija(Request $request){
-        $detail = DetailLaporanPalawija::where('id_laporan_palawija', $request->id)->get();
+    public function deletaDetailById($id)
+    {
+        $item = LaporanPalawija::find($id);
 
-        $responseData = [
+        if (!$item) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+                'data' => null
+            ], 404);
+        }
+
+        $item->delete();
+
+        return response()->json([
             'status' => 'success',
-            'message' => 'Create successful',
-            'data' => $detail
-        ];
-        return response()->json($responseData);
+            'message' => 'Berhasil menghapus data',
+            'data' => null
+        ], 200);
     }
 
     public function store(Request $request)
     {
-        try {
-            DB::transaction(function () use ($request) {
-                $palawija = LaporanPalawija::create($request->only(['desa_id', 'kecamatan_id', 'nama_pengumpul', 'jabatan', 'jenis_lahan', 'id_rehab_jaringan_irigasi_tersier']));
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'kecamatan_id' => 'required|string',
+            'desa_id' => 'required|string',
+            'jenis_lahan' => 'required|string|max:255',
+            'jenis_bantuan' => 'required|string|max:255',
+            'jenis_palawija' => 'required|string|max:255',
+            'tipe_data' => 'required|string|max:255',
+            'nilai' => 'required|numeric',
+        ]);
 
-                foreach ($request->details as $detailData) {
-                    $palawija->details()->create($detailData);
-                }
-            });
+        try {
+            $palawija = new LaporanPalawija();
+            $palawija->fill($validated);
+            $palawija->save();
 
             $responseData = [
                 'status' => 'success',
-                'message' => 'Create successful',
-                'data' => null
+                'message' => 'Berhasil menyimpan data',
+                'data' => $palawija,
             ];
             return response()->json($responseData, 201);
         } catch (QueryException $e) {
             $responseData = [
                 'status' => 'error',
-                'message' => 'Failed to store data. Database error : '.$e,
+                'message' => 'Gagal menyimpan data. Database error: ' . $e->getMessage(),
                 'data' => null
             ];
             return response()->json($responseData, 500);
         } catch (\Exception $e) {
             $responseData = [
                 'status' => 'error',
-                'message' => 'Failed to store data.',
-                'data' => null
-            ];
-            return response()->json($responseData, 500);
-        }
-    }
-
-    public function deletePalawijaById(Request $request){
-        try {
-            $laporanPadi = LaporanPalawija::findOrFail($request->id);
-            $laporanPadi->delete();
-            $responseData = [
-                'status' => 'success',
-                'message' => 'Delete successful.',
-                'data' => null
-            ];
-            return response()->json($responseData, 200);
-        } catch (\Exception $e) {
-            $responseData = [
-                'status' => 'error',
-                'message' => 'Failed to delete.',
+                'message' => 'Gagal menyimpan data. ' . $e->getMessage(),
                 'data' => null
             ];
             return response()->json($responseData, 500);
         }
     }
 
-    public function deleteDetailPalawijaById(Request $request){
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'kecamatan_id' => 'required|string',
+            'desa_id' => 'required|string',
+            'jenis_lahan' => 'required|string|max:255',
+            'jenis_bantuan' => 'required|string|max:255',
+            'jenis_palawija' => 'required|string|max:255',
+            'tipe_data' => 'required|string|max:255',
+            'nilai' => 'required|numeric',
+        ]);
+
         try {
-            $detailPadi = DetailLaporanPalawija::findOrFail($request->id);
-            $detailPadi->delete();
+            $palawija = LaporanPalawija::findOrFail($id);
+            $palawija->fill($validated);
+            $palawija->save();
+
             $responseData = [
                 'status' => 'success',
-                'message' => 'Delete successful.',
-                'data' => null
+                'message' => 'Berhasil mengupdate data',
+                'data' => $palawija,
             ];
             return response()->json($responseData, 200);
+        } catch (QueryException $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal mengupdate data. Database error: ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
         } catch (\Exception $e) {
             $responseData = [
                 'status' => 'error',
-                'message' => 'Failed to delete.',
+                'message' => 'Gagal mengupdate data. ' . $e->getMessage(),
                 'data' => null
             ];
             return response()->json($responseData, 500);

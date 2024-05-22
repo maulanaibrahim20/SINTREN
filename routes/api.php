@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PadiController;
+use App\Http\Controllers\Api\PalawijaController;
 use App\Http\Controllers\Api\WilayahController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,8 +31,14 @@ Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
 Route::post('/padi/store',[PadiController::class,'store']);
 Route::patch('/padi/update/{id}',[PadiController::class,'update']);
 Route::get('/padi/showByUser/{id}',[PadiController::class,'showAllByUser']);
-Route::get('/padi/summary',[PadiController::class,'getDataSummaryByMonth']);
 Route::delete('/padi/deletaDetailById/{id}', [PadiController::class, 'deletaDetailById']);
+Route::get('/padi/summary',[PadiController::class,'getDataSummaryByMonth']);
+
+Route::get('/palawija',[PalawijaController::class,'getJenisPalawija']);
+Route::post('/palawija/store',[PalawijaController::class,'store']);
+Route::patch('/palawija/update/{id}',[PalawijaController::class,'update']);
+Route::get('/palawija/showByUser/{id}',[PalawijaController::class,'showAllByUser']);
+Route::delete('/palawija/deletaDetailById/{id}', [PalawijaController::class, 'deletaDetailById']);
 
 Route::get('/pengairan',[PadiController::class,'getPengairan']);
 Route::get('/desa',[WilayahController::class,'getDesa']);

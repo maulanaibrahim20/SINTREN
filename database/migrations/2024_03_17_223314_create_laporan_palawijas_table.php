@@ -13,11 +13,20 @@ return new class extends Migration
     {
         Schema::create('laporan_palawijas', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_lahan', 25);
-            $table->string('nama_pengumpul', 25);
-            $table->string('desa_id', 30);
-            $table->string('kecamatan_id', 30);
-            $table->enum('status', ['belum_terkirim', 'terkirim'])->default('belum_terkirim');
+            $table->string('user_id', 50);
+            $table->string('desa_id', 50);
+            $table->string('kecamatan_id', 25);
+            $table->string('jenis_lahan', 50);
+            $table->integer('id_jenis_palawija');
+            $table->string('jenis_bantuan', 50);
+            $table->enum('tipe_data', ['panen', 'tanam', 'puso/rusak','panen_muda','panen_hijauan_pakan_ternak']);
+            $table->integer('nilai')->default('0');
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('desa_id')->references('id')->on('desas')->onDelete('cascade');
+            $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
+            $table->foreign('id_jenis_palawija')->references('id')->on('jenis_palawijas')->onDelete('cascade');
             $table->timestamps();
         });
     }
