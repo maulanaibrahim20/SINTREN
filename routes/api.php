@@ -22,17 +22,16 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('/login', [UserController::class, 'login']);
-Route::put('/users/{id}', [UserController::class, 'update']);
-Route::post('/change-password', [UserController::class, 'changePassword'])->middleware('auth:api');
+Route::patch('/users/{id}', [UserController::class, 'update']);
+Route::get('/getUserById/{id}', [UserController::class, 'getUserById']);
+Route::get('/getAssignment/{id}', [UserController::class, 'getAssignment']);
+Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
 
-Route::post('/storePadi',[PadiController::class,'store']);
-Route::post('/padiShowByUser',[PadiController::class,'showAllByUser']);
-Route::post('/showDetailPadiByIdLaporanPadi',[PadiController::class,'showDetailPadiByIdLaporanPadi']);
-Route::post('/showDetailPengairanByIdLaporanPadi',[PadiController::class,'showDetailPengairanByIdLaporanPadi']);
-Route::post('/deletePadiById',[PadiController::class,'deletePadiById']);
-Route::post('/deleteDetailPadiById',[PadiController::class,'deleteDetailPadiById']);
-Route::post('/deleteDetailPengairanById',[PadiController::class,'deleteDetailPengairanById']);
-
+Route::post('/padi/store',[PadiController::class,'store']);
+Route::patch('/padi/update/{id}',[PadiController::class,'update']);
+Route::get('/padi/showByUser/{id}',[PadiController::class,'showAllByUser']);
+Route::get('/padi/summary',[PadiController::class,'getDataSummaryByMonth']);
+Route::delete('/padi/deletaDetailById/{id}', [PadiController::class, 'deletaDetailById']);
 
 Route::get('/pengairan',[PadiController::class,'getPengairan']);
 Route::get('/desa',[WilayahController::class,'getDesa']);

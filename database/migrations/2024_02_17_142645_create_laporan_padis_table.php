@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('desa_id', 50);
             $table->string('kecamatan_id', 25);
             $table->string('jenis_lahan', 50);
+            $table->string('jenis_padi', 50);
             $table->string('jenis_bantuan', 50);
             $table->integer('id_jenis_pengairan',)->nullable();
-            $table->enum('tipe_data', ['panen', 'tanam', 'puso_rusak']);
-            $table->string('nilai')->default('0');
+            $table->enum('tipe_data', ['panen', 'tanam', 'puso/rusak']);
+            $table->integer('nilai')->default('0');
             $table->timestamps();
         });
     }

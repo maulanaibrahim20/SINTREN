@@ -2,6 +2,7 @@
 
 namespace App\Models\Wilayah;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,5 +16,10 @@ class Desa extends Model
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'district_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'penugasan_penyuluh', 'desa_id', 'user_id');
     }
 }
