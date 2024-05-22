@@ -36,7 +36,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
           Container(
             height: 40,
             width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: ElevatedButton.icon(
               onPressed: () {},
               icon: Icon(Icons.filter_list, color: ColorTheme().whiteColor),
@@ -81,7 +81,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                         ),
                         Text(
                           snapshot.error.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Colors.red,
                           ),
@@ -92,7 +92,15 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                   );
                 } else {
                   final itemList = snapshot.data ?? [];
-                  if (itemList.isEmpty) {
+                  final filteredData = itemList.where((report) {
+                    final searchText =
+                        padiC.searchText.toLowerCase();
+                    final tanggalLaporan = report.date.toLowerCase();
+                    final wilayah = report.desaName.toLowerCase();
+                    return tanggalLaporan.contains(searchText) ||
+                        wilayah.contains(searchText);
+                  }).toList();
+                  if (filteredData.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -115,9 +123,9 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                   }
                   return ListView.builder(
                     padding: EdgeInsets.zero,
-                    itemCount: itemList.length,
+                    itemCount: filteredData.length,
                     itemBuilder: (BuildContext context, int index) {
-                      DetailPadiModel data = itemList[index];
+                      DetailPadiModel data = filteredData[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -343,20 +351,20 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Konfirmasi Aksi"),
-          content: Text("Anda yakin ingin menghapus data ini?"),
+          title: const Text("Konfirmasi Aksi"),
+          content: const Text("Anda yakin ingin menghapus data ini?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false); // Kembali dengan nilai false
               },
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true); // Kembali dengan nilai true
               },
-              child: Text("Delete"),
+              child: const Text("Delete"),
             ),
           ],
         );

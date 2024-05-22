@@ -185,7 +185,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (_) => FormPadiView(
+                                        builder: (_) => const FormPadiView(
                                               onCreate: true,
                                             )));
                               }
@@ -263,7 +263,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const HistoriPenyuluhanView()));
+                            builder: (_) => const HistoriPenyuluhanView(index: 0,)));
                   },
                   icon: Icon(Icons.history, color: ColorTheme().whiteColor),
                   label: Text(

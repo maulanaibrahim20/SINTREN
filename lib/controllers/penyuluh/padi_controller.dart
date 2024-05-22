@@ -18,6 +18,7 @@ class PadiController {
   late String selectedTipeDataValue;
   TextEditingController value = TextEditingController();
   TextEditingController date = TextEditingController();
+  var searchText = '';
   late Future<List<DetailPadiModel>> detailPadi;
 
   List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
@@ -137,7 +138,7 @@ class PadiController {
     }
   }
 
-  Future<List<PengairanModel>> getPengiran() async {
+  Future<List<PengairanModel>> getPengairan() async {
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('pengairan');
 

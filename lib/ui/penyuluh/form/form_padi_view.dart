@@ -36,11 +36,12 @@ class _FormPadiViewState extends State<FormPadiView> {
 
   Future<void> _initializeData() async {
     _desaList = await padiC.getAssignment();
-    _pengiranList = await padiC.getPengiran();
+    _pengiranList = await padiC.getPengairan();
     setState(() {
       if (widget.detail != null) {
         padiC.value =
             TextEditingController(text: widget.detail!.nilai.toString());
+        padiC.date = TextEditingController(text: widget.detail!.date);
         padiC.selectedDesaValue =
             DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
         padiC.selectedBantuanValue = widget.detail!.jenisBantuan;
@@ -106,7 +107,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                 padiC.store().then((value) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HistoriPenyuluhanView()),
+                          builder: (context) => const HistoriPenyuluhanView(index: 0,)),
                       (Route<dynamic> route) => route.isFirst,
                     ));
               } else {
@@ -142,8 +143,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                 padding: const EdgeInsets.all(10),
                 child: Form(
                   key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: ListView(
                     children: [
                       DropdownButtonComponent(
                         icon: Icons.villa,
@@ -188,6 +188,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           _selectDate(context);
                         },
                       ),
+                      const SizedBox(height: 10),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",

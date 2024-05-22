@@ -4,46 +4,46 @@ import 'dart:developer';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
-import 'package:sintren_mobile/models/detail_padi_model.dart';
-import 'package:sintren_mobile/models/pengairan_model.dart';
+import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
 
-class PadiService {
-  Future<void> getPengairan() async {
+class PalawijaService {
+  Future<void> getPalawija() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
-      await db.delete('pengairan');
+      await db.delete('palawija');
 
       final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}pengairan'),
+        Uri.parse('${ConfigApp().baseUrl}palawija'),
       );
 
       if (result.statusCode != 200) {
         throw Exception(
-            "Failed to get pengairan: ${result.statusCode} - ${result.body}");
+            "Failed to get palawija: ${result.statusCode} - ${result.body}");
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
 
-      List<PengairanModel> pengairan = (jsonResult['data'] as List)
-          .map((element) => PengairanModel.fromJson(element))
+      List<PalawijaModel> palawija = (jsonResult['data'] as List)
+          .map((element) => PalawijaModel.fromJson(element))
           .toList();
 
       Batch batch = db.batch();
-      for (var item in pengairan) {
-        batch.insert('pengairan', item.toMap());
+      for (var item in palawija) {
+        batch.insert('palawija', item.toMap());
       }
       await batch.commit(noResult: true);
     } catch (e) {
-      throw Exception("Failed to save pengairan to database: $e");
+      throw Exception("Failed to save palawija to database: $e");
     }
   }
 
   Future<bool> store(Map<String, dynamic> data) async {
     try {
       final Response result = await post(
-        Uri.parse('${ConfigApp().baseUrl}padi/store'),
+        Uri.parse('${ConfigApp().baseUrl}palawija/store'),
         headers: {
           "Content-Type": "application/json",
         },
@@ -65,7 +65,7 @@ class PadiService {
   Future<bool> update(Map<String, dynamic> data, String id) async {
     try {
       final Response result = await patch(
-        Uri.parse('${ConfigApp().baseUrl}padi/update/$id'),
+        Uri.parse('${ConfigApp().baseUrl}palawija/update/$id'),
         headers: {
           "Content-Type": "application/json",
         },
@@ -84,45 +84,45 @@ class PadiService {
     }
   }
 
-  Future<void> getDetailPadiByUser() async {
+  Future<void> getDetailPalawijaByUser() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
-      await db.delete('detailPadi');
+      await db.delete('detailPalawija');
 
       final id = await UserLoginModel().getUserId();
       final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}padi/showByUser/$id'),
+        Uri.parse('${ConfigApp().baseUrl}palawija/showByUser/$id'),
       );
 
       if (result.statusCode != 200) {
-        log("Failed to get detail padi: ${result.statusCode} - ${result.body}");
+        log("Failed to get detail palawija: ${result.statusCode} - ${result.body}");
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
 
-      List<DetailPadiModel> detail = [];
+      List<DetailPalawijaModel> detail = [];
       for (var element in jsonResult['data'] as List) {
-        DetailPadiModel detailPadiModel = DetailPadiModel.fromJson(element);
-        detail.add(detailPadiModel);
+        DetailPalawijaModel detailPalawijaModel =
+            DetailPalawijaModel.fromJson(element);
+        detail.add(detailPalawijaModel);
       }
 
       if (detail.isNotEmpty) {
-        log(detail[0].pengairanName);
         Batch batch = db.batch();
         for (var item in detail) {
-          batch.insert('detailPadi', item.toMap());
+          batch.insert('detailPalawija', item.toMap());
         }
         await batch.commit(noResult: true);
       }
     } catch (e) {
-      log("Failed to get detail padi: $e");
+      log("Failed to get detail palawija: $e");
     }
   }
 
   Future<bool> deletaDetailById(int id) async {
     try {
       final Response result = await delete(
-        Uri.parse('${ConfigApp().baseUrl}padi/deletaDetailById/$id'),
+        Uri.parse('${ConfigApp().baseUrl}palawija/deletaDetailById/$id'),
       );
 
       if (result.statusCode != 200) {

@@ -4,36 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
-import 'package:sintren_mobile/models/detail_padi_model.dart';
-import 'package:sintren_mobile/models/pengairan_model.dart';
+import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
-import 'package:sintren_mobile/services/padi_service.dart';
+import 'package:sintren_mobile/services/palawija_service.dart';
 
 class PalawijaController {
   late String selectedJenisLahanValue;
   late String selectedBantuanValue;
   late DesaModel? selectedDesaValue;
-  late String selectedJenisPalawijaValue;
+  late PalawijaModel? selectedJenisPalawijaValue;
   late String selectedTipeDataValue;
   TextEditingController value = TextEditingController();
-  late Future<List<DetailPadiModel>> detailPalawija;
+  TextEditingController date = TextEditingController();
+  late Future<List<DetailPalawijaModel>> detailPalawija;
 
   List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
   List<String> bantuan = ["Bantuan Pemerintah", "Bantuan Non-Pemerintah"];
-  List<String> tipeData = ["panen", "tanam", "puso/rusak"];
+  List<String> tipeData = ["panen", "tanam", "puso/rusak","panen_muda","panen_hijauan_pakan_ternak"];
   late Future<List<DesaModel>> desa;
-  List<String> jenisPalawija = [
-    "Hibrida",
-    "Inhibrida",
-  ];
-
-  PalawijaController() {
-    selectedJenisLahanValue = '';
-    selectedBantuanValue = '';
-    selectedDesaValue = null;
-    selectedJenisPalawijaValue = '';
-    selectedTipeDataValue = '';
-  }
+  late Future<List<PalawijaModel>> palawija;
 
   String toCamelCase(String input) {
     if (input.isEmpty) {
@@ -61,14 +51,15 @@ class PalawijaController {
       "kecamatan_id": kecamatanId,
       "jenis_lahan": selectedJenisLahanValue,
       "jenis_bantuan": selectedBantuanValue,
-      "jenis_palawija": selectedJenisPalawijaValue,
+      "date": date.text,
+      "id_jenis_palawija": selectedJenisPalawijaValue?.id,
       "tipe_data": selectedTipeDataValue,
       "nilai": value.text
     };
 
     log(data.toString());
 
-    final result = await PadiService().store(data);
+    final result = await PalawijaService().store(data);
 
     if (!result) {
       EasyLoading.showToast("Gagal menyimpan data");
@@ -88,14 +79,15 @@ class PalawijaController {
       "kecamatan_id": kecamatanId,
       "jenis_lahan": selectedJenisLahanValue,
       "jenis_bantuan": selectedBantuanValue,
-      "jenis_padi": selectedJenisPalawijaValue,
+      "date": date.text,
+      "id_jenis_palawija": selectedJenisPalawijaValue?.id,
       "tipe_data": selectedTipeDataValue,
       "nilai": value.text
     };
 
     log(data.toString());
 
-    final result = await PadiService().update(data, dataId);
+    final result = await PalawijaService().update(data, dataId);
 
     if (!result) {
       EasyLoading.showToast("Gagal mengupdate data");
@@ -106,7 +98,7 @@ class PalawijaController {
         ..removeWhere((key, value) => key == "user_id");
 
       await db.update(
-        'detailPadi',
+        'detailPalawija',
         localData,
         where: 'id = ?',
         whereArgs: [dataId],
@@ -118,14 +110,14 @@ class PalawijaController {
 
   Future<void> deleteDetailById(int id) async {
     EasyLoading.show(status: "Loading...");
-    final result = await PadiService().deletaDetailById(id);
+    final result = await PalawijaService().deletaDetailById(id);
 
     if (!result) {
       EasyLoading.showToast("Gagal menghapus data");
     } else {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete(
-        'detailPadi',
+        'detailPalawija',
         where: "id = ?",
         whereArgs: [id],
       );
@@ -134,14 +126,14 @@ class PalawijaController {
     }
   }
 
-  Future<List<PengairanModel>> getPengiran() async {
-    await PadiService().getPengairan();
+  Future<List<PalawijaModel>> getPalawija() async {
+    await PalawijaService().getPalawija();
 
     final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('pengairan');
+    final List<Map<String, dynamic>> maps = await db.query('palawija');
 
-    return List<PengairanModel>.from(
-        maps.map((map) => PengairanModel.fromJson(map)));
+    return List<PalawijaModel>.from(
+        maps.map((map) => PalawijaModel.fromJson(map)));
   }
 
   Future<List<DesaModel>> getAssignment() async {
@@ -151,26 +143,26 @@ class PalawijaController {
     return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
   }
 
-  Future<List<DetailPadiModel>> getDetailPadiByUser() async {
-    await PadiService().getDetailPadiByUser();
+  Future<List<DetailPalawijaModel>> getDetailPalawijaByUser() async {
+    await PalawijaService().getDetailPalawijaByUser();
 
     final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('detailPadi');
+    final List<Map<String, dynamic>> maps = await db.query('detailPalawija');
 
-    return List<DetailPadiModel>.from(
-        maps.map((map) => DetailPadiModel.fromMap(map)));
+    return List<DetailPalawijaModel>.from(
+        maps.map((map) => DetailPalawijaModel.fromMap(map)));
   }
 
-  Future<DetailPadiModel?> getDetailPadiById(int? id) async {
+  Future<DetailPalawijaModel?> getDetailPadiById(int? id) async {
     final db = await PenyuluhDatabaseHelper().database;
     final maps = await db.query(
-      'detailPadi',
+      'detailPalawija',
       where: 'id = ?',
       whereArgs: [id],
     );
 
     if (maps.isNotEmpty) {
-      return DetailPadiModel.fromMap(maps.first);
+      return DetailPalawijaModel.fromMap(maps.first);
     } else {
       return null;
     }

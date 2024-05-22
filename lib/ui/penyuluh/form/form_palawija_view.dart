@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
@@ -24,6 +25,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
   final formKey = GlobalKey<FormState>();
   final palawijaC = PalawijaController();
   late List<DesaModel> _desaList;
+  late List<PalawijaModel> _palawijaList;
   bool _isLoading = true;
 
   @override
@@ -34,19 +36,43 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
 
   Future<void> _initializeData() async {
     _desaList = await palawijaC.getAssignment();
+    _palawijaList = await palawijaC.getPalawija();
     setState(() {
       if (widget.detail != null) {
         palawijaC.value =
             TextEditingController(text: widget.detail!.nilai.toString());
+        palawijaC.date = TextEditingController(text: widget.detail!.date);
         palawijaC.selectedDesaValue =
             DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
         palawijaC.selectedBantuanValue = widget.detail!.jenisBantuan;
         palawijaC.selectedJenisLahanValue = widget.detail!.jenisLahan;
-        palawijaC.selectedJenisPalawijaValue = widget.detail!.jenisPalawija;
+        palawijaC.selectedJenisPalawijaValue = PalawijaModel(
+            id: widget.detail!.idJenisPalawija,
+            name: widget.detail!.palawijaName);
         palawijaC.selectedTipeDataValue = widget.detail!.tipeData;
+      } else {
+        palawijaC.selectedJenisLahanValue = '';
+        palawijaC.selectedBantuanValue = '';
+        palawijaC.selectedDesaValue = null;
+        palawijaC.selectedJenisPalawijaValue = null;
+        palawijaC.selectedTipeDataValue = '';
       }
       _isLoading = false;
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null) {
+      setState(() {
+        palawijaC.date.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
   }
 
   @override
@@ -79,7 +105,9 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                 palawijaC.store().then((value) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HistoriPenyuluhanView()),
+                          builder: (context) => const HistoriPenyuluhanView(
+                                index: 1,
+                              )),
                       (Route<dynamic> route) => route.isFirst,
                     ));
               } else {
@@ -144,6 +172,24 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                         },
                       ),
                       const SizedBox(height: 10),
+                      TextFormFieldComponent(
+                        readOnly: true,
+                        icon: Icons.date_range_rounded,
+                        hint: "Pilih Tanggal",
+                        label: "Tanggal Penyuluhan",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a date';
+                          }
+                          return null;
+                        },
+                        obsecure: false,
+                        controller: palawijaC.date,
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                      ),
+                      const SizedBox(height: 10),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",
@@ -175,26 +221,22 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       const SizedBox(height: 10),
                       DropdownButtonComponent(
-                        icon: Icons.date_range,
-                        label: "Jenis Padi",
-                        selectedItem: palawijaC.selectedJenisPalawijaValue.isEmpty
-                            ? null
-                            : palawijaC.selectedJenisPalawijaValue,
-                        items: palawijaC.jenisPalawija.map(
-                          (value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          },
-                        ).toList(),
-                        hint: "Pilih Jenis Palawija",
+                        icon: Icons.villa,
+                        label: 'Jenis Palawija',
+                        selectedItem: palawijaC.selectedJenisPalawijaValue,
+                        items: _palawijaList.map((palawija) {
+                          return DropdownMenuItem<PalawijaModel>(
+                            value: palawija,
+                            child: Text(palawijaC.toCamelCase(palawija.name)),
+                          );
+                        }).toList(),
+                        hint: 'Pilih Jenis Palawija',
                         validator: (value) => value == null
-                            ? "Pilih jenis padi terlebih dahulu"
+                            ? 'Pilih jenis palawija terlebih dahulu'
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            palawijaC.selectedJenisPalawijaValue = newValue!;
+                            palawijaC.selectedJenisPalawijaValue = newValue;
                           });
                         },
                         onSaved: (newValue) {

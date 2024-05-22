@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/history/histori_padi_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/history/histori_palawija_view.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
-  const HistoriPenyuluhanView({super.key});
+  const HistoriPenyuluhanView({super.key, required this.index});
+
+  final int index;
 
   @override
   State<HistoriPenyuluhanView> createState() => _HistoriPenyuluhanViewState();
@@ -26,7 +29,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController = TabController(
+      length: tabs.length,
+      vsync: this,
+      initialIndex: widget.index,
+    );
   }
 
   @override
@@ -66,7 +73,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView>
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 16.0),
                   ),
-                  // onChanged: controller.updateSearchText,
+                  onChanged: (value) {
+                    setState(() {
+                      PadiController().searchText = value;
+                    });
+                  },
                 ),
               )
             : Text(

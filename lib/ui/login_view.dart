@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
-import 'package:sintren_mobile/services/padi_service.dart';
-import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/admin/admin_landing_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -18,12 +16,6 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final loginC = UserController();
   final formKey = GlobalKey<FormState>();
-
-  Future<void> _initializeData() async {
-    await UserService().getAssignment();
-    await PadiService().getPengairan();
-    await PadiService().getDetailPadiByUser();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +140,6 @@ class _LoginViewState extends State<LoginView> {
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             await loginC.login().then((value) {
-                              _initializeData();
                               if (value == "PENYULUH") {
                                 Navigator.pushAndRemoveUntil(
                                   context,

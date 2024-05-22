@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
+import 'package:sintren_mobile/services/padi_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
 
 class UserController {
@@ -27,6 +28,10 @@ class UserController {
     if (!result) {
       EasyLoading.showToast("Login gagal");
     }
+
+    await UserService().getAssignment();
+    await PadiService().getPengairan();
+    await PadiService().getDetailPadiByUser();
 
     final role = await UserLoginModel().getRole();
     return role ?? "";
