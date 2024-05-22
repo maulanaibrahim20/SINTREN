@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Penyuluh\DetailLaporanPalawija;
 use App\Models\Penyuluh\JenisPalawija;
 use App\Models\Penyuluh\LaporanPalawija;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PalawijaController extends Controller
 {
