@@ -23,11 +23,6 @@ return new class extends Migration
             $table->enum('tipe_data', ['panen', 'tanam', 'puso/rusak']);
             $table->integer('nilai')->default('0');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('desa_id')->references('id')->on('desas')->onDelete('cascade');
-            $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
-            $table->foreign('id_jenis_pengairan')->references('id')->on('pengairan')->onDelete('cascade');
         });
     }
 
