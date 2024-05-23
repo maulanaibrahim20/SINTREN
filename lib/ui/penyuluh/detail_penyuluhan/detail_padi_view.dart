@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
 
-class HistoriPadiView extends StatefulWidget {
-  const HistoriPadiView({super.key});
+class DetailPadiView extends StatefulWidget {
+  const DetailPadiView({super.key});
 
   @override
-  State<HistoriPadiView> createState() => HistoriPadiViewState();
+  State<DetailPadiView> createState() => DetailPadiViewState();
 }
 
-class HistoriPadiViewState extends State<HistoriPadiView> {
+class DetailPadiViewState extends State<DetailPadiView> {
   final padiC = PadiController();
+  late Future<List<DetailPadiModel>> detailPadi;
 
   Future<void> _initializeData() async {
     setState(() {
-      padiC.detailPadi = padiC.getDetailPadiByUser();
+      detailPadi = padiC.getDetailPadiByUser();
     });
   }
 
@@ -58,7 +60,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
           ),
           Expanded(
             child: FutureBuilder<List<DetailPadiModel>>(
-              future: padiC.detailPadi,
+              future: detailPadi,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -92,15 +94,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                   );
                 } else {
                   final itemList = snapshot.data ?? [];
-                  final filteredData = itemList.where((report) {
-                    final searchText =
-                        padiC.searchText.toLowerCase();
-                    final tanggalLaporan = report.date.toLowerCase();
-                    final wilayah = report.desaName.toLowerCase();
-                    return tanggalLaporan.contains(searchText) ||
-                        wilayah.contains(searchText);
-                  }).toList();
-                  if (filteredData.isEmpty) {
+                  if (itemList.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -123,9 +117,9 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                   }
                   return ListView.builder(
                     padding: EdgeInsets.zero,
-                    itemCount: filteredData.length,
+                    itemCount: itemList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      DetailPadiModel data = filteredData[index];
+                      DetailPadiModel data = itemList[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -176,7 +170,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              padiC.toCamelCase(data.desaName),
+                                              UserController().toCamelCase(data.desaName),
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(
@@ -210,7 +204,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(
-                                              padiC.toCamelCase(
+                                              UserController().toCamelCase(
                                                   data.pengairanName),
                                               style: StyleTheme().styleBlack,
                                             ),
@@ -222,7 +216,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              padiC.toCamelCase(data.tipeData),
+                                              UserController().toCamelCase(data.tipeData),
                                               style: StyleTheme()
                                                   .styleBlack
                                                   .copyWith(
@@ -257,7 +251,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                                                                 onCreate: false,
                                                               )));
                                                   setState(() {
-                                                    padiC.detailPadi = padiC
+                                                    detailPadi = padiC
                                                         .getDetailPadiByUser();
                                                   });
                                                 },
@@ -297,7 +291,7 @@ class HistoriPadiViewState extends State<HistoriPadiView> {
                                                         .deleteDetailById(
                                                             data.id);
                                                     setState(() {
-                                                      padiC.detailPadi = padiC
+                                                      detailPadi = padiC
                                                           .getDetailPadiByUser();
                                                     });
                                                   }

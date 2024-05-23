@@ -14,9 +14,26 @@ class ChangeProfileView extends StatefulWidget {
 class _ChangeProfileViewState extends State<ChangeProfileView> {
   final userC = UserController();
   final formKey = GlobalKey<FormState>();
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController username = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController address = TextEditingController();
+
+  Future<void> _initializeData() async {
+    Map<String, dynamic> data = await userC.getUser();
+    setState(() {
+      name.text = data['name'];
+      email.text = data['email'];
+      username.text = data['username'];
+      phone.text = data['phone'];
+      address.text = data['address'];
+    });
+  }
+
   @override
   void initState() {
-    userC.getUser();
+    _initializeData();
     super.initState();
   }
 
@@ -48,7 +65,14 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
         child: ElevatedButton.icon(
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              userC.updateProfil().then((value) => Navigator.pop(context));
+              final data = {
+                'name': name.text,
+                'username': username.text,
+                'email': email.text,
+                'phone': phone.text,
+                'address': address.text,
+              };
+              userC.updateProfil(data).then((value) => Navigator.pop(context));
             }
           },
           icon: Icon(Icons.save_rounded, color: ColorTheme().whiteColor),
@@ -78,7 +102,7 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
             child: ListView(
               children: [
                 TextFormFieldComponent(
-                  controller: userC.name,
+                  controller: name,
                   icon: Icons.person,
                   hint: 'Masukkan Nama Lengkap',
                   label: 'Nama Lengkap',
@@ -94,7 +118,7 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   height: 10,
                 ),
                 TextFormFieldComponent(
-                  controller: userC.username,
+                  controller: username,
                   icon: Icons.account_circle,
                   hint: 'Masukkan Username',
                   label: 'Username',
@@ -110,7 +134,7 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   height: 10,
                 ),
                 TextFormFieldComponent(
-                  controller: userC.email,
+                  controller: email,
                   icon: Icons.email,
                   hint: 'Masukkan Email',
                   label: 'Email',
@@ -126,7 +150,7 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   height: 10,
                 ),
                 TextFormFieldComponent(
-                  controller: userC.phone,
+                  controller: phone,
                   icon: Icons.phone_android,
                   hint: 'Masukkan Nomor HP',
                   label: 'Nomor HP',
@@ -142,7 +166,7 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   height: 10,
                 ),
                 TextFormFieldComponent(
-                  controller: userC.address,
+                  controller: address,
                   icon: Icons.location_on,
                   maxLine: 5,
                   hint: 'Masukkan Alamat',

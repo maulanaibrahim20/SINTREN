@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/detail_desa/detail_desa_padi_view.dart';
-import 'package:sintren_mobile/ui/penyuluh/detail_desa/detail_desa_palawija_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_padi_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_palawija_view.dart';
 
-class DetailDesaView extends StatefulWidget {
-  const DetailDesaView({super.key});
+class DetailPenyuluhanView extends StatefulWidget {
+  const DetailPenyuluhanView({super.key, required this.index});
+
+  final int index;
 
   @override
-  State<DetailDesaView> createState() => _DetailDesaViewState();
+  State<DetailPenyuluhanView> createState() => _DetailPenyuluhanViewState();
 }
 
-class _DetailDesaViewState extends State<DetailDesaView>
+class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
     with SingleTickerProviderStateMixin {
   final List<Tab> tabs = [
     const Tab(text: 'Padi'),
@@ -26,7 +28,11 @@ class _DetailDesaViewState extends State<DetailDesaView>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController = TabController(
+      length: tabs.length,
+      vsync: this,
+      initialIndex: widget.index,
+    );
   }
 
   @override
@@ -66,11 +72,15 @@ class _DetailDesaViewState extends State<DetailDesaView>
                     contentPadding:
                         const EdgeInsets.symmetric(horizontal: 16.0),
                   ),
-                  // onChanged: controller.updateSearchText,
+                  onChanged: (value) {
+                    setState(() {
+                      
+                    });
+                  },
                 ),
               )
             : Text(
-                'Desa Lohbener',
+                'Histori Penyuluhan',
                 style: StyleTheme().styleWhite.copyWith(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -125,10 +135,7 @@ class _DetailDesaViewState extends State<DetailDesaView>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: const [
-                  DetailDesaPadiView(),
-                  DetailDesaPalawijaView()
-                ],
+                children: const [DetailPadiView(), DetailPalawijaView()],
               ),
             ),
           ],

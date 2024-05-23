@@ -16,6 +16,8 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final loginC = UserController();
   final formKey = GlobalKey<FormState>();
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class _LoginViewState extends State<LoginView> {
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: loginC.usernameC,
+                      controller: username,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         isDense: true,
@@ -104,7 +106,7 @@ class _LoginViewState extends State<LoginView> {
                       height: 20,
                     ),
                     TextFormField(
-                      controller: loginC.passwordC,
+                      controller: password,
                       keyboardType: TextInputType.name,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -139,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
                       child: ElevatedButton.icon(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            await loginC.login().then((value) {
+                            await loginC.login(username: username.text, password: password.text).then((value) {
                               if (value == "PENYULUH") {
                                 Navigator.pushAndRemoveUntil(
                                   context,

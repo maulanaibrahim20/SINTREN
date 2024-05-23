@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_home_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
@@ -28,9 +27,8 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
   late Future<List<DesaModel>> desa;
 
   Future<void> _initializeData() async {
-    await userC.getUser();
     setState(() {
-      desa = userC.getAssignment();
+      desa = userC.getDesa();
     });
   }
 
@@ -263,7 +261,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const HistoriPenyuluhanView(index: 0,)));
+                            builder: (_) => const HistoriPenyuluhanView()));
                   },
                   icon: Icon(Icons.history, color: ColorTheme().whiteColor),
                   label: Text(
@@ -393,7 +391,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Desa ${PadiController().toCamelCase(desa.name)}",
+                                                  "Desa ${UserController().toCamelCase(desa.name)}",
                                                   style: StyleTheme()
                                                       .stylePrimary
                                                       .copyWith(

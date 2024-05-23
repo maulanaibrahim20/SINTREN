@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
@@ -9,7 +10,7 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.dart';
-import 'package:sintren_mobile/ui/penyuluh/histori_penyuluhan_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class FormPalawijaView extends StatefulWidget {
   const FormPalawijaView({super.key, this.detail, required this.onCreate});
@@ -24,8 +25,15 @@ class FormPalawijaView extends StatefulWidget {
 class _FormPalawijaViewState extends State<FormPalawijaView> {
   final formKey = GlobalKey<FormState>();
   final palawijaC = PalawijaController();
-  late List<DesaModel> _desaList;
-  late List<PalawijaModel> _palawijaList;
+  late List<DesaModel> desaList;
+  late List<PalawijaModel> palawijaList;
+  late String selectedJenisLahanValue;
+  late String selectedBantuanValue;
+  late DesaModel? selectedDesaValue;
+  late PalawijaModel? selectedJenisPalawijaValue;
+  late String selectedTipeDataValue;
+  TextEditingController value = TextEditingController();
+  TextEditingController date = TextEditingController();
   bool _isLoading = true;
 
   @override
@@ -35,27 +43,26 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
   }
 
   Future<void> _initializeData() async {
-    _desaList = await palawijaC.getAssignment();
-    _palawijaList = await palawijaC.getPalawija();
+    desaList = await palawijaC.getDesa();
+    palawijaList = await palawijaC.getPalawija();
     setState(() {
       if (widget.detail != null) {
-        palawijaC.value =
-            TextEditingController(text: widget.detail!.nilai.toString());
-        palawijaC.date = TextEditingController(text: widget.detail!.date);
-        palawijaC.selectedDesaValue =
+        value = TextEditingController(text: widget.detail!.nilai.toString());
+        date = TextEditingController(text: widget.detail!.date);
+        selectedDesaValue =
             DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
-        palawijaC.selectedBantuanValue = widget.detail!.jenisBantuan;
-        palawijaC.selectedJenisLahanValue = widget.detail!.jenisLahan;
-        palawijaC.selectedJenisPalawijaValue = PalawijaModel(
+        selectedBantuanValue = widget.detail!.jenisBantuan;
+        selectedJenisLahanValue = widget.detail!.jenisLahan;
+        selectedJenisPalawijaValue = PalawijaModel(
             id: widget.detail!.idJenisPalawija,
             name: widget.detail!.palawijaName);
-        palawijaC.selectedTipeDataValue = widget.detail!.tipeData;
+        selectedTipeDataValue = widget.detail!.tipeData;
       } else {
-        palawijaC.selectedJenisLahanValue = '';
-        palawijaC.selectedBantuanValue = '';
-        palawijaC.selectedDesaValue = null;
-        palawijaC.selectedJenisPalawijaValue = null;
-        palawijaC.selectedTipeDataValue = '';
+        selectedJenisLahanValue = '';
+        selectedBantuanValue = '';
+        selectedDesaValue = null;
+        selectedJenisPalawijaValue = null;
+        selectedTipeDataValue = '';
       }
       _isLoading = false;
     });
@@ -70,7 +77,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
     );
     if (picked != null) {
       setState(() {
-        palawijaC.date.text = "${picked.toLocal()}".split(' ')[0];
+        date.text = "${picked.toLocal()}".split(' ')[0];
       });
     }
   }
@@ -101,18 +108,29 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
         child: ElevatedButton.icon(
           onPressed: () {
             if (formKey.currentState!.validate()) {
+              final data = {
+                "desa_id": selectedDesaValue!.id,
+                "jenis_lahan": selectedJenisLahanValue,
+                "jenis_bantuan": selectedBantuanValue,
+                "date": date.text,
+                "id_jenis_palawija": selectedJenisPalawijaValue!.id,
+                "tipe_data": selectedTipeDataValue,
+                "nilai": value.text
+              };
               if (widget.onCreate) {
-                palawijaC.store().then((value) => Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HistoriPenyuluhanView(
-                                index: 1,
-                              )),
-                      (Route<dynamic> route) => route.isFirst,
-                    ));
+                palawijaC
+                    .store(data)
+                    .then((value) => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DetailPenyuluhanView(
+                                    index: 1,
+                                  )),
+                          (Route<dynamic> route) => route.isFirst,
+                        ));
               } else {
                 palawijaC
-                    .update(widget.detail!.id.toString())
+                    .update(widget.detail!.id.toString(), data)
                     .then((value) => Navigator.pop(context));
               }
             }
@@ -149,11 +167,11 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Desa',
-                        selectedItem: palawijaC.selectedDesaValue,
-                        items: _desaList.map((desa) {
+                        selectedItem: selectedDesaValue,
+                        items: desaList.map((desa) {
                           return DropdownMenuItem<DesaModel>(
                             value: desa,
-                            child: Text(palawijaC.toCamelCase(desa.name)),
+                            child: Text(UserController().toCamelCase(desa.name)),
                           );
                         }).toList(),
                         hint: 'Pilih Desa',
@@ -162,12 +180,12 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                         onChanged: (newValue) {
                           log(newValue!.id.toString());
                           setState(() {
-                            palawijaC.selectedDesaValue = newValue;
+                            selectedDesaValue = newValue;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            palawijaC.selectedDesaValue = newValue!;
+                            selectedDesaValue = newValue!;
                           });
                         },
                       ),
@@ -184,7 +202,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           return null;
                         },
                         obsecure: false,
-                        controller: palawijaC.date,
+                        controller: date,
                         onTap: () {
                           _selectDate(context);
                         },
@@ -193,9 +211,9 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",
-                        selectedItem: palawijaC.selectedJenisLahanValue.isEmpty
+                        selectedItem: selectedJenisLahanValue.isEmpty
                             ? null
-                            : palawijaC.selectedJenisLahanValue,
+                            : selectedJenisLahanValue,
                         items: palawijaC.jenisLahan.map(
                           (value) {
                             return DropdownMenuItem<String>(
@@ -210,12 +228,12 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            palawijaC.selectedJenisLahanValue = newValue!;
+                            selectedJenisLahanValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            palawijaC.selectedJenisLahanValue = newValue!;
+                            selectedJenisLahanValue = newValue!;
                           });
                         },
                       ),
@@ -223,11 +241,11 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Jenis Palawija',
-                        selectedItem: palawijaC.selectedJenisPalawijaValue,
-                        items: _palawijaList.map((palawija) {
+                        selectedItem: selectedJenisPalawijaValue,
+                        items: palawijaList.map((palawija) {
                           return DropdownMenuItem<PalawijaModel>(
                             value: palawija,
-                            child: Text(palawijaC.toCamelCase(palawija.name)),
+                            child: Text(UserController().toCamelCase(palawija.name)),
                           );
                         }).toList(),
                         hint: 'Pilih Jenis Palawija',
@@ -236,12 +254,12 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            palawijaC.selectedJenisPalawijaValue = newValue;
+                            selectedJenisPalawijaValue = newValue;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            palawijaC.selectedJenisPalawijaValue = newValue!;
+                            selectedJenisPalawijaValue = newValue!;
                           });
                         },
                       ),
@@ -249,9 +267,9 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Bantuan",
-                        selectedItem: palawijaC.selectedBantuanValue.isEmpty
+                        selectedItem: selectedBantuanValue.isEmpty
                             ? null
-                            : palawijaC.selectedBantuanValue,
+                            : selectedBantuanValue,
                         items: palawijaC.bantuan.map(
                           (value) {
                             return DropdownMenuItem<String>(
@@ -266,12 +284,12 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            palawijaC.selectedBantuanValue = newValue!;
+                            selectedBantuanValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            palawijaC.selectedBantuanValue = newValue!;
+                            selectedBantuanValue = newValue!;
                           });
                         },
                       ),
@@ -279,14 +297,14 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       DropdownButtonComponent(
                         icon: Icons.type_specimen,
                         label: "Jenis Data",
-                        selectedItem: palawijaC.selectedTipeDataValue.isEmpty
+                        selectedItem: selectedTipeDataValue.isEmpty
                             ? null
-                            : palawijaC.selectedTipeDataValue,
+                            : selectedTipeDataValue,
                         items: palawijaC.tipeData.map(
                           (value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(palawijaC.toCamelCase(value)),
+                              child: Text(UserController().toCamelCase(value)),
                             );
                           },
                         ).toList(),
@@ -296,18 +314,18 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            palawijaC.selectedTipeDataValue = newValue!;
+                            selectedTipeDataValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            palawijaC.selectedTipeDataValue = newValue!;
+                            selectedTipeDataValue = newValue!;
                           });
                         },
                       ),
                       const SizedBox(height: 10),
                       TextFormFieldComponent(
-                        controller: palawijaC.value = TextEditingController(
+                        controller: value = TextEditingController(
                             text: widget.detail == null
                                 ? ""
                                 : widget.detail!.nilai.toString()),
@@ -321,7 +339,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                         obsecure: false,
                         onSaved: (value) {
                           setState(() {
-                            palawijaC.value.text = value!;
+                            value.text = value!;
                           });
                         },
                       ),

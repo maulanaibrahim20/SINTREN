@@ -31,7 +31,10 @@ class PenyuluhDatabaseHelper {
     await db.execute('''
       CREATE TABLE desa (
         id TEXT PRIMARY KEY,
-        name TEXT
+        name TEXT,
+        lahan_sawah INTEGER,
+        lahan_non_sawah INTEGER,
+        total_luas_lahan INTEGER
       )
     ''');
     await db.execute('''

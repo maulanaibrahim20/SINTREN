@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
@@ -10,51 +9,30 @@ import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/palawija_service.dart';
 
 class PalawijaController {
-  late String selectedJenisLahanValue;
-  late String selectedBantuanValue;
-  late DesaModel? selectedDesaValue;
-  late PalawijaModel? selectedJenisPalawijaValue;
-  late String selectedTipeDataValue;
-  TextEditingController value = TextEditingController();
-  TextEditingController date = TextEditingController();
-  late Future<List<DetailPalawijaModel>> detailPalawija;
-
   List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
   List<String> bantuan = ["Bantuan Pemerintah", "Bantuan Non-Pemerintah"];
-  List<String> tipeData = ["panen", "tanam", "puso/rusak","panen_muda","panen_hijauan_pakan_ternak"];
-  late Future<List<DesaModel>> desa;
-  late Future<List<PalawijaModel>> palawija;
+  List<String> tipeData = [
+    "panen",
+    "tanam",
+    "puso/rusak",
+    "panen_muda",
+    "panen_hijauan_pakan_ternak"
+  ];
 
-  String toCamelCase(String input) {
-    if (input.isEmpty) {
-      return input;
-    }
-
-    List<String> words = input.split(' ');
-    List<String> capitalizedWords = words.map((word) {
-      if (word.isEmpty) {
-        return word;
-      }
-      return word[0].toUpperCase() + word.substring(1).toLowerCase();
-    }).toList();
-
-    return capitalizedWords.join(' ');
-  }
-
-  Future<void> store() async {
+  Future<void> store(Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
     final id = await UserLoginModel().getUserId();
     final kecamatanId = await UserLoginModel().getKecamatanId();
     final data = {
       "user_id": id,
-      "desa_id": selectedDesaValue?.id,
+      "desa_id": map['desa_id'],
       "kecamatan_id": kecamatanId,
-      "jenis_lahan": selectedJenisLahanValue,
-      "jenis_bantuan": selectedBantuanValue,
-      "date": date.text,
-      "id_jenis_palawija": selectedJenisPalawijaValue?.id,
-      "tipe_data": selectedTipeDataValue,
-      "nilai": value.text
+      "jenis_lahan": map['jenis_lahan'],
+      "jenis_bantuan": map['jenis_bantuan'],
+      "date": map['date'],
+      "id_jenis_palawija": map['id_jenis_palawija'],
+      "tipe_data": map['tipe_data'],
+      "nilai": map['nilai']
     };
 
     log(data.toString());
@@ -69,20 +47,20 @@ class PalawijaController {
     }
   }
 
-  Future<void> update(String dataId) async {
+  Future<void> update(String dataId, Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
     final id = await UserLoginModel().getUserId();
     final kecamatanId = await UserLoginModel().getKecamatanId();
     final data = {
       "user_id": id,
-      "desa_id": selectedDesaValue?.id,
+      "desa_id": map['desa_id'],
       "kecamatan_id": kecamatanId,
-      "jenis_lahan": selectedJenisLahanValue,
-      "jenis_bantuan": selectedBantuanValue,
-      "date": date.text,
-      "id_jenis_palawija": selectedJenisPalawijaValue?.id,
-      "tipe_data": selectedTipeDataValue,
-      "nilai": value.text
+      "jenis_lahan": map['jenis_lahan'],
+      "jenis_bantuan": map['jenis_bantuan'],
+      "date": map['date'],
+      "id_jenis_palawija": map['id_jenis_palawija'],
+      "tipe_data": map['tipe_data'],
+      "nilai": map['nilai']
     };
 
     log(data.toString());
@@ -136,7 +114,7 @@ class PalawijaController {
         maps.map((map) => PalawijaModel.fromJson(map)));
   }
 
-  Future<List<DesaModel>> getAssignment() async {
+  Future<List<DesaModel>> getDesa() async {
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('desa');
 

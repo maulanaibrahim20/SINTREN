@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
@@ -9,7 +10,7 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.dart';
-import 'package:sintren_mobile/ui/penyuluh/histori_penyuluhan_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class FormPadiView extends StatefulWidget {
   const FormPadiView({super.key, this.detail, required this.onCreate});
@@ -24,9 +25,17 @@ class FormPadiView extends StatefulWidget {
 class _FormPadiViewState extends State<FormPadiView> {
   final formKey = GlobalKey<FormState>();
   final padiC = PadiController();
-  late List<DesaModel> _desaList;
-  late List<PengairanModel> _pengiranList;
+  late List<DesaModel> desaList;
+  late List<PengairanModel> pengiranList;
   bool _isLoading = true;
+  late String selectedJenisLahanValue;
+  late String selectedBantuanValue;
+  late PengairanModel? selectedJenisPengairanValue;
+  late DesaModel? selectedDesaValue;
+  late String selectedJenisPadiValue;
+  late String selectedTipeDataValue;
+  TextEditingController value = TextEditingController();
+  TextEditingController date = TextEditingController();
 
   @override
   void initState() {
@@ -35,29 +44,28 @@ class _FormPadiViewState extends State<FormPadiView> {
   }
 
   Future<void> _initializeData() async {
-    _desaList = await padiC.getAssignment();
-    _pengiranList = await padiC.getPengairan();
+    desaList = await padiC.getDesa();
+    pengiranList = await padiC.getPengairan();
     setState(() {
       if (widget.detail != null) {
-        padiC.value =
-            TextEditingController(text: widget.detail!.nilai.toString());
-        padiC.date = TextEditingController(text: widget.detail!.date);
-        padiC.selectedDesaValue =
+        value.text = widget.detail!.nilai.toString();
+        date.text = widget.detail!.date;
+        selectedDesaValue =
             DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
-        padiC.selectedBantuanValue = widget.detail!.jenisBantuan;
-        padiC.selectedJenisLahanValue = widget.detail!.jenisLahan;
-        padiC.selectedJenisPadiValue = widget.detail!.jenisPadi;
-        padiC.selectedTipeDataValue = widget.detail!.tipeData;
-        padiC.selectedJenisPengairanValue = PengairanModel(
+        selectedBantuanValue = widget.detail!.jenisBantuan;
+        selectedJenisLahanValue = widget.detail!.jenisLahan;
+        selectedJenisPadiValue = widget.detail!.jenisPadi;
+        selectedTipeDataValue = widget.detail!.tipeData;
+        selectedJenisPengairanValue = PengairanModel(
             id: widget.detail!.idJenisPengairan,
             name: widget.detail!.pengairanName);
       } else {
-        padiC.selectedJenisLahanValue = '';
-        padiC.selectedBantuanValue = '';
-        padiC.selectedJenisPengairanValue = null;
-        padiC.selectedDesaValue = null;
-        padiC.selectedJenisPadiValue = '';
-        padiC.selectedTipeDataValue = '';
+        selectedJenisLahanValue = '';
+        selectedBantuanValue = '';
+        selectedJenisPengairanValue = null;
+        selectedDesaValue = null;
+        selectedJenisPadiValue = '';
+        selectedTipeDataValue = '';
       }
       _isLoading = false;
     });
@@ -72,7 +80,7 @@ class _FormPadiViewState extends State<FormPadiView> {
     );
     if (picked != null) {
       setState(() {
-        padiC.date.text = "${picked.toLocal()}".split(' ')[0];
+        date.text = "${picked.toLocal()}".split(' ')[0];
       });
     }
   }
@@ -103,16 +111,28 @@ class _FormPadiViewState extends State<FormPadiView> {
         child: ElevatedButton.icon(
           onPressed: () {
             if (formKey.currentState!.validate()) {
+              final data = {
+                "desa_id": selectedDesaValue!.id,
+                "jenis_lahan": selectedJenisLahanValue,
+                "jenis_bantuan": selectedBantuanValue,
+                "jenis_padi": selectedJenisPadiValue,
+                "date": date.text,
+                "id_jenis_pengairan": selectedJenisPengairanValue!.id,
+                "tipe_data": selectedTipeDataValue,
+                "nilai": value.text,
+              };
               if (widget.onCreate) {
-                padiC.store().then((value) => Navigator.pushAndRemoveUntil(
+                padiC.store(data).then((value) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const HistoriPenyuluhanView(index: 0,)),
+                          builder: (context) => const DetailPenyuluhanView(
+                                index: 0,
+                              )),
                       (Route<dynamic> route) => route.isFirst,
                     ));
               } else {
                 padiC
-                    .update(widget.detail!.id.toString())
+                    .update(widget.detail!.id.toString(), data)
                     .then((value) => Navigator.pop(context));
               }
             }
@@ -148,11 +168,11 @@ class _FormPadiViewState extends State<FormPadiView> {
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Desa',
-                        selectedItem: padiC.selectedDesaValue,
-                        items: _desaList.map((desa) {
+                        selectedItem: selectedDesaValue,
+                        items: desaList.map((desa) {
                           return DropdownMenuItem<DesaModel>(
                             value: desa,
-                            child: Text(padiC.toCamelCase(desa.name)),
+                            child: Text(UserController().toCamelCase(desa.name)),
                           );
                         }).toList(),
                         hint: 'Pilih Desa',
@@ -161,12 +181,12 @@ class _FormPadiViewState extends State<FormPadiView> {
                         onChanged: (newValue) {
                           log(newValue!.id.toString());
                           setState(() {
-                            padiC.selectedDesaValue = newValue;
+                            selectedDesaValue = newValue;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            padiC.selectedDesaValue = newValue!;
+                            selectedDesaValue = newValue!;
                           });
                         },
                       ),
@@ -183,7 +203,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           return null;
                         },
                         obsecure: false,
-                        controller: padiC.date,
+                        controller: date,
                         onTap: () {
                           _selectDate(context);
                         },
@@ -192,9 +212,9 @@ class _FormPadiViewState extends State<FormPadiView> {
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",
-                        selectedItem: padiC.selectedJenisLahanValue.isEmpty
+                        selectedItem: selectedJenisLahanValue.isEmpty
                             ? null
-                            : padiC.selectedJenisLahanValue,
+                            : selectedJenisLahanValue,
                         items: padiC.jenisLahan.map(
                           (value) {
                             return DropdownMenuItem<String>(
@@ -209,28 +229,27 @@ class _FormPadiViewState extends State<FormPadiView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            padiC.selectedJenisLahanValue = newValue!;
+                            selectedJenisLahanValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            padiC.selectedJenisLahanValue = newValue!;
+                            selectedJenisLahanValue = newValue!;
                           });
                         },
                       ),
                       const SizedBox(height: 10),
-                      if (padiC.selectedJenisLahanValue ==
-                          'Lahan Non-Sawah') ...[
+                      if (selectedJenisLahanValue == 'Lahan Non-Sawah') ...[
                         const SizedBox.shrink()
                       ] else ...[
                         DropdownButtonComponent(
                           icon: Icons.water,
                           label: 'Pengairan',
-                          selectedItem: padiC.selectedJenisPengairanValue,
-                          items: _pengiranList.map((pengiran) {
+                          selectedItem: selectedJenisPengairanValue,
+                          items: pengiranList.map((pengiran) {
                             return DropdownMenuItem<PengairanModel>(
                               value: pengiran,
-                              child: Text(padiC.toCamelCase(pengiran.name)),
+                              child: Text(UserController().toCamelCase(pengiran.name)),
                             );
                           }).toList(),
                           hint: 'Pilih Pengiran',
@@ -239,12 +258,12 @@ class _FormPadiViewState extends State<FormPadiView> {
                               : null,
                           onChanged: (newValue) {
                             setState(() {
-                              padiC.selectedJenisPengairanValue = newValue!;
+                              selectedJenisPengairanValue = newValue!;
                             });
                           },
                           onSaved: (newValue) {
                             setState(() {
-                              padiC.selectedJenisPengairanValue = newValue!;
+                              selectedJenisPengairanValue = newValue!;
                             });
                           },
                         ),
@@ -253,9 +272,9 @@ class _FormPadiViewState extends State<FormPadiView> {
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Padi",
-                        selectedItem: padiC.selectedJenisPadiValue.isEmpty
+                        selectedItem: selectedJenisPadiValue.isEmpty
                             ? null
-                            : padiC.selectedJenisPadiValue,
+                            : selectedJenisPadiValue,
                         items: padiC.jenisPadi.map(
                           (value) {
                             return DropdownMenuItem<String>(
@@ -270,12 +289,12 @@ class _FormPadiViewState extends State<FormPadiView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            padiC.selectedJenisPadiValue = newValue!;
+                            selectedJenisPadiValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            padiC.selectedJenisPadiValue = newValue!;
+                            selectedJenisPadiValue = newValue!;
                           });
                         },
                       ),
@@ -283,9 +302,9 @@ class _FormPadiViewState extends State<FormPadiView> {
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Bantuan",
-                        selectedItem: padiC.selectedBantuanValue.isEmpty
+                        selectedItem: selectedBantuanValue.isEmpty
                             ? null
-                            : padiC.selectedBantuanValue,
+                            : selectedBantuanValue,
                         items: padiC.bantuan.map(
                           (value) {
                             return DropdownMenuItem<String>(
@@ -300,12 +319,12 @@ class _FormPadiViewState extends State<FormPadiView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            padiC.selectedBantuanValue = newValue!;
+                            selectedBantuanValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            padiC.selectedBantuanValue = newValue!;
+                            selectedBantuanValue = newValue!;
                           });
                         },
                       ),
@@ -313,14 +332,14 @@ class _FormPadiViewState extends State<FormPadiView> {
                       DropdownButtonComponent(
                         icon: Icons.type_specimen,
                         label: "Jenis Data",
-                        selectedItem: padiC.selectedTipeDataValue.isEmpty
+                        selectedItem: selectedTipeDataValue.isEmpty
                             ? null
-                            : padiC.selectedTipeDataValue,
+                            : selectedTipeDataValue,
                         items: padiC.tipeData.map(
                           (value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(padiC.toCamelCase(value)),
+                              child: Text(UserController().toCamelCase(value)),
                             );
                           },
                         ).toList(),
@@ -330,18 +349,18 @@ class _FormPadiViewState extends State<FormPadiView> {
                             : null,
                         onChanged: (newValue) {
                           setState(() {
-                            padiC.selectedTipeDataValue = newValue!;
+                            selectedTipeDataValue = newValue!;
                           });
                         },
                         onSaved: (newValue) {
                           setState(() {
-                            padiC.selectedTipeDataValue = newValue!;
+                            selectedTipeDataValue = newValue!;
                           });
                         },
                       ),
                       const SizedBox(height: 10),
                       TextFormFieldComponent(
-                        controller: padiC.value = TextEditingController(
+                        controller: value = TextEditingController(
                             text: widget.detail == null
                                 ? ""
                                 : widget.detail!.nilai.toString()),
@@ -355,7 +374,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                         obsecure: false,
                         onSaved: (value) {
                           setState(() {
-                            padiC.value.text = value!;
+                            value.text = value!;
                           });
                         },
                       ),

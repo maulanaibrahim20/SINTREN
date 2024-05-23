@@ -14,6 +14,10 @@ class ChangePasswordView extends StatefulWidget {
 class _ChangePasswordViewState extends State<ChangePasswordView> {
   final userC = UserController();
   final formKey = GlobalKey<FormState>();
+  TextEditingController oldPass = TextEditingController();
+  TextEditingController newPass = TextEditingController();
+  TextEditingController confirmPass = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -37,19 +41,22 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
-      bottomNavigationBar: 
-      Container(
+      bottomNavigationBar: Container(
         margin: const EdgeInsets.all(10),
         height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           gradient: ColorTheme().linearColor,
         ),
-        child: 
-        ElevatedButton.icon(
+        child: ElevatedButton.icon(
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              userC.changePassword().then((value) => Navigator.pop(context));
+              userC
+                  .changePassword(
+                      oldPass: oldPass.text,
+                      newPass: newPass.text,
+                      confirmPass: confirmPass.text)
+                  .then((value) => Navigator.pop(context));
             }
           },
           icon: Icon(Icons.save_rounded, color: ColorTheme().whiteColor),
@@ -79,7 +86,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             child: ListView(
               children: [
                 TextFormFieldComponent(
-                  controller: userC.oldPass,
+                  controller: oldPass,
                   icon: Icons.lock,
                   hint: 'Masukkan Password Lama',
                   label: 'Password Lama',
@@ -96,7 +103,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   height: 10,
                 ),
                 TextFormFieldComponent(
-                  controller: userC.newPass,
+                  controller: newPass,
                   icon: Icons.lock,
                   hint: 'Masukkan Password Baru',
                   label: 'Password Baru',
@@ -113,7 +120,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   height: 10,
                 ),
                 TextFormFieldComponent(
-                  controller: userC.confirmPass,
+                  controller: confirmPass,
                   icon: Icons.lock,
                   hint: 'Masukkan Konfirmasi Password',
                   label: 'Konfirmasi Password',

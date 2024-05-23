@@ -4,7 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
-import 'package:sintren_mobile/models/desa_model.dart';
+import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -158,8 +158,8 @@ class UserService {
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
 
-      List<DesaModel> desa = (jsonResult['data'] as List)
-          .map((element) => DesaModel.fromJson(element))
+      List<LuasWilayahModel> desa = (jsonResult['data'] as List)
+          .map((element) => LuasWilayahModel.fromJson(element))
           .toList();
 
       Batch batch = db.batch();

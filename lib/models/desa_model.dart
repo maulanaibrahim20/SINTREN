@@ -2,7 +2,10 @@ class DesaModel {
   final String id;
   final String name;
 
-  DesaModel({required this.id, required this.name});
+  DesaModel({
+    required this.id,
+    required this.name,
+  });
 
   factory DesaModel.fromJson(Map<String, dynamic> json) {
     return DesaModel(

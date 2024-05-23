@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
-import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
 
-class HistoriPalawijaView extends StatefulWidget {
-  const HistoriPalawijaView({super.key});
+class HistoriPadiView extends StatefulWidget {
+  const HistoriPadiView({super.key});
 
   @override
-  State<HistoriPalawijaView> createState() => HistoriPalawijaViewState();
+  State<HistoriPadiView> createState() => HistoriPadiViewState();
 }
 
-class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
-  final palawijaC = PalawijaController();
+class HistoriPadiViewState extends State<HistoriPadiView> {
+  final padiC = PadiController();
+  late Future<List<DetailPadiModel>> detailPadi;
 
   Future<void> _initializeData() async {
     setState(() {
-      palawijaC.detailPalawija = palawijaC.getDetailPalawijaByUser();
+      detailPadi = padiC.getDetailPadiByUser();
     });
   }
 
@@ -57,8 +59,8 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<DetailPalawijaModel>>(
-              future: palawijaC.detailPalawija,
+            child: FutureBuilder<List<DetailPadiModel>>(
+              future: detailPadi,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -117,13 +119,13 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                     padding: EdgeInsets.zero,
                     itemCount: itemList.length,
                     itemBuilder: (BuildContext context, int index) {
-                      DetailPalawijaModel data = itemList[index];
+                      DetailPadiModel data = itemList[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => FormPalawijaView(
+                                builder: (_) => FormPadiView(
                                   detail: data,
                                   onCreate: false,
                                 ),
@@ -156,8 +158,7 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          palawijaC
-                                              .toCamelCase(data.palawijaName),
+                                          data.jenisPadi,
                                           style: StyleTheme()
                                               .styleBlack
                                               .copyWith(
@@ -169,8 +170,7 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              palawijaC
-                                                  .toCamelCase(data.desaName),
+                                              UserController().toCamelCase(data.desaName),
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(
@@ -203,6 +203,11 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                                               data.jenisLahan,
                                               style: StyleTheme().styleBlack,
                                             ),
+                                            Text(
+                                              UserController().toCamelCase(
+                                                  data.pengairanName),
+                                              style: StyleTheme().styleBlack,
+                                            ),
                                           ],
                                         ),
                                         const Divider(),
@@ -211,8 +216,7 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              palawijaC
-                                                  .toCamelCase(data.tipeData),
+                                              UserController().toCamelCase(data.tipeData),
                                               style: StyleTheme()
                                                   .styleBlack
                                                   .copyWith(
@@ -242,14 +246,13 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (_) =>
-                                                              FormPalawijaView(
+                                                              FormPadiView(
                                                                 detail: data,
                                                                 onCreate: false,
                                                               )));
                                                   setState(() {
-                                                    palawijaC.detailPalawija =
-                                                        palawijaC
-                                                            .getDetailPalawijaByUser();
+                                                    detailPadi = padiC
+                                                        .getDetailPadiByUser();
                                                   });
                                                 },
                                                 icon: Icon(Icons.edit,
@@ -284,13 +287,12 @@ class HistoriPalawijaViewState extends State<HistoriPalawijaView> {
                                                       await _showDeleteConfirmationDialog(
                                                           context);
                                                   if (shouldDelete == true) {
-                                                    await palawijaC
+                                                    await padiC
                                                         .deleteDetailById(
                                                             data.id);
                                                     setState(() {
-                                                      palawijaC.detailPalawija =
-                                                          palawijaC
-                                                              .getDetailPalawijaByUser();
+                                                      detailPadi = padiC
+                                                          .getDetailPadiByUser();
                                                     });
                                                   }
                                                 },

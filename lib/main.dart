@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/padi_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key, this.isLogin, this.role});
 
   Future<void> _initializeData() async {
+    await initializeDateFormatting('id_ID', null);
     await UserService().getAssignment();
     await PadiService().getPengairan();
     await PadiService().getDetailPadiByUser();
