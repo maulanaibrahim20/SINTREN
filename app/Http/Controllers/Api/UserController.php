@@ -206,7 +206,7 @@ class UserController extends Controller
     public function getAssignment($id)
     {
         try {
-            $assignments = User::with('desas')->find($id);
+            $assignments = User::with(['desas.luasLahanWilayah'])->find($id);
 
             if (is_null($assignments)) {
                 return response()->json([

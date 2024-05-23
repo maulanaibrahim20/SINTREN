@@ -17,32 +17,32 @@ class LuasLahanWilayahSeeder extends Seeder
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
             'desa_id' => '3212010007',
-            'lahan_sawah' => 100,
-            'lahan_non_sawah' => 100
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
             'desa_id' => '3212010008',
-            'lahan_sawah' => 100,
-            'lahan_non_sawah' => 100
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
             'desa_id' => '3212010009',
-            'lahan_sawah' => 100,
-            'lahan_non_sawah' => 100
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
             'desa_id' => '3212010010',
-            'lahan_sawah' => 100,
-            'lahan_non_sawah' => 100
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
             'desa_id' => '3212010011',
-            'lahan_sawah' => 100,
-            'lahan_non_sawah' => 100
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
         ]);
     }
 }
