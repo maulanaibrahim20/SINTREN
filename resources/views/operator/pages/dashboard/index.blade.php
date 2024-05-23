@@ -37,7 +37,7 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <p class="mb-0 fw-semibold text-dark lh-1">Employees</p>
+                                    <p class="mb-0 fw-semibold text-dark lh-1">Karyawan</p>
                                     <div class="fs-12 text-muted mb-5">Overview of this month</div>
                                     <div class="fs-30 fw-semibold mb-0 lh-1">{{ $user }}
                                     </div>
