@@ -69,11 +69,15 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstDate = DateTime(now.year, now.month - 1, 1);
+    final DateTime lastDate = DateTime(now.year, now.month + 1, 0);
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
     if (picked != null) {
       setState(() {
@@ -123,8 +127,10 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                     .then((value) => Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const DetailPenyuluhanView(
+                              builder: (context) => DetailPenyuluhanView(
                                     index: 1,
+                                    date: date.text,
+                                    desaId: selectedDesaValue!.id,
                                   )),
                           (Route<dynamic> route) => route.isFirst,
                         ));
@@ -171,7 +177,8 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                         items: desaList.map((desa) {
                           return DropdownMenuItem<DesaModel>(
                             value: desa,
-                            child: Text(UserController().toCamelCase(desa.name)),
+                            child:
+                                Text(UserController().toCamelCase(desa.name)),
                           );
                         }).toList(),
                         hint: 'Pilih Desa',
@@ -245,7 +252,8 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                         items: palawijaList.map((palawija) {
                           return DropdownMenuItem<PalawijaModel>(
                             value: palawija,
-                            child: Text(UserController().toCamelCase(palawija.name)),
+                            child: Text(
+                                UserController().toCamelCase(palawija.name)),
                           );
                         }).toList(),
                         hint: 'Pilih Jenis Palawija',

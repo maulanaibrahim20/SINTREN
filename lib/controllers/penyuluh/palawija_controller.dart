@@ -121,11 +121,16 @@ class PalawijaController {
     return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
   }
 
-  Future<List<DetailPalawijaModel>> getDetailPalawijaByUser() async {
+  Future<List<DetailPalawijaModel>> getDetailPalawijaByUser(
+      String date, String desaId) async {
     await PalawijaService().getDetailPalawijaByUser();
 
     final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('detailPalawija');
+    final List<Map<String, dynamic>> maps = await db.query(
+      'detailPalawija',
+      where: 'date LIKE ? AND desa_id = ?',
+      whereArgs: ['%$date%', desaId],
+    );
 
     return List<DetailPalawijaModel>.from(
         maps.map((map) => DetailPalawijaModel.fromMap(map)));

@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/data_pengairan_padi_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
+import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
 
 class DetailPadiView extends StatefulWidget {
-  const DetailPadiView({super.key});
+  const DetailPadiView(
+      {super.key,
+      required this.date,
+      required this.desaId,
+      this.desaName = ""});
+  final String date;
+  final String desaId;
+  final String desaName;
 
   @override
   State<DetailPadiView> createState() => DetailPadiViewState();
@@ -15,13 +24,10 @@ class DetailPadiView extends StatefulWidget {
 
 class DetailPadiViewState extends State<DetailPadiView> {
   final padiC = PadiController();
-  late Future<List<DetailPadiModel>> detailPadi;
+  bool isOpen = false;
+  List<DataPengairanPadiModel> groupedData = [];
 
-  Future<void> _initializeData() async {
-    setState(() {
-      detailPadi = padiC.getDetailPadiByUser();
-    });
-  }
+  Future<void> _initializeData() async {}
 
   @override
   void initState() {
@@ -35,32 +41,224 @@ class DetailPadiViewState extends State<DetailPadiView> {
       backgroundColor: ColorTheme().bgColor,
       body: Column(
         children: [
-          Container(
-            height: 40,
-            width: double.infinity,
+          Card(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.filter_list, color: ColorTheme().whiteColor),
-              label: Text(
-                'Filter dan Urutkan',
-                style: StyleTheme().styleWhite.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorTheme().primaryColor,
-                side: BorderSide(color: ColorTheme().primaryColor, width: 2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            elevation: 3,
+            surfaceTintColor: ColorTheme().whiteColor,
+            color: ColorTheme().whiteColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: ColorTheme().linearColor,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.home_rounded,
+                                color: ColorTheme().whiteColor,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Desa ${UserController().toCamelCase(widget.desaName)}",
+                                style: StyleTheme().stylePrimary.copyWith(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                UserController().convertDate(widget.date),
+                                style: StyleTheme().styleBlack.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[700],
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: ColorTheme().linearColor,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.add,
+                            color: ColorTheme().whiteColor,
+                            size: 25,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                const Divider(thickness: 2),
+                Visibility(
+                  visible: isOpen,
+                  child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 400,
+                      child: FutureBuilder(
+                        future: Future.wait([
+                          padiC.getKesimpulanDataPengairan(
+                              widget.date, widget.desaId),
+                          padiC.getKesimpulanDataPadi(
+                              widget.date, widget.desaId)
+                        ]),
+                        builder:
+                            (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else {
+                            final pengairanData = snapshot.data![0]
+                                as Map<String, JenisPengairan>;
+                            final padiData =
+                                snapshot.data![1] as Map<String, JenisPadi>;
+
+                            if (pengairanData.isEmpty && padiData.isEmpty) {
+                              return const Center(child: Text('No data available'));
+                            } else {
+                              return SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // ListView for pengairanData
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: pengairanData.length,
+                                      itemBuilder: (context, index) {
+                                        String jenisPengairan =
+                                            pengairanData.keys.elementAt(index);
+                                        JenisPengairan pengairanDataItem =
+                                            pengairanData[jenisPengairan]!;
+                                        return ExpansionTile(
+                                          title: Text(
+                                              'Jenis Pengairan: $jenisPengairan, (Total: ${pengairanDataItem.total})'),
+                                          children: [
+                                            for (var entry in pengairanDataItem
+                                                .pengairanData.entries)
+                                              ListTile(
+                                                title: Text(
+                                                    'Tipe Data: ${entry.key}'),
+                                                trailing: Text(
+                                                    'Total Nilai: ${entry.value.total}'),
+                                              ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    // ListView for padiData
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: padiData.length,
+                                      itemBuilder: (context, index) {
+                                        String jenisPadi =
+                                            padiData.keys.elementAt(index);
+                                        JenisPadi padiDataItem =
+                                            padiData[jenisPadi]!;
+                                        return ExpansionTile(
+                                          title: Text(
+                                              'Jenis Padi: $jenisPadi (Total: ${padiDataItem.total})'),
+                                          children: padiDataItem
+                                              .jenisLahan.entries
+                                              .map((lahanEntry) {
+                                            final jenisLahan = lahanEntry.key;
+                                            final lahanData = lahanEntry.value;
+                                            return ExpansionTile(
+                                              title: Text(
+                                                  'Jenis Lahan: $jenisLahan (Total: ${lahanData.total})'),
+                                              children: lahanData
+                                                  .jenisBantuan.entries
+                                                  .map((bantuanEntry) {
+                                                final jenisBantuan =
+                                                    bantuanEntry.key;
+                                                final bantuanData =
+                                                    bantuanEntry.value;
+                                                return ExpansionTile(
+                                                  title: Text(
+                                                      'Jenis Bantuan: $jenisBantuan (Total: ${bantuanData.total})'),
+                                                  children: bantuanData
+                                                      .tipeData.entries
+                                                      .map((tipeEntry) {
+                                                    final tipeData =
+                                                        tipeEntry.key;
+                                                    final nilai = tipeEntry
+                                                            .value
+                                                            .data[tipeData] ??
+                                                        0;
+                                                    return ListTile(
+                                                      title: Text(
+                                                          'Tipe Data: $tipeData'),
+                                                      trailing: Text(
+                                                          'Total Nilai: $nilai'),
+                                                    );
+                                                  }).toList(),
+                                                );
+                                              }).toList(),
+                                            );
+                                          }).toList(),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      )),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isOpen = !isOpen;
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Detail Data Penyuluhan",
+                        style: StyleTheme().stylePrimary.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      Icon(
+                        !isOpen ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                        color: ColorTheme().primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
           ),
           Expanded(
             child: FutureBuilder<List<DetailPadiModel>>(
-              future: detailPadi,
+              future: padiC.getDetailPadiByUser(widget.date, widget.desaId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -123,13 +321,14 @@ class DetailPadiViewState extends State<DetailPadiView> {
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => FormPadiView(
-                                  detail: data,
-                                  onCreate: false,
-                                ),
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FormPadiView(
+                                detail: data,
+                                onCreate: false,
+                              ),
+                            ),
+                          ).then((value) => setState(() {}));
                         },
                         child: Card(
                           surfaceTintColor: ColorTheme().whiteColor,
@@ -137,7 +336,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                               right: 10, left: 10, bottom: 15),
                           elevation: 3,
                           child: SizedBox(
-                            height: 190,
+                            height: 180,
                             width: MediaQuery.of(context).size.width,
                             child: Row(
                               children: [
@@ -164,22 +363,6 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                               .copyWith(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 16),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              UserController().toCamelCase(data.desaName),
-                                              style: StyleTheme().styleBlack,
-                                            ),
-                                            Text(
-                                              "Tidak Terverifikasi",
-                                              style: StyleTheme()
-                                                  .styleBlack
-                                                  .copyWith(color: Colors.red),
-                                            ),
-                                          ],
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -216,7 +399,8 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              UserController().toCamelCase(data.tipeData),
+                                              UserController()
+                                                  .toCamelCase(data.tipeData),
                                               style: StyleTheme()
                                                   .styleBlack
                                                   .copyWith(
@@ -243,17 +427,16 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                               child: ElevatedButton.icon(
                                                 onPressed: () async {
                                                   await Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              FormPadiView(
-                                                                detail: data,
-                                                                onCreate: false,
-                                                              )));
-                                                  setState(() {
-                                                    detailPadi = padiC
-                                                        .getDetailPadiByUser();
-                                                  });
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (_) =>
+                                                          FormPadiView(
+                                                        detail: data,
+                                                        onCreate: false,
+                                                      ),
+                                                    ),
+                                                  ).then((value) =>
+                                                      setState(() {}));
                                                 },
                                                 icon: Icon(Icons.edit,
                                                     color: ColorTheme()
@@ -290,10 +473,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                                     await padiC
                                                         .deleteDetailById(
                                                             data.id);
-                                                    setState(() {
-                                                      detailPadi = padiC
-                                                          .getDetailPadiByUser();
-                                                    });
+                                                    setState(() {});
                                                   }
                                                 },
                                                 icon: const Icon(Icons.delete,

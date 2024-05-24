@@ -72,11 +72,15 @@ class _FormPadiViewState extends State<FormPadiView> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
+    final DateTime firstDate = DateTime(now.year, now.month - 1, 1);
+    final DateTime lastDate = DateTime(now.year, now.month + 1, 0);
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
     if (picked != null) {
       setState(() {
@@ -117,7 +121,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                 "jenis_bantuan": selectedBantuanValue,
                 "jenis_padi": selectedJenisPadiValue,
                 "date": date.text,
-                "id_jenis_pengairan": selectedJenisPengairanValue!.id,
+                "id_jenis_pengairan": selectedJenisPengairanValue?.id,
                 "tipe_data": selectedTipeDataValue,
                 "nilai": value.text,
               };
@@ -125,8 +129,10 @@ class _FormPadiViewState extends State<FormPadiView> {
                 padiC.store(data).then((value) => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DetailPenyuluhanView(
+                          builder: (context) => DetailPenyuluhanView(
                                 index: 0,
+                                date: date.text,
+                                desaId: selectedDesaValue!.id,
                               )),
                       (Route<dynamic> route) => route.isFirst,
                     ));
@@ -172,7 +178,8 @@ class _FormPadiViewState extends State<FormPadiView> {
                         items: desaList.map((desa) {
                           return DropdownMenuItem<DesaModel>(
                             value: desa,
-                            child: Text(UserController().toCamelCase(desa.name)),
+                            child:
+                                Text(UserController().toCamelCase(desa.name)),
                           );
                         }).toList(),
                         hint: 'Pilih Desa',
@@ -249,7 +256,8 @@ class _FormPadiViewState extends State<FormPadiView> {
                           items: pengiranList.map((pengiran) {
                             return DropdownMenuItem<PengairanModel>(
                               value: pengiran,
-                              child: Text(UserController().toCamelCase(pengiran.name)),
+                              child: Text(
+                                  UserController().toCamelCase(pengiran.name)),
                             );
                           }).toList(),
                           hint: 'Pilih Pengiran',

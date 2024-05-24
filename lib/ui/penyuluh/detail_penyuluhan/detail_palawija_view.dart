@@ -7,7 +7,11 @@ import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
 
 class DetailPalawijaView extends StatefulWidget {
-  const DetailPalawijaView({super.key});
+  const DetailPalawijaView(
+      {super.key, required this.date, required this.desaId});
+
+  final String date;
+  final String desaId;
 
   @override
   State<DetailPalawijaView> createState() => DetailPalawijaViewState();
@@ -19,7 +23,8 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
 
   Future<void> _initializeData() async {
     setState(() {
-      detailPalawija = palawijaC.getDetailPalawijaByUser();
+      detailPalawija =
+          palawijaC.getDetailPalawijaByUser(widget.date, widget.desaId);
     });
   }
 
@@ -137,7 +142,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                               right: 10, left: 10, bottom: 15),
                           elevation: 3,
                           child: SizedBox(
-                            height: 190,
+                            height: 180,
                             width: MediaQuery.of(context).size.width,
                             child: Row(
                               children: [
@@ -158,28 +163,13 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          UserController().toCamelCase(data.palawijaName),
+                                          UserController()
+                                              .toCamelCase(data.palawijaName),
                                           style: StyleTheme()
                                               .styleBlack
                                               .copyWith(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 16),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              UserController().toCamelCase(data.desaName),
-                                              style: StyleTheme().styleBlack,
-                                            ),
-                                            Text(
-                                              "Tidak Terverifikasi",
-                                              style: StyleTheme()
-                                                  .styleBlack
-                                                  .copyWith(color: Colors.red),
-                                            ),
-                                          ],
                                         ),
                                         Row(
                                           mainAxisAlignment:
@@ -211,7 +201,8 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              UserController().toCamelCase(data.tipeData),
+                                              UserController()
+                                                  .toCamelCase(data.tipeData),
                                               style: StyleTheme()
                                                   .styleBlack
                                                   .copyWith(
@@ -246,9 +237,10 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                                 onCreate: false,
                                                               )));
                                                   setState(() {
-                                                    detailPalawija =
-                                                        palawijaC
-                                                            .getDetailPalawijaByUser();
+                                                    detailPalawija = palawijaC
+                                                        .getDetailPalawijaByUser(
+                                                            widget.date,
+                                                            widget.desaId);
                                                   });
                                                 },
                                                 icon: Icon(Icons.edit,
@@ -287,9 +279,10 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                         .deleteDetailById(
                                                             data.id);
                                                     setState(() {
-                                                      detailPalawija =
-                                                          palawijaC
-                                                              .getDetailPalawijaByUser();
+                                                      detailPalawija = palawijaC
+                                                          .getDetailPalawijaByUser(
+                                                              widget.date,
+                                                              widget.desaId);
                                                     });
                                                   }
                                                 },

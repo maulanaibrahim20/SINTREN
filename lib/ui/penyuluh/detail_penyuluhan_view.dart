@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_padi_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_palawija_view.dart';
 
 class DetailPenyuluhanView extends StatefulWidget {
-  const DetailPenyuluhanView({super.key, required this.index});
+  const DetailPenyuluhanView(
+      {super.key,
+      required this.index,
+      required this.date,
+      required this.desaId,
+      this.desaName = ""});
 
   final int index;
+  final String date;
+  final String desaId;
+  final String desaName;
 
   @override
   State<DetailPenyuluhanView> createState() => _DetailPenyuluhanViewState();
@@ -25,8 +34,16 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
   late TabController _tabController =
       TabController(length: tabs.length, vsync: this);
 
+  Future<void> _initializeData() async {
+    setState(() {
+      DetailPalawijaViewState().detailPalawija = PalawijaController()
+          .getDetailPalawijaByUser(widget.date, widget.desaId);
+    });
+  }
+
   @override
   void initState() {
+    _initializeData();
     super.initState();
     _tabController = TabController(
       length: tabs.length,
@@ -73,9 +90,7 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
                         const EdgeInsets.symmetric(horizontal: 16.0),
                   ),
                   onChanged: (value) {
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                 ),
               )
@@ -114,11 +129,11 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
         ),
       ),
       body: Container(
-        color: ColorTheme().bgColor, // Warna latar belakang body
+        color: ColorTheme().bgColor,
         child: Column(
           children: [
             Container(
-              color: ColorTheme().primaryColor, // Warna latar belakang TabBar
+              color: ColorTheme().primaryColor,
               child: TabBar(
                 controller: _tabController,
                 tabs: tabs,
@@ -135,7 +150,17 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                children: const [DetailPadiView(), DetailPalawijaView()],
+                children: [
+                  DetailPadiView(
+                    date: widget.date,
+                    desaId: widget.desaId,
+                    desaName: widget.desaName,
+                  ),
+                  DetailPalawijaView(
+                    date: widget.date,
+                    desaId: widget.desaId,
+                  )
+                ],
               ),
             ),
           ],

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/services/padi_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
   const HistoriPenyuluhanView({super.key});
@@ -22,6 +26,12 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
       userC.getHistory(),
       userC.getLuasLahanDesa(),
     ]);
+  }
+
+  Future<void> _synchronizeData() async {
+    await UserService().getAssignment();
+    await PadiService().getDetailPadiByUser();
+    _initializeData();
   }
 
   @override
@@ -64,11 +74,17 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         backgroundColor: ColorTheme().primaryColor,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          EasyLoading.show(status: "Sinkronisasi Data");
+          setState(() {
+            _synchronizeData();
+          });
+          EasyLoading.dismiss();
+        },
         backgroundColor: ColorTheme().primaryColor,
         foregroundColor: ColorTheme().whiteColor,
         child: const Icon(
-          Icons.filter_list,
+          Icons.refresh_rounded,
         ),
       ),
       body: FutureBuilder<List<dynamic>>(
@@ -139,15 +155,25 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                 itemBuilder: (BuildContext context, int index) {
                   HistoriPenyuluhanModel desa = historiList[index];
                   return GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (_) => const DetailDesaView()));
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DetailPenyuluhanView(
+                            index: 0,
+                            date: desa.date,
+                            desaId: desa.desaId,
+                            desaName: desa.desaName,
+                          ),
+                        ),
+                      );
+                      setState(() {
+                        _initializeData();
+                      });
                     },
                     child: Card(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                          horizontal: 10, vertical: 10),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
@@ -186,7 +212,8 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                     Text(
                                       userC.convertDate(desa.date),
                                       style: StyleTheme().styleBlack.copyWith(
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700],
                                           fontSize: 14),
                                     ),
                                   ],
@@ -218,9 +245,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                             animation: true,
                             lineHeight: 30,
                             animationDuration: 2000,
-                            percent: desa.nilai / getLuasDesa(desa.desaId),
+                            percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
+                                ? 1
+                                : desa.nilai / getLuasDesa(desa.desaId),
                             center: Text(
-                              "${(desa.nilai / getLuasDesa(desa.desaId)) * 100}%",
+                              "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
                               style: StyleTheme().styleWhite.copyWith(
                                   fontWeight: FontWeight.w500, fontSize: 14),
                             ),
