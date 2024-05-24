@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
-import 'package:sintren_mobile/models/data_pengairan_padi_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
@@ -25,7 +24,6 @@ class DetailPadiView extends StatefulWidget {
 class DetailPadiViewState extends State<DetailPadiView> {
   final padiC = PadiController();
   bool isOpen = false;
-  List<DataPengairanPadiModel> groupedData = [];
 
   Future<void> _initializeData() async {}
 
