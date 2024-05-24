@@ -112,8 +112,12 @@ class DetailPadiViewState extends State<DetailPadiView> {
                 const Divider(thickness: 2),
                 Visibility(
                   visible: isOpen,
-                  child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 400,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height -
+                          400, // Sesuaikan batas tinggi sesuai kebutuhan Anda
+                    ),
+                    child: SingleChildScrollView(
                       child: FutureBuilder(
                         future: Future.wait([
                           padiC.getKesimpulanDataPengairan(
@@ -125,7 +129,8 @@ class DetailPadiViewState extends State<DetailPadiView> {
                             (context, AsyncSnapshot<List<dynamic>> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(
+                                child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
                             return Center(
                                 child: Text('Error: ${snapshot.error}'));
@@ -136,41 +141,30 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                 snapshot.data![1] as Map<String, JenisPadi>;
 
                             if (pengairanData.isEmpty && padiData.isEmpty) {
-                              return const Center(child: Text('No data available'));
+                              return const Center(
+                                  child: Text('No data available'));
                             } else {
-                              return SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    // ListView for pengairanData
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemCount: pengairanData.length,
-                                      itemBuilder: (context, index) {
-                                        String jenisPengairan =
-                                            pengairanData.keys.elementAt(index);
-                                        JenisPengairan pengairanDataItem =
-                                            pengairanData[jenisPengairan]!;
-                                        return ExpansionTile(
-                                          title: Text(
-                                              'Jenis Pengairan: $jenisPengairan, (Total: ${pengairanDataItem.total})'),
-                                          children: [
-                                            for (var entry in pengairanDataItem
-                                                .pengairanData.entries)
-                                              ListTile(
-                                                title: Text(
-                                                    'Tipe Data: ${entry.key}'),
-                                                trailing: Text(
-                                                    'Total Nilai: ${entry.value.total}'),
-                                              ),
-                                          ],
-                                        );
-                                      },
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, bottom: 5),
+                                    child: Text("Data Padi",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500)),
+                                  ),
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height -
+                                              150,
                                     ),
-                                    // ListView for padiData
-                                    ListView.builder(
+                                    child: ListView.builder(
                                       shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       itemCount: padiData.length,
                                       itemBuilder: (context, index) {
                                         String jenisPadi =
@@ -178,16 +172,31 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                         JenisPadi padiDataItem =
                                             padiData[jenisPadi]!;
                                         return ExpansionTile(
-                                          title: Text(
-                                              'Jenis Padi: $jenisPadi (Total: ${padiDataItem.total})'),
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Jenis: $jenisPadi'),
+                                              Text(padiDataItem.total
+                                                  .toString()),
+                                            ],
+                                          ),
                                           children: padiDataItem
                                               .jenisLahan.entries
                                               .map((lahanEntry) {
                                             final jenisLahan = lahanEntry.key;
                                             final lahanData = lahanEntry.value;
                                             return ExpansionTile(
-                                              title: Text(
-                                                  'Jenis Lahan: $jenisLahan (Total: ${lahanData.total})'),
+                                              title: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text('Lahan: $jenisLahan'),
+                                                  Text(lahanData.total
+                                                      .toString()),
+                                                ],
+                                              ),
                                               children: lahanData
                                                   .jenisBantuan.entries
                                                   .map((bantuanEntry) {
@@ -196,8 +205,17 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                                 final bantuanData =
                                                     bantuanEntry.value;
                                                 return ExpansionTile(
-                                                  title: Text(
-                                                      'Jenis Bantuan: $jenisBantuan (Total: ${bantuanData.total})'),
+                                                  title: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                          'Bantuan: $jenisBantuan'),
+                                                      Text(bantuanData.total
+                                                          .toString()),
+                                                    ],
+                                                  ),
                                                   children: bantuanData
                                                       .tipeData.entries
                                                       .map((tipeEntry) {
@@ -208,10 +226,16 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                                             .data[tipeData] ??
                                                         0;
                                                     return ListTile(
-                                                      title: Text(
-                                                          'Tipe Data: $tipeData'),
-                                                      trailing: Text(
-                                                          'Total Nilai: $nilai'),
+                                                      title: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              'Data ${UserController().toCamelCase(tipeData)}'),
+                                                          Text(nilai.toString())
+                                                        ],
+                                                      ),
                                                     );
                                                   }).toList(),
                                                 );
@@ -221,13 +245,71 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                         );
                                       },
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, bottom: 5, top: 5),
+                                    child: Text("Data Pengairan",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500)),
+                                  ),
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height -
+                                              150,
+                                    ),
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: pengairanData.length,
+                                      itemBuilder: (context, index) {
+                                        String jenisPengairan =
+                                            pengairanData.keys.elementAt(index);
+                                        JenisPengairan pengairanDataItem =
+                                            pengairanData[jenisPengairan]!;
+                                        return ExpansionTile(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  'Jenis: ${UserController().toCamelCase(jenisPengairan)}'),
+                                              Text(pengairanDataItem.total
+                                                  .toString()),
+                                            ],
+                                          ),
+                                          children: [
+                                            for (var entry in pengairanDataItem
+                                                .pengairanData.entries)
+                                              ListTile(
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                        'Data ${UserController().toCamelCase(entry.key)}'),
+                                                    Text(entry.value.total
+                                                        .toString()),
+                                                  ],
+                                                ),
+                                              ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               );
                             }
                           }
                         },
-                      )),
+                      ),
+                    ),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
