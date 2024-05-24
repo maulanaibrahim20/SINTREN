@@ -97,7 +97,7 @@ class LaporanPalawijaController extends Controller
             return redirect('/penyuluh/create/laporan_palawija')->with('success', 'Data Laporan Palawija Berhasil Ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->with('error', 'Error Data Laporan Palawija Gagal Ditambahkan!'.$e->getMessage());
+            return back()->with('error', 'Error Data Laporan Palawija Gagal Ditambahkan!' . $e->getMessage());
         }
     }
 
@@ -128,7 +128,7 @@ class LaporanPalawijaController extends Controller
             'penugasanPenyuluh' => $this->penugasan::where('user_id', Auth::user()->id)->get(),
         ];
 
-        return view ('penyuluh.pages.laporan_palawija.update',$data);
+        return view('penyuluh.pages.laporan_palawija.update', $data);
     }
 
     /**
@@ -164,8 +164,20 @@ class LaporanPalawijaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+
+            $laporanPalawija = $this->laporanPalawija::findOrFail($id);
+            $laporanPalawija->delete();
+
+            DB::commit();
+            return redirect('/penyuluh/create/laporan_palawija')->with('success', 'Data Laporan Palawija Berhasil Dihapus!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Error Data Laporan Palawija Gagal Dihapus! ' . $e->getMessage());
+        }
     }
 }
