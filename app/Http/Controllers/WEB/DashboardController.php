@@ -65,9 +65,17 @@ class DashboardController extends Controller
 
     public function penyuluh()
     {
-        $data['penugasan'] = $this->penugasan::where('user_id', Auth::user()->id)->get();
-        return view('penyuluh.pages.dashboard.index', $data);
+        $penugasan = $this->penugasan::where('user_id', Auth::user()->id)->get();
+
+        if ($penugasan->isEmpty()) {
+            $data['penugasan'] = $penugasan;
+            return view('penyuluh.pages.dashboard.index', $data)->with('message', 'Tidak ada data penugasan yang tersedia.');
+        } else {
+            $data['penugasan'] = $penugasan;
+            return view('penyuluh.pages.dashboard.index', $data);
+        }
     }
+
 
     public function dinas_pangan()
     {

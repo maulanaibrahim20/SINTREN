@@ -7,7 +7,7 @@
         </ol>
     </div>
     <div class="row">
-        @foreach ($penugasan as $tugas)
+        @forelse ($penugasan as $tugas)
             <div class="col-xl-6 col-md-6 col-lg-6 col-sm-6 m-b-3">
                 <div class="card">
                     <div class="">
@@ -44,6 +44,8 @@
                     </div>
                 </div>
             </div><!-- col end -->
-        @endforeach
+            @empty
+            <p>Belum ada penugasan</p>
+        @endforelse
     </div>
 @endsection
