@@ -2,6 +2,7 @@
 
 namespace App\Models\Penyuluh;
 
+use App\Models\User;
 use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,5 +26,9 @@ class LaporanPalawija extends Model
     public function palawija()
     {
         return $this->belongsTo(JenisPalawija::class, 'id_jenis_palawija');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
     }
 }

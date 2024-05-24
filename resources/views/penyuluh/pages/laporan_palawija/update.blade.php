@@ -14,9 +14,10 @@
                 <div class="card-header">
                     <h3 class="mb-0 card-title">Tambah Data Laporan Palawija</h3>
                 </div>
-                <form action="{{ url('/penyuluh/create/laporan_palawija') }}" method="POST" id="myForm">
+                <form action="{{ url('/penyuluh/create/laporan_palawija/'. $editPalawija->id) }}" method="POST" id="myForm">
                     <div class="card-body">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -25,19 +26,17 @@
                                         <div class="input-group-text">
                                             <i class="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
                                         </div>
-                                        <input type="text" class="form-control" name="date" id="date"
-                                            placeholder="Pilih Tanggal">
+                                        <input type="text" class="form-control" name="date" id="date" placeholder="Pilih Tanggal" value="{{ $editPalawija->date }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Penugasan Desa</label>
-                                    <select id="desa" class="form-control form-select select2"
-                                        aria-label="Default select example" name="desa">
+                                    <select id="desa" class="form-control form-select select2" aria-label="Default select example" name="desa">
                                         <option value="">-- Pilih --</option>
                                         @foreach ($penugasanPenyuluh as $item)
-                                            <option value="{{ $item->desa_id }}" name="desa">
+                                            <option value="{{ $item->desa_id }}" {{ $editPalawija->desa_id == $item->desa_id ? 'selected' : '' }}>
                                                 {{ $item->desa->name }}
                                             </option>
                                         @endforeach
@@ -47,11 +46,10 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pilih Jenis Lahan</label>
-                                    <select id="jenis_lahan" class="form-control form-select select2"
-                                        aria-label="Default select example" name="jenis_lahan">
+                                    <select id="jenis_lahan" class="form-control form-select select2" aria-label="Default select example" name="jenis_lahan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="lahan sawah">Lahan Sawah</option>
-                                        <option value="non sawah">Bukan Sawah/Non Sawah</option>
+                                        <option value="lahan sawah" {{ $editPalawija->jenis_lahan == 'lahan sawah' ? 'selected' : '' }}>Lahan Sawah</option>
+                                        <option value="non sawah" {{ $editPalawija->jenis_lahan == 'non sawah' ? 'selected' : '' }}>Bukan Sawah/Non Sawah</option>
                                     </select>
                                 </div>
                             </div>
@@ -60,22 +58,20 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pilih Jenis Bantuan</label>
-                                    <select id="jenis_bantuan" class="form-control form-select select2"
-                                        aria-label="Default select example" name="jenis_bantuan">
+                                    <select id="jenis_bantuan" class="form-control form-select select2" aria-label="Default select example" name="jenis_bantuan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="bantuan pemerintah">Bantuan Pemerintah</option>
-                                        <option value="non bantuan pemerintah">Bukan Bantuan Pemerintah/Non Bantuan Pemerintah</option>
+                                        <option value="bantuan pemerintah" {{ $editPalawija->jenis_bantuan == 'bantuan pemerintah' ? 'selected' : '' }}>Bantuan Pemerintah</option>
+                                        <option value="non bantuan pemerintah" {{ $editPalawija->jenis_bantuan == 'non bantuan pemerintah' ? 'selected' : '' }}>Bukan Bantuan Pemerintah/Non Bantuan Pemerintah</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pilih Jenis Palawija</label>
-                                    <select id="jenis_palawija" class="form-control form-select select2"
-                                        aria-label="Default select example" name="jenis_palawija">
+                                    <select id="jenis_palawija" class="form-control form-select select2" aria-label="Default select example" name="jenis_palawija">
                                         <option value="">-- Pilih --</option>
                                         @foreach ($jenisPalawija as $palawija)
-                                        <option value="{{$palawija->id}}">{{$palawija->name}}</option>
+                                            <option value="{{ $palawija->id }}" {{ $editPalawija->id_jenis_palawija == $palawija->id ? 'selected' : '' }}>{{ $palawija->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -85,21 +81,20 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pilih Jenis Data/Inputan</label>
-                                    <select id="jenis_data" class="form-control form-select select2"
-                                        aria-label="Default select example" name="jenis_data">
+                                    <select id="jenis_data" class="form-control form-select select2" aria-label="Default select example" name="jenis_data">
                                         <option value="">-- Pilih --</option>
-                                        <option value="panen">Panen</option>
-                                        <option value="tanam">Tanam</option>
-                                        <option value="puso/rusak">Puso/Rusak</option>
-                                        <option value="panen muda">Panen Muda</option>
-                                        <option value="panen hijauan pakan ternak">Panen Hijauan Pakan Ternak</option>
+                                        <option value="panen" {{ $editPalawija->tipe_data == 'panen' ? 'selected' : '' }}>Panen</option>
+                                        <option value="tanam" {{ $editPalawija->tipe_data == 'tanam' ? 'selected' : '' }}>Tanam</option>
+                                        <option value="puso/rusak" {{ $editPalawija->tipe_data == 'puso/rusak' ? 'selected' : '' }}>Puso/Rusak</option>
+                                        <option value="panen muda" {{ $editPalawija->tipe_data == 'panen muda' ? 'selected' : '' }}>Panen Muda</option>
+                                        <option value="panen hijauan pakan ternak" {{ $editPalawija->tipe_data == 'panen hijauan pakan ternak' ? 'selected' : '' }}>Panen Hijauan Pakan Ternak</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Nilai</label>
-                                    <input type="number" class="form-control" name="nilai">
+                                    <input type="number" class="form-control" name="nilai" value="{{ $editPalawija->nilai }}">
                                 </div>
                             </div>
                         </div>

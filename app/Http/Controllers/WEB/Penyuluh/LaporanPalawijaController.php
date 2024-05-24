@@ -7,6 +7,7 @@ use App\Models\Operator\TanamanPalawija;
 use App\Models\Penyuluh\DetailLaporanPalawija;
 use App\Models\Penyuluh\JenisPalawija;
 use App\Models\Penyuluh\LaporanPalawija;
+use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Wilayah\Desa;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
@@ -16,23 +17,23 @@ use Illuminate\Http\Request;
 class LaporanPalawijaController extends Controller
 {
     protected $laporanPalawija;
-    protected $detailPalawija;
     protected $desa;
     protected $tanamanPalawija;
     protected $jenisPalawija;
+    protected $penugasan;
 
     public function __construct(
         LaporanPalawija $laporanPalawija,
-        DetailLaporanPalawija $detailPalawija,
         Desa $desa,
         TanamanPalawija $tanamanPalawija,
         JenisPalawija $jenisPalawija,
+        PenugasanPenyuluh $penugasanPenyuluh,
     ) {
         $this->laporanPalawija = $laporanPalawija;
-        $this->detailPalawija = $detailPalawija;
         $this->desa = $desa;
         $this->tanamanPalawija = $tanamanPalawija;
         $this->jenisPalawija = $jenisPalawija;
+        $this->penugasan = $penugasanPenyuluh;
     }
 
     public function kirimkan(Request $request)
@@ -54,8 +55,7 @@ class LaporanPalawijaController extends Controller
     public function index()
     {
         $data = [
-            'palawija' => $this->laporanPalawija::all(),
-            'detailLaporan' => $this->detailPalawija::all(),
+            'palawija' => $this->laporanPalawija::where('user_id', Auth::user()->id)->get(),
         ];
         return view('penyuluh.pages.laporan_palawija.index', $data);
     }
@@ -67,11 +67,10 @@ class LaporanPalawijaController extends Controller
     {
         $kecamatan = Auth::user()->penyuluh->kecamatan->id;
         $data = [
-            'desa' => $this->desa::where('district_id', $kecamatan)->get(),
             'tanamanPalawija' => $this->tanamanPalawija::all(),
             'jenisPalawija' => $this->jenisPalawija::all(),
+            'penugasanPenyuluh' => $this->penugasan::where('user_id', Auth::user()->id)->get(),
         ];
-
         return view('penyuluh.pages.laporan_palawija.create', $data);
     }
 
@@ -82,34 +81,23 @@ class LaporanPalawijaController extends Controller
     {
         try {
             DB::beginTransaction();
-            $palawija = $this->laporanPalawija->create([
-                'jenis_lahan' => $request->jenis_lahan,
-                'nama_pengumpul' => Auth::user()->name,
+            $this->laporanPalawija->create([
+                'user_id' => Auth::user()->id,
                 'desa_id' => $request->desa,
-                'kecamatan_id' => Auth::user()->penyuluh->kecamatan->id,
-            ]);
-            $this->detailPalawija->create([
-                'id_laporan_palawija' => $palawija->id,
+                'kecamatan_id' => Auth::user()->penyuluh->kecamatan_id,
+                'jenis_lahan' => $request->jenis_lahan,
+                'jenis_bantuan' => $request->jenis_bantuan,
                 'id_jenis_palawija' => $request->jenis_palawija,
-                'jenis_bantuan' => $request->jenis_bantuan ?? 0,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu ?? 0,
-                'panen' => $request->panen ?? 0,
-                'panen_muda' => $request->panen_muda ?? 0,
-                'panen_pakan_ternak' => $request->panen_pakan_ternak ?? 0,
-                'tanam' => $request->tanam ?? 0,
-                'puso_rusak' => $request->puso_rusak ?? 0,
-                'tanaman_akhir_bulan_laporan' => $request->tanaman_akhir_bulan_laporan ?? 0,
-                'total_produksi' => 0,
+                'date' => $request->date,
+                'tipe_data' => $request->jenis_data,
+                'nilai' => $request->nilai,
             ]);
             DB::commit();
 
-            Alert::success('Success', 'Data Laporan Palawija Berhasil Ditambahkan!');
             return redirect('/penyuluh/create/laporan_palawija')->with('success', 'Data Laporan Palawija Berhasil Ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
-
-            Alert::error('error', 'Data Laporan Palawija Gagal Ditambahkan!' . $e->getMessage());
-            return back()->with('error', 'Error Data Laporan Palawija Gagal Ditambahkan!');
+            return back()->with('error', 'Error Data Laporan Palawija Gagal Ditambahkan!'.$e->getMessage());
         }
     }
 
@@ -121,7 +109,8 @@ class LaporanPalawijaController extends Controller
         $laporanPalawija = $this->laporanPalawija::findOrFail($id);
         $data = [
             'laporanPalawija' => $laporanPalawija,
-            'detailPalawija' => $this->detailPalawija::where('id_laporan_palawija', $id)->get(),
+
+
         ];
         return view('penyuluh.pages.laporan_palawija.show', $data);
     }
@@ -131,16 +120,46 @@ class LaporanPalawijaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $editPalawija = $this->laporanPalawija::findOrFail($id);
+        $data = [
+            'editPalawija' => $editPalawija,
+            'tanamanPalawija' => $this->tanamanPalawija::all(),
+            'jenisPalawija' => $this->jenisPalawija::all(),
+            'penugasanPenyuluh' => $this->penugasan::where('user_id', Auth::user()->id)->get(),
+        ];
+
+        return view ('penyuluh.pages.laporan_palawija.update',$data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $laporanPalawija = $this->laporanPalawija::findOrFail($id);
+            $laporanPalawija->update([
+                'user_id' => Auth::user()->id,
+                'desa_id' => $request->desa,
+                'kecamatan_id' => Auth::user()->penyuluh->kecamatan_id,
+                'jenis_lahan' => $request->jenis_lahan,
+                'jenis_bantuan' => $request->jenis_bantuan,
+                'id_jenis_palawija' => $request->jenis_palawija,
+                'date' => $request->date,
+                'tipe_data' => $request->jenis_data,
+                'nilai' => $request->nilai,
+            ]);
+
+            DB::commit();
+            return redirect('/penyuluh/create/laporan_palawija')->with('success', 'Data Laporan Palawija Berhasil Diperbarui!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Error Data Laporan Palawija Gagal Diperbarui! ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
