@@ -6,6 +6,7 @@ import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/padi_service.dart';
+import 'package:sintren_mobile/services/palawija_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
 
 class UserController {
@@ -37,9 +38,11 @@ class UserController {
       EasyLoading.showToast("Login gagal");
     }
 
-    await UserService().getAssignment();
+    await UserService().getDataPenyuluhanDesa();
     await PadiService().getPengairan();
+    await PalawijaService().getPalawija();
     await PadiService().getDetailPadiByUser();
+    await PalawijaService().getDetailPalawijaByUser();
 
     final role = await UserLoginModel().getRole();
     return role ?? "";
@@ -115,7 +118,7 @@ class UserController {
     return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
   }
 
-  Future<List<HistoriPenyuluhanModel>> getHistory() async {
+  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan() async {
     final db = await PenyuluhDatabaseHelper().database;
     const String query = '''
     SELECT
@@ -145,7 +148,8 @@ class UserController {
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('desa');
 
-    return List<LuasWilayahModel>.from(maps.map((map) => LuasWilayahModel.fromMap(map)));
+    return List<LuasWilayahModel>.from(
+        maps.map((map) => LuasWilayahModel.fromMap(map)));
   }
 
   String convertDate(String date) {
@@ -154,5 +158,86 @@ class UserController {
     String formattedDate = DateFormat('MMMM yyyy', 'id_ID').format(parsedDate);
 
     return formattedDate;
+  }
+
+  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhanBulanIni() async {
+    final db = await PenyuluhDatabaseHelper().database;
+    final DateTime now = DateTime.now();
+    final String currentMonthYear =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    final DateTime lastMonthDate = DateTime(now.year, now.month - 1, now.day);
+    final String lastMonthYear =
+        '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
+
+    const String queryCurrentMonth = '''
+    SELECT
+        strftime('%Y-%m', date) AS month_year,
+        desa_id,
+        desa_name,
+        SUM(nilai) AS total_nilai
+    FROM (
+        SELECT date, desa_id, desa_name, nilai FROM detailPadi
+        UNION ALL
+        SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+    ) AS combined_data
+    WHERE strftime('%Y-%m', date) = ?
+    GROUP BY
+        month_year,
+        desa_id
+    ORDER BY
+        month_year, desa_id;
+  ''';
+
+    const String queryLastMonth = '''
+    SELECT
+        strftime('%Y-%m', date) AS month_year,
+        desa_id,
+        desa_name,
+        SUM(nilai) AS total_nilai
+    FROM (
+        SELECT date, desa_id, desa_name, nilai FROM detailPadi
+        UNION ALL
+        SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+    ) AS combined_data
+    WHERE strftime('%Y-%m', date) = ?
+    GROUP BY
+        month_year,
+        desa_id
+    ORDER BY
+        month_year, desa_id;
+  ''';
+
+    final List<Map<String, dynamic>> mapsCurrentMonth =
+        await db.rawQuery(queryCurrentMonth, [currentMonthYear]);
+
+    // Mengidentifikasi desa yang sudah ada di bulan ini
+    final Set desaIdsCurrentMonth =
+        mapsCurrentMonth.map((map) => map['desa_id']).toSet();
+
+    // Mengambil data bulan lalu
+    final List<Map<String, dynamic>> mapsLastMonth =
+        await db.rawQuery(queryLastMonth, [lastMonthYear]);
+
+    // Filter data bulan lalu untuk desa yang tidak ada di bulan ini
+    final List<Map<String, dynamic>> mapsFilteredLastMonth = mapsLastMonth
+        .where((map) => !desaIdsCurrentMonth.contains(map['desa_id']))
+        .toList();
+
+    // Menggabungkan data bulan ini dengan data bulan lalu yang difilter
+    final List<Map<String, dynamic>> combinedMaps = [
+      ...mapsCurrentMonth,
+      ...mapsFilteredLastMonth
+    ];
+
+    return List<HistoriPenyuluhanModel>.from(
+        combinedMaps.map((map) => HistoriPenyuluhanModel.fromJson(map)));
+  }
+
+  Future<void> synchronizeData() async {
+    await UserService().getDataPenyuluhanDesa();
+    await PadiService().getPengairan();
+    await PalawijaService().getPalawija();
+    await PadiService().getDetailPadiByUser();
+    await PalawijaService().getDetailPalawijaByUser();
   }
 }

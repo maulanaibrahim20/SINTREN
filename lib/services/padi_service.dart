@@ -35,6 +35,7 @@ class PadiService {
         batch.insert('pengairan', item.toMap());
       }
       await batch.commit(noResult: true);
+      log("get pengairan sukses");
     } catch (e) {
       throw Exception("Failed to save pengairan to database: $e");
     }
@@ -107,12 +108,12 @@ class PadiService {
       }
 
       if (detail.isNotEmpty) {
-        log(detail[0].pengairanName);
         Batch batch = db.batch();
         for (var item in detail) {
           batch.insert('detailPadi', item.toMap());
         }
         await batch.commit(noResult: true);
+        log("get detail padi sukses");
       }
     } catch (e) {
       log("Failed to get detail padi: $e");

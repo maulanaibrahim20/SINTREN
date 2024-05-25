@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_padi_view.dart';
@@ -34,16 +33,8 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
   late TabController _tabController =
       TabController(length: tabs.length, vsync: this);
 
-  Future<void> _initializeData() async {
-    setState(() {
-      DetailPalawijaViewState().detailPalawija = PalawijaController()
-          .getDetailPalawijaByUser(widget.date, widget.desaId);
-    });
-  }
-
   @override
   void initState() {
-    _initializeData();
     super.initState();
     _tabController = TabController(
       length: tabs.length,
@@ -159,6 +150,7 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
                   DetailPalawijaView(
                     date: widget.date,
                     desaId: widget.desaId,
+                    desaName: widget.desaName,
                   )
                 ],
               ),

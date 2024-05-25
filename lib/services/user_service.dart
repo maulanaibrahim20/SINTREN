@@ -141,7 +141,7 @@ class UserService {
     }
   }
 
-  Future<void> getAssignment() async {
+  Future<void> getDataPenyuluhanDesa() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete('desa');
@@ -152,8 +152,7 @@ class UserService {
       );
 
       if (result.statusCode != 200) {
-        log(
-            "Failed to get desa: ${result.statusCode} - ${result.body}");
+        log("Failed to get desa: ${result.statusCode} - ${result.body}");
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
@@ -167,6 +166,7 @@ class UserService {
         batch.insert('desa', item.toMap());
       }
       await batch.commit(noResult: true);
+      log("get data penyuluhan desa sukses");
     } catch (e) {
       log("Failed to getAssignment: $e");
     }

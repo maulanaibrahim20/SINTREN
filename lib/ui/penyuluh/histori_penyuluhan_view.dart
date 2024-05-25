@@ -5,6 +5,7 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/padi_service.dart';
+import 'package:sintren_mobile/services/palawija_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -19,24 +20,16 @@ class HistoriPenyuluhanView extends StatefulWidget {
 
 class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
   final userC = UserController();
-  late Future<List<dynamic>> combinedFuture;
-
-  Future<void> _initializeData() async {
-    combinedFuture = Future.wait([
-      userC.getHistory(),
-      userC.getLuasLahanDesa(),
-    ]);
-  }
 
   Future<void> _synchronizeData() async {
-    await UserService().getAssignment();
+    await UserService().getDataPenyuluhanDesa();
     await PadiService().getDetailPadiByUser();
-    _initializeData();
+    await PalawijaService().getDetailPalawijaByUser();
+    setState(() {});
   }
 
   @override
   void initState() {
-    _initializeData();
     super.initState();
   }
 
@@ -76,9 +69,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           EasyLoading.show(status: "Sinkronisasi Data");
-          setState(() {
-            _synchronizeData();
-          });
+          _synchronizeData();
           EasyLoading.dismiss();
         },
         backgroundColor: ColorTheme().primaryColor,
@@ -88,7 +79,10 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         ),
       ),
       body: FutureBuilder<List<dynamic>>(
-        future: combinedFuture,
+        future: Future.wait([
+          userC.getHistoriPenyuluhan(),
+          userC.getLuasLahanDesa(),
+        ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -167,9 +161,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                           ),
                         ),
                       );
-                      setState(() {
-                        _initializeData();
-                      });
+                      setState(() {});
                     },
                     child: Card(
                       margin: const EdgeInsets.symmetric(

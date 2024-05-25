@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
 
 class DetailPalawijaView extends StatefulWidget {
   const DetailPalawijaView(
-      {super.key, required this.date, required this.desaId});
+      {super.key,
+      required this.date,
+      required this.desaId,
+      required this.desaName});
 
   final String date;
   final String desaId;
+  final String desaName;
 
   @override
   State<DetailPalawijaView> createState() => DetailPalawijaViewState();
@@ -19,18 +24,10 @@ class DetailPalawijaView extends StatefulWidget {
 
 class DetailPalawijaViewState extends State<DetailPalawijaView> {
   final palawijaC = PalawijaController();
-  late Future<List<DetailPalawijaModel>> detailPalawija;
-
-  Future<void> _initializeData() async {
-    setState(() {
-      detailPalawija =
-          palawijaC.getDetailPalawijaByUser(widget.date, widget.desaId);
-    });
-  }
+  bool isOpen = false;
 
   @override
   void initState() {
-    _initializeData();
     super.initState();
   }
 
@@ -40,32 +37,245 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
       backgroundColor: ColorTheme().bgColor,
       body: Column(
         children: [
-          Container(
-            height: 40,
-            width: double.infinity,
+          Card(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.filter_list, color: ColorTheme().whiteColor),
-              label: Text(
-                'Filter dan Urutkan',
-                style: StyleTheme().styleWhite.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorTheme().primaryColor,
-                side: BorderSide(color: ColorTheme().primaryColor, width: 2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            elevation: 3,
+            surfaceTintColor: ColorTheme().whiteColor,
+            color: ColorTheme().whiteColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: ColorTheme().linearColor,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.home_rounded,
+                                color: ColorTheme().whiteColor,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Desa ${UserController().toCamelCase(widget.desaName)}",
+                                style: StyleTheme().stylePrimary.copyWith(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                UserController().convertDate(widget.date),
+                                style: StyleTheme().styleBlack.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[700],
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: ColorTheme().linearColor,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.add,
+                            color: ColorTheme().whiteColor,
+                            size: 25,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                const Divider(thickness: 2),
+                Visibility(
+                  visible: isOpen,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height -
+                          400, // Sesuaikan batas tinggi sesuai kebutuhan Anda
+                    ),
+                    child: SingleChildScrollView(
+                      child: FutureBuilder(
+                        future: palawijaC.getKesimpulanDataPalawija(
+                            widget.date, widget.desaId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else {
+                            final palawijaData =
+                                snapshot.data as Map<String, JenisPalawija>;
+
+                            if (palawijaData.isEmpty) {
+                              return const Center(
+                                  child: Text('No data available'));
+                            } else {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20, bottom: 5),
+                                    child: Text("Data Palawija",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500)),
+                                  ),
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height -
+                                              150,
+                                    ),
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: palawijaData.length,
+                                      itemBuilder: (context, index) {
+                                        String jenisPalawija =
+                                            palawijaData.keys.elementAt(index);
+                                        JenisPalawija palawijaDataItem =
+                                            palawijaData[jenisPalawija]!;
+                                        return ExpansionTile(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  'Jenis: ${UserController().toCamelCase(jenisPalawija)}'),
+                                              Text(palawijaDataItem.total
+                                                  .toString()),
+                                            ],
+                                          ),
+                                          children: palawijaDataItem
+                                              .jenisLahan.entries
+                                              .map((lahanEntry) {
+                                            final jenisLahan = lahanEntry.key;
+                                            final lahanData = lahanEntry.value;
+                                            return ExpansionTile(
+                                              title: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text('Lahan: $jenisLahan'),
+                                                  Text(lahanData.total
+                                                      .toString()),
+                                                ],
+                                              ),
+                                              children: lahanData
+                                                  .jenisBantuan.entries
+                                                  .map((bantuanEntry) {
+                                                final jenisBantuan =
+                                                    bantuanEntry.key;
+                                                final bantuanData =
+                                                    bantuanEntry.value;
+                                                return ExpansionTile(
+                                                  title: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                          'Bantuan: $jenisBantuan'),
+                                                      Text(bantuanData.total
+                                                          .toString()),
+                                                    ],
+                                                  ),
+                                                  children: bantuanData
+                                                      .tipeData.entries
+                                                      .map((tipeEntry) {
+                                                    final tipeData =
+                                                        tipeEntry.key;
+                                                    final nilai = tipeEntry
+                                                            .value
+                                                            .data[tipeData] ??
+                                                        0;
+                                                    return ListTile(
+                                                      title: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                              'Data ${UserController().toCamelCase(tipeData)}'),
+                                                          Text(nilai.toString())
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                );
+                                              }).toList(),
+                                            );
+                                          }).toList(),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isOpen = !isOpen;
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Detail Data Penyuluhan",
+                        style: StyleTheme().stylePrimary.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      Icon(
+                        !isOpen ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                        color: ColorTheme().primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
           ),
           Expanded(
             child: FutureBuilder<List<DetailPalawijaModel>>(
-              future: detailPalawija,
+              future:
+                  palawijaC.getDetailPalawijaByUser(widget.date, widget.desaId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -236,12 +446,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                                 detail: data,
                                                                 onCreate: false,
                                                               )));
-                                                  setState(() {
-                                                    detailPalawija = palawijaC
-                                                        .getDetailPalawijaByUser(
-                                                            widget.date,
-                                                            widget.desaId);
-                                                  });
+                                                  setState(() {});
                                                 },
                                                 icon: Icon(Icons.edit,
                                                     color: ColorTheme()
@@ -278,12 +483,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                     await palawijaC
                                                         .deleteDetailById(
                                                             data.id);
-                                                    setState(() {
-                                                      detailPalawija = palawijaC
-                                                          .getDetailPalawijaByUser(
-                                                              widget.date,
-                                                              widget.desaId);
-                                                    });
+                                                    setState(() {});
                                                   }
                                                 },
                                                 icon: const Icon(Icons.delete,

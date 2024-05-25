@@ -129,7 +129,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           MaterialPageRoute(
                               builder: (context) => DetailPenyuluhanView(
                                     index: 1,
-                                    date: date.text,
+                                    date: date.text.substring(0, 7),
                                     desaId: selectedDesaValue!.id,
                                   )),
                           (Route<dynamic> route) => route.isFirst,

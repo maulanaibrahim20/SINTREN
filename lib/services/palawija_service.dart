@@ -35,6 +35,7 @@ class PalawijaService {
         batch.insert('palawija', item.toMap());
       }
       await batch.commit(noResult: true);
+      log("get palawija sukses");
     } catch (e) {
       throw Exception("Failed to save palawija to database: $e");
     }
@@ -113,6 +114,7 @@ class PalawijaService {
           batch.insert('detailPalawija', item.toMap());
         }
         await batch.commit(noResult: true);
+        log("get detail palawija sukses");
       }
     } catch (e) {
       log("Failed to get detail palawija: $e");

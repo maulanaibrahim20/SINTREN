@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/palawija_service.dart';
@@ -105,8 +106,6 @@ class PalawijaController {
   }
 
   Future<List<PalawijaModel>> getPalawija() async {
-    await PalawijaService().getPalawija();
-
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query('palawija');
 
@@ -123,8 +122,6 @@ class PalawijaController {
 
   Future<List<DetailPalawijaModel>> getDetailPalawijaByUser(
       String date, String desaId) async {
-    await PalawijaService().getDetailPalawijaByUser();
-
     final db = await PenyuluhDatabaseHelper().database;
     final List<Map<String, dynamic>> maps = await db.query(
       'detailPalawija',
@@ -149,5 +146,60 @@ class PalawijaController {
     } else {
       return null;
     }
+  }
+
+  Future<Map<String, JenisPalawija>> getKesimpulanDataPalawija(
+      String date, String desaId) async {
+    List<DetailPalawijaModel> groupedData =
+        await PalawijaController().getDetailPalawijaByUser(date, desaId);
+
+    // Data structure to hold the aggregated data
+    var groupedByAll = <String, Map<String, Map<String, Map<String, int>>>>{};
+
+    // Aggregate the data
+    for (var row in groupedData) {
+      groupedByAll
+          .putIfAbsent(row.palawijaName, () => {})
+          .putIfAbsent(row.jenisLahan, () => {})
+          .putIfAbsent(row.jenisBantuan, () => {})
+          .update(row.tipeData, (value) => value + row.nilai,
+              ifAbsent: () => row.nilai);
+    }
+
+    // Convert aggregated data into the desired structure
+    var result = <String, JenisPalawija>{};
+
+    groupedByAll.forEach((jenisPalawija, lahanMap) {
+      var lahanData = <String, JenisLahan>{};
+      int totalJenisPalawija = 0;
+
+      lahanMap.forEach((jenisLahan, bantuanMap) {
+        var bantuanData = <String, JenisBantuan>{};
+        int totalJenisLahan = 0;
+
+        bantuanMap.forEach((jenisBantuan, tipeDataMap) {
+          var tipeDataEntries = <String, TipeData>{};
+          int totalJenisBantuan = 0;
+
+          tipeDataMap.forEach((tipeData, nilai) {
+            tipeDataEntries[tipeData] = TipeData(data: {tipeData: nilai});
+            totalJenisBantuan += nilai;
+          });
+
+          bantuanData[jenisBantuan] =
+              JenisBantuan(tipeData: tipeDataEntries, total: totalJenisBantuan);
+          totalJenisLahan += totalJenisBantuan;
+        });
+
+        lahanData[jenisLahan] =
+            JenisLahan(jenisBantuan: bantuanData, total: totalJenisLahan);
+        totalJenisPalawija += totalJenisLahan;
+      });
+
+      result[jenisPalawija] =
+          JenisPalawija(jenisLahan: lahanData, total: totalJenisPalawija);
+    });
+
+    return result;
   }
 }

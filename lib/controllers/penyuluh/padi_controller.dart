@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
@@ -37,8 +35,6 @@ class PadiController {
       "nilai": map['nilai'],
     };
 
-    log(data.toString());
-
     final result = await PadiService().store(data);
 
     if (!result) {
@@ -67,8 +63,6 @@ class PadiController {
       "tipe_data": map['tipe_data'],
       "nilai": map['nilai'],
     };
-
-    log(data.toString());
 
     final result = await PadiService().update(data, dataId);
 
@@ -133,7 +127,6 @@ class PadiController {
       whereArgs: ['%$date%', desaId],
     );
 
-    log(maps.toString());
     return List<DetailPadiModel>.from(
         maps.map((map) => DetailPadiModel.fromMap(map)));
   }

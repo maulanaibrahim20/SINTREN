@@ -73,12 +73,20 @@ class _FormPadiViewState extends State<FormPadiView> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
-    final DateTime firstDate = DateTime(now.year, now.month - 1, 1);
-    final DateTime lastDate = DateTime(now.year, now.month + 1, 0);
+
+    DateTime firstDate = DateTime(now.year, now.month - 1, 1);
+    DateTime lastDate = DateTime(now.year, now.month + 1, 0);
+    DateTime initialDate = DateTime.now();
+    // if (widget.detail != null) {
+    //   final DateTime parsedDate = DateTime.parse(widget.detail!.date);
+
+    //   firstDate = DateTime(parsedDate.year, parsedDate.month, 1);
+    //   lastDate = DateTime(parsedDate.year, parsedDate.month + 1, 0);
+    // }
 
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
     );
@@ -131,7 +139,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       MaterialPageRoute(
                           builder: (context) => DetailPenyuluhanView(
                                 index: 0,
-                                date: date.text,
+                                date: date.text.substring(0, 7),
                                 desaId: selectedDesaValue!.id,
                               )),
                       (Route<dynamic> route) => route.isFirst,

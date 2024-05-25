@@ -25,11 +25,8 @@ class DetailPadiViewState extends State<DetailPadiView> {
   final padiC = PadiController();
   bool isOpen = false;
 
-  Future<void> _initializeData() async {}
-
   @override
   void initState() {
-    _initializeData();
     super.initState();
   }
 
