@@ -14,6 +14,7 @@ use App\Http\Controllers\WEB\Operator\Master\PengairanController;
 use App\Http\Controllers\WEB\Operator\Tanaman\Kategori\KategoriTanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
+use App\Http\Controllers\WEB\Operator\User\PanganController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
@@ -21,6 +22,8 @@ use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController;
+use App\Http\Controllers\PANGAN\UserPasarController;
+use App\Http\Controllers\PANGAN\PasarController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,6 +65,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('pertanian', PertanianController::class);
                 Route::resource('uptd', UptdController::class);
                 Route::resource('penyuluh', PenyuluhController::class);
+                Route::resource('pangan', PanganController::class);
             });
             Route::prefix('kategori')->group(function () {
                 Route::resource('tanaman_palawija', KategoriTanamanPalawijaController::class);
@@ -118,9 +122,11 @@ Route::middleware(['autentikasi'])->group(function () {
     });
 
     // yuan diana
-    Route::group(['middleware' => ['can:dinas_pangan']], function () {
-        Route::prefix('dinas_pangan')->group(function () {
-            Route::get('/dashboard', [DashboardController::class, 'dinas_pangan']);
+    Route::group(['middleware' => ['can:pangan']], function () {
+        Route::prefix('pangan')->group(function () {
+            Route::get('/dashboard', [DashboardController::class, 'pangan']);
+            Route::resource('/user/pasar', UserPasarController::class);
+            Route::resource('/pasar/data_pasar', PasarController::class);
         });
     });
 });
