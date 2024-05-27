@@ -111,7 +111,7 @@
                                         @if ($view->user->email_verified_at)
                                             <span class="badge bg-primary">Terverifikasi</span>
                                         @else
-                                            <span class="badge bg-warning">Belum Terverifikasi</span>
+                                            <span class="badge bg-warning"> Terverifikasi</span>
                                         @endif
                                     </td>
                                 </tr>

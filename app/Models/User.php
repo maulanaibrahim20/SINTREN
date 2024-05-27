@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Penyuluh\Penyuluh;
+use App\Models\Pasar\PetugasPasar;
+use App\Models\Uptd\Uptd;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -43,6 +45,7 @@ class User extends Authenticatable
     ];
 
     protected $keyType = 'string';
+    protected $primaryKey = 'id';
     /**
      * The attributes that should be cast.
      *
@@ -61,5 +64,15 @@ class User extends Authenticatable
     public function penyuluh()
     {
         return $this->hasOne(Penyuluh::class);
+    }
+
+    public function uptd()
+    {
+        return $this->hasOne(Uptd::class);
+    }
+
+    public function petugaspasar()
+    {
+        return $this->hasOne(PetugasPasar::class);
     }
 }

@@ -26,6 +26,7 @@ class CreateRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'alamat' => ['required', 'string', 'max:255'],
             'no_telp' => ['required', 'string', 'max:255'],
+            'pasar' => ['required', 'numeric'],
         ];
     }
 }

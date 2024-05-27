@@ -60,8 +60,8 @@
                                             @if ($data->status == 'terkirim')
                                                 <span class="badge bg-success-transparent text-warning fw-semibold">Terkirim
                                                 </span>
-                                            @elseif ($data->status == 'belum_terkirim')
-                                                <span class="badge bg-danger-transparent text-danger fw-semibold">Belum
+                                            @elseif ($data->status == '_terkirim')
+                                                <span class="badge bg-danger-transparent text-danger fw-semibold">
                                                     Terkirim
                                                 </span>
                                             @endif
@@ -75,7 +75,7 @@
                                                 <i class="ti ti-eye"></i>
                                             </a>
                                             @if ($data->status == 'terkirim')
-                                            @elseif($data->status == 'belum_terkirim')
+                                            @elseif($data->status == '_terkirim')
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                     data-bs-target="#largeModal{{ $data->id }}">
                                                     <i class="fa fa-paper-plane"></i>

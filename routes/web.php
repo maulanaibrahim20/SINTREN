@@ -19,6 +19,7 @@ use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 //pangan
 use App\Http\Controllers\PANGAN\UserPasarController;
+use App\Http\Controllers\PANGAN\PasarController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -114,6 +115,7 @@ Route::middleware(['autentikasi'])->group(function () {
         Route::prefix('dinas_pangan')->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'dinas_pangan']);
             Route::resource('/user/pasar', UserPasarController::class);
+            Route::resource('/pasar/data_pasar', PasarController::class);
         });
     });
 });

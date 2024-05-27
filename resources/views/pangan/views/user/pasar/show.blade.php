@@ -1,12 +1,12 @@
 @extends('index')
-@section('title', 'View User Pasar')
+@section('title', 'Detail Pengguna Pasar')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/dinas_pangan/user/pasar') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
+            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/user/pasar') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
     </div>
     <div class="row">
@@ -39,6 +39,13 @@
                             </td>
                         </tr>
                         <tr>
+                            <td class="text-right">Nomor Telepon</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->no_telp }}
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="text-right">Role</td>
                             <td>:</td>
                             <td>
@@ -51,6 +58,11 @@
                             <td>
                                 {{ $user->alamat }}
                             </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Pasar</td>
+                            <td>:</td>
+                            <td><span class="badge bg-primary">{{ $user->pasar->name }}</span></td>
                         </tr>
                     </table>
                 </div>

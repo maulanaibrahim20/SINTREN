@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pertanian\Pertanian;
+use App\Models\Pasar\PetugasPasar;
 use App\Models\Role;
 use App\Models\Uptd\Uptd;
 use App\Models\User;
@@ -53,9 +54,16 @@ class UserSeeder extends Seeder
             'username' => 'dinas_pangan',
             'role_id' => Role::DINAS_PANGAN,
         ]);
-        User::factory()->create([
-            'username' => 'user_pasar',
+        $petugaspasar = User::factory()->create([
+            'username' => 'pasar',
             'role_id' => Role::PASAR,
+        ]);
+        PetugasPasar::create([
+            'alamat' => 'indramayu',
+            'user_id' => $petugaspasar['id'],
+            'no_telp' => '0857982995',
+            'pasar_id' =>  '1',
+            // 'createdBy' => 'admin',
         ]);
     }
 }

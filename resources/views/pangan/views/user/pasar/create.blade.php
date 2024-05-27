@@ -1,13 +1,12 @@
 @extends('index')
-@section('title', 'Create User | Pangan')
+@section('title', 'Tambah Pengguna Pasar | Pangan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/dinas_pangan/dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
-            <li class="breadcrumb-item" aria-current="page">Pengguna Pasar</li>
-            <li class="breadcrumb-item active" aria-current="page">Buat Akun Pasar</li>
+            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/pasar') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/user/pasar') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
     </div>
     <div class="row">
@@ -66,6 +65,18 @@
                                     <input type="number" class="form-control" id="validationCustom15" name="no_telp"
                                         value="{{ old('no_telp') }}" required>
                                     <div class="invalid-feedback">Please provide a valid zip.</div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                    <label for="validationCustom15">Pasar</label>
+                                    <select name="pasar" id="pasar" class="form-control form-select select2">
+                                        <option value="">-- pilih --</option>
+                                        @foreach ($pasar as $data)
+                                        <option value="{{ $data->id }}">
+                                            {{ $data->name }}</option>
+                                    @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <button class="btn btn-primary" type="submit">Submit </button>

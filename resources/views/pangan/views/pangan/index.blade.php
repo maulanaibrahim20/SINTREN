@@ -1,15 +1,15 @@
 @extends('index')
-@section('title', 'Pengguna Pasar | Pangan')
+@section('title', 'Data Pangan | Pangan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3  ">
+        <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
             <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/dinas_pangan/user/pasar/create') }}" class="btn bg-primary-transparent"
+                <a href="{{ url('/dinas_pangan/pangan/create') }}" class="btn bg-primary-transparent"
                     data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
                     <span>
                         <i class="fa fa-plus"></i>
@@ -42,9 +42,13 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
-                                    <th class="wd-20p border-bottom-0">Username</th>
-                                    <th class="wd-15p border-bottom-0">Pasar</th>
-                                    <th class="wd-15p border-bottom-0">Role</th>
+                                    <th class="wd-15p border-bottom-0">Status</th>
+                                    <th class="wd-20p border-bottom-0">Pasar</th>
+                                    <th class="wd-15p border-bottom-0">Tanggal</th>
+                                    <th class="wd-15p border-bottom-0">Kebutuhan (Ton)</th>
+                                    <th class="wd-15p border-bottom-0">Ketersediaan (Ton)</th>
+                                    <th class="wd-15p border-bottom-0">Neraca (Ton)</th>
+                                    <th class="wd-15p border-bottom-0">Harga (Rp/Kg)</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -52,18 +56,14 @@
                                 @foreach ($users as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->user->name }}</td>
-                                        <td>{{ $data->user->username }}</td>
-                                        <td><span class="badge bg-primary">{{ $data->pasar->name }}</span></td>
-                                        <td>{{ $data->user->getAkses->name }}</td>
+                                        <td>{{ $data->name }}</td>
+                                        {{-- <td>{{ $data->id }}</td> --}}
+                                        {{-- <td>{{ $data->user->getAkses->name }}</td> --}}
                                         <td class="text-center">
-                                            <a href="{{ url('/dinas_pangan/user/pasar/' . $data->id . '/edit') }}"
+                                            <a href="{{ url('/dinas_pangan/pasar/data_pasar/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/dinas_pangan/user/pasar/' . $data->id) }}"
-                                                class="btn btn-primary">
-                                                <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/dinas_pangan/user/pasar/' . $data->id) }}"
+                                                action="{{ url('/dinas_pangan/pasar/data_pasar/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf

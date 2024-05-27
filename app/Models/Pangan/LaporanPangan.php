@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Dinas_Pangan;
+namespace App\Models\Pangan;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dinas_Pangan extends Model
+class LaporanPangan extends Model
 {
     use HasFactory;
 }

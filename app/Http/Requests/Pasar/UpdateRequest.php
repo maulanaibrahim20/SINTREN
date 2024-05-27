@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Operator\User\Pasar;
+namespace App\Http\Requests\Pasar;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,10 +23,6 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'no_telp' => ['required', 'string', 'max:15'],
-            'alamat' => ['required', 'string', 'max:255'],
-            'pasar' => ['required', 'numeric'],
         ];
     }
 }

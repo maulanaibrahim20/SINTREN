@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Models\Pasar;
+namespace App\Models\Pangan;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pasar extends Model
+class DetailLaporanPangan extends Model
 {
     use HasFactory;
-
-    protected $table = 'pasars';
-    protected $guarded = [''];
 }

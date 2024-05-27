@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('pasars', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('alamat');
-            $table->string('no_telp');
+            $table->string('name', 25);
             $table->timestamps();
         });
     }

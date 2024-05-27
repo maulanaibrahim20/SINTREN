@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laporan_palawijas', function (Blueprint $table) {
+        Schema::create('petugas_pasars', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_lahan', 25);
-            $table->string('nama_pengumpul', 25);
-            $table->string('desa_id', 30);
-            $table->string('kecamatan_id', 30);
-            $table->enum('status', ['_terkirim', 'terkirim'])->default('_terkirim');
+            $table->string('user_id', 50);
+            $table->integer('pasar_id');
+            $table->string('alamat', 50);
+            $table->string('no_telp', 15);
+            // $table->string('createdBy', 50);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('laporan_palawijas');
+        Schema::dropIfExists('petugas_pasars');
     }
 };

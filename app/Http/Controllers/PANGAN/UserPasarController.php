@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\PANGAN;
+use App\Models\Pasar\PetugasPasar;
 use App\Models\Pasar\Pasar;
 use App\Models\User;
 use App\Models\Role;
@@ -10,17 +11,21 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Operator\User\Pasar\CreateRequest;
 use App\Http\Requests\Operator\User\Pasar\UpdateRequest;
 
 class UserPasarController extends Controller
 {
     protected $user;
-
+    protected $petugaspasar;
     protected $pasar;
-    public function __construct(User $user, Pasar $pasar)
+
+    public function __construct(User $user, PetugasPasar $petugaspasar, Pasar $pasar)
     {
         $this->user = $user;
+        $this->petugaspasar = $petugaspasar;
         $this->pasar = $pasar;
     }
     public function index()
@@ -30,7 +35,7 @@ class UserPasarController extends Controller
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Data Pengguna Pasar',
             'button_create' => 'Tambah Data Pengguna',
-            'users' => $this->pasar::orderBy('created_at', 'asc')->get(),
+            'users' => $this->petugaspasar::orderBy('created_at', 'asc')->get(),
         ];
 
         return view('pangan.views.user.pasar.index', $data);
@@ -41,7 +46,16 @@ class UserPasarController extends Controller
      */
     public function create()
     {
-        return view('pangan.views.user.pasar.create');
+        $data = [
+            'title' => 'Tambah Data Pengguna Pasar',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Pasar',
+            'breadcrumb_active' => 'Tambah Data Pengguna Pasar',
+            'pasar' => $this->pasar::all(),
+            'selected' => $this->petugaspasar::pluck('pasar_id')->toArray(),
+        ];
+
+        return view('pangan.views.user.pasar.create', $data);
     }
 
     /**
@@ -57,39 +71,46 @@ class UserPasarController extends Controller
                 'password' => bcrypt('password'),
                 'role_id' => Role::PASAR,
             ]);
-            $this->pasar->create($request->all() + [
+            $this->petugaspasar->create($request->all() + [
                 'user_id' => $user->id,
+                'pasar_id' => $request->pasar,
+                // 'createdBy' => Auth::user()->id,
             ]);
-            $user->setAttribute('email_verified_at', Carbon::now());
-            $user->setAttribute('remember_token', Str::random(10));
-            $user->save();
+            // $user->setAttribute('email_verified_at', Carbon::now());
+            // $user->setAttribute('remember_token', Str::random(10));
+            // $user->save();
 
             DB::commit();
-            Alert::success('Success', 'Success Data Berhasil Ditambahkan');
-            return redirect('/dinas_pangan/user/pasar')->with('success', 'Data User Pasar Berhasil Ditambahkan');
-        } catch (ValidationException $e) {
+            Alert::success('Success', 'Pengguna Pasar Berhasil Ditambahkan');
+            return redirect('/dinas_pangan/user/pasar')->with('success', 'User Pasar Berhasil Ditambahkan!');
+        } catch (\Exception $er) {
             DB::rollback();
-            Alert::warning('kesalahan' . $e->errors());
-            return redirect()->back()->withInput()->withErrors($e->errors());
-        } catch (\Exception $e) {
-            DB::rollback();
-            $errorMessage = 'Gagal Menambahkan Data: ' . $e->getMessage();
-            Alert::error('Error', $errorMessage);
-            return back()->withInput()->withErrors($errorMessage);
+            return back()->with('error', 'Gagal Menambahkan User Pasar' . $er->getMessage());
         }
+        //     return redirect('/dinas_pangan/user/pasar')->with('success', 'Pengguna Pasar Berhasil Ditambahkan');
+        // } catch (ValidationException $e) {
+        //     DB::rollback();
+        //     Alert::warning('kesalahan' . $e->errors());
+        //     return redirect()->back()->withInput()->withErrors($e->errors());
+        // } catch (\Exception $e) {
+        //     DB::rollback();
+        //     $errorMessage = 'Gagal Menambahkan Pengguna Pasar: ' . $e->getMessage();
+        //     Alert::error('Error', $errorMessage);
+        //     return back()->withInput()->withErrors($errorMessage);
+        // }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
         $data = [
+            'user'  => $this->petugaspasar->findOrFail($id),
             'title' => 'Detail Data Pengguna Pasar',
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna Pasar',
             'breadcrumb_active' => 'Detail Data Pengguna Pasar',
-            'user'  => $this->pasar->findOrFail($id),
         ];
         return view('pangan.views.user.pasar.show', $data);
     }
@@ -97,60 +118,69 @@ class UserPasarController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $user = $this->pasar->findOrFail($id);
-        return view('pangan.views.user.pasar.update', compact('user'));
+        $user = $this->petugaspasar::findOrFail($id);
+        $pasar = $this->pasar::all();
+        $data = [
+            'pasar' => $this->pasar::where('id', $user->pasar_id)->get(),
+            'selected_pas' => $user->pasar_id,
+            'title' => 'Edit Data Pengguna Pasar',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Pasar',
+            'breadcrumb_active' => 'Edit Data Pengguna Pasar',
+        ];
+        return view('pangan.views.user.pasar.update', $data, compact('user', 'pasar'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatedRequest $request, $id)
     {
         try {
             DB::beginTransaction();
-            $user = $this->pasar->findOrFail($id);
+            $user = $this->petugaspasar->findOrFail($id);
             $user->update($request->all() + [
                 'updated_at' => now(),
+                'pasar_id' => $request->pasar
             ]);
             $user->user->update($request->all() + [
                 'updated_at' => now(),
             ]);
             DB::commit();
-            Alert::success('success', 'Data berhasil diubah!');
-            return redirect('/dinas_pangan/user/pasar')->with('success', 'Success data berhasil diubah!');
+            Alert::success('success', 'Pengguna Pasar Berhasil Diubah!');
+            return redirect('/dinas_pangan/user/pasar')->with('success', 'Pengguna Pasar Berhasil Diubah!');
         } catch (ValidationException $e) {
             DB::rollback();
             Alert::warning('kesalahan' . $e->errors());
             return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $er) {
             DB::rollback();
-            $errorMessage = 'Gagal Menambahkan Data: ' . $er->getMessage();
-            Alert::error('Error', $errorMessage);
-            return back()->withInput()->withErrors($errorMessage);
+            Alert::error('error', 'Pengguna Pasar Gagal Diubah!' . $er->getMessage());
+            return back()->with('error', 'Gagal Mengubah Pengguna Pasar' . $er->getMessage());
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         try {
             DB::beginTransaction();
-            $user = $this->pasar->findOrFail($id);
+            $user = $this->petugaspasar->findOrFail($id);
             $user->user->delete();
             $user->delete();
 
             DB::commit();
 
-            Alert::success('success', 'Data Berhasil Dihapus!');
-            return back()->with('success', 'Data Berhasil Dihapus');
+            Alert::success('success', 'Pengguna Pasar Berhasil Dihapus!');
+            return back()->with('success', 'Pengguna Pasar Berhasil Dihapus');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data Gagal Dihapus' . $e->getMessage());
-            return back()->with('error', 'Data GagalDihapus!');
+            Alert::error('error', 'Pengguna Pasar Berhasil Gagal Dihapus' . $e->getMessage());
+            return back()->with('error', 'Pengguna Pasar Berhasil Dihapus!');
         }
     }
 }
