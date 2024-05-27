@@ -4,12 +4,12 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/dinas_pangan/pasar/data_pasar/create') }}" class="btn bg-primary-transparent"
+                <a href="{{ url('/pangan/create/data_pasar/create') }}" class="btn bg-primary-transparent"
                     data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
                     <span>
                         <i class="fa fa-plus"></i>
@@ -56,10 +56,10 @@
                                         {{-- <td>{{ $data->id }}</td> --}}
                                         {{-- <td>{{ $data->user->getAkses->name }}</td> --}}
                                         <td class="text-center">
-                                            <a href="{{ url('/dinas_pangan/pasar/data_pasar/' . $data->id . '/edit') }}"
-                                                class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                            {{-- <a href="{{ url('/dinas_pangan/pasar/data_pasar/' . $data->id . '/edit') }}"
+                                                class="btn btn-warning"><i class="fa fa-edit"></i></a> --}}
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/dinas_pangan/pasar/data_pasar/' . $data->id) }}"
+                                                action="{{ url('/pangan/create/data_pasar/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf

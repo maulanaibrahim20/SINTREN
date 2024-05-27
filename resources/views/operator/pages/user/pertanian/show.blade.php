@@ -1,12 +1,12 @@
 @extends('index')
-@section('title', 'View User Pertanian')
+@section('title', 'View Pengguna Pertanian')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
+        <ol class="breadcrumb1 br-7">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operator/user/pertanian') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item" aria-current="page">{{ $breadcrumb_1 }}</li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/user/pertanian') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
     </div>
     <div class="row">

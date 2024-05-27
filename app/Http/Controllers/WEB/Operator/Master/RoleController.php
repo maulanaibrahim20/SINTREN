@@ -22,9 +22,4 @@ class RoleController extends Controller
         $role = $this->role::all();
         return view('operator.pages.master.role.index', $data, compact('role'));
     }
-
-    public function store(Request $request)
-    {
-        dd($request->all());
-    }
 }

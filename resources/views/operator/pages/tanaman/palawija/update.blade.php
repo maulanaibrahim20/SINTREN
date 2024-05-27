@@ -55,22 +55,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-12">
-                                <label for="validationCustom15">Deskripsi</label>
-                                <textarea class="form-control" name="description" id="exampleFormControlTextarea1" rows="3"
-                                    placeholder="Write a large text here ...">{{ $palawija->description }}</textarea>
-                            </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
-                            <label for="validationCustom12">Upload Image</label>
-                            <input type="file" class="dropify" name="gambar" data-height="200">
-                            @if ($palawija->gambar)
-                                <div class="mt-3">
-                                    <label for="currentImage">Gambar Saat Ini:</label><br>
-                                    <img src="{{ asset($palawija->gambar) }}" alt="Current Image"
-                                        style="max-height: 200px;">
-                                </div>
-                            @endif
                         </div>
                         <button class="btn btn-primary" type="submit">Submit </button>
                     </form>

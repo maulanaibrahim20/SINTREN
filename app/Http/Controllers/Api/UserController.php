@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Penyuluh\Penyuluh;
+use App\Models\Pertanian\Pertanian;
 use App\Models\Role;
+use App\Models\Uptd\Uptd;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,33 +18,54 @@ class UserController extends Controller
     {
         $credentials = $request->only('username', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $role = Role::where('id', $user->role_id)->first();
-            if ($role->name == "PENYULUH") {
-                $responseData = [
-                    'status' => 'success',
-                    'message' => 'Login successful',
-                    'data' => $user
-                ];
-                return response()->json($responseData, 200);
-            } else {
-                $responseData = [
-                    'status' => 'error',
-                    'message' => 'Unauthorized',
-                    'data' => null
-                ];
-                return response()->json($responseData, 401);
-            }
-        } else {
-            $responseData = [
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized',
                 'data' => null
-            ];
-            return response()->json($responseData, 401);
+            ], 401);
         }
+
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized',
+                'data' => null
+            ], 401);
+        }
+
+        $role = Role::find($user->role_id);
+
+        $detail = null;
+        switch ($user->role_id) {
+            case Role::PERTANIAN:
+                $detail = $user->pertanian;
+                break;
+            case Role::UPTD:
+                $detail = $user->uptd;
+                break;
+            case Role::PENYULUH:
+                $detail = $user->penyuluh;
+                break;
+        }
+
+        $userData = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'username' => $user->username,
+            'detail' => $detail,
+            'role_name' => $role ? $role->name : 'No Role'
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Login berhasil',
+            'data' => $userData
+        ], 200);
     }
+
 
     public function update(Request $request, $id)
     {
@@ -50,28 +74,43 @@ class UserController extends Controller
                 'name' => 'required|string',
                 'username' => 'required|string',
                 'email' => 'required|email|unique:users,email,' . $id,
-                'role_id' => 'required|exists:roles,id',
+                'alamat' => 'required|string',
+                'no_telp' => 'required'
             ]);
 
             $user = User::findOrFail($id);
-            $user->update($request->only(['name', 'username', 'email', 'role_id']));
+
+            $user->update($request->only(['name', 'username', 'email']));
+
+            switch ($user->role_id) {
+                case Role::PERTANIAN:
+                    Pertanian::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
+                    break;
+                case Role::PENYULUH:
+                    Penyuluh::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
+                    break;
+                case Role::UPTD:
+                    Uptd::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
+                    break;
+            }
+
             $responseData = [
                 'status' => 'success',
-                'message' => 'Update successful.',
+                'message' => 'Update berhasil.',
                 'data' => null
             ];
             return response()->json($responseData, 200);
         } catch (\Exception $e) {
             $responseData = [
                 'status' => 'error',
-                'message' => 'Failed to update.',
+                'message' => 'Update gagal',
                 'data' => null
             ];
             return response()->json($responseData, 500);
         }
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(Request $request, $id)
     {
         try {
             $request->validate([
@@ -80,36 +119,120 @@ class UserController extends Controller
                 'confirm_password' => 'required|string|same:new_password',
             ]);
 
-            $user = auth()->user();
+            $user = User::findOrFail($id);
 
-            // Verifikasi password saat ini
             if (!Hash::check($request->current_password, $user->password)) {
-                $responseData = [
+                return response()->json([
                     'status' => 'error',
-                    'message' => 'Current password is incorrect.',
+                    'message' => 'Password lama tidak ditemukan/salah.',
                     'data' => null
-                ];
-                return response()->json($responseData, 400);
+                ], 400);
             }
 
-            // Update password baru
-            $users = User::findOrFail($request->id);
-            $users->update([
+            $user->update([
                 'password' => Hash::make($request->new_password),
             ]);
-            $responseData = [
+
+            return response()->json([
                 'status' => 'success',
-                'message' => 'Password changed successfully.',
+                'message' => 'Password berhasil diubah.',
                 'data' => null
-            ];
-            return response()->json($responseData, 200);
+            ], 200);
         } catch (\Exception $e) {
-            $responseData = [
+            return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to change password.',
+                'message' => 'Password gagal diubah: ' . $e->getMessage(),
                 'data' => null
+            ], 500);
+        }
+    }
+
+    public function getUserById($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized',
+                    'data' => null
+                ], 401);
+            }
+
+            $role = Role::find($user->role_id);
+
+            $detail = null;
+            switch ($user->role_id) {
+                case Role::PERTANIAN:
+                    $detail = $user->pertanian;
+                    break;
+                case Role::UPTD:
+                    $detail = $user->uptd;
+                    break;
+                case Role::PENYULUH:
+                    $detail = $user->penyuluh;
+                    break;
+            }
+
+            $userData = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'username' => $user->username,
+                'detail' => $detail,
+                'role_name' => $role ? $role->name : 'No Role'
             ];
-            return response()->json($responseData, 500);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil didapatkan',
+                'data' => $userData
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan.',
+                'data' => null
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
+    }
+
+    public function getAssignment($id)
+    {
+        try {
+            $assignments = User::with(['desas.luasLahanWilayah'])->find($id);
+
+            if (is_null($assignments)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data kosong',
+                    'data' => null
+                ], 201);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil didapatkan',
+                'data' => $assignments->desas
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan.',
+                'data' => null
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
         }
     }
 }

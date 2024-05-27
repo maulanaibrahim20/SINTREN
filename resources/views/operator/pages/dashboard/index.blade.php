@@ -2,11 +2,10 @@
 @section('title', 'Dashboard Operator')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Dashboard01</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1 active">Dashboard</li>
+        </ol><!-- Eneadcrumb -->
+
         <div class="ms-auto">
             <div>
                 <a href="#" class="btn bg-secondary-transparent text-secondary btn-sm" data-bs-toggle="tooltip"
@@ -38,7 +37,7 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <p class="mb-0 fw-semibold text-dark lh-1">Employees</p>
+                                    <p class="mb-0 fw-semibold text-dark lh-1">Karyawan</p>
                                     <div class="fs-12 text-muted mb-5">Overview of this month</div>
                                     <div class="fs-30 fw-semibold mb-0 lh-1">{{ $user }}
                                     </div>
@@ -66,7 +65,7 @@
                                 <div>
                                     <p class="mb-0 fw-semibold text-dark lh-1">Task</p>
                                     <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1">{{ $unverifiedUsersCount }}
+                                    <div class="fs-30 fw-semibold mb-0 lh-1">1
                                     </div>
                                 </div>
                                 <div class="text-end d-flex flex-column align-items-center">
@@ -92,8 +91,7 @@
                                 <div>
                                     <p class="mb-0 fw-semibold text-dark lh-1">Earnings</p>
                                     <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1">{{ $verifiedUsersCount }} <i
-                                            class=""></i>
+                                    <div class="fs-30 fw-semibold mb-0 lh-1"> <i class=""></i>
                                     </div>
                                 </div>
                                 <div class="text-end d-flex flex-column align-items-center">

@@ -12,7 +12,7 @@ class Role extends Model
     const PERTANIAN = 2;
     const UPTD = 3;
     const PENYULUH = 4;
-    const DINAS_PANGAN = 5;
+    const PANGAN = 5;
     const PASAR = 6;
 
 

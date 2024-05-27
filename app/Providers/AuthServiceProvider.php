@@ -52,11 +52,11 @@ class AuthServiceProvider extends ServiceProvider
                 return $user->getAkses->id == Role::PENYULUH;
             }
         });
-        Gate::define("dinas_pangan", function ($user) {
+        Gate::define("pangan", function ($user) {
             if (empty($user->getAkses)) {
                 return redirect("/logout");
             } else {
-                return $user->getAkses->id == Role::DINAS_PANGAN;
+                return $user->getAkses->id == Role::PANGAN;
             }
         });
     }

@@ -8,6 +8,7 @@ use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Uptd\PenugasanPenyuluh;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -15,19 +16,19 @@ class DashboardController extends Controller
     protected $penyuluh;
     protected $laporanPadi;
     protected $laporanPalawija;
+    protected $penugasan;
 
-    public function __construct(Penyuluh $penyuluh, LaporanPalawija $laporanPalawija, LaporanPadi $laporanPadi)
+    public function __construct(Penyuluh $penyuluh, LaporanPalawija $laporanPalawija, LaporanPadi $laporanPadi, PenugasanPenyuluh $penugasan)
     {
         $this->penyuluh = $penyuluh;
         $this->laporanPadi = $laporanPadi;
         $this->laporanPalawija = $laporanPalawija;
+        $this->penugasan = $penugasan;
     }
     public function operator()
     {
         $user = User::count();
-        $verifiedUsersCount = User::whereNotNull('email_verified_at')->count();
-        $unverifiedUsersCount = $user - $verifiedUsersCount;
-        return view('operator.pages.dashboard.index', compact('user', 'verifiedUsersCount', 'unverifiedUsersCount'));
+        return view('operator.pages.dashboard.index', compact('user'));
     }
 
     public function pertanian()
@@ -64,10 +65,19 @@ class DashboardController extends Controller
 
     public function penyuluh()
     {
-        return view('penyuluh.pages.dashboard.index');
+        $penugasan = $this->penugasan::where('user_id', Auth::user()->id)->get();
+
+        if ($penugasan->isEmpty()) {
+            $data['penugasan'] = $penugasan;
+            return view('penyuluh.pages.dashboard.index', $data)->with('message', 'Tidak ada data penugasan yang tersedia.');
+        } else {
+            $data['penugasan'] = $penugasan;
+            return view('penyuluh.pages.dashboard.index', $data);
+        }
     }
 
-    public function dinas_pangan()
+
+    public function pangan()
     {
         return view('pangan.views.dashboard.index');
     }

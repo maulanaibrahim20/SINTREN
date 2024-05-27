@@ -9,8 +9,7 @@
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/penyuluh/create/laporan_padi/create') }}" class="btn bg-primary-transparent"
-                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
+                <a href="{{ url('/penyuluh/create/laporan_padi/create') }}" class="btn bg-primary-transparent">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
@@ -41,10 +40,9 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Desa</th>
-                                    <th class="wd-15p border-bottom-0">Kecamatan</th>
-                                    <th class="wd-20p border-bottom-0">Nama Pengumpul</th>
-                                    <th class="wd-20p border-bottom-0">Tanggal</th>
+                                    <th class="wd-15p border-bottom-0">Alamat</th>
+                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
+                                    <th class="wd-20p border-bottom-0">Tanggal Input</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
@@ -52,10 +50,19 @@
                                 @foreach ($padi as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->desa->name }}</td>
-                                        <td>{{ $data->kecamatan->name }}</td>
-                                        <td>{{ $data->nama_pengumpul }}</td>
-                                        <td>{{ $data->created_at }}</td>
+                                        <td>
+                                            <div class="d-flex contact-image">
+                                                <div class="d-flex mt-1 flex-column ms-2">
+                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">Kecamatan : <span
+                                                            class="badge bg-primary me-1 my-1">{{ $data->kecamatan->name }}</span>
+                                                    </h6>
+                                                    <span class="fs-12 text-muted">Desa : <span
+                                                            class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ $data->jenis_lahan }}</td>
+                                        <td>{{ $data->date }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>

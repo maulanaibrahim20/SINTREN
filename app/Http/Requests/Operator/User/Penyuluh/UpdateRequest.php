@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'no_telp' => ['required', 'string', 'max:15'],
+            'no_telp' => ['required', 'string', 'min:10', 'max:15'],
             'alamat' => ['required', 'string', 'max:255'],
         ];
     }

@@ -39,7 +39,13 @@ class PertanianController extends Controller
 
     public function create()
     {
-        return view('operator.pages.user.pertanian.create');
+        $data = [
+            'title' => 'Buat Akun Pengguna Pertanian',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Pertanian',
+            'breadcrumb_active' => 'Tambah Pengguna Pertanian',
+        ];
+        return view('operator.pages.user.pertanian.create', $data);
     }
 
     public function store(CreateRequest $request)
@@ -54,17 +60,10 @@ class PertanianController extends Controller
             $this->pertanian->create($request->all() + [
                 'user_id' => $user->id,
             ]);
-            $user->setAttribute('email_verified_at', Carbon::now());
-            $user->setAttribute('remember_token', Str::random(10));
-            $user->save();
 
             DB::commit();
             Alert::success('Success', 'Success Data Berhasil Ditambahkan');
             return redirect('/operator/user/pertanian')->with('success', 'Data User Pertanian Berhasil Ditambahkan');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            Alert::warning('kesalahan' . $e->errors());
-            return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $e) {
             DB::rollback();
             $errorMessage = 'Gagal Menambahkan Data: ' . $e->getMessage();
@@ -75,8 +74,14 @@ class PertanianController extends Controller
 
     public function edit($id)
     {
-        $user = $this->pertanian->findOrFail($id);
-        return view('operator.pages.user.pertanian.update', compact('user'));
+        $data = [
+            'title' => 'Buat Akun Pengguna Pertanian',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Data Pengguna Pertanian',
+            'breadcrumb_active' => 'Edit Pengguna Pertanian',
+            'user' => $this->pertanian->findOrFail(decrypt($id)),
+        ];
+        return view('operator.pages.user.pertanian.update', $data);
     }
 
     public function show($id)
@@ -86,7 +91,7 @@ class PertanianController extends Controller
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna Pertanian',
             'breadcrumb_active' => 'Detail Data Pengguna Pertanian',
-            'user'  => $this->pertanian->findOrFail($id),
+            'user'  => $this->pertanian->findOrFail(decrypt($id)),
         ];
         return view('operator.pages.user.pertanian.show', $data);
     }
@@ -95,7 +100,7 @@ class PertanianController extends Controller
     {
         try {
             DB::beginTransaction();
-            $user = $this->pertanian->findOrFail($id);
+            $user = $this->pertanian->findOrFail(decrypt($id));
             $user->update($request->all() + [
                 'updated_at' => now(),
             ]);
@@ -105,10 +110,6 @@ class PertanianController extends Controller
             DB::commit();
             Alert::success('success', 'Data berhasil diubah!');
             return redirect('/operator/user/pertanian')->with('success', 'Success data berhasil diubah!');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            Alert::warning('kesalahan' . $e->errors());
-            return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $er) {
             DB::rollback();
             $errorMessage = 'Gagal Menambahkan Data: ' . $er->getMessage();

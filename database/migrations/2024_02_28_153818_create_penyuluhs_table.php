@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('penyuluhs', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->string('user_id', 50);
             $table->integer('kecamatan_id');
-            $table->string('alamat');
-            $table->string('no_telp');
+            $table->string('alamat', 50);
+            $table->string('no_telp', 15);
+            $table->string('createdBy', 50);
             $table->timestamps();
         });
     }

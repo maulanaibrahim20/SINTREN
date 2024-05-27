@@ -4,8 +4,6 @@ namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
 use App\Models\Operator\TanamanPadi;
-use App\Models\Penyuluh\DetailLaporanPadi;
-use App\Models\Penyuluh\DetailLaporanPengairan;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
 use App\Models\Wilayah\Kecamatan;
@@ -14,6 +12,7 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Uptd\PenugasanPenyuluh;
 
 class LaporanPadiController extends Controller
 {
@@ -22,9 +21,9 @@ class LaporanPadiController extends Controller
     protected $kecamatan;
     protected $desa;
     protected $pengairan;
-    protected $detailpadi;
     protected $laporanpadi;
-    protected $detailpengairan;
+
+    protected $penugasanDesa;
 
 
     public function __construct(
@@ -32,22 +31,21 @@ class LaporanPadiController extends Controller
         Desa $desa,
         Kecamatan $kecamatan,
         Pengairan $pengairan,
-        DetailLaporanPadi $detailpadi,
         LaporanPadi $laporanpadi,
-        DetailLaporanPengairan $detailpengairan
+        PenugasanPenyuluh $penugasanDesa,
     ) {
         $this->jenis_padi = $jenis_padi;
         $this->kecamatan = $kecamatan;
         $this->desa = $desa;
         $this->pengairan = $pengairan;
-        $this->detailpadi = $detailpadi;
         $this->laporanpadi = $laporanpadi;
-        $this->detailpengairan = $detailpengairan;
+        $this->penugasanDesa = $penugasanDesa;
     }
     public function index()
     {
         $data = [
-            'padi' => $this->laporanpadi::orderBy('created_at', 'asc')->get(),
+            'padi' => $this->laporanpadi::where('kecamatan_id', Auth::user()->penyuluh->kecamatan->id)
+                ->orderBy('created_at', 'asc')->get(),
         ];
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
@@ -59,6 +57,7 @@ class LaporanPadiController extends Controller
             'jenis_padi' => $this->jenis_padi::orderBy('created_at', 'asc')->get(),
             'desa' => $this->desa::where('district_id', $kecamatanId)->get(),
             'pengairan' => $this->pengairan::all(),
+            'penugasanDesa' => $this->penugasanDesa::where('user_id', Auth::user()->id)->get(),
         ];
         return view('penyuluh.pages.laporan_padi.create', $data);
     }
@@ -66,58 +65,66 @@ class LaporanPadiController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-            $laporanPadiId = $this->laporanpadi->create([
-                'desa_id' => $request->desa,
+            $this->laporanpadi->create([
+                'user_id' => Auth::user()->id,
+                'desa_id' => $request['desa'],
                 'kecamatan_id' => Auth::user()->penyuluh->kecamatan->id,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu,
-                'nama_pengumpul' => Auth::user()->name,
-                'jabatan' => 'penyuluh',
-                'jenis_lahan' => $request->jenis_lahan,
-                'id_rehab_jaringan_irigasi_tersier' => 0,
-            ]);
-
-            $this->detailpadi->create([
-                'id_laporan_padi' => $laporanPadiId->id,
-                'jenis_padi' => $request->jenis_padi,
-                'jenis_bantuan' => $request->jenis_bantuan,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu,
-                'panen' => $request->panen,
-                'tanam' => $request->tanam,
-                'puso_rusak' => $request->rusak,
-                'tanaman_akhir_bulan_laporan' => $request->tanam_akhir_bulan_laporan,
-            ]);
-
-            $this->detailpengairan->create([
-                'id_laporan_padi' => $laporanPadiId->id,
-                'jenis_pengairan' => $request->pengairan,
-                'tanaman_akhir_bulan_lalu' => $request->tanaman_akhir_bulan_lalu_pengairan,
-                'panen' => $request->panen_pengairan,
-                'tanam' => $request->tanam_pengairan,
-                'puso_rusak' => $request->rusak_pengairan,
-                'tanaman_akhir_bulan_laporan' => $request->tanam_akhir_bulan_laporan_pengairan,
+                'jenis_lahan' => $request['jenis_lahan'],
+                'jenis_bantuan' => $request['jenis_bantuan'],
+                'jenis_padi' => $request['jenis_padi'],
+                'id_jenis_pengairan' => $request['jenis_pengairan'],
+                'date' => $request->date,
+                'tipe_data' => $request['jenis_data'],
+                'nilai' => $request['nilai'],
             ]);
 
             DB::commit();
-            Alert::success('success', 'Data Laporan Padi Berhasil Dibuat!');
             return redirect('/penyuluh/create/laporan_padi')->with('success', 'Data Laporan Padi Berhasil Dibuat!');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data Laporan Padi Gagal DIbuat!' . $e->getMessage());
-            return back()->with('error', 'Data Laporan Padi Gagal Dibuat!');
+            return back()->with('error', 'Data Laporan Padi Gagal Dibuat!' . $e->getMessage());
         }
     }
 
     public function show($id)
     {
-        $padi = $this->laporanpadi::findOrFail($id);
-        $data = [
-            'padi' => $padi->all(),
-            'detail_padi' => $this->detailpadi::where('id_laporan_padi', $id)->get(),
-            'detail_pengairan' => $this->detailpengairan::where('id_laporan_padi', $id)->get(),
-        ];
+        $data['show'] = $this->laporanpadi::findOrFail($id);
         return view('penyuluh.pages.laporan_padi.show', $data);
     }
+
+    public function edit($id)
+    {
+        $data['edit'] = $this->laporanpadi::findOrFail($id);
+        $data['penugasanDesa'] = $this->penugasanDesa::where('user_id', Auth::user()->id)->get();
+        $data['pengairan'] = $this->pengairan::all();
+        $data['jenis_padi'] = $this->jenis_padi::orderBy('created_at', 'asc')->get();
+        return view('penyuluh.pages.laporan_padi.update', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $laporan = $this->laporanpadi->findOrFail($id);
+
+            $laporan->update([
+                'desa_id' => $request['desa'],
+                'jenis_lahan' => $request['jenis_lahan'],
+                'jenis_bantuan' => $request['jenis_bantuan'],
+                'id_jenis_pengairan' => $request['jenis_pengairan'],
+                'jenis_padi' => $request['jenis_padi'],
+                'date' => $request['date'],
+                'tipe_data' => $request['jenis_data'],
+                'nilai' => $request['nilai'],
+            ]);
+
+            DB::commit();
+            return redirect('/penyuluh/create/laporan_padi')->with('success', 'Data Laporan Padi Berhasil Diperbarui!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Data Laporan Padi Gagal Diperbarui! ' . $e->getMessage());
+        }
+    }
+
 
     public function destroy($id)
     {

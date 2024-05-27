@@ -4,8 +4,9 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/pasar') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item1"><a href="{{ url('/dinas_pangan/pasar/data_pasar') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/pasar') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/create/data_pasar') }}">{{ $breadcrumb_1 }}</a></li>
+
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
     </div>
@@ -29,7 +30,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ url('/dinas_pangan/pasar/data_pasar') }}" method="post" class="needs-validation"
+                        <form action="{{ url('/pangan/create/data_pasar') }}" method="post" class="needs-validation"
                             novalidate>
                             @csrf
                             <div class="form-row">

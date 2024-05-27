@@ -96,3 +96,13 @@
 <!-- INTERNAL WYSIWYG Editor js -->
 <script src="{{ url('/assets') }}/plugins/wysiwyag/jquery.richtext.js"></script>
 <script src="{{ url('/assets') }}/plugins/wysiwyag/wysiwyag.js"></script>
+
+<!--MutipleSelect js-->
+<script src="{{ url('/assets') }}/plugins/multipleselect/multiple-select.js"></script>
+<script src="{{ url('/assets') }}/plugins/multipleselect/multi-select.js"></script>
+
+
+
+<!-- Flatpickr js -->
+<script src="{{url('/assets')}}/plugins/flatpickr/flatpickr.js"></script>
+<script src="{{url('/assets')}}/js/flatpickr.js"></script>

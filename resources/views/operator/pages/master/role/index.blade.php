@@ -1,14 +1,14 @@
 @extends('index')
-@section('title', 'Master Role | Operator')
+@section('title', 'Role | Operator')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
-            <li class="breadcrumb-item active" aria-current="page">Pengguna Penyuluh</li>
+            <li class="breadcrumb-item"><a href="{{ url('/operator/dashbord') }}">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Master</li>
+            <li class="breadcrumb-item active" aria-current="page">Role</li>
         </ol><!-- End breadcrumb -->
-        <div class="ms-auto">
+        {{-- <div class="ms-auto">
             <div>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter">
                     <span>
@@ -17,7 +17,7 @@
                     Add New Role
                 </button>
             </div>
-        </div>
+        </div> --}}
     </div>
     <div class="row">
         <div class="col-lg-12">

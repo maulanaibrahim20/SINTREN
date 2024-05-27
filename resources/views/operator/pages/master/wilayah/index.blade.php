@@ -1,24 +1,13 @@
 @extends('index')
-@section('title', 'Pengguna Penyuluh | Operator')
+@section('title', 'Wilayah | Operator')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Data Pengguna</li>
-            <li class="breadcrumb-item active" aria-current="page">Pengguna Penyuluh</li>
+            <li class="breadcrumb-item"><a href="{{ url('/operator/dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item" aria-current="page">Master</li>
+            <li class="breadcrumb-item active" aria-current="page">Role</li>
         </ol><!-- End breadcrumb -->
-        <div class="ms-auto">
-            <div>
-                <a href="{{ url('/operator/user/penyuluh/create') }}" class="btn bg-primary-transparent"
-                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
-                    <span>
-                        <i class="fa fa-plus"></i>
-                    </span>
-                    Add New User
-                </a>
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-lg-12">

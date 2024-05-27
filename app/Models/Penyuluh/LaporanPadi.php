@@ -2,10 +2,13 @@
 
 namespace App\Models\Penyuluh;
 
+use App\Models\Operator\Padi;
+use App\Models\Operator\TanamanPadi;
+use App\Models\User;
 use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LaporanPadi extends Model
 {
@@ -26,13 +29,18 @@ class LaporanPadi extends Model
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
 
-    public function details()
+    public function user()
     {
-        return $this->hasMany(DetailLaporanPadi::class, 'id_laporan_padi');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function pengairan()
     {
-        return $this->hasMany(DetailLaporanPengairan::class, 'id_laporan_padi');
+        return $this->belongsTo(Pengairan::class, 'id_jenis_pengairan');
+    }
+
+    public function padi()
+    {
+        return $this->belongsTo(TanamanPadi::class, 'jenis_padi');
     }
 }

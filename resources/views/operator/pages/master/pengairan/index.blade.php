@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Kelola Pengairan | Operator')
+@section('title', 'Kelola Pengairan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -74,30 +74,7 @@
     </div>
 
     {{-- start modal tambah Jenis Padi --}}
-    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form action="{{ url('/operator/master/pengairan') }}" enctype="multipart/form-data" method="post">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalCenterTitle">Tambah Pengairan</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">Nama</label>
-                            <input type="text" name="name" class="form-control"
-                                placeholder="Masukkan Nama Kategori" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('operator.pages.master.pengairan.modal_tambah')
     @foreach ($pengairan as $item)
         <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -107,19 +84,18 @@
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Edit Pengairan</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">Edit Data Pengairan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="col mb-3">
-                                <label for="nameBasic" class="form-label">Nama</label>
+                                <label for="nameBasic" class="form-label">Nama Pengairan</label>
                                 <input type="text" value="{{ $item->name }}" name="name" class="form-control"
                                     placeholder="Masukkan Nama Kategori" />
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            @include('template.component.button_modal')
                         </div>
                     </form>
                 </div>

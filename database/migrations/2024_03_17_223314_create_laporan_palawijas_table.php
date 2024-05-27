@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('laporan_palawijas', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_lahan', 25);
-            $table->string('nama_pengumpul', 25);
-            $table->string('desa_id', 30);
-            $table->string('kecamatan_id', 30);
-            $table->enum('status', ['_terkirim', 'terkirim'])->default('_terkirim');
+            $table->string('user_id', 50);
+            $table->string('desa_id', 50);
+            $table->string('kecamatan_id', 25);
+            $table->string('jenis_lahan', 50);
+            $table->string('date',50);
+            $table->integer('id_jenis_palawija');
+            $table->string('jenis_bantuan', 50);
+            $table->enum('tipe_data', ['panen', 'tanam', 'puso/rusak','panen_muda','panen_hijauan_pakan_ternak']);
+            $table->integer('nilai')->default('0');
             $table->timestamps();
         });
     }

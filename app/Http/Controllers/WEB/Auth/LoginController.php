@@ -29,16 +29,12 @@ class LoginController extends Controller
     {
         $user = $this->user->where('username', $request->username)->first();
         if (!$user) {
-            Alert::error('Maaf Akun Anda Tidak Terdaftar');
-            return redirect(route('login.index'))->with('error', 'Maaf Akun Anda Tidak Terdaftar');
+            Alert::error('Maaf, Akun Anda Tidak Ditemukan');
+            return redirect(route('login.index'))->with('error', 'Maaf, Akun Anda Tidak Ditemukan');
         }
         if (!Hash::check($request->password, $user->password)) {
             Alert::error('Maaf Pasword Anda Salah!');
             return redirect(route('login.index'))->with('error', 'Password Anda Salah');
-        }
-        if (!$user->email_verified_at) {
-            Alert::warning('Maaf Akun Anda Belum Terverifikasi');
-            return back()->with('error', 'Maaf Akun Anda Belum Terverifikasi');
         }
         if (Auth::attempt(["username" => $request->username, "password" => $request->password])) {
             $request->session()->regenerate();
@@ -55,9 +51,9 @@ class LoginController extends Controller
             } else if ($user->role_id == Role::PENYULUH) {
                 Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
                 return redirect("/penyuluh/dashboard");
-            } else if ($user->role_id == Role::DINAS_PANGAN) {
+            } else if ($user->role_id == Role::PANGAN) {
                 Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
-                return redirect("/dinas_pangan/dashboard");
+                return redirect("/pangan/dashboard");
             }
         }
         return back()->with('error', 'Gagal melakukan autentikasi');

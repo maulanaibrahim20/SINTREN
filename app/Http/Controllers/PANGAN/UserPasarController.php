@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Operator\User\Pasar\CreateRequest;
 use App\Http\Requests\Operator\User\Pasar\UpdateRequest;
 
@@ -34,7 +33,7 @@ class UserPasarController extends Controller
             'title' => 'Data Pengguna',
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Data Pengguna Pasar',
-            'button_create' => 'Tambah Data Pengguna',
+            'add_button' => 'Tambah Data Pengguna',
             'users' => $this->petugaspasar::orderBy('created_at', 'asc')->get(),
         ];
 
@@ -74,30 +73,15 @@ class UserPasarController extends Controller
             $this->petugaspasar->create($request->all() + [
                 'user_id' => $user->id,
                 'pasar_id' => $request->pasar,
-                // 'createdBy' => Auth::user()->id,
             ]);
-            // $user->setAttribute('email_verified_at', Carbon::now());
-            // $user->setAttribute('remember_token', Str::random(10));
-            // $user->save();
 
             DB::commit();
             Alert::success('Success', 'Pengguna Pasar Berhasil Ditambahkan');
-            return redirect('/dinas_pangan/user/pasar')->with('success', 'User Pasar Berhasil Ditambahkan!');
+            return redirect('/pangan/user/pasar')->with('success', 'User Pasar Berhasil Ditambahkan!');
         } catch (\Exception $er) {
             DB::rollback();
             return back()->with('error', 'Gagal Menambahkan User Pasar' . $er->getMessage());
         }
-        //     return redirect('/dinas_pangan/user/pasar')->with('success', 'Pengguna Pasar Berhasil Ditambahkan');
-        // } catch (ValidationException $e) {
-        //     DB::rollback();
-        //     Alert::warning('kesalahan' . $e->errors());
-        //     return redirect()->back()->withInput()->withErrors($e->errors());
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     $errorMessage = 'Gagal Menambahkan Pengguna Pasar: ' . $e->getMessage();
-        //     Alert::error('Error', $errorMessage);
-        //     return back()->withInput()->withErrors($errorMessage);
-        // }
     }
 
     /**
@@ -106,7 +90,7 @@ class UserPasarController extends Controller
     public function show($id)
     {
         $data = [
-            'user'  => $this->petugaspasar->findOrFail($id),
+            'user'  => $this->petugaspasar->findOrFail(decrypt($id)),
             'title' => 'Detail Data Pengguna Pasar',
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna Pasar',
@@ -120,7 +104,7 @@ class UserPasarController extends Controller
      */
     public function edit($id)
     {
-        $user = $this->petugaspasar::findOrFail($id);
+        $user = $this->petugaspasar->findOrFail(decrypt($id));
         $pasar = $this->pasar::all();
         $data = [
             'pasar' => $this->pasar::where('id', $user->pasar_id)->get(),
@@ -150,7 +134,7 @@ class UserPasarController extends Controller
             ]);
             DB::commit();
             Alert::success('success', 'Pengguna Pasar Berhasil Diubah!');
-            return redirect('/dinas_pangan/user/pasar')->with('success', 'Pengguna Pasar Berhasil Diubah!');
+            return redirect('/pangan/user/pasar')->with('success', 'Pengguna Pasar Berhasil Diubah!');
         } catch (ValidationException $e) {
             DB::rollback();
             Alert::warning('kesalahan' . $e->errors());

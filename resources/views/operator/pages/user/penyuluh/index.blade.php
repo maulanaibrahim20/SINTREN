@@ -1,16 +1,14 @@
 @extends('index')
-@section('title', 'Penyuluh | Operator')
+@section('title', 'Data Pengguna Penyuluh')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
-            <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operator/user/penyuluh') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+        <ol class="breadcrumb1 br-7">
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol>
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/operator/user/penyuluh/create') }}" class="btn bg-primary-transparent"
-                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
+                <a href="{{ url('/operator/user/penyuluh/create') }}" class="btn bg-primary-transparent">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
@@ -37,7 +35,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+                        <table class="table table-striped text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
@@ -73,7 +71,6 @@
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>

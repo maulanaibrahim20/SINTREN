@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Kategori Tanaman Palawija || Operator')
+@section('title', 'Kategori Tanaman Palawija ')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -43,7 +43,6 @@
                                     <th class="wd-15p border-bottom-0">No.</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-15p border-bottom-0">Deskripsi</th>
-                                    <th class="wd-15p border-bottom-0">Gambar</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -53,7 +52,6 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->description }}</td>
-                                        <td><img src="{{ asset('' . $data->image) }}" style="width:60px;height:60"></td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                                 data-bs-target="#modalCenter1{{ $data->id }}"><i
@@ -79,40 +77,9 @@
     </div>
 
     {{-- start modal tambah Jenis Padi --}}
-    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form action="{{ url('/operator/kategori/tanaman_palawija') }}" enctype="multipart/form-data"
-                    method="post">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalCenterTitle">Tambah kategori tanaman palawija</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">Nama</label>
-                            <input type="text" name="name" class="form-control"
-                                placeholder="Masukkan Nama Kategori" />
-                        </div>
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">Description</label>
-                            <input type="text" name="description" class="form-control"
-                                placeholder="Masukkan Nama Deskripsi" />
-                        </div>
-                        <div class="col mb-3">
-                            <label for="nameBasic" class="form-label">Foto</label>
-                            <input type="file" name="image" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    @include('operator.pages.tanaman.kategori.tanaman_palawija.modal_tambah')
+    {{-- end modal tambah Jenis Padi --}}
+    {{-- start modal edit Jenis Padi --}}
     @foreach ($tanaman as $item)
         <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -123,8 +90,7 @@
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="modalCenterTitle">Edit kategori tanaman palawija</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="col mb-3">
@@ -135,14 +101,6 @@
                             <div class="col mb-3">
                                 <label for="descriptionBasic" class="form-label">Deskripsi</label>
                                 <textarea name="description" class="form-control" placeholder="Masukkan Deskripsi">{{ $item->description }}</textarea>
-                            </div>
-                            <div class="col mb-3">
-                                <label for="nameBasic" class="form-label">Foto</label><br>
-                                @if ($item->image)
-                                    <img src="{{ asset($item->image) }}" alt="Foto Kategori"
-                                        style="max-width: 100px;"><br><br>
-                                @endif
-                                <input type="file" name="image" class="form-control" />
                             </div>
                         </div>
                         <div class="modal-footer">

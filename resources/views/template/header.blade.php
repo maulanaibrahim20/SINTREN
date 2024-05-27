@@ -10,26 +10,7 @@
                     alt="Sparic logo">
             </a>
             <!-- LOGO -->
-            <div class="main-header-center ms-3 d-none d-lg-block">
-                <input type="text" class="form-control" id="typehead" placeholder="Search for results..."
-                    autocomplete="off">
-                <button class="btn px-2"><i class="fe fe-search" aria-hidden="true"></i></button>
-            </div>
             <div class="d-flex order-lg-2 ms-auto header-right-icons">
-                <div class="dropdown d-none">
-                    <a href="javascript:void(0)" class="nav-link icon" data-bs-toggle="dropdown">
-                        <i class="fe fe-search"></i>
-                    </a>
-                    <div class="dropdown-menu header-search dropdown-menu-start">
-                        <div class="input-group w-100 p-2">
-                            <input type="text" class="form-control" placeholder="Search....">
-                            <div class="input-group-text btn btn-primary">
-                                <i class="fe fe-search" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- SEARCH -->
                 <button class="navbar-toggler navresponsive-toggler d-lg-none ms-auto" type="button"
                     data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4"
                     aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,19 +19,6 @@
                 <div class="navbar navbar-collapse responsive-navbar p-0">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
                         <div class="d-flex order-lg-2">
-                            <div class="dropdown d-lg-none d-flex">
-                                <a href="javascript:void(0)" class="nav-link icon" data-bs-toggle="dropdown">
-                                    <i class="fe fe-search"></i>
-                                </a>
-                                <div class="dropdown-menu header-search dropdown-menu-start">
-                                    <div class="input-group w-100 p-2">
-                                        <input type="text" class="form-control" placeholder="Search....">
-                                        <div class="input-group-text btn btn-primary">
-                                            <i class="fa fa-search" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="d-flex country">
                                 <a class="nav-link icon theme-layout nav-link-bg layout-setting">
                                     <span class="dark-layout mt-1"><i class="ri-moon-clear-line"></i></span>
@@ -251,7 +219,7 @@
                             <div class="dropdown d-flex profile-1">
                                 <a href="javascript:void(0)" data-bs-toggle="dropdown"
                                     class="nav-link leading-none d-flex">
-                                    <img src="{{ url('/assets') }}/images/users/male/15.jpg" alt="profile-user"
+                                    <img src="{{ url('/assets') }}/images/users/male/user1.png" alt="profile-user"
                                         class="avatar  profile-user brround cover-image">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
@@ -263,6 +231,10 @@
                                             @if (Auth::user()->role_id == '4')
                                                 <span class="text-muted fs-12">
                                                     {{ Auth::user()->penyuluh->kecamatan->name }}
+                                                </span>
+                                            @elseif (Auth::user()->role_id == '3')
+                                                <span class="text-muted fs-12">
+                                                    {{ Auth::user()->uptd->kecamatan->name }}
                                                 </span>
                                             @endif
                                         </div>

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('kecamatans', function (Blueprint $table) {
             $table->id();
-            $table->string('regency_id');
-            $table->string('name');
+            $table->bigInteger('regency_id');
+            $table->string('name', 25);
             $table->timestamps();
         });
     }

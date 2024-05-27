@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Penyuluh\Penyuluh;
-use App\Models\Pasar\PetugasPasar;
+use App\Models\Pangan\Pangan;
+use App\Models\Pasar\Pasar;
+use App\Models\Pertanian\Pertanian;
 use App\Models\Uptd\Uptd;
+use App\Models\Wilayah\Desa;
+
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -70,9 +74,23 @@ class User extends Authenticatable
     {
         return $this->hasOne(Uptd::class);
     }
-
-    public function petugaspasar()
+    public function pertanian()
     {
-        return $this->hasOne(PetugasPasar::class);
+        return $this->hasOne(Pertanian::class);
+    }
+
+    public function desas()
+    {
+        return $this->belongsToMany(Desa::class, 'penugasan_penyuluh', 'user_id', 'desa_id');
+    }
+
+    public function pangan()
+    {
+        return $this->hasOne(Pangan::class);
+    }
+
+    public function pasar()
+    {
+        return $this->hasOne(Pasar::class);
     }
 }

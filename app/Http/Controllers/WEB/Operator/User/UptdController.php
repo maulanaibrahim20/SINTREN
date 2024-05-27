@@ -12,17 +12,19 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Wilayah\Kecamatan;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class UptdController extends Controller
 {
     protected $user;
-
     protected $uptd;
-    public function __construct(User $user, Uptd $uptd)
+    protected $kecamatan;
+    public function __construct(User $user, Uptd $uptd, Kecamatan $kecamatan)
     {
         $this->user = $user;
         $this->uptd = $uptd;
+        $this->kecamatan = $kecamatan;
     }
     public function index()
     {
@@ -43,6 +45,8 @@ class UptdController extends Controller
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna UPTD',
             'breadcrumb_active' => 'Tambah Data Pengguna UPTD',
+            'kecamatan' => $this->kecamatan::all(),
+            'disabled' => $this->uptd::pluck('kecamatan_id')->toArray(),
         ];
         return view('operator.pages.user.uptd.create', $data);
     }
@@ -57,11 +61,8 @@ class UptdController extends Controller
             ]);
             $this->uptd->create($request->all() + [
                 'user_id' => $user->id,
+                'kecamatan_id' => $request->kecamatan
             ]);
-            $user->setAttribute('email_verified_at', Carbon::now());
-            $user->setAttribute('remember_token', Str::random(10));
-            $user->save();
-
             DB::commit();
             Alert::success('success', 'Data User Uptd Berhasil Ditambahkan!');
             return redirect('/operator/user/uptd')->with('success', 'Data User Uptd Berhasil Ditambahkan!');
@@ -75,10 +76,11 @@ class UptdController extends Controller
     public function show($id)
     {
         $data = [
-            'user' => $this->uptd::findOrFail($id),
+            'user' => $this->uptd::findOrFail(decrypt($id)),
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna UPTD',
             'breadcrumb_active' => 'Detail Data Pengguna UPTD',
+
         ];
         return view('operator.pages.user.uptd.show', $data);
     }
@@ -86,11 +88,13 @@ class UptdController extends Controller
     public function edit($id)
     {
         $data = [
-            'user' => $this->uptd->findOrFail($id),
+            'user' => $this->uptd->findOrFail(decrypt($id)),
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Pengguna UPTD',
             'breadcrumb_active' => 'Edit Data Pengguna UPTD',
             'title' => 'Edit Data Pengguna UPTD',
+            'kecamatan' => $this->kecamatan::all(),
+            'selected' => $this->uptd::pluck('kecamatan_id')->toArray(),
         ];
         return view('operator.pages.user.uptd.update', $data);
     }
@@ -99,9 +103,10 @@ class UptdController extends Controller
     {
         try {
             DB::beginTransaction();
-            $user = $this->uptd->findOrFail($id);
+            $user = $this->uptd->findOrFail(decrypt($id));
             $user->update($request->all() + [
                 'updated_at' => now(),
+                'kecamatan_id' => $request->kecamatan,
             ]);
             $user->user->update($request->all() + [
                 'updated_at' => now(),

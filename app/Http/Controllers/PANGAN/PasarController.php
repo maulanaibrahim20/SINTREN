@@ -56,7 +56,7 @@ class PasarController extends Controller
             ]);
             DB::commit();
             Alert::success('success', 'success Data Pasar Berhasil Ditambahkan!');
-            return redirect('/dinas_pangan/data/data_pasar')->with('success', 'Data Pasar Berhasil Ditambahkan');
+            return redirect('/pangan/create/data_pasar')->with('success', 'Data Pasar Berhasil Ditambahkan');
         } catch (ValidationException $e) {
             DB::rollback();
             return redirect()->back()->withInput()->withErrors($e->errors());

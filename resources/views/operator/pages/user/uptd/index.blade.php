@@ -1,16 +1,15 @@
 @extends('index')
-@section('title', 'UPTD | Operator')
+@section('title', 'Pengguna UPTD')
 @section('content')
     <div class="page-header d-sm-flex d-block">
-        <ol class="breadcrumb mb-sm-0 mb-3">
+        <ol class="breadcrumb1 br-7">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol><!-- End breadcrumb ---->
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/operator/user/uptd/create') }}" class="btn bg-primary-transparent" data-bs-toggle="tooltip"
-                    title="Add New User" data-bs-placement="bottom">
+                <a href="{{ url('/operator/user/uptd/create') }}" class="btn bg-primary-transparent">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
@@ -37,13 +36,14 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+                        <table class="table table-striped text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-20p border-bottom-0">Email</th>
                                     <th class="wd-15p border-bottom-0">Role</th>
+                                    <th class="wd-15p border-bottom-0">Kecamatan</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -54,10 +54,12 @@
                                         <td>{{ $data->user->name }}</td>
                                         <td>{{ $data->user->email }}</td>
                                         <td>{{ $data->user->getAkses->name }}</td>
+                                        <td>{{ $data->kecamatan->name }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('/operator/user/uptd/' . $data->id . '/edit') }}"
+                                            <a href="{{ url('/operator/user/uptd/' . encrypt($data->id) . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/operator/user/uptd/' . $data->id) }}" class="btn btn-primary">
+                                            <a href="{{ url('/operator/user/uptd/' . encrypt($data->id)) }}"
+                                                class="btn btn-primary">
                                                 <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/operator/user/uptd/' . $data->id) }}"

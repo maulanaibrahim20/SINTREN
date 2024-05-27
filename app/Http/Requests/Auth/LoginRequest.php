@@ -23,7 +23,21 @@ class LoginRequest extends FormRequest
     {
         return [
             'username' => 'required|string|min:3|max:25',
-            "password" => "required|min:8|max:255",
+            "password" => "required|min:8|max:25",
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'username.required' => 'Kolom username wajib diisi.',
+            'username.string' => 'Username harus berupa string.',
+            'username.min' => 'Username minimal harus :min karakter.',
+            'username.max' => 'Username tidak boleh lebih dari :max karakter.',
+            'password.required' => 'Kolom password wajib diisi.',
+            'password.string' => 'Password harus berupa string.',
+            'password.min' => 'Password minimal harus :min karakter.',
+            'password.max' => 'Password tidak boleh lebih dari :max karakter.',
         ];
     }
 }

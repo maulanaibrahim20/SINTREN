@@ -31,7 +31,6 @@ class PengairanController extends Controller
         try {
             DB::begintransaction();
             $this->pengairan->create([
-                'id_pengairan' => 'PENG-' . date('YmdHis'),
                 'name' => $request->name,
             ]);
             DB::commit();
