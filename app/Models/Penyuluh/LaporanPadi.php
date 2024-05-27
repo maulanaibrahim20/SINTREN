@@ -2,6 +2,8 @@
 
 namespace App\Models\Penyuluh;
 
+use App\Models\Operator\Padi;
+use App\Models\Operator\TanamanPadi;
 use App\Models\User;
 use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
@@ -35,5 +37,10 @@ class LaporanPadi extends Model
     public function pengairan()
     {
         return $this->belongsTo(Pengairan::class, 'id_jenis_pengairan');
+    }
+
+    public function padi()
+    {
+        return $this->belongsTo(TanamanPadi::class, 'jenis_padi');
     }
 }

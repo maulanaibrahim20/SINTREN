@@ -23,6 +23,18 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label for="select2Basic" class="form-label">Pilih Tanggal</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <i class="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
+                                        </div>
+                                        <input type="text" class="form-control" name="date" id="date"
+                                            placeholder="Pilih Tanggal">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label for="select2Basic" class="form-label">Desa Penugasan</label>
                                     <select id="desa" class="form-control select2 form-select"
                                         aria-label="Default select example" data-placeholder="Pilih Desa" name="desa">
@@ -42,11 +54,13 @@
                                         data-placeholder="Pilih Jenis Lahan" aria-label="Default select example"
                                         name="jenis_lahan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="lahan_sawah">Lahan Sawah</option>
-                                        <option value="non_sawah">Bukan Sawah/Non Sawah</option>
+                                        <option value="lahan sawah">Lahan Sawah</option>
+                                        <option value="non sawah">Bukan Sawah/Non Sawah</option>
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pilih Jenis Bantuan</label>
@@ -54,15 +68,26 @@
                                         data-placeholder="Pilih Jenis Bantuan" aria-label="Default select example"
                                         name="jenis_bantuan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="bantuan_pemerintah">Bantuan Pemerintah</option>
-                                        <option value="non_bantuan_pemerintah">Bukan Bantuan Pemerintah/Non Bantuan
+                                        <option value="bantuan pemerintah">Bantuan Pemerintah</option>
+                                        <option value="non bantuan pemerintah">Bukan Bantuan Pemerintah/Non Bantuan
                                             Pemerintah
                                         </option>
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="select2Basic" class="form-label">Jenis Padi</label>
+                                    <select id="jenis_padi" class="form-control select2 form-select"
+                                        aria-label="Default select example" data-placeholder="Pilih Jenis Padi"
+                                        name="jenis_padi">
+                                        <option value="">-- Pilih Padi --</option>
+                                        @foreach ($jenis_padi as $padi)
+                                            <option value="{{ $padi['id'] }}">{{ $padi['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Jenis Pengairan</label>
@@ -76,7 +101,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pilih Inputan</label>
                                     <select id="jenis_data" class="form-control select2 form-select"
@@ -85,11 +112,11 @@
                                         <option value="">-- Pilih --</option>
                                         <option value="tanam">Tanam</option>
                                         <option value="panen">Panen</option>
-                                        <option value="puso_rusak">Puso/Rusak</option>
+                                        <option value="puso/rusak">Puso/Rusak</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Nilai</label>
                                     <input class="form-control" type="text" name="nilai">

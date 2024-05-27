@@ -71,7 +71,9 @@ class LaporanPadiController extends Controller
                 'kecamatan_id' => Auth::user()->penyuluh->kecamatan->id,
                 'jenis_lahan' => $request['jenis_lahan'],
                 'jenis_bantuan' => $request['jenis_bantuan'],
+                'jenis_padi' => $request['jenis_padi'],
                 'id_jenis_pengairan' => $request['jenis_pengairan'],
+                'date' => $request->date,
                 'tipe_data' => $request['jenis_data'],
                 'nilai' => $request['nilai'],
             ]);
@@ -95,6 +97,7 @@ class LaporanPadiController extends Controller
         $data['edit'] = $this->laporanpadi::findOrFail($id);
         $data['penugasanDesa'] = $this->penugasanDesa::where('user_id', Auth::user()->id)->get();
         $data['pengairan'] = $this->pengairan::all();
+        $data['jenis_padi'] = $this->jenis_padi::orderBy('created_at', 'asc')->get();
         return view('penyuluh.pages.laporan_padi.update', $data);
     }
 
@@ -108,6 +111,8 @@ class LaporanPadiController extends Controller
                 'jenis_lahan' => $request['jenis_lahan'],
                 'jenis_bantuan' => $request['jenis_bantuan'],
                 'id_jenis_pengairan' => $request['jenis_pengairan'],
+                'jenis_padi' => $request['jenis_padi'],
+                'date' => $request['date'],
                 'tipe_data' => $request['jenis_data'],
                 'nilai' => $request['nilai'],
             ]);

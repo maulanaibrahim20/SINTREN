@@ -29,11 +29,6 @@
                             <td><span class="badge bg-primary">{{ $user->kecamatan->name }}</span></td>
                         </tr>
                         <tr>
-                            <td class="text-right">Desa</td>
-                            <td>:</td>
-                            <td><span class="badge bg-primary">{{ $user->desa->name }}</span></td>
-                        </tr>
-                        <tr>
                             <td class="text-right">Username</td>
                             <td>:</td>
                             <td>
