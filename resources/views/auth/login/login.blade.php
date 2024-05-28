@@ -57,13 +57,6 @@
                                                     password?</a>
                                             </div>
                                         </div>
-<<<<<<< HEAD
-                                        <div class="mt-6 btn-list">
-                                            <button type="button" class="btn btn-icon btn-google"><i
-                                                    class="fa fa-google"></i></button>
-                                        </div>
-=======
->>>>>>> ac05a750b36994399cfd86af854b2d7ca9ef60b8
                                     </form>
                                 </div>
                             </div>

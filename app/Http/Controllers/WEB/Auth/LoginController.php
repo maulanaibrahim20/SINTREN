@@ -31,7 +31,7 @@ class LoginController extends Controller
         if (!$user) {
             Alert::error('Maaf, Akun Anda Tidak Ditemukan');
             return redirect(route('login.index'))->with('error', 'Maaf, Akun Anda Tidak Ditemukan');
-        }
+        } 
         if (!Hash::check($request->password, $user->password)) {
             Alert::error('Maaf Pasword Anda Salah!');
             return redirect(route('login.index'))->with('error', 'Password Anda Salah');
