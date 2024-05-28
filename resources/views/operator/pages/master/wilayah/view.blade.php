@@ -34,7 +34,6 @@
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
                                     <th class="wd-20p border-bottom-0">ID</th>
-                                    <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,14 +42,8 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
                                         <td>{{ $data->id }}</td>
-                                        <td class="text-center">
-                                            <a data-bs-toggle="tooltip" title="Lihat Desa" data-bs-placement="bottom"
-                                                href="{{ url('/operator/master/wilayah/view/' . $data->id) }}"
-                                                class="btn btn-primary"><i class="ti ti-eye"></i></a>
-                                        </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>

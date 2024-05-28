@@ -57,16 +57,14 @@
                                         data-placeholder="Pilih Jenis Lahan" aria-label="Default select example"
                                         name="jenis_lahan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="lahan sawah"
-                                            {{ $edit['jenis_lahan'] == 'lahan sawah' ? 'selected' : '' }}>Lahan Sawah
-                                        </option>
+                                        <option value="sawah" {{ $edit['jenis_lahan'] == 'sawah' ? 'selected' : '' }}>
+                                            Lahan Sawah</option>
                                         <option value="non sawah"
                                             {{ $edit['jenis_lahan'] == 'non sawah' ? 'selected' : '' }}>Bukan Sawah/Non
                                             Sawah</option>
                                     </select>
                                 </div>
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -94,7 +92,7 @@
                                         <option value="">-- Pilih Padi --</option>
                                         @foreach ($jenis_padi as $padi)
                                             <option value="{{ $padi['id'] }}"
-                                                {{ $edit['jenis_padi'] == $padi['id'] ? 'selected' : '' }}>
+                                                {{ $edit['id_jenis_padi'] == $padi['id'] ? 'selected' : '' }}>
                                                 {{ $padi['name'] }}</option>
                                         @endforeach
                                     </select>
@@ -107,10 +105,10 @@
                                         aria-label="Default select example" data-placeholder="Pilih Jenis Pengairan"
                                         name="jenis_pengairan">
                                         <option value="">-- Pilih Pengairan --</option>
-                                        @foreach ($pengairan as $peng)
-                                            <option value="{{ $peng['id'] }}"
-                                                {{ $edit['id_jenis_pengairan'] == $peng['id'] ? 'selected' : '' }}>
-                                                {{ $peng['name'] }}</option>
+                                        @foreach ($pengairan as $air)
+                                            <option value="{{ $air['id'] }}"
+                                                {{ $edit['id_jenis_pengairan'] == $air['id'] ? 'selected' : '' }}>
+                                                {{ $air['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -155,5 +153,24 @@
 @endsection
 
 @section('script')
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            function togglePengairan() {
+                if ($('#jenis_lahan').val() === 'non sawah') {
+                    $('#jenis_pengairan').closest('.form-group').hide();
+                    $('#jenis_pengairan').val(''); // Kosongkan nilai jenis_pengairan
+                } else {
+                    $('#jenis_pengairan').closest('.form-group').show();
+                }
+            }
+
+            // Panggil fungsi saat halaman dimuat
+            togglePengairan();
+
+            // Tambahkan event listener untuk perubahan pada select jenis_lahan
+            $('#jenis_lahan').change(function() {
+                togglePengairan();
+            });
+        });
+    </script>
 @endsection

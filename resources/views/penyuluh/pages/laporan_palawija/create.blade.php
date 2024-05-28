@@ -50,7 +50,7 @@
                                     <select id="jenis_lahan" class="form-control form-select select2"
                                         aria-label="Default select example" name="jenis_lahan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="lahan sawah">Lahan Sawah</option>
+                                        <option value="sawah">Lahan Sawah</option>
                                         <option value="non sawah">Bukan Sawah/Non Sawah</option>
                                     </select>
                                 </div>
@@ -64,7 +64,8 @@
                                         aria-label="Default select example" name="jenis_bantuan">
                                         <option value="">-- Pilih --</option>
                                         <option value="bantuan pemerintah">Bantuan Pemerintah</option>
-                                        <option value="non bantuan pemerintah">Bukan Bantuan Pemerintah/Non Bantuan Pemerintah</option>
+                                        <option value="non bantuan pemerintah">Bukan Bantuan Pemerintah/Non Bantuan
+                                            Pemerintah</option>
                                     </select>
                                 </div>
                             </div>
@@ -75,7 +76,7 @@
                                         aria-label="Default select example" name="jenis_palawija">
                                         <option value="">-- Pilih --</option>
                                         @foreach ($jenisPalawija as $palawija)
-                                        <option value="{{$palawija->id}}">{{$palawija->name}}</option>
+                                            <option value="{{ $palawija->id }}">{{ $palawija->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

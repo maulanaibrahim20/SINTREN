@@ -54,7 +54,7 @@
                                         data-placeholder="Pilih Jenis Lahan" aria-label="Default select example"
                                         name="jenis_lahan">
                                         <option value="">-- Pilih --</option>
-                                        <option value="lahan sawah">Lahan Sawah</option>
+                                        <option value="sawah">Lahan Sawah</option>
                                         <option value="non sawah">Bukan Sawah/Non Sawah</option>
                                     </select>
                                 </div>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="form-group">
+                                <div class="form-group" style="display: none">
                                     <label for="select2Basic" class="form-label">Jenis Pengairan</label>
                                     <select id="jenis_pengairan" class="form-control select2 form-select"
                                         aria-label="Default select example" data-placeholder="Pilih Jenis Pengairan"
@@ -137,5 +137,24 @@
 @endsection
 
 @section('script')
-    <script></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+    <script>
+        $(document).ready(function() {
+            // Ketika nilai jenis lahan berubah
+            $('#jenis_lahan').change(function() {
+                // Ambil nilai jenis lahan yang dipilih
+                var jenisLahan = $(this).val();
+
+                // Jika jenis lahan adalah 'lahan sawah'
+                if (jenisLahan === 'sawah') {
+                    // Tampilkan opsi jenis pengairan
+                    $('#jenis_pengairan').parent().show();
+                } else {
+                    // Sembunyikan opsi jenis pengairan
+                    $('#jenis_pengairan').parent().hide();
+                }
+            });
+        });
+    </script>
+
 @endsection

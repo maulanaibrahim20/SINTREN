@@ -5,107 +5,43 @@
         <ol class="breadcrumb1 br-7">
             <li class="breadcrumb-item1 active">Dashboard</li>
         </ol><!-- Eneadcrumb -->
-
-        <div class="ms-auto">
-            <div>
-                <a href="#" class="btn bg-secondary-transparent text-secondary btn-sm" data-bs-toggle="tooltip"
-                    title="" data-bs-placement="bottom" data-bs-original-title="Rating">
-                    <span>
-                        <i class="fa fa-star"></i>
-                    </span>
-                </a>
-                <a href="lockscreen.html" class="btn bg-primary-transparent text-primary mx-2 btn-sm"
-                    data-bs-toggle="tooltip" title="" data-bs-placement="bottom" data-bs-original-title="lock">
-                    <span>
-                        <i class="fa fa-lock"></i>
-                    </span>
-                </a>
-                <a href="#" class="btn bg-warning-transparent text-warning btn-sm" data-bs-toggle="tooltip"
-                    title="" data-bs-placement="bottom" data-bs-original-title="Add New">
-                    <span>
-                        <i class="fa fa-plus"></i>
-                    </span>
-                </a>
-            </div>
-        </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
-            <div class="card overflow-hidden">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p class="mb-0 fw-semibold text-dark lh-1">Karyawan</p>
-                                    <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1">{{ $user }}
-                                    </div>
-                                </div>
-                                <div class="text-end d-flex flex-column align-items-center">
-                                    <label class="custom-switch mb-5">
-                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                        <span class="custom-switch-indicator"></span>
-                                    </label>
-                                    <span class="text-secondary lh-1 mt-3 fs-26"><i class="fe fe-users"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="row row-cards">
+        <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
+            <div class="card">
+                <div class="card-body text-center list-icons">
+                    <i class="si si-briefcase fs-2 text-primary"></i>
+                    <p class="card-text mt-3 mb-3">Total Projects</p>
+                    <p class="h1 text-center  text-primary">459</p>
                 </div>
             </div>
-        </div>
-        <!-- col end -->
-        <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
-            <div class="card overflow-hidden">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p class="mb-0 fw-semibold text-dark lh-1">Task</p>
-                                    <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1">1
-                                    </div>
-                                </div>
-                                <div class="text-end d-flex flex-column align-items-center">
-                                    <label class="custom-switch mb-5">
-                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                        <span class="custom-switch-indicator"></span>
-                                    </label>
-                                    <span class="text-warning lh-1 mt-3 fs-26"><i class="fe fe-file-text"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        </div><!-- col end -->
+        <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
+            <div class="card">
+                <div class="card-body text-center list-icons">
+                    <i class="si si-basket-loaded fs-2 text-secondary"></i>
+                    <p class="card-text mt-3 mb-3">Total Lahan Penyuluhan</p>
+                    <p class="h1 text-center  text-secondary">{{ $penugasan }}</p>
                 </div>
             </div>
-        </div>
-        <!-- col end -->
-        <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
-            <div class="card overflow-hidden">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <p class="mb-0 fw-semibold text-dark lh-1">Earnings</p>
-                                    <div class="fs-12 text-muted mb-5">Overview of this month</div>
-                                    <div class="fs-30 fw-semibold mb-0 lh-1"> <i class=""></i>
-                                    </div>
-                                </div>
-                                <div class="text-end d-flex flex-column align-items-center">
-                                    <label class="custom-switch mb-5">
-                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                        <span class="custom-switch-indicator"></span>
-                                    </label>
-                                    <span class="text-danger lh-1 mt-3 fs-26"><i class="fe fe-external-link"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        </div><!-- col end -->
+        <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
+            <div class="card">
+                <div class="card-body text-center list-icons">
+                    <i class="si si-people fs-2 text-warning"></i>
+                    <p class="card-text mt-3 mb-3">Total User</p>
+                    <p class="h1 text-center  text-warning">{{ $user }}</p>
                 </div>
             </div>
-        </div>
+        </div><!-- col end -->
+        <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
+            <div class="card">
+                <div class="card-body text-center list-icons">
+                    <i class="si si-eye fs-2 text-success"></i>
+                    <p class="card-text mt-3 mb-3">Customer Visitis</p>
+                    <p class="h1 text-center text-success">2635</p>
+                </div>
+            </div>
+        </div><!-- col end -->
     </div>
 @endsection
