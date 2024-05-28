@@ -36,4 +36,8 @@ class LaporanPadi extends Model
     {
         return $this->belongsTo(Pengairan::class, 'id_jenis_pengairan');
     }
+
+    public function padi(){
+        return $this->belongsTo(Pengairan::class, 'id_jenis_padi');
+    }
 }
