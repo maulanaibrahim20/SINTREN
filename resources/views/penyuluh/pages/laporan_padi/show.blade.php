@@ -12,56 +12,87 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
                 <div class="card-header">
-                    <h3 class="card-title">Detail Laporan Tanaman Padi</h3>
+                    <h3 class="card-title">Laporan Penyuluh</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
-                            <thead>
-                                <tr>
-                                    <th class="wd-15p border-bottom-0">Nama Pengumpul</th>
-                                    <th class="wd-20p border-bottom-0">Alamat</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Bantuan</th>
-                                    <th class="wd-20p border-bottom-0">Panen</th>
-                                    <th class="wd-20p border-bottom-0">Tanam</th>
-                                    <th class="wd-20p border-bottom-0">Puso/Rusak</th>
-                                    <th class="wd-20p border-bottom-0">Tanaman Akhir Bulan Laporan</th>
-                                    <th class="wd-20p border-bottom-0">Hari/Tanggal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ $show->user->name }}</td> <!-- Jika user memiliki relasi dengan user -->
-                                    <td>
-                                        <div class="d-flex contact-image">
-                                            <div class="d-flex mt-1 flex-column ms-2">
-                                                <h6 class="mb-0 fs-14 fw-semibold text-dark">{{ $show->desa->name }}
-                                                </h6>
-                                                <span class="fs-12 text-muted">{{ $show->kecamatan->name }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ $show->jenis_lahan }}</td>
-                                    <td>{{ $show->jenis_bantuan }}</td>
-                                    <td>{{ $show->pengairan->name ?? 'N/A' }}</td>
-                                    <td>{{ $show->tipe_data }}</td>
-                                    <td>{{ $show->nilai }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($show->created_at)->isoFormat('dddd, D MMMM YYYY') }}
-                                    </td>
-                                </tr>
-                            </tbody>
+                        <table class="table table-striped" style="width: 100%">
+                            <tr>
+                                <td class="text-right">Tanggal Input</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->date }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Jenis Lahan</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->jenis_lahan }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Nama Penyuluh</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->user->name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Desa</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->desa->name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">kecamatan</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->kecamatan->name }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-header">
+                    <h3 class="card-title">Laporan Lahan</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="width: 100%">
+                            <tr>
+                                <td class="text-right">Jenis Lahan</td>
+                                <td>:</td>
+                                <td>{{ str_replace('_', ' ', $show->jenis_lahan) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Jenis Palawija</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->padi->name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Jenis Bantuan</td>
+                                <td>:</td>
+                                <td>{{ str_replace('_', ' ', $show->jenis_bantuan) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Tipe Data input</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->tipe_data }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Nilai</td>
+                                <td>:</td>
+                                <td>
+                                    {{ $show->nilai }}
+                                </td>
+                            </tr>
                         </table>
                     </div>
                 </div>

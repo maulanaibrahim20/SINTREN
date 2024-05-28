@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\PadiController;
 use App\Http\Controllers\Api\PalawijaController;
 use App\Http\Controllers\Api\WilayahController;
+use App\Http\Controllers\Api\PasarController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,4 +49,6 @@ Route::delete('/palawija/deletaDetailById/{id}', [PalawijaController::class, 'de
 
 Route::get('/desa',[WilayahController::class,'getDesa']);
 Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);
+
+Route::get('/pasar',[PasarController::class,'getPasar']);
 

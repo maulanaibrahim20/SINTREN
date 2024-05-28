@@ -18,7 +18,6 @@ return new class extends Migration
             $table->double('lahan_sawah');
             $table->double('lahan_non_sawah');
             $table->timestamps();
-
             $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
             $table->foreign('desa_id')->references('id')->on('desas')->onDelete('cascade');
         });

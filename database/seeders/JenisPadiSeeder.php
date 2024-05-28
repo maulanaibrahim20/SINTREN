@@ -18,7 +18,7 @@ class JenisPadiSeeder extends Seeder
         ]);
 
         TanamanPadi::create([
-            'name' => 'Hibrida 33',
+            'name' => 'Hibrida',
         ]);
     }
 }
