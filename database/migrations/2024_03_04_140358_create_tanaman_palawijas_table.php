@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('tanaman_palawijas', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 25);
-            $table->string('category', 25);
+            $table->string('name', 50);
             $table->timestamps();
         });
     }

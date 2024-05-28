@@ -27,8 +27,11 @@ class DashboardController extends Controller
     }
     public function operator()
     {
-        $user = User::count();
-        return view('operator.pages.dashboard.index', compact('user'));
+        $data = [
+            'user' => User::count(),
+            'penugasan' => PenugasanPenyuluh::count(),
+        ];
+        return view('operator.pages.dashboard.index', $data);
     }
 
     public function pertanian()

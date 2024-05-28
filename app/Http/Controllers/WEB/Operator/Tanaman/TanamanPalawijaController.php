@@ -5,25 +5,20 @@ namespace App\Http\Controllers\WEB\Operator\Tanaman;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Operator\Tanaman\Palawija\CreateRequest;
 use App\Http\Requests\Operator\Tanaman\Palawija\UpdateRequest;
-use App\Models\Operator\KategoriTanamanPalawija;
 use App\Models\Operator\TanamanPalawija;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\File;
-use Illuminate\Validation\ValidationException;
 use RealRashid\SweetAlert\Facades\Alert;
 
 
 class TanamanPalawijaController extends Controller
 {
     protected $palawija;
-    protected $kategoritanaman;
 
-    public function __construct(TanamanPalawija $palawija, KategoriTanamanPalawija $kategoritanaman)
+    public function __construct(TanamanPalawija $palawija,)
     {
         $this->palawija = $palawija;
-        $this->kategoritanaman = $kategoritanaman;
     }
     public function index()
     {
@@ -32,10 +27,9 @@ class TanamanPalawijaController extends Controller
             'breadcrumb' => 'Dashbord',
             'breadcrumb_active' => 'Tanaman Palawija',
             'button_create' => 'Tambah Tanaman Palawija',
-            'kategori' => $this->kategoritanaman::all(),
+            'palawija' => $this->palawija::all(),
         ];
-        $palawija = $this->palawija::all();
-        return view('operator.pages.tanaman.palawija.index', $data, compact('palawija'));
+        return view('operator.pages.tanaman.palawija.index', $data);
     }
 
     public function store(CreateRequest $request)
@@ -44,11 +38,9 @@ class TanamanPalawijaController extends Controller
             DB::beginTransaction();
             $this->palawija->create($request->all());
             DB::commit();
-            Alert::success('success', 'Data Palawija Berhasil Dibuat!');
             return back()->with('success', 'Data Palawija Berhasil Dibuat!');
         } catch (\Exception $th) {
             DB::rollback();
-            Alert::error('Error', 'Data Palawija Gagal Dibuat!' . $th->getMessage());
             return back()->with('error', 'Data Palawija Gagal Dibuat!' . $th->getMessage());
         }
     }
@@ -60,11 +52,9 @@ class TanamanPalawijaController extends Controller
             $palawija = $this->palawija->find($id);
             $palawija->update($request->all());
             DB::commit();
-            Alert::success('success', 'Data Palawija Berhasil Diubah!');
             return back()->with('success', 'Data Palawija Berhasil Diubah!');
         } catch (\Exception $th) {
             DB::rollback();
-            Alert::error('Error', 'Data Palawija Gagal Diubah!' . $th->getMessage());
             return back()->with('error', 'Data Palawija Gagal Diubah!' . $th->getMessage());
         }
     }

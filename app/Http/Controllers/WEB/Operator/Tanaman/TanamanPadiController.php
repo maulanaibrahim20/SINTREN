@@ -37,11 +37,9 @@ class TanamanPadiController extends Controller
                 'name' => $request->name,
             ]);
             DB::commit();
-            Alert::success('success', 'success Data Padi Berhasil Ditambahkan!');
             return back()->with('success', 'Success Data Padi Berhasil Ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data Padi Gagal Ditambahkan!' . $e->getMessage());
             return back()->with('error', 'Error Data Padi Gagal Ditambahkan!');
         }
     }
@@ -55,11 +53,9 @@ class TanamanPadiController extends Controller
                 'name' => $request->name,
             ]);
             DB::commit();
-            Alert::success('success', 'success Data Padi Berhasil Diubah!');
             return back()->with('success', 'Success Data Padi Berhasil Diubah!');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data Padi Gagal Diubah!' . $e->getMessage());
             return back()->with('error', 'Error Data Padi Gagal Diubah!');
         }
     }
@@ -71,11 +67,9 @@ class TanamanPadiController extends Controller
             $padi = $this->padi->findOrFail($id);
             $padi->delete();
             DB::commit();
-            Alert::success('success', 'success Data Padi Berhasil Dihapus!');
             return back()->with('success', 'Success Data Padi Berhasil Dihapus!');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data Padi Gagal Dihapus!' . $e->getMessage());
             return back()->with('error', 'Error Data Padi Gagal Dihapus!');
         }
     }

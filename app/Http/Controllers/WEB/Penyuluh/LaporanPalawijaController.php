@@ -26,7 +26,7 @@ class LaporanPalawijaController extends Controller
         LaporanPalawija $laporanPalawija,
         Desa $desa,
         TanamanPalawija $tanamanPalawija,
-        JenisPalawija $jenisPalawija,
+        TanamanPalawija $jenisPalawija,
         PenugasanPenyuluh $penugasanPenyuluh,
     ) {
         $this->laporanPalawija = $laporanPalawija;
@@ -65,7 +65,6 @@ class LaporanPalawijaController extends Controller
      */
     public function create()
     {
-        $kecamatan = Auth::user()->penyuluh->kecamatan->id;
         $data = [
             'tanamanPalawija' => $this->tanamanPalawija::all(),
             'jenisPalawija' => $this->jenisPalawija::all(),
