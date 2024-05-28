@@ -80,7 +80,7 @@ class DashboardController extends Controller
     }
 
 
-    public function dinas_pangan()
+    public function pangan()
     {
         return view('pangan.views.dashboard.index');
     }

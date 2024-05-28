@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pertanian\Pertanian;
+use App\Models\Pangan\Pangan;
 use App\Models\Role;
 use App\Models\Uptd\Uptd;
 use App\Models\User;
@@ -51,9 +52,14 @@ class UserSeeder extends Seeder
             'kecamatan_id' =>  '3212170',
             'createdBy' => 'admin',
         ]);
-        User::factory()->create([
-            'username' => 'dinas_pangan',
-            'role_id' => Role::DINAS_PANGAN,
+        $pangan = User::factory()->create([
+            'username' => 'pangan',
+            'role_id' => Role::PANGAN,
+        ]);
+        Pangan::create([
+            'alamat' => 'indramayu',
+            'user_id' => $pangan['id'],
+            'no_telp' => '085797288'
         ]);
     }
 }
