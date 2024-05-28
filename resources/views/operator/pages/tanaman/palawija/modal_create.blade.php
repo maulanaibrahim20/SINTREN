@@ -11,19 +11,7 @@
                     <div class="col mb-3">
                         <label class="form-label">Nama Tanaman Palawija</label>
                         <input type="text" name="name" value="{{ old('name') }}" class="form-control"
-                            placeholder="Masukkan Nama Kategori" />
-                    </div>
-                    <div class="col mb-3">
-                        <label class="form-label">Nama Tanaman Palawija</label>
-                        <select id="category" class="form-control select2 form-select" name="category"
-                            data-placeholder="Pilih Kategori Palawija">
-                            <option value="">-- Pilih --</option>
-                            @foreach ($kategori as $item)
-                                <option value="{{ $item->id }}" name="category">
-                                    {{ $item->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                            placeholder="Masukkan Nama Palawija" />
                     </div>
                 </div>
                 <div class="modal-footer">

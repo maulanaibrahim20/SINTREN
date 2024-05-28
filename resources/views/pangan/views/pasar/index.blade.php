@@ -1,21 +1,21 @@
 @extends('index')
-@section('title', 'Kategori Tanaman Palawija ')
+@section('title', 'Data Pasar | Pangan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item" aria-current="page">Master</li>
-            <li class="breadcrumb-item active" aria-current="page">Kategori Tanaman Palawija</li>
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter">
+                <a href="{{ url('/pangan/create/data_pasar/create') }}" class="btn bg-primary-transparent"
+                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
-                    Buat Kategori Palawija
-                </button>
+                    {{ $button_create }}
+                </a>
             </div>
         </div>
     </div>
@@ -40,24 +40,26 @@
                         <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
-                                    <th class="wd-15p border-bottom-0">No.</th>
+                                    <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
-                                    <th class="wd-15p border-bottom-0">Deskripsi</th>
+                                    {{-- <th class="wd-15p border-bottom-0">ID</th> --}}
+                                    {{-- <th class="wd-20p border-bottom-0">Username</th>
+                                    <th class="wd-15p border-bottom-0">Role</th> --}}
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($tanaman as $data)
+                                @foreach ($users as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
-                                        <td>{{ $data->description }}</td>
+                                        {{-- <td>{{ $data->id }}</td> --}}
+                                        {{-- <td>{{ $data->user->getAkses->name }}</td> --}}
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#modalCenter1{{ $data->id }}"><i
-                                                    class="fa fa-edit"></i></button>
+                                            {{-- <a href="{{ url('/dinas_pangan/pasar/data_pasar/' . $data->id . '/edit') }}"
+                                                class="btn btn-warning"><i class="fa fa-edit"></i></a> --}}
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/operator/kategori/tanaman_palawija/' . $data->id) }}"
+                                                action="{{ url('/pangan/create/data_pasar/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
@@ -76,45 +78,7 @@
         </div>
     </div>
 
-    {{-- start modal tambah Jenis Padi --}}
-    @include('operator.pages.tanaman.kategori.tanaman_palawija.modal_tambah')
-    {{-- end modal tambah Jenis Padi --}}
-    {{-- start modal edit Jenis Padi --}}
-    @foreach ($tanaman as $item)
-        <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <form action="{{ url('/operator/kategori/tanaman_palawija/' . $item->id) }}"
-                        enctype="multipart/form-data" method="post">
-                        @method('PUT')
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Edit kategori tanaman palawija</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="col mb-3">
-                                <label for="nameBasic" class="form-label">Nama</label>
-                                <input type="text" value="{{ $item->name }}" name="name" class="form-control"
-                                    placeholder="Masukkan Nama Kategori" />
-                            </div>
-                            <div class="col mb-3">
-                                <label for="descriptionBasic" class="form-label">Deskripsi</label>
-                                <textarea name="description" class="form-control" placeholder="Masukkan Deskripsi">{{ $item->description }}</textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @endforeach
-    {{-- end modal tambah Jenis Padi --}}
 @endsection
-
 @section('script')
     <script>
         $('.deleteBtn').on('click', function(e) {

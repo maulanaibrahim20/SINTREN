@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Models\Operator;
+namespace App\Models\Pasar;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KategoriTanamanPalawija extends Model
+class Pasar extends Model
 {
     use HasFactory;
 
-    protected $table = 'kategori_tanaman_palawija';
-
-
+    protected $table = 'pasars';
     protected $guarded = [''];
 }

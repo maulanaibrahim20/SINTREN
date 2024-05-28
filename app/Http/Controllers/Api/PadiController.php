@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Operator\Padi;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
 use Carbon\Carbon;
@@ -22,10 +23,21 @@ class PadiController extends Controller
         return response()->json($responseData);
     }
 
+    public function getPadi()
+    {
+        $pengairan = Padi::all();
+        $responseData = [
+            'status' => 'success',
+            'message' => 'Get data successful',
+            'data' => $pengairan
+        ];
+        return response()->json($responseData);
+    }
+
     public function showAllByUser($id)
     {
         try {
-            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan'])->get();
+            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan','padi'])->get();
 
             if ($laporanPadi->isEmpty()) {
                 return response()->json([

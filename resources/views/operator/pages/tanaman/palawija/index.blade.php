@@ -40,7 +40,6 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
-                                    <th class="wd-20p border-bottom-0">kategori</th>
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -49,15 +48,10 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
-                                        <td>{{ $data->kategori->name }}</td>
                                         <td class="text-center">
                                             <button class="btn btn-warning" data-bs-toggle="modal"
                                                 data-bs-target="#modalCenterEdit{{ $data->id }}">
                                                 <span<i class="fa fa-edit"></i></span>
-                                            </button>
-                                            <button class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#modalCenterShow{{ $data->id }}">
-                                                <span<i class="fa fa-eye"></i></span>
                                             </button>
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/operator/tanaman/palawija/' . $data->id) }}"
@@ -95,21 +89,7 @@
                         <div class="modal-body">
                             <div class="col mb-3">
                                 <label class="form-label">Nama Tanaman Palawija</label>
-                                <input type="text" name="name" value="{{ $edit['name'] }}" class="form-control"
-                                    placeholder="Masukkan Nama Kategori" />
-                            </div>
-                            <div class="col mb-3">
-                                <label class="form-label">Nama Tanaman Palawija</label>
-                                <select id="category" class="form-control select2 form-select" name="category"
-                                    data-placeholder="Pilih Kategori Palawija">
-                                    <option value="">-- Pilih --</option>
-                                    @foreach ($kategori as $item)
-                                        <option value="{{ $item->id }}"
-                                            {{ $item['id'] == $edit['category'] ? 'selected' : '' }} name="category">
-                                            {{ $item->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="name" value="{{ $edit['name'] }}" class="form-control" />
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -121,7 +101,6 @@
         </div>
     @endforeach
 
-    @include('operator.pages.tanaman.palawija.modal_show')
 
 
 @endsection

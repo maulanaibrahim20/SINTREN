@@ -41,6 +41,6 @@ class LaporanPadi extends Model
 
     public function padi()
     {
-        return $this->belongsTo(TanamanPadi::class, 'jenis_padi');
+        return $this->belongsTo(TanamanPadi::class, 'id_jenis_padi');
     }
 }

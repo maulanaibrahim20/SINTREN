@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jenis_palawijas', function (Blueprint $table) {
+        Schema::create('petugas_pasars', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->boolean('bantuan')->default(false);
-            $table->boolean('panen_muda')->default(false);
-            $table->boolean('panen_pakan_ternak')->default(false);
-            $table->boolean('total_produksi')->default(false);
+            $table->string('user_id', 50);
+            $table->integer('pasar_id');
+            $table->string('alamat', 50);
+            $table->string('no_telp', 15);
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jenis_palawijas');
+        Schema::dropIfExists('petugas_pasars');
     }
 };

@@ -68,7 +68,7 @@
                                 <td>{{ str_replace('_', ' ', $show->jenis_lahan) }}</td>
                             </tr>
                             <tr>
-                                <td class="text-right">Jenis Palawija</td>
+                                <td class="text-right">Jenis Padi</td>
                                 <td>:</td>
                                 <td>
                                     {{ $show->padi->name }}

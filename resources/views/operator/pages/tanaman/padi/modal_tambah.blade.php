@@ -10,8 +10,7 @@
                 <div class="modal-body">
                     <div class="col mb-3">
                         <label for="nameBasic" class="form-label">Nama</label>
-                        <input type="text" name="name" class="form-control"
-                            placeholder="Masukkan Nama Kategori" />
+                        <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Padi" />
                     </div>
                 </div>
                 <div class="modal-footer">
