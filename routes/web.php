@@ -20,7 +20,7 @@ use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
-use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController;
+use App\Http\Controllers\WEB\Uptd\user\UptdPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
 /*
