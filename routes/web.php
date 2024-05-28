@@ -17,11 +17,10 @@ use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Operator\User\PanganController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
-use App\Http\Controllers\WEB\Penyuluh\Master\JenisPadiController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
-use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController;
+use App\Http\Controllers\WEB\Uptd\User\UptdAkunPenyuluhController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
 use Illuminate\Support\Facades\Route;
@@ -93,8 +92,8 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
-            Route::resource('pengguna/penyuluh', UptdPenyuluhController::class);
-            Route::post('pengguna/penyuluh/penugasan', [UptdPenyuluhController::class, 'penugasan']);
+            Route::resource('pengguna/penyuluh', UptdAkunPenyuluhController::class);
+            Route::post('pengguna/penyuluh/penugasan', [UptdAkunPenyuluhController::class, 'penugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
