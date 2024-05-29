@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Data Pasar ')
+@section('title', 'Data Stok Pangan | Pangan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -9,12 +9,13 @@
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCenter">
+                <a href="{{ url('/pangan/create/data_pangan') }}" class="btn bg-primary-transparent"
+                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
                     {{ $button_create }}
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -39,24 +40,45 @@
                         <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
                             <thead>
                                 <tr>
-                                    <th class="wd-15p border-bottom-0">No.</th>
-                                    <th class="wd-15p border-bottom-0">Nama</th>
-                                    {{-- <th class="wd-15p border-bottom-0">Deskripsi</th> --}}
-                                    <th class="text-center wd-10p border-bottom-0">Actions</th>
+                                    <th class="wd-15p border-bottom-0">No</th>
+                                    <th class="wd-15p border-bottom-0">Status</th>
+                                    {{--  <th class="wd-15p border-bottom-0">Nama Petugas</th> --}}
+                                    <th class="wd-15p border-bottom-0">Pasar</th>
+                                    <th class="wd-20p border-bottom-0">Nama Pangan</th>
+                                    <th class="wd-20p border-bottom-0">Tanggal</th>
+                                    {{-- <th class="wd-20p border-bottom-0">Kategori Pangan</th> --}}
+                                    <th class="wd-20p border-bottom-0">Kebutuhan(Ton)</th>
+                                    <th class="wd-20p border-bottom-0">Ketersediaan(Ton)</th>
+                                    <th class="wd-20p border-bottom-0">Neraca(Ton)</th>
+                                    <th class="wd-20p border-bottom-0">Harga(Rp/Kg)</th>
+                                    <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($pasar as $data)
+                                @foreach ($datapangan as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->name }}</td>
-                                        {{-- <td>{{ $data->description }}</td> --}}
+                                        <td>
+                                            <div class="d-flex contact-image">
+                                                <div class="d-flex mt-1 flex-column ms-2">
+                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">Pasar : <span
+                                                            class="badge bg-primary me-1 my-1">{{ $data->pasar->name }}</span>
+                                                    </h6>
+                                                    {{-- <span class="fs-12 text-muted">Desa : <span
+                                                            class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span> --}}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ $data->kategori_pangan }}</td>
+                                        <td>{{ $data->date }}</td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                                data-bs-target="#modalCenter1{{ $data->id }}"><i
-                                                    class="fa fa-edit"></i></button>
+                                            <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}"
+                                                class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                            <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/pangan/create/data_pasar/' . $data->id) }}"
+                                                action="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
@@ -66,7 +88,6 @@
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -75,45 +96,7 @@
         </div>
     </div>
 
-    {{-- start modal tambah Data Pasar --}}
-    @include('pangan.views.pasar.modal_tambah')
-    {{-- end modal tambah Data Pasar --}}
-    {{-- start modal edit Data Pasar --}}
-    @foreach ($pasar as $item)
-        <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <form action="{{ url('/pangan/create/data_pasar/' . $item->id) }}"
-                        enctype="multipart/form-data" method="post">
-                        @method('PUT')
-                        @csrf
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Edit Data Pasar</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="col mb-3">
-                                <label for="nameBasic" class="form-label">Nama</label>
-                                <input type="text" value="{{ $item->name }}" name="name" class="form-control"
-                                    placeholder="Masukkan Nama Pasar" />
-                            </div>
-                            {{-- <div class="col mb-3">
-                                <label for="descriptionBasic" class="form-label">Deskripsi</label>
-                                <textarea name="description" class="form-control" placeholder="Masukkan Deskripsi">{{ $item->description }}</textarea>
-                            </div> --}}
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @endforeach
-    {{-- end modal tambah Data Pasar --}}
 @endsection
-
 @section('script')
     <script>
         $('.deleteBtn').on('click', function(e) {

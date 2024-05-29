@@ -25,6 +25,7 @@ use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController;
 
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\PANGAN\KategoriPanganController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -129,7 +130,8 @@ Route::middleware(['autentikasi'])->group(function () {
         Route::prefix('pangan')->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'pangan']);
             Route::resource('/user/pasar', UserPasarController::class);
-            Route::resource('/pasar/data_pasar', PasarController::class);
+            Route::resource('/create/data_pasar', PasarController::class);
+            Route::resource('/create/kategori_pangan', KategoriPanganController::class);
         });
     });
 });

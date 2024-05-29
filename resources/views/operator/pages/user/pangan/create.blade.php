@@ -4,7 +4,7 @@
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb1 br-7">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
             <li class="breadcrumb-item1"><a href="{{ url('/operator/user/pangan') }}">{{ $breadcrumb_1 }}</a></li>
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
