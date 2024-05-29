@@ -10,17 +10,17 @@ import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/palawija_service.dart';
 
 class PalawijaController {
-  List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
-  List<String> bantuan = ["Bantuan Pemerintah", "Bantuan Non-Pemerintah"];
+  List<String> jenisLahan = ["sawah", "non sawah"];
+  List<String> bantuan = ["bantuan pemerintah", "non bantuan pemerintah"];
   List<String> tipeData = [
     "panen",
     "tanam",
     "puso/rusak",
-    "panen_muda",
-    "panen_hijauan_pakan_ternak"
+    "panen muda",
+    "panen hijauan pakan ternak"
   ];
 
-  Future<void> store(Map<String, dynamic> map) async {
+  Future<bool> store(Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
     final id = await UserLoginModel().getUserId();
     final kecamatanId = await UserLoginModel().getKecamatanId();
@@ -42,13 +42,15 @@ class PalawijaController {
 
     if (!result) {
       EasyLoading.showToast("Gagal menyimpan data");
+      return false;
     } else {
       EasyLoading.dismiss();
       EasyLoading.showToast("Berhasil menyimpan data");
+      return true;
     }
   }
 
-  Future<void> update(String dataId, Map<String, dynamic> map) async {
+  Future<bool> update(String dataId, Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
     final id = await UserLoginModel().getUserId();
     final kecamatanId = await UserLoginModel().getKecamatanId();
@@ -70,6 +72,7 @@ class PalawijaController {
 
     if (!result) {
       EasyLoading.showToast("Gagal mengupdate data");
+      return false;
     } else {
       final db = await PenyuluhDatabaseHelper().database;
 
@@ -84,6 +87,7 @@ class PalawijaController {
       );
       EasyLoading.dismiss();
       EasyLoading.showToast("Berhasil mengupdate data");
+      return true;
     }
   }
 

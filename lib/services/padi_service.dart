@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
+import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -38,6 +39,37 @@ class PadiService {
       log("get pengairan sukses");
     } catch (e) {
       throw Exception("Failed to save pengairan to database: $e");
+    }
+  }
+
+Future<void> getPadi() async {
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      await db.delete('padi');
+
+      final Response result = await get(
+        Uri.parse('${ConfigApp().baseUrl}padi'),
+      );
+
+      if (result.statusCode != 200) {
+        throw Exception(
+            "Failed to get padi: ${result.statusCode} - ${result.body}");
+      }
+
+      final Map<String, dynamic> jsonResult = jsonDecode(result.body);
+
+      List<PadiModel> padi = (jsonResult['data'] as List)
+          .map((element) => PadiModel.fromJson(element))
+          .toList();
+
+      Batch batch = db.batch();
+      for (var item in padi) {
+        batch.insert('padi', item.toMap());
+      }
+      await batch.commit(noResult: true);
+      log("get padi sukses");
+    } catch (e) {
+      throw Exception("Failed to save padi to database: $e");
     }
   }
 

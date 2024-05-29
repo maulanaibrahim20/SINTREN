@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/padi_service.dart';
@@ -9,6 +11,7 @@ import 'package:sintren_mobile/services/palawija_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
@@ -20,6 +23,8 @@ class HistoriPenyuluhanView extends StatefulWidget {
 
 class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
   final userC = UserController();
+  late List<DesaModel> desaList;
+  late DesaModel? selectedDesaValue;
 
   Future<void> _synchronizeData() async {
     await UserService().getDataPenyuluhanDesa();
@@ -30,7 +35,13 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
 
   @override
   void initState() {
+    _initializeData();
     super.initState();
+  }
+
+  Future<void> _initializeData() async {
+    desaList = await PadiController().getDesa();
+    selectedDesaValue = null;
   }
 
   @override
@@ -58,9 +69,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
               color: ColorTheme().whiteColor,
             ),
             onPressed: () {
-              setState(
-                () {},
-              );
+              _filter(context);
             },
           ),
         ],
@@ -145,9 +154,18 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: historiList.length,
+                itemCount: (selectedDesaValue == null)
+                    ? historiList.length
+                    : historiList
+                        .where((desa) => desa.desaId == selectedDesaValue!.id)
+                        .length,
                 itemBuilder: (BuildContext context, int index) {
-                  HistoriPenyuluhanModel desa = historiList[index];
+                  var displayList = (selectedDesaValue == null)
+                      ? historiList
+                      : historiList
+                          .where((desa) => desa.desaId == selectedDesaValue!.id)
+                          .toList();
+                  HistoriPenyuluhanModel desa = displayList[index];
                   return GestureDetector(
                     onTap: () async {
                       await Navigator.push(
@@ -259,6 +277,90 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
           }
         },
       ),
+    );
+  }
+
+  void _filter(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final formKeyUP = GlobalKey<FormState>();
+        return Form(
+          key: formKeyUP,
+          child: AlertDialog(
+            surfaceTintColor: ColorTheme().whiteColor,
+            title: const Column(
+              children: [
+                Text('Filter Desa'),
+                Divider(),
+              ],
+            ),
+            content: DropdownButtonComponent(
+              icon: Icons.villa,
+              label: 'Desa',
+              selectedItem: selectedDesaValue,
+              items: desaList.map((desa) {
+                return DropdownMenuItem<DesaModel>(
+                  value: desa,
+                  child: Text(UserController().toCamelCase(desa.name)),
+                );
+              }).toList(),
+              hint: 'Pilih Desa',
+              validator: (value) =>
+                  value == null ? 'Pilih desa terlebih dahulu' : null,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedDesaValue = newValue;
+                });
+              },
+              onSaved: (newValue) {
+                setState(() {
+                  selectedDesaValue = newValue!;
+                });
+              },
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKeyUP.currentState!.validate()) {
+                        setState(() {
+                          selectedDesaValue = null;
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorTheme().primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        fixedSize:
+                            Size(MediaQuery.of(context).size.width * 0.27, 50)),
+                    child: Text("Reset", style: StyleTheme().styleWhite),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        fixedSize:
+                            Size(MediaQuery.of(context).size.width * 0.27, 50)),
+                    child: Text(
+                      'Tutup',
+                      style: StyleTheme().styleBlack,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

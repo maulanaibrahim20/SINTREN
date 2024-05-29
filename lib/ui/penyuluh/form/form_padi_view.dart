@@ -5,6 +5,7 @@ import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
+import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -27,12 +28,13 @@ class _FormPadiViewState extends State<FormPadiView> {
   final padiC = PadiController();
   late List<DesaModel> desaList;
   late List<PengairanModel> pengiranList;
+  late List<PadiModel> padiList;
   bool _isLoading = true;
   late String selectedJenisLahanValue;
   late String selectedBantuanValue;
   late PengairanModel? selectedJenisPengairanValue;
   late DesaModel? selectedDesaValue;
-  late String selectedJenisPadiValue;
+  late PadiModel? selectedJenisPadiValue;
   late String selectedTipeDataValue;
   TextEditingController value = TextEditingController();
   TextEditingController date = TextEditingController();
@@ -46,6 +48,7 @@ class _FormPadiViewState extends State<FormPadiView> {
   Future<void> _initializeData() async {
     desaList = await padiC.getDesa();
     pengiranList = await padiC.getPengairan();
+    padiList = await padiC.getPadi();
     setState(() {
       if (widget.detail != null) {
         value.text = widget.detail!.nilai.toString();
@@ -54,7 +57,8 @@ class _FormPadiViewState extends State<FormPadiView> {
             DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
         selectedBantuanValue = widget.detail!.jenisBantuan;
         selectedJenisLahanValue = widget.detail!.jenisLahan;
-        selectedJenisPadiValue = widget.detail!.jenisPadi;
+        selectedJenisPadiValue = PadiModel(
+            id: widget.detail!.idJenisPadi, name: widget.detail!.padiName);
         selectedTipeDataValue = widget.detail!.tipeData;
         selectedJenisPengairanValue = PengairanModel(
             id: widget.detail!.idJenisPengairan,
@@ -64,7 +68,7 @@ class _FormPadiViewState extends State<FormPadiView> {
         selectedBantuanValue = '';
         selectedJenisPengairanValue = null;
         selectedDesaValue = null;
-        selectedJenisPadiValue = '';
+        selectedJenisPadiValue = null;
         selectedTipeDataValue = '';
       }
       _isLoading = false;
@@ -127,27 +131,34 @@ class _FormPadiViewState extends State<FormPadiView> {
                 "desa_id": selectedDesaValue!.id,
                 "jenis_lahan": selectedJenisLahanValue,
                 "jenis_bantuan": selectedBantuanValue,
-                "jenis_padi": selectedJenisPadiValue,
+                "id_jenis_padi": selectedJenisPadiValue!.id,
                 "date": date.text,
-                "id_jenis_pengairan": selectedJenisPengairanValue?.id,
+                "id_jenis_pengairan": selectedJenisPengairanValue!.id,
                 "tipe_data": selectedTipeDataValue,
                 "nilai": value.text,
               };
               if (widget.onCreate) {
-                padiC.store(data).then((value) => Navigator.pushAndRemoveUntil(
+                padiC.store(data).then((value) {
+                  if (value) {
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (context) => DetailPenyuluhanView(
                                 index: 0,
                                 date: date.text.substring(0, 7),
                                 desaId: selectedDesaValue!.id,
+                                desaName: selectedDesaValue!.name,
                               )),
                       (Route<dynamic> route) => route.isFirst,
-                    ));
+                    );
+                  }
+                });
               } else {
-                padiC
-                    .update(widget.detail!.id.toString(), data)
-                    .then((value) => Navigator.pop(context));
+                padiC.update(widget.detail!.id.toString(), data).then((value) {
+                  if (value) {
+                    Navigator.pop(context);
+                  }
+                });
               }
             }
           },
@@ -234,7 +245,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           (value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(UserController().toCamelCase(value)),
                             );
                           },
                         ).toList(),
@@ -254,7 +265,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      if (selectedJenisLahanValue == 'Lahan Non-Sawah') ...[
+                      if (selectedJenisLahanValue == 'non sawah') ...[
                         const SizedBox.shrink()
                       ] else ...[
                         DropdownButtonComponent(
@@ -288,17 +299,14 @@ class _FormPadiViewState extends State<FormPadiView> {
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Padi",
-                        selectedItem: selectedJenisPadiValue.isEmpty
-                            ? null
-                            : selectedJenisPadiValue,
-                        items: padiC.jenisPadi.map(
-                          (value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          },
-                        ).toList(),
+                        selectedItem: selectedJenisPadiValue,
+                        items: padiList.map((padi) {
+                          return DropdownMenuItem<PadiModel>(
+                            value: padi,
+                            child:
+                                Text(UserController().toCamelCase(padi.name)),
+                          );
+                        }).toList(),
                         hint: "Pilih Jenis Padi",
                         validator: (value) => value == null
                             ? "Pilih jenis padi terlebih dahulu"
@@ -325,7 +333,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           (value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(UserController().toCamelCase(value)),
                             );
                           },
                         ).toList(),

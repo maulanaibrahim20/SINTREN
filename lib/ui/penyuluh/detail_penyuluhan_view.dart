@@ -28,13 +28,13 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
     const Tab(text: 'Palawija'),
   ];
 
-  bool isSearchOpen = false;
-
   late TabController _tabController =
       TabController(length: tabs.length, vsync: this);
 
   @override
   void initState() {
+    setState(() {
+    });
     super.initState();
     _tabController = TabController(
       length: tabs.length,
@@ -50,74 +50,30 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
         elevation: 0,
         centerTitle: false,
         foregroundColor: ColorTheme().whiteColor,
-        automaticallyImplyLeading: isSearchOpen ? false : true,
         flexibleSpace: Container(
           decoration: BoxDecoration(gradient: ColorTheme().linearColor),
         ),
-        title: isSearchOpen
-            ? PreferredSize(
-                preferredSize: const Size.fromHeight(60.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isSearchOpen = false;
-                        });
-                      },
-                    ),
-                    hintText: 'Cari berdasarkan desa/tanggal...',
-                    filled: true,
-                    fillColor: ColorTheme().whiteColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                ),
-              )
-            : Text(
-                'Histori Penyuluhan',
-                style: StyleTheme().styleWhite.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
+        title: Text(
+          'Histori Penyuluhan',
+          style: StyleTheme().styleWhite.copyWith(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
+        ),
         actions: [
-          isSearchOpen
-              ? const SizedBox.shrink()
-              : IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    color: ColorTheme().whiteColor,
-                  ),
-                  onPressed: () {
-                    setState(
-                      () {
-                        isSearchOpen = true;
-                      },
-                    );
-                  },
-                ),
+          IconButton(
+            icon: Icon(
+              Icons.refresh_rounded,
+              color: ColorTheme().whiteColor,
+            ),
+            onPressed: () {
+              setState(
+                () {},
+              );
+            },
+          ),
         ],
         backgroundColor: ColorTheme().primaryColor,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: ColorTheme().primaryColor,
-        foregroundColor: ColorTheme().whiteColor,
-        child: const Icon(
-          Icons.filter_list,
-        ),
       ),
       body: Container(
         color: ColorTheme().bgColor,

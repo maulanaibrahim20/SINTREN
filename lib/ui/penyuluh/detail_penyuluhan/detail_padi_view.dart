@@ -27,6 +27,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
 
   @override
   void initState() {
+    setState(() {});
     super.initState();
   }
 
@@ -189,7 +190,8 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text('Lahan: $jenisLahan'),
+                                                  Text(
+                                                      'Lahan: ${UserController().toCamelCase(jenisLahan)}'),
                                                   Text(lahanData.total
                                                       .toString()),
                                                 ],
@@ -208,7 +210,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                          'Bantuan: $jenisBantuan'),
+                                                          'Bantuan: ${UserController().toCamelCase(jenisBantuan)}'),
                                                       Text(bantuanData.total
                                                           .toString()),
                                                     ],
@@ -434,7 +436,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          data.jenisPadi,
+                                          data.padiName,
                                           style: StyleTheme()
                                               .styleBlack
                                               .copyWith(
@@ -446,7 +448,8 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              data.jenisBantuan,
+                                              UserController().toCamelCase(
+                                                  data.jenisBantuan),
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(
@@ -460,7 +463,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              data.jenisLahan,
+                                              'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(

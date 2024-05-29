@@ -5,7 +5,8 @@ class DetailPadiModel {
   final String desaName;
   final String kecamatanId;
   final String jenisLahan;
-  final String jenisPadi;
+  final String idJenisPadi;
+  final String padiName;
   final String jenisBantuan;
   final String idJenisPengairan;
   final String pengairanName;
@@ -21,7 +22,8 @@ class DetailPadiModel {
     required this.desaId,
     required this.kecamatanId,
     required this.jenisLahan,
-    required this.jenisPadi,
+    required this.idJenisPadi,
+    required this.padiName,
     required this.jenisBantuan,
     required this.idJenisPengairan,
     required this.tipeData,
@@ -37,12 +39,13 @@ class DetailPadiModel {
       kecamatanId: json['kecamatan_id'],
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPengairan: json['id_jenis_pengairan'].toString(),
       tipeData: json['tipe_data'],
       nilai: json['nilai'],
       desaName: json['desa']['name'],
+      idJenisPengairan: json['id_jenis_pengairan'].toString(),
       pengairanName: json['pengairan'] == null ? '' : json['pengairan']['name'],
-      jenisPadi: json['jenis_padi'],
+      idJenisPadi: json['id_jenis_padi'].toString(),
+      padiName: json['padi'] == null ? '' : json['padi']['name'],
       date: json['date'],
     );
   }
@@ -55,12 +58,13 @@ class DetailPadiModel {
       kecamatanId: json['kecamatan_id'],
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPengairan: json['id_jenis_pengairan'].toString(),
       tipeData: json['tipe_data'],
       nilai: json['nilai'],
       desaName: json['desa_name'],
+      idJenisPengairan: json['id_jenis_pengairan'].toString(),
       pengairanName: json['pengairan_name'],
-      jenisPadi: json['jenis_padi'],
+      idJenisPadi: json['id_jenis_padi'].toString(),
+      padiName: json['padi_name'],
       date: json['date'],
     );
   }
@@ -73,7 +77,8 @@ class DetailPadiModel {
       'desa_name': desaName,
       'kecamatan_id': kecamatanId,
       'jenis_lahan': jenisLahan,
-      'jenis_padi': jenisPadi,
+       'id_jenis_padi': idJenisPadi,
+      'padi_name': padiName,
       'jenis_bantuan': jenisBantuan,
       'id_jenis_pengairan': idJenisPengairan,
       'pengairan_name': pengairanName,

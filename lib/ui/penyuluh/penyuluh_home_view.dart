@@ -36,6 +36,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
 
   @override
   void initState() {
+    setState(() {});
     super.initState();
     desa = Future.value([]);
     _initializeData();
@@ -46,9 +47,11 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () {
           EasyLoading.show(status: "Sinkronisasi Data");
           userC.synchronizeData();
+          setState(() {});
           EasyLoading.dismiss();
         },
         backgroundColor: ColorTheme().primaryColor,

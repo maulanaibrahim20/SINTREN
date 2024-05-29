@@ -25,8 +25,6 @@ class UserService {
         body: jsonEncode(data),
       );
 
-      log("Result body => ${result.body}");
-
       if (result.statusCode != 200) {
         return false;
       }
@@ -46,7 +44,7 @@ class UserService {
         ..setKecamatanId(detail['kecamatan_id'].toString())
         ..setAddress(detail['alamat'])
         ..setPhone(detail['no_telp']);
-
+      log("Login berhasil");
       return true;
     } catch (e) {
       EasyLoading.showToast("Internal Server Error");

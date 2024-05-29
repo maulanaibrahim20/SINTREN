@@ -1,22 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
+import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/padi_service.dart';
 
 class PadiController {
-  List<String> jenisLahan = ["Lahan Sawah", "Lahan Non-Sawah"];
-  List<String> bantuan = ["Bantuan Pemerintah", "Bantuan Non-Pemerintah"];
+  List<String> jenisLahan = ["sawah", "non sawah"];
+  List<String> bantuan = ["bantuan pemerintah", "non bantuan pemerintah"];
   List<String> tipeData = ["panen", "tanam", "puso/rusak"];
-  List<String> jenisPadi = [
-    "Hibrida",
-    "Inhibrida",
-  ];
 
-  Future<void> store(Map<String, dynamic> map) async {
+  Future<bool> store(Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
     final id = await UserLoginModel().getUserId();
     final kecamatanId = await UserLoginModel().getKecamatanId();
@@ -26,7 +25,7 @@ class PadiController {
       "kecamatan_id": kecamatanId,
       "jenis_lahan": map['jenis_lahan'],
       "jenis_bantuan": map['jenis_bantuan'],
-      "jenis_padi": map['jenis_padi'],
+      "id_jenis_padi": map['id_jenis_padi'],
       "date": map['date'],
       "id_jenis_pengairan": map['jenis_lahan'] == 'Lahan Non-Sawah'
           ? null
@@ -35,17 +34,21 @@ class PadiController {
       "nilai": map['nilai'],
     };
 
+    log(data.toString());
+
     final result = await PadiService().store(data);
 
     if (!result) {
       EasyLoading.showToast("Gagal menyimpan data");
+      return false;
     } else {
       EasyLoading.dismiss();
       EasyLoading.showToast("Berhasil menyimpan data");
+      return true;
     }
   }
 
-  Future<void> update(String dataId, Map<String, dynamic> map) async {
+  Future<bool> update(String dataId, Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
     final id = await UserLoginModel().getUserId();
     final kecamatanId = await UserLoginModel().getKecamatanId();
@@ -55,7 +58,7 @@ class PadiController {
       "kecamatan_id": kecamatanId,
       "jenis_lahan": map['jenis_lahan'],
       "jenis_bantuan": map['jenis_bantuan'],
-      "jenis_padi": map['jenis_padi'],
+      "id_jenis_padi": map['id_jenis_padi'],
       "date": map['date'],
       "id_jenis_pengairan": map['jenis_lahan'] == 'Lahan Non-Sawah'
           ? null
@@ -68,6 +71,7 @@ class PadiController {
 
     if (!result) {
       EasyLoading.showToast("Gagal mengupdate data");
+      return false;
     } else {
       final db = await PenyuluhDatabaseHelper().database;
 
@@ -82,6 +86,7 @@ class PadiController {
       );
       EasyLoading.dismiss();
       EasyLoading.showToast("Berhasil mengupdate data");
+      return true;
     }
   }
 
@@ -109,6 +114,13 @@ class PadiController {
 
     return List<PengairanModel>.from(
         maps.map((map) => PengairanModel.fromJson(map)));
+  }
+
+  Future<List<PadiModel>> getPadi() async {
+    final db = await PenyuluhDatabaseHelper().database;
+    final List<Map<String, dynamic>> maps = await db.query('padi');
+
+    return List<PadiModel>.from(maps.map((map) => PadiModel.fromJson(map)));
   }
 
   Future<List<DesaModel>> getDesa() async {
@@ -171,7 +183,7 @@ class PadiController {
     // Aggregate the data
     for (var row in groupedData) {
       groupedByAll
-          .putIfAbsent(row.jenisPadi, () => {})
+          .putIfAbsent(row.padiName, () => {})
           .putIfAbsent(row.jenisLahan, () => {})
           .putIfAbsent(row.jenisBantuan, () => {})
           .update(row.tipeData, (value) => value + row.nilai,

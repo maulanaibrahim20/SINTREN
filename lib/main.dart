@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
     await initializeDateFormatting('id_ID', null);
     await UserService().getDataPenyuluhanDesa();
     await PadiService().getPengairan();
+    await PadiService().getPadi();
     await PalawijaService().getPalawija();
     await PadiService().getDetailPadiByUser();
     await PalawijaService().getDetailPalawijaByUser();

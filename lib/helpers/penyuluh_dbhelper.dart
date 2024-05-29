@@ -43,6 +43,12 @@ class PenyuluhDatabaseHelper {
         name TEXT
       )
     ''');
+    await db.execute('''
+      CREATE TABLE padi (
+        id TEXT PRIMARY KEY,
+        name TEXT
+      )
+    ''');
      await db.execute('''
       CREATE TABLE palawija (
         id TEXT PRIMARY KEY,
@@ -57,7 +63,8 @@ class PenyuluhDatabaseHelper {
         desa_name TEXT,
         kecamatan_id TEXT,
         jenis_lahan TEXT,
-        jenis_padi TEXT,
+        id_jenis_padi TEXT,
+        padi_name TEXT,
         jenis_bantuan TEXT,
         id_jenis_pengairan TEXT,
         pengairan_name TEXT,

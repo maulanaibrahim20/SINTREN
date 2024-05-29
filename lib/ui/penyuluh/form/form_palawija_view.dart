@@ -122,22 +122,29 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                 "nilai": value.text
               };
               if (widget.onCreate) {
-                palawijaC
-                    .store(data)
-                    .then((value) => Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DetailPenyuluhanView(
-                                    index: 1,
-                                    date: date.text.substring(0, 7),
-                                    desaId: selectedDesaValue!.id,
-                                  )),
-                          (Route<dynamic> route) => route.isFirst,
-                        ));
+                palawijaC.store(data).then((value) {
+                  if (value) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DetailPenyuluhanView(
+                                index: 1,
+                                date: date.text.substring(0, 7),
+                                desaId: selectedDesaValue!.id,
+                                desaName: selectedDesaValue!.name,
+                              )),
+                      (Route<dynamic> route) => route.isFirst,
+                    );
+                  }
+                });
               } else {
                 palawijaC
                     .update(widget.detail!.id.toString(), data)
-                    .then((value) => Navigator.pop(context));
+                    .then((value) {
+                  if (value) {
+                    Navigator.pop(context);
+                  }
+                });
               }
             }
           },

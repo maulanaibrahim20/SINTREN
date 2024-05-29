@@ -28,6 +28,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
 
   @override
   void initState() {
+    setState(() {});
     super.initState();
   }
 
@@ -184,7 +185,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text('Lahan: $jenisLahan'),
+                                                  Text('Lahan: ${UserController().toCamelCase(jenisLahan)}'),
                                                   Text(lahanData.total
                                                       .toString()),
                                                 ],
@@ -203,7 +204,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                          'Bantuan: $jenisBantuan'),
+                                                          'Bantuan: ${UserController().toCamelCase(jenisBantuan)}'),
                                                       Text(bantuanData.total
                                                           .toString()),
                                                     ],
@@ -386,7 +387,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              data.jenisBantuan,
+                                              UserController().toCamelCase(data.jenisBantuan),
                                               style: StyleTheme().styleBlack,
                                             ),
                                             Text(
@@ -400,7 +401,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              data.jenisLahan,
+                                              "Lahan ${UserController().toCamelCase(data.jenisLahan)}",
                                               style: StyleTheme().styleBlack,
                                             ),
                                           ],
