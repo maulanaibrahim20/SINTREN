@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Operator\Padi;
+use App\Models\Operator\TanamanPadi;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
-use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -25,7 +24,7 @@ class PadiController extends Controller
 
     public function getPadi()
     {
-        $pengairan = Padi::all();
+        $pengairan = TanamanPadi::all();
         $responseData = [
             'status' => 'success',
             'message' => 'Get data successful',
@@ -90,7 +89,7 @@ class PadiController extends Controller
             'desa_id' => 'required|string',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'jenis_padi' => 'required|string|max:255',
+            'id_jenis_padi' => 'required|integer',
             'date' => 'required|string|max:255',
             'id_jenis_pengairan' => 'integer|nullable',
             'tipe_data' => 'required|string|max:255',
@@ -134,7 +133,7 @@ class PadiController extends Controller
             'date' => 'required|string|max:255',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'jenis_padi' => 'required|string|max:255',
+            'id_jenis_padi' => 'required|string|max:255',
             'id_jenis_pengairan' => 'integer|nullable',
             'tipe_data' => 'required|string|max:255',
             'nilai' => 'required|numeric',

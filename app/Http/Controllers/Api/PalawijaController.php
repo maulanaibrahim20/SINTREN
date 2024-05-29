@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Operator\TanamanPalawija;
 use App\Models\Penyuluh\JenisPalawija;
 use App\Models\Penyuluh\LaporanPalawija;
 use Illuminate\Database\QueryException;
@@ -12,7 +13,7 @@ class PalawijaController extends Controller
 {
     public function getJenisPalawija()
     {
-        $pengairan = JenisPalawija::all();
+        $pengairan = TanamanPalawija::all();
         $responseData = [
             'status' => 'success',
             'message' => 'Get data successful',
