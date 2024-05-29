@@ -36,15 +36,18 @@ class UptdAkunPenyuluhController extends Controller
             'button_create' => 'Tambah Penyuluh',
             'title_create' => 'Tambah Penyuluh',
         ];
+
         $penyuluh = $this->penyuluh::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get();
-        $userIds = $penyuluh->pluck('user_id');
+        $userIds = $penyuluh->pluck('user_id')->toArray();
         $data = [
-            'penyuluh' => $this->penyuluh::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get(),
+            'penyuluh' => $penyuluh,
             'desa' => $this->desa::where('district_id', Auth::user()->uptd->kecamatan->id)->orderBy('name', 'ASC')->get(),
-            'penugasan' =>  $this->penugasan::where('user_id', $userIds)->get(),
+            'penugasan' => $this->penugasan::whereIn('user_id', $userIds)->get(),
         ];
-        return view('uptd.pages.user.penyuluh.index', $content, $data);
+
+        return view('uptd.pages.user.penyuluh.index', array_merge($content, $data));
     }
+
 
     /**
      * Show the form for creating a new resource.

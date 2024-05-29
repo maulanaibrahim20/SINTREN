@@ -11,7 +11,6 @@ use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\Master\WilayahController;
 use App\Http\Controllers\WEB\Operator\User\PertanianController;
 use App\Http\Controllers\WEB\Operator\Master\PengairanController;
-use App\Http\Controllers\WEB\Operator\Tanaman\Kategori\KategoriTanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Operator\User\PanganController;
@@ -65,9 +64,6 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('uptd', UptdController::class);
                 Route::resource('penyuluh', PenyuluhController::class);
                 Route::resource('pangan', PanganController::class);
-            });
-            Route::prefix('kategori')->group(function () {
-                Route::resource('tanaman_palawija', KategoriTanamanPalawijaController::class);
             });
             Route::prefix('tanaman')->group(function () {
                 Route::resource('padi', TanamanPadiController::class);
