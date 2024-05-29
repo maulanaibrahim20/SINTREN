@@ -136,6 +136,7 @@ class UptdAkunPenyuluhController extends Controller
 
     public function penugasan(Request $request)
     {
+        dd($request->all());
         try {
             DB::beginTransaction();
 
