@@ -133,22 +133,6 @@
                                                         class="slide-item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}">Tanaman
                                                         Palawija</a>
                                                 </li>
-
-                                                <li
-                                                    class="sub-slide {{ Request::segment(3) == 'tanaman_palawija' ? 'is-expanded' : '' }}">
-                                                    <a class="sub-side-menu__item {{ Request::segment(3) == 'tanaman_palawija' ? 'active' : '' }} "
-                                                        data-bs-toggle="sub-slide" href="javascript:void(0)"><span
-                                                            class="sub-side-menu__label">Kategori</span><i
-                                                            class="sub-angle fe fe-chevron-right"></i></a>
-                                                    <ul class="sub-slide-menu">
-                                                        <li>
-                                                            <a
-                                                                class="sub-slide-item {{ Request::segment(3) == 'tanaman_palawija' ? 'active' : '' }}"href="{{ url('/operator/kategori/tanaman_palawija') }}">
-                                                                Kategori Palawija
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
                                             </ul>
                                         </div>
                                     </div>

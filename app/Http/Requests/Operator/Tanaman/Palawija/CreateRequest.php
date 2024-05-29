@@ -23,7 +23,6 @@ class CreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'category' => 'required|string',
         ];
     }
 }

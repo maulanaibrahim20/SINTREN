@@ -2,6 +2,7 @@
 
 namespace App\Models\Penyuluh;
 
+use App\Models\Operator\TanamanPalawija;
 use App\Models\User;
 use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
@@ -25,10 +26,10 @@ class LaporanPalawija extends Model
 
     public function palawija()
     {
-        return $this->belongsTo(JenisPalawija::class, 'id_jenis_palawija');
+        return $this->belongsTo(TanamanPalawija::class, 'id_jenis_palawija');
     }
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

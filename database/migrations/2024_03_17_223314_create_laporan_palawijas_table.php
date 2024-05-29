@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('user_id', 50);
             $table->string('desa_id', 50);
             $table->string('kecamatan_id', 25);
-            $table->string('jenis_lahan', 50);
-            $table->string('date',50);
+            $table->enum('jenis_lahan', ['sawah', 'non sawah']);
+            $table->string('date', 50);
             $table->integer('id_jenis_palawija');
-            $table->string('jenis_bantuan', 50);
-            $table->enum('tipe_data', ['panen', 'tanam', 'puso/rusak','panen_muda','panen_hijauan_pakan_ternak']);
-            $table->integer('nilai')->default('0');
+            $table->enum('jenis_bantuan', ['bantuan pemerintah', 'non bantuan pemerintah']);
+            $table->enum('tipe_data', ['panen', 'tanam', 'puso/rusak', 'panen muda', 'panen hijauan pakan ternak']);
+            $table->double('nilai')->default('0');
             $table->timestamps();
         });
     }
