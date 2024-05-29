@@ -53,7 +53,7 @@ Route::middleware(['auth'])->name('web.')->group(function () {
 });
 
 
-Route::middleware(['autentikasi'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::get('ambil_desa', [GetWilayahController::class, 'ambil_desa']);
 
