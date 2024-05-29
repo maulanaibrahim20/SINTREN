@@ -19,9 +19,9 @@ use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
-use App\Http\Controllers\WEB\Uptd\User\UptdAkunPenyuluhController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,7 +53,7 @@ Route::middleware(['auth'])->name('web.')->group(function () {
 });
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['autentikasi'])->group(function () {
 
     Route::get('ambil_desa', [GetWilayahController::class, 'ambil_desa']);
 

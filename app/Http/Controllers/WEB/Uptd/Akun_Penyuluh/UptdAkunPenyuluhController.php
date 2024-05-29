@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\WEB\Uptd\User;
+namespace App\Http\Controllers\WEB\Uptd\Akun_Penyuluh;
 
 use App\Http\Controllers\Controller;
 use App\Models\Penyuluh\Penyuluh;
