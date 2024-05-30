@@ -62,24 +62,22 @@
                                         <td>{{ $data->user->email }}</td>
                                         <td>{{ $data->user->getAkses->name }}</td>
                                         <td>
-                                            @if ($data['penugasan'])
-                                                @foreach ($penugasan as $tugas)
+                                            @if ($data->penugasan->isNotEmpty())
+                                                @foreach ($data->penugasan as $tugas)
                                                     <span class="badge bg-primary">{{ $tugas->desa->name }}</span>
                                                 @endforeach
-                                            @elseif ($data['penugasan'] === null)
-                                                <span class="badge bg-warning">Belum ada penugasan</span>
                                             @else
-                                                <span class="badge bg-danger">Error: penugasan tidak ditemukan</span>
+                                                <span class="badge bg-warning">Belum ada penugasan</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ url('/operator/user/penyuluh/' . encrypt($data->id) . '/edit') }}"
+                                            <a href="{{ url('/uptd/pengguna/penyuluh/' . encrypt($data->id) . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/operator/user/penyuluh/' . encrypt($data->id)) }}"
+                                            <a href="{{ url('/uptd/pengguna/penyuluh/' . encrypt($data->id)) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/operator/user/penyuluh/' . $data->id) }}"
+                                                action="{{ url('/uptd/pengguna/penyuluh/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
@@ -114,35 +112,25 @@
                                 data-placeholder="Pilih Pengguna">
                                 <option value="">-- pilih --</option>
                                 @foreach ($penyuluh as $item)
-                                    <option value="{{ $item->user->id }}">
-                                        {{ $item->user->name }}</option>
+                                    @php
+                                        $disabled = $item->penugasan->isNotEmpty() ? 'disabled' : '';
+                                    @endphp
+                                    <option value="{{ $item->user->id }}" {{ $disabled }}>
+                                        {{ $item->user->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Desa</label>
-                            <select name="desa[]" id="desa" multiple="multiple" class="multi-select"
-                                data-placeholder="Pilih Desa">
+                        <div class="form-group" id="desaFormGroup" style="display: none;">
+                            <label class="form-label">Pilih Desa Penugasan</label>
+                            <select class="form-control select2" name="desa[]" id="desa" data-placeholder="Pilih Desa"
+                                multiple>
                                 @foreach ($desa as $data)
-                                    <option value="{{ $data->id }}">
-                                        {{ $data->name }}</option>
+                                    <option value="{{ $data['id'] }}">{{ $data['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <table class="table table-striped" style="width: 100%">
-                            <tr>
-                                <th> Nama Desa</th>
-                                <th> Action</th>
-                            </tr>
-                            <tbody>
-                                <tr>
-                                    <td>Desa</td>
-                                    <td>
-                                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary br-7">Save changes</button>
@@ -150,7 +138,43 @@
                     </div>
                 </div>
             </form>
-        </div><!-- modal-dialog -->
-    </div><!-- modal -->
+        </div>
+    </div>
+@endsection
 
+@section('script')
+    <script>
+        $(document).ready(function() {
+            // Ketika nilai jenis lahan berubah
+            $('#name').change(function() {
+                // Periksa apakah penyuluh dipilih
+                if ($(this).val()) {
+                    // Tampilkan form group desa
+                    $('#desaFormGroup').show();
+                } else {
+                    // Sembunyikan form group desa
+                    $('#desaFormGroup').hide();
+                }
+            });
+        });
+        $('.deleteBtn').on('click', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var deleteForm = $('#deleteForm' + id);
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Data akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            });
+        });
+    </script>
 @endsection

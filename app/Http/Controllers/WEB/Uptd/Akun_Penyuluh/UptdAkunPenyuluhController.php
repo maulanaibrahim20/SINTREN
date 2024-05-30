@@ -39,14 +39,20 @@ class UptdAkunPenyuluhController extends Controller
 
         $penyuluh = $this->penyuluh::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get();
         $userIds = $penyuluh->pluck('user_id')->toArray();
+        $penugasan = $this->penugasan::whereIn('user_id', $userIds)->get();
+
+        $penyuluh->each(function ($p) use ($penugasan) {
+            $p->penugasan = $penugasan->where('user_id', $p->user_id);
+        });
+
         $data = [
             'penyuluh' => $penyuluh,
             'desa' => $this->desa::where('district_id', Auth::user()->uptd->kecamatan->id)->orderBy('name', 'ASC')->get(),
-            'penugasan' => $this->penugasan::whereIn('user_id', $userIds)->get(),
         ];
 
         return view('uptd.pages.user.penyuluh.index', array_merge($content, $data));
     }
+
 
 
     /**
@@ -85,7 +91,6 @@ class UptdAkunPenyuluhController extends Controller
             $this->penyuluh->create([
                 'user_id' => $user['id'],
                 'kecamatan_id' => $kecamatanId,
-                'desa_id' => $request['desa'],
                 'alamat' => $request['alamat'],
                 'no_telp' => $request['no_telp'],
                 'createdBy' => Auth::user()->id,
@@ -107,7 +112,15 @@ class UptdAkunPenyuluhController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $content = [
+            'title' => 'Detail Penyuluh',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Akun Penyuluh',
+            'breadcrumb_active' => 'Detail Penyuluh',
+        ];
+        $data['show'] = $this->penyuluh::findOrFail(decrypt($id));
+        $data['penugasan'] = $this->penugasan::where('user_id', $data['show']->user_id)->get();
+        return view('uptd.pages.user.penyuluh.show', $data, $content);
     }
 
     /**
@@ -115,15 +128,44 @@ class UptdAkunPenyuluhController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $content = [
+            'title_1' => 'Edit Desa Penugasan Penyuluh',
+            'title' => 'Edit Akun Penyuluh',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_1' => 'Akun Penyuluh',
+            'breadcrumb_active' => 'Edit Akun Penyuluh',
+        ];
+        $data['edit'] = $this->penyuluh::findOrFail(decrypt($id));
+        $data['penugasan'] = $this->penugasan::where('user_id', $data['edit']->user_id)->get();
+        $data['desa'] = $this->desa::where('district_id', Auth::user()->uptd->kecamatan->id)->orderBy('name', 'ASC')->get();
+        $data['assigned_desa_ids'] = $data['penugasan']->pluck('desa_id')->toArray();
+        return view('uptd.pages.user.penyuluh.update', $data, $content);
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $penyuluh = $this->penyuluh::findOrFail($id);
+            $penyuluh->update([
+                'alamat' => $request['alamat'],
+                'no_telp' => $request['no_telp'],
+            ]);
+            $penyuluh->user->update([
+                'name' => $request->name,
+                'username' => Str::slug($request['name']),
+                'email' => $request['email'],
+            ]);
+            DB::commit();
+            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Data penyuluh berhasil diubah!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Data penyuluh gagal diubah!' . $e->getMessage());
+        }
     }
 
     /**
@@ -131,12 +173,21 @@ class UptdAkunPenyuluhController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $penyuluh = $this->penyuluh::findOrFail($id);
+            $penyuluh->delete();
+            $penyuluh->user->delete();
+            DB::commit();
+            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Data penyuluh berhasil dihapus!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Data penyuluh gagal dihapus!' . $e->getMessage());
+        }
     }
 
     public function penugasan(Request $request)
     {
-        dd($request->all());
         try {
             DB::beginTransaction();
 
@@ -154,6 +205,31 @@ class UptdAkunPenyuluhController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Error Terjadi Kesalahan' . $e->getMessage());
+        }
+    }
+
+    public function updatePenugasan(Request $request, $user_id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Menghapus penugasan lama
+            $this->penugasan::where('user_id', $user_id)->delete();
+
+            // Menambahkan penugasan baru
+            $array_desa = $request->penugasan;
+            foreach ($array_desa as $desa_id) {
+                $this->penugasan->create([
+                    'desa_id' => $desa_id,
+                    'user_id' => $user_id, // Menggunakan $user_id yang diterima dari URL
+                ]);
+            }
+
+            DB::commit();
+            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Penugasan Untuk Penyuluh Berhasil Diubah!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error: Terjadi Kesalahan - ' . $e->getMessage());
         }
     }
 }

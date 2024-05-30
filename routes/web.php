@@ -90,6 +90,7 @@ Route::middleware(['autentikasi'])->group(function () {
         Route::prefix('uptd')->group(function () {
             Route::resource('pengguna/penyuluh', UptdAkunPenyuluhController::class);
             Route::post('pengguna/penyuluh/penugasan', [UptdAkunPenyuluhController::class, 'penugasan']);
+            Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);

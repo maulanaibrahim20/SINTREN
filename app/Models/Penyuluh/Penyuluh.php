@@ -32,6 +32,10 @@ class Penyuluh extends Model
 
     public function penugasan()
     {
-        return $this->belongsTo(PenugasanPenyuluh::class, 'user_id', 'user_id');
+        return $this->belongsTo(PenugasanPenyuluh::class, 'user_id',);
+    }
+    public function createBy()
+    {
+        return $this->belongsTo(User::class, 'createdBy');
     }
 }
