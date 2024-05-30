@@ -43,7 +43,7 @@ class LuasLahanWilayahController extends Controller
             'title' => 'Table Luas Lahan Wilayah',
         ];
         $data = [
-            'kecamatan' => $this->kecamatan::all(),
+            'kecamatan' => $this->kecamatan::orderBy('name', 'asc')->get(),
         ];
         return view('operator.pages.master.luas_lahan_wilayah.create', $content, $data);
     }

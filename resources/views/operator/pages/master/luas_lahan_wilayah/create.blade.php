@@ -35,12 +35,12 @@
                         @csrf
                         <div class="form-row">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
-                                <label class="form-label">Lahan Sawah</label>
+                                <label class="form-label">Luas Lahan Sawah</label>
                                 <input type="number" class="form-control" name="lahan_sawah"
                                     value="{{ old('lahan_sawah') }}" required>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
-                                <label class="form-label">Luas Lahan</label>
+                                <label class="form-label">Luas Lahan Non Sawah</label>
                                 <input type="number" class="form-control" name="lahan_non_sawah"
                                     value="{{ old('lahan_non_sawah') }}" required>
                             </div>
