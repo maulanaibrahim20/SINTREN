@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\WEB\Uptd\Akun_Penyuluh;
 
 use App\Http\Controllers\Controller;
+use App\Models\Penyuluh\LuasLahanWilayah;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Role;
 use App\Models\User;
@@ -15,7 +16,7 @@ use Illuminate\Support\Str;
 
 class UptdAkunPenyuluhController extends Controller
 {
-    protected $user, $penyuluh, $desa, $penugasan;
+    protected $user, $penyuluh, $desa, $penugasan, $luasLahanWilayah;
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class UptdAkunPenyuluhController extends Controller
         $this->penyuluh = new Penyuluh();
         $this->desa = new Desa();
         $this->penugasan = new PenugasanPenyuluh();
+        $this->luasLahanWilayah = new LuasLahanWilayah();
     }
     /**
      * Display a listing of the resource.
@@ -47,9 +49,8 @@ class UptdAkunPenyuluhController extends Controller
 
         $data = [
             'penyuluh' => $penyuluh,
-            'desa' => $this->desa::where('district_id', Auth::user()->uptd->kecamatan->id)->orderBy('name', 'ASC')->get(),
+            'desa' => $this->luasLahanWilayah::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get(),
         ];
-
         return view('uptd.pages.user.penyuluh.index', array_merge($content, $data));
     }
 
@@ -137,7 +138,7 @@ class UptdAkunPenyuluhController extends Controller
         ];
         $data['edit'] = $this->penyuluh::findOrFail(decrypt($id));
         $data['penugasan'] = $this->penugasan::where('user_id', $data['edit']->user_id)->get();
-        $data['desa'] = $this->desa::where('district_id', Auth::user()->uptd->kecamatan->id)->orderBy('name', 'ASC')->get();
+        $data['desa'] = $this->luasLahanWilayah::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get();
         $data['assigned_desa_ids'] = $data['penugasan']->pluck('desa_id')->toArray();
         return view('uptd.pages.user.penyuluh.update', $data, $content);
     }

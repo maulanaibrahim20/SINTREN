@@ -72,9 +72,9 @@
                             <select multiple class="form-control select2-show-search form-select"
                                 data-placeholder="Choose one" name="penugasan[]">
                                 @foreach ($desa as $d)
-                                    <option value="{{ $d->id }}"
-                                        {{ in_array($d->id, $assigned_desa_ids) ? 'selected' : '' }}>
-                                        {{ $d->name }}
+                                    <option value="{{ $d['getDesa']['id'] }}"
+                                        {{ in_array($d['getDesa']['id'], $assigned_desa_ids) ? 'selected' : '' }}>
+                                        {{ $d['getDesa']['name'] }}
                                     </option>
                                 @endforeach
                             </select>

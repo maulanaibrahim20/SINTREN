@@ -19,9 +19,4 @@ class PenugasanPenyuluh extends Model
     {
         return $this->belongsTo(Desa::class, 'desa_id');
     }
-
-    // public function penyuluh()
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
 }
