@@ -21,6 +21,7 @@ use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
@@ -83,6 +84,9 @@ Route::middleware(['autentikasi'])->group(function () {
     Route::group(['middleware' => ['can:pertanian']], function () {
         Route::prefix('pertanian')->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'pertanian']);
+            Route::prefix('prediksi')->group(function () {
+                Route::get('/padi', [PrediksiPadiController::class, 'index']);
+            });
         });
     });
 
