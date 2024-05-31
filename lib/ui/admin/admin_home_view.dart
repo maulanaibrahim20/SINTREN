@@ -2,11 +2,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:sintren_mobile/controllers/admin/admin_home_controller.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/admin/components/home_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
+import 'package:sintren_mobile/ui/users/change_password_view.dart';
+import 'package:sintren_mobile/ui/users/change_profile_view.dart';
 
 class AdminHomeView extends StatefulWidget {
   const AdminHomeView({super.key});
@@ -16,7 +18,7 @@ class AdminHomeView extends StatefulWidget {
 }
 
 class _AdminHomeViewState extends State<AdminHomeView> {
-  final homeC = AdminHomeController();
+  final userC = UserController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,21 +61,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                       ),
                       onSelected: (String value) {
                         if (value == "1") {
-                          // showDialog(
-                          //           context: context,
-                          //           builder: (BuildContext context) {
-                          //             return UpdateProfileDialog();
-                          //           },
-                          //         );
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => const ChangeProfileView()));
                         } else if (value == "2") {
-                          // showDialog(
-                          //           context: context,
-                          //           builder: (BuildContext context) {
-                          //             return ChangePasswordDialog();
-                          //           },
-                          //         );
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => const ChangePasswordView()));
                         } else {
-                          homeC.logout().then((value) {
+                          userC.logout().then((value) {
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(

@@ -129,11 +129,14 @@ class _FormPadiViewState extends State<FormPadiView> {
             if (formKey.currentState!.validate()) {
               final data = {
                 "desa_id": selectedDesaValue!.id,
+                "desa_name": selectedDesaValue!.name,
                 "jenis_lahan": selectedJenisLahanValue,
                 "jenis_bantuan": selectedBantuanValue,
                 "id_jenis_padi": selectedJenisPadiValue!.id,
+                "padi_name": selectedJenisPadiValue!.name,
                 "date": date.text,
-                "id_jenis_pengairan": selectedJenisPengairanValue!.id,
+                "id_jenis_pengairan": selectedJenisPengairanValue?.id,
+                "pengairan_name": selectedJenisPengairanValue?.name,
                 "tipe_data": selectedTipeDataValue,
                 "nilai": value.text,
               };
@@ -218,6 +221,8 @@ class _FormPadiViewState extends State<FormPadiView> {
                       ),
                       const SizedBox(height: 10),
                       TextFormFieldComponent(
+                        style: StyleTheme().styleBlack.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: 15),
                         readOnly: true,
                         icon: Icons.date_range_rounded,
                         hint: "Pilih Tanggal",
@@ -384,10 +389,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       ),
                       const SizedBox(height: 10),
                       TextFormFieldComponent(
-                        controller: value = TextEditingController(
-                            text: widget.detail == null
-                                ? ""
-                                : widget.detail!.nilai.toString()),
+                        controller: value,
                         icon: Icons.numbers,
                         hint: "Masukkan Nilai",
                         label: "Nilai",
@@ -401,6 +403,10 @@ class _FormPadiViewState extends State<FormPadiView> {
                             value.text = value!;
                           });
                         },
+                        style: StyleTheme().styleBlack.copyWith(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
                       ),
                     ],
                   ),

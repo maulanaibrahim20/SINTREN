@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
@@ -10,6 +13,12 @@ import 'package:sintren_mobile/services/palawija_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
 
 class UserController {
+  Future<void> logout() async {
+    EasyLoading.show(status: "Loading...");
+    await UserLoginModel().clearPreferences();
+    EasyLoading.dismiss();
+  }
+
   String toCamelCase(String input) {
     if (input.isEmpty) {
       return input;
@@ -29,215 +38,258 @@ class UserController {
   Future<String> login(
       {required String username, required String password}) async {
     EasyLoading.show(status: "Loading...");
-    final result = await UserService().login(
-      username: username,
-      password: password,
-    );
-    EasyLoading.dismiss();
-    if (!result) {
-      EasyLoading.showToast("Login gagal");
+    try {
+      final bool result = await UserService().login(
+        username: username,
+        password: password,
+      );
+
+      if (!result) {
+        EasyLoading.showToast("Login gagal");
+        return "";
+      }
+
+      await Future.wait([
+        PadiService().getPengairan(),
+        PadiService().getPadi(),
+        PalawijaService().getPalawija(),
+        UserService().getDataPenyuluhanDesa(),
+        PadiService().getDetailPadiByUser(),
+        PalawijaService().getDetailPalawijaByUser(),
+      ]);
+
+      final String? role = await UserLoginModel().getRole();
+      EasyLoading.dismiss();
+      return role ?? "";
+    } catch (e) {
+      EasyLoading.dismiss();
+      EasyLoading.showToast("Internal Server Error");
+      log("Login error: $e");
+      return "";
     }
-
-    await UserService().getDataPenyuluhanDesa();
-    await PadiService().getPengairan();
-    await PalawijaService().getPalawija();
-    await PadiService().getDetailPadiByUser();
-    await PalawijaService().getDetailPalawijaByUser();
-
-    final role = await UserLoginModel().getRole();
-    return role ?? "";
   }
 
   Future<void> updateProfil(Map<String, dynamic> newData) async {
     EasyLoading.show(status: "Loading...");
-    final id = await UserLoginModel().getUserId();
-    final data = {
-      "name": newData['name'],
-      "email": newData['email'],
-      "username": newData['username'],
-      "alamat": newData['address'],
-      "no_telp": newData['phone']
-    };
+    try {
+      final String? id = await UserLoginModel().getUserId();
+      final Map<String, dynamic> data = {
+        "name": newData['name'],
+        "email": newData['email'],
+        "username": newData['username'],
+        "alamat": newData['address'],
+        "no_telp": newData['phone']
+      };
 
-    final result =
-        await UserService().updateProfile(id: id.toString(), data: data);
+      final bool result =
+          await UserService().updateProfile(id: id.toString(), data: data);
 
-    if (!result) {
-      EasyLoading.showToast("Update Gagal");
-    } else {
-      await UserService().getUser(id: id.toString());
+      if (!result) {
+        EasyLoading.showToast("Update Gagal");
+      } else {
+        await UserService().getUser(id: id.toString());
+        EasyLoading.showToast("Update Berhasil");
+      }
+    } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
+      log("Update profile error: $e");
+    } finally {
       EasyLoading.dismiss();
-      EasyLoading.showToast("Update Berhasil");
     }
   }
 
-  Future<void> changePassword(
-      {required String oldPass,
-      required String newPass,
-      required String confirmPass}) async {
+  Future<void> changePassword({
+    required String oldPass,
+    required String newPass,
+    required String confirmPass,
+  }) async {
     EasyLoading.show(status: "Loading...");
-    final id = await UserLoginModel().getUserId();
-    final data = {
-      "current_password": oldPass,
-      "new_password": newPass,
-      "confirm_password": confirmPass,
-    };
+    try {
+      final String? id = await UserLoginModel().getUserId();
+      final Map<String, dynamic> data = {
+        "current_password": oldPass,
+        "new_password": newPass,
+        "confirm_password": confirmPass,
+      };
 
-    final result =
-        await UserService().changePassword(id: id.toString(), data: data);
+      final bool result =
+          await UserService().changePassword(id: id.toString(), data: data);
 
-    if (!result) {
-      EasyLoading.showToast("Update Gagal");
-    } else {
+      if (!result) {
+        EasyLoading.showToast("Update Gagal");
+      } else {
+        EasyLoading.showToast("Update Berhasil");
+      }
+    } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
+      log("Change password error: $e");
+    } finally {
       EasyLoading.dismiss();
-      EasyLoading.showToast("Update Berhasil");
     }
   }
 
   Future<Map<String, dynamic>> getUser() async {
-    EasyLoading.show(status: "Loading");
-    final nameT = await UserLoginModel().getName();
-    final emailT = await UserLoginModel().getEmail();
-    final usernameT = await UserLoginModel().getUsername();
-    final addressT = await UserLoginModel().getAddress();
-    final phoneT = await UserLoginModel().getPhone();
-    EasyLoading.dismiss();
-    return {
-      'name': nameT,
-      'email': emailT,
-      'username': usernameT,
-      'address': addressT,
-      'phone': phoneT,
-    };
+    EasyLoading.show(status: "Loading...");
+    try {
+      final String? name = await UserLoginModel().getName();
+      final String? email = await UserLoginModel().getEmail();
+      final String? username = await UserLoginModel().getUsername();
+      final String? address = await UserLoginModel().getAddress();
+      final String? phone = await UserLoginModel().getPhone();
+
+      return {
+        'name': name,
+        'email': email,
+        'username': username,
+        'address': address,
+        'phone': phone,
+      };
+    } catch (e) {
+      log("Get user error: $e");
+      return {};
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 
   Future<List<DesaModel>> getDesa() async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('desa');
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final List<Map<String, dynamic>> maps = await db.query('desa');
 
-    return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
+      return maps.map((map) => DesaModel.fromJson(map)).toList();
+    } catch (e) {
+      log("Get desa error: $e");
+      return [];
+    }
   }
 
   Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan() async {
-    final db = await PenyuluhDatabaseHelper().database;
-    const String query = '''
-    SELECT
-        strftime('%Y-%m', date) AS month_year,
-        desa_id,
-        desa_name,
-        SUM(nilai) AS total_nilai
-    FROM (
-        SELECT date, desa_id, desa_name, nilai FROM detailPadi
-        UNION ALL
-        SELECT date, desa_id, desa_name, nilai FROM detailPalawija
-    ) AS combined_data
-    GROUP BY
-        month_year,
-        desa_id
-    ORDER BY
-        month_year, desa_id;
-  ''';
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      const String query = '''
+        SELECT
+            strftime('%Y-%m', date) AS month_year,
+            desa_id,
+            desa_name,
+            SUM(nilai) AS total_nilai
+        FROM (
+            SELECT date, desa_id, desa_name, nilai FROM detailPadi
+            UNION ALL
+            SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+        ) AS combined_data
+        GROUP BY
+            month_year,
+            desa_id
+        ORDER BY
+            month_year, desa_id;
+      ''';
 
-    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+      final List<Map<String, dynamic>> maps = await db.rawQuery(query);
 
-    return List<HistoriPenyuluhanModel>.from(
-        maps.map((map) => HistoriPenyuluhanModel.fromJson(map)));
+      return maps.map((map) => HistoriPenyuluhanModel.fromJson(map)).toList();
+    } catch (e) {
+      log("Get histori penyuluhan error: $e");
+      return [];
+    }
   }
 
   Future<List<LuasWilayahModel>> getLuasLahanDesa() async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('desa');
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final List<Map<String, dynamic>> maps = await db.query('desa');
 
-    return List<LuasWilayahModel>.from(
-        maps.map((map) => LuasWilayahModel.fromMap(map)));
+      return maps.map((map) => LuasWilayahModel.fromMap(map)).toList();
+    } catch (e) {
+      log("Get luas lahan desa error: $e");
+      return [];
+    }
   }
 
   String convertDate(String date) {
-    DateTime parsedDate = DateTime.parse('$date-01');
-
-    String formattedDate = DateFormat('MMMM yyyy', 'id_ID').format(parsedDate);
-
-    return formattedDate;
+    final DateTime parsedDate = DateTime.parse('$date-01');
+    return DateFormat('MMMM yyyy', 'id_ID').format(parsedDate);
   }
 
   Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhanBulanIni() async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final DateTime now = DateTime.now();
-    final String currentMonthYear =
-        '${now.year}-${now.month.toString().padLeft(2, '0')}';
-    final DateTime lastMonthDate = DateTime(now.year, now.month - 1, now.day);
-    final String lastMonthYear =
-        '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final DateTime now = DateTime.now();
+      final String currentMonthYear =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      final DateTime lastMonthDate = DateTime(now.year, now.month - 1, now.day);
+      final String lastMonthYear =
+          '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
 
-    const String queryCurrentMonth = '''
-    SELECT
-        strftime('%Y-%m', date) AS month_year,
-        desa_id,
-        desa_name,
-        SUM(nilai) AS total_nilai
-    FROM (
-        SELECT date, desa_id, desa_name, nilai FROM detailPadi
-        UNION ALL
-        SELECT date, desa_id, desa_name, nilai FROM detailPalawija
-    ) AS combined_data
-    WHERE strftime('%Y-%m', date) = ?
-    GROUP BY
-        month_year,
-        desa_id
-    ORDER BY
-        month_year, desa_id;
-  ''';
+      const String query = '''
+        SELECT
+            strftime('%Y-%m', date) AS month_year,
+            desa_id,
+            desa_name,
+            SUM(nilai) AS total_nilai
+        FROM (
+            SELECT date, desa_id, desa_name, nilai FROM detailPadi
+            UNION ALL
+            SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+        ) AS combined_data
+        WHERE strftime('%Y-%m', date) = ?
+        GROUP BY
+            month_year,
+            desa_id
+        ORDER BY
+            month_year, desa_id;
+      ''';
 
-    const String queryLastMonth = '''
-    SELECT
-        strftime('%Y-%m', date) AS month_year,
-        desa_id,
-        desa_name,
-        SUM(nilai) AS total_nilai
-    FROM (
-        SELECT date, desa_id, desa_name, nilai FROM detailPadi
-        UNION ALL
-        SELECT date, desa_id, desa_name, nilai FROM detailPalawija
-    ) AS combined_data
-    WHERE strftime('%Y-%m', date) = ?
-    GROUP BY
-        month_year,
-        desa_id
-    ORDER BY
-        month_year, desa_id;
-  ''';
+      final List<Map<String, dynamic>> mapsCurrentMonth =
+          await db.rawQuery(query, [currentMonthYear]);
 
-    final List<Map<String, dynamic>> mapsCurrentMonth =
-        await db.rawQuery(queryCurrentMonth, [currentMonthYear]);
+      final Set<String> desaIdsCurrentMonth =
+          mapsCurrentMonth.map((map) => map['desa_id'] as String).toSet();
 
-    // Mengidentifikasi desa yang sudah ada di bulan ini
-    final Set desaIdsCurrentMonth =
-        mapsCurrentMonth.map((map) => map['desa_id']).toSet();
+      final List<Map<String, dynamic>> mapsLastMonth =
+          await db.rawQuery(query, [lastMonthYear]);
 
-    // Mengambil data bulan lalu
-    final List<Map<String, dynamic>> mapsLastMonth =
-        await db.rawQuery(queryLastMonth, [lastMonthYear]);
+      final List<Map<String, dynamic>> mapsFilteredLastMonth = mapsLastMonth
+          .where((map) => !desaIdsCurrentMonth.contains(map['desa_id']))
+          .toList();
 
-    // Filter data bulan lalu untuk desa yang tidak ada di bulan ini
-    final List<Map<String, dynamic>> mapsFilteredLastMonth = mapsLastMonth
-        .where((map) => !desaIdsCurrentMonth.contains(map['desa_id']))
-        .toList();
+      final List<Map<String, dynamic>> combinedMaps = [
+        ...mapsCurrentMonth,
+        ...mapsFilteredLastMonth
+      ];
 
-    // Menggabungkan data bulan ini dengan data bulan lalu yang difilter
-    final List<Map<String, dynamic>> combinedMaps = [
-      ...mapsCurrentMonth,
-      ...mapsFilteredLastMonth
-    ];
-
-    return List<HistoriPenyuluhanModel>.from(
-        combinedMaps.map((map) => HistoriPenyuluhanModel.fromJson(map)));
+      return combinedMaps
+          .map((map) => HistoriPenyuluhanModel.fromJson(map))
+          .toList();
+    } catch (e) {
+      log("Get histori penyuluhan bulan ini error: $e");
+      return [];
+    }
   }
 
-  Future<void> synchronizeData() async {
-    await UserService().getDataPenyuluhanDesa();
-    await PadiService().getPengairan();
-    await PalawijaService().getPalawija();
-    await PadiService().getDetailPadiByUser();
-    await PalawijaService().getDetailPalawijaByUser();
+  Future<void> synchronizeData(ValueNotifier<String> statusNotifier) async {
+    try {
+      statusNotifier.value = 'Memulai sinkronisasi...';
+
+      statusNotifier.value = 'Mendapatkan data pengairan...';
+      await PadiService().getPengairan();
+
+      statusNotifier.value = 'Mendapatkan data padi...';
+      await PadiService().getPadi();
+
+      statusNotifier.value = 'Mendapatkan data palawija...';
+      await PalawijaService().getPalawija();
+
+      statusNotifier.value = 'Mendapatkan data desa...';
+      await UserService().getDataPenyuluhanDesa();
+
+      statusNotifier.value = 'Mendapatkan data penyuluhan...';
+      await PadiService().getDetailPadiByUser();
+      statusNotifier.value = 'Sinkronisasi selesai...';
+      await PalawijaService().getDetailPalawijaByUser();
+    } catch (error) {
+      statusNotifier.value = 'Error: ${error.toString()}';
+      throw Exception("Internal Server Error");
+    }
   }
 }

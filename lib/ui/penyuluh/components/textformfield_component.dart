@@ -13,6 +13,7 @@ class TextFormFieldComponent extends StatelessWidget {
   final dynamic maxLine;
   final bool readOnly;
   final dynamic onTap;
+  final dynamic style;
 
   const TextFormFieldComponent({
     super.key,
@@ -27,11 +28,13 @@ class TextFormFieldComponent extends StatelessWidget {
     this.onSaved,
     this.readOnly = false,
     this.onTap,
+    this.style,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: style,
       maxLines: maxLine,
       obscureText: obsecure,
       controller: controller,

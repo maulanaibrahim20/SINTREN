@@ -17,10 +17,11 @@ class LuasWilayahModel {
     return LuasWilayahModel(
       id: json['id'],
       name: json['name'],
-      luasLahanNonSawah: json['luas_lahan_wilayah']['lahan_non_sawah'],
-      luasLahanSawah: json['luas_lahan_wilayah']['lahan_sawah'],
-      totalLuasLahan: json['luas_lahan_wilayah']['lahan_sawah'] +
-          json['luas_lahan_wilayah']['lahan_non_sawah'],
+      luasLahanNonSawah:
+          int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
+      luasLahanSawah: int.parse(json['luas_lahan_wilayah']['lahan_sawah']),
+      totalLuasLahan: int.parse(json['luas_lahan_wilayah']['lahan_sawah']) +
+          int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
     );
   }
 

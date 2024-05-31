@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:sintren_mobile/controllers/penyuluh/penyuluh_home_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
@@ -20,11 +19,10 @@ class PenyuluhHomeView extends StatefulWidget {
   const PenyuluhHomeView({super.key});
 
   @override
-  State<PenyuluhHomeView> createState() => _PenyuluhHomeViewState();
+  State<PenyuluhHomeView> createState() => PenyuluhHomeViewState();
 }
 
-class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
-  final homeC = PenyuluhHomeController();
+class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
   final userC = UserController();
   late Future<List<DesaModel>> desa;
 
@@ -44,15 +42,26 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final statusNotifier =
+        ValueNotifier<String>('Memulai sinkronisasi data...');
+
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
-        onPressed: () {
-          EasyLoading.show(status: "Sinkronisasi Data");
-          userC.synchronizeData();
+        onPressed: () async {
+          EasyLoading.show(status: statusNotifier.value);
+
+          statusNotifier.addListener(() {
+            EasyLoading.show(status: statusNotifier.value);
+          });
+
+          try {
+            await userC.synchronizeData(statusNotifier);
+          } finally {
+            EasyLoading.dismiss();
+          }
           setState(() {});
-          EasyLoading.dismiss();
         },
         backgroundColor: ColorTheme().primaryColor,
         foregroundColor: ColorTheme().whiteColor,
@@ -102,7 +111,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (_) => const ChangePasswordView()));
                             } else {
-                              homeC.logout().then((value) {
+                              userC.logout().then((value) {
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
@@ -195,7 +204,8 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                           onPressed: () {
                             desa.then((value) {
                               if (value.isEmpty) {
-                                EasyLoading.showToast("Belum ada tugas");
+                                EasyLoading.showToast(
+                                    "Belum Dilakukan Penyuluhan");
                               } else {
                                 Navigator.push(
                                     context,
@@ -391,8 +401,7 @@ class _PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                       desaName: desa.desaName,
                                     ),
                                   ),
-                                );
-                                setState(() {});
+                                ).then((value) => setState(() {}));
                               },
                               child: Card(
                                 margin: const EdgeInsets.symmetric(

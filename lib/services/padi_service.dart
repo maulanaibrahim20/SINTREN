@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
@@ -11,72 +12,96 @@ import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PadiService {
-  Future<void> getPengairan() async {
+  final String baseUrl = ConfigApp().baseUrl;
+
+  Future<bool> getPengairan() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete('pengairan');
 
-      final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}pengairan'),
-      );
+      final Response result = await get(Uri.parse('${baseUrl}pengairan'));
 
       if (result.statusCode != 200) {
-        throw Exception(
-            "Failed to get pengairan: ${result.statusCode} - ${result.body}");
+        log("Failed to get pengairan: ${result.statusCode} - ${result.body}");
+        return false;
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
+      if (jsonResult['data'] == null) {
+        log("Failed to get pengairan: data is null");
+        return false;
+      }
 
       List<PengairanModel> pengairan = (jsonResult['data'] as List)
           .map((element) => PengairanModel.fromJson(element))
           .toList();
 
-      Batch batch = db.batch();
-      for (var item in pengairan) {
-        batch.insert('pengairan', item.toMap());
+      if (pengairan.isNotEmpty) {
+        Batch batch = db.batch();
+        for (var item in pengairan) {
+          batch.insert(
+            'pengairan',
+            item.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+        await batch.commit(noResult: true);
+        log("Get pengairan sukses");
       }
-      await batch.commit(noResult: true);
-      log("get pengairan sukses");
+      return true;
     } catch (e) {
-      throw Exception("Failed to save pengairan to database: $e");
+      EasyLoading.showToast("Internal Server Error");
+      log("Failed to save pengairan to database: $e");
+      throw Exception("Internal Server Error");
     }
   }
 
-Future<void> getPadi() async {
+  Future<bool> getPadi() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete('padi');
 
-      final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}padi'),
-      );
+      final Response result = await get(Uri.parse('${baseUrl}padi'));
 
       if (result.statusCode != 200) {
-        throw Exception(
-            "Failed to get padi: ${result.statusCode} - ${result.body}");
+        log("Failed to get padi: ${result.statusCode} - ${result.body}");
+        return false;
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
+      if (jsonResult['data'] == null) {
+        log("Failed to get padi: data is null");
+        return false;
+      }
 
       List<PadiModel> padi = (jsonResult['data'] as List)
           .map((element) => PadiModel.fromJson(element))
           .toList();
 
-      Batch batch = db.batch();
-      for (var item in padi) {
-        batch.insert('padi', item.toMap());
+      if (padi.isNotEmpty) {
+        Batch batch = db.batch();
+        for (var item in padi) {
+          batch.insert(
+            'padi',
+            item.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+        await batch.commit(noResult: true);
+        log("Get padi sukses");
       }
-      await batch.commit(noResult: true);
-      log("get padi sukses");
+      return true;
     } catch (e) {
-      throw Exception("Failed to save padi to database: $e");
+      EasyLoading.showToast("Internal Server Error");
+      log("Failed to save padi to database: $e");
+      throw Exception("Internal Server Error");
     }
   }
 
   Future<bool> store(Map<String, dynamic> data) async {
     try {
       final Response result = await post(
-        Uri.parse('${ConfigApp().baseUrl}padi/store'),
+        Uri.parse('${baseUrl}padi/store'),
         headers: {
           "Content-Type": "application/json",
         },
@@ -90,6 +115,7 @@ Future<void> getPadi() async {
 
       return true;
     } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
       log("Gagal menyimpan data: $e");
       return false;
     }
@@ -98,7 +124,7 @@ Future<void> getPadi() async {
   Future<bool> update(Map<String, dynamic> data, String id) async {
     try {
       final Response result = await patch(
-        Uri.parse('${ConfigApp().baseUrl}padi/update/$id'),
+        Uri.parse('${baseUrl}padi/update/$id'),
         headers: {
           "Content-Type": "application/json",
         },
@@ -106,56 +132,68 @@ Future<void> getPadi() async {
       );
 
       if (result.statusCode != 200) {
-        log("Gagal mengupdate data1: ${result.statusCode} - ${result.body}");
+        log("Gagal mengupdate data: ${result.statusCode} - ${result.body}");
         return false;
       }
 
       return true;
     } catch (e) {
-      log("Gagal mengupdate data2: $e");
+      EasyLoading.showToast("Internal Server Error");
+      log("Gagal mengupdate data: $e");
       return false;
     }
   }
 
-  Future<void> getDetailPadiByUser() async {
+  Future<bool> getDetailPadiByUser() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete('detailPadi');
 
-      final id = await UserLoginModel().getUserId();
+      final String? id = await UserLoginModel().getUserId();
       final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}padi/showByUser/$id'),
+        Uri.parse('${baseUrl}padi/showByUser/$id'),
       );
 
       if (result.statusCode != 200) {
         log("Failed to get detail padi: ${result.statusCode} - ${result.body}");
+        return false;
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
-
-      List<DetailPadiModel> detail = [];
-      for (var element in jsonResult['data'] as List) {
-        DetailPadiModel detailPadiModel = DetailPadiModel.fromJson(element);
-        detail.add(detailPadiModel);
+      if (jsonResult['data'] == null) {
+        log("Failed to get detail padi: data is null");
+        return false;
       }
+
+      List<DetailPadiModel> detail = (jsonResult['data'] as List)
+          .map((element) => DetailPadiModel.fromJson(element))
+          .toList();
 
       if (detail.isNotEmpty) {
         Batch batch = db.batch();
         for (var item in detail) {
-          batch.insert('detailPadi', item.toMap());
+          batch.insert(
+            'detailPadi',
+            item.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
         }
         await batch.commit(noResult: true);
-        log("get detail padi sukses");
+        log("Get detail padi sukses");
       }
+
+      return true;
     } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
       log("Failed to get detail padi: $e");
+      throw Exception("Internal Server Error");
     }
   }
 
-  Future<bool> deletaDetailById(int id) async {
+  Future<bool> deleteDetailById(int id) async {
     try {
       final Response result = await delete(
-        Uri.parse('${ConfigApp().baseUrl}padi/deletaDetailById/$id'),
+        Uri.parse('${baseUrl}padi/deleteDetailById/$id'),
       );
 
       if (result.statusCode != 200) {
@@ -165,6 +203,7 @@ Future<void> getPadi() async {
 
       return true;
     } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
       log("Gagal menghapus data: $e");
       return false;
     }

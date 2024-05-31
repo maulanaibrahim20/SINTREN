@@ -245,14 +245,17 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                       },
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20, bottom: 5, top: 5),
-                                    child: Text("Data Pengairan",
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500)),
-                                  ),
+                                  if (pengairanData.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, bottom: 5, top: 5),
+                                      child: Text("Data Pengairan",
+                                          style: StyleTheme()
+                                              .styleBlack
+                                              .copyWith(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500)),
+                                    ),
                                   ConstrainedBox(
                                     constraints: BoxConstraints(
                                       maxHeight:

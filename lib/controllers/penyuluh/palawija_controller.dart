@@ -8,11 +8,12 @@ import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/palawija_service.dart';
+import 'package:sqflite/sqflite.dart';
 
 class PalawijaController {
-  List<String> jenisLahan = ["sawah", "non sawah"];
-  List<String> bantuan = ["bantuan pemerintah", "non bantuan pemerintah"];
-  List<String> tipeData = [
+  final List<String> jenisLahan = ["sawah", "non sawah"];
+  final List<String> bantuan = ["bantuan pemerintah", "non bantuan pemerintah"];
+  final List<String> tipeData = [
     "panen",
     "tanam",
     "puso/rusak",
@@ -22,62 +23,72 @@ class PalawijaController {
 
   Future<bool> store(Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
-    final id = await UserLoginModel().getUserId();
-    final kecamatanId = await UserLoginModel().getKecamatanId();
-    final data = {
-      "user_id": id,
-      "desa_id": map['desa_id'],
-      "kecamatan_id": kecamatanId,
-      "jenis_lahan": map['jenis_lahan'],
-      "jenis_bantuan": map['jenis_bantuan'],
-      "date": map['date'],
-      "id_jenis_palawija": map['id_jenis_palawija'],
-      "tipe_data": map['tipe_data'],
-      "nilai": map['nilai']
-    };
+    try {
+      final id = await UserLoginModel().getUserId();
+      final kecamatanId = await UserLoginModel().getKecamatanId();
+      final data = {
+        "user_id": id,
+        "desa_id": map['desa_id'],
+        "kecamatan_id": kecamatanId,
+        "jenis_lahan": map['jenis_lahan'],
+        "jenis_bantuan": map['jenis_bantuan'],
+        "date": map['date'],
+        "id_jenis_palawija": map['id_jenis_palawija'],
+        "tipe_data": map['tipe_data'],
+        "nilai": map['nilai']
+      };
 
-    log(data.toString());
+      final result = await PalawijaService().store(data);
 
-    final result = await PalawijaService().store(data);
+      if (!result) {
+        EasyLoading.showToast("Gagal menyimpan data");
+        return false;
+      }
 
-    if (!result) {
-      EasyLoading.showToast("Gagal menyimpan data");
-      return false;
-    } else {
-      EasyLoading.dismiss();
+      final db = await PenyuluhDatabaseHelper().database;
+      await db.insert(
+        'detailPalawija',
+        data,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
       EasyLoading.showToast("Berhasil menyimpan data");
       return true;
+    } catch (e) {
+      EasyLoading.showToast("Gagal menyimpan data");
+      log("Store error: $e");
+      return false;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
   Future<bool> update(String dataId, Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
-    final id = await UserLoginModel().getUserId();
-    final kecamatanId = await UserLoginModel().getKecamatanId();
-    final data = {
-      "user_id": id,
-      "desa_id": map['desa_id'],
-      "kecamatan_id": kecamatanId,
-      "jenis_lahan": map['jenis_lahan'],
-      "jenis_bantuan": map['jenis_bantuan'],
-      "date": map['date'],
-      "id_jenis_palawija": map['id_jenis_palawija'],
-      "tipe_data": map['tipe_data'],
-      "nilai": map['nilai']
-    };
+    try {
+      final id = await UserLoginModel().getUserId();
+      final kecamatanId = await UserLoginModel().getKecamatanId();
+      final data = {
+        "user_id": id,
+        "desa_id": map['desa_id'],
+        "kecamatan_id": kecamatanId,
+        "jenis_lahan": map['jenis_lahan'],
+        "jenis_bantuan": map['jenis_bantuan'],
+        "date": map['date'],
+        "id_jenis_palawija": map['id_jenis_palawija'],
+        "tipe_data": map['tipe_data'],
+        "nilai": map['nilai']
+      };
 
-    log(data.toString());
+      final result = await PalawijaService().update(data, dataId);
 
-    final result = await PalawijaService().update(data, dataId);
+      if (!result) {
+        EasyLoading.showToast("Gagal mengupdate data");
+        return false;
+      }
 
-    if (!result) {
-      EasyLoading.showToast("Gagal mengupdate data");
-      return false;
-    } else {
       final db = await PenyuluhDatabaseHelper().database;
-
-      final localData = Map<String, dynamic>.from(data)
-        ..removeWhere((key, value) => key == "user_id");
+      final localData = Map<String, dynamic>.from(data)..remove("user_id");
 
       await db.update(
         'detailPalawija',
@@ -85,125 +96,157 @@ class PalawijaController {
         where: 'id = ?',
         whereArgs: [dataId],
       );
-      EasyLoading.dismiss();
+
       EasyLoading.showToast("Berhasil mengupdate data");
       return true;
+    } catch (e) {
+      EasyLoading.showToast("Gagal mengupdate data");
+      log("Update error: $e");
+      return false;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
   Future<void> deleteDetailById(int id) async {
     EasyLoading.show(status: "Loading...");
-    final result = await PalawijaService().deletaDetailById(id);
+    try {
+      final result = await PalawijaService().deleteDetailById(id);
 
-    if (!result) {
-      EasyLoading.showToast("Gagal menghapus data");
-    } else {
+      if (!result) {
+        EasyLoading.showToast("Gagal menghapus data");
+        return;
+      }
+
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete(
         'detailPalawija',
         where: "id = ?",
         whereArgs: [id],
       );
-      EasyLoading.dismiss();
+
       EasyLoading.showToast("Berhasil menghapus data");
+    } catch (e) {
+      EasyLoading.showToast("Gagal menghapus data");
+      log("Delete error: $e");
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
   Future<List<PalawijaModel>> getPalawija() async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('palawija');
-
-    return List<PalawijaModel>.from(
-        maps.map((map) => PalawijaModel.fromJson(map)));
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final List<Map<String, dynamic>> maps = await db.query('palawija');
+      return List<PalawijaModel>.from(
+          maps.map((map) => PalawijaModel.fromJson(map)));
+    } catch (e) {
+      log("Get palawija error: $e");
+      return [];
+    }
   }
 
   Future<List<DesaModel>> getDesa() async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query('desa');
-
-    return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final List<Map<String, dynamic>> maps = await db.query('desa');
+      return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
+    } catch (e) {
+      log("Get desa error: $e");
+      return [];
+    }
   }
 
   Future<List<DetailPalawijaModel>> getDetailPalawijaByUser(
       String date, String desaId) async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'detailPalawija',
-      where: 'date LIKE ? AND desa_id = ?',
-      whereArgs: ['%$date%', desaId],
-    );
-
-    return List<DetailPalawijaModel>.from(
-        maps.map((map) => DetailPalawijaModel.fromMap(map)));
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        'detailPalawija',
+        where: 'date LIKE ? AND desa_id = ?',
+        whereArgs: ['%$date%', desaId],
+      );
+      return List<DetailPalawijaModel>.from(
+          maps.map((map) => DetailPalawijaModel.fromMap(map)));
+    } catch (e) {
+      log("Get detail palawija by user error: $e");
+      return [];
+    }
   }
 
-  Future<DetailPalawijaModel?> getDetailPadiById(int? id) async {
-    final db = await PenyuluhDatabaseHelper().database;
-    final maps = await db.query(
-      'detailPalawija',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-
-    if (maps.isNotEmpty) {
-      return DetailPalawijaModel.fromMap(maps.first);
-    } else {
+  Future<DetailPalawijaModel?> getDetailPalawijaById(int? id) async {
+    try {
+      final db = await PenyuluhDatabaseHelper().database;
+      final maps = await db.query(
+        'detailPalawija',
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+      if (maps.isNotEmpty) {
+        return DetailPalawijaModel.fromMap(maps.first);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("Get detail palawija by id error: $e");
       return null;
     }
   }
 
   Future<Map<String, JenisPalawija>> getKesimpulanDataPalawija(
       String date, String desaId) async {
-    List<DetailPalawijaModel> groupedData =
-        await PalawijaController().getDetailPalawijaByUser(date, desaId);
+    try {
+      List<DetailPalawijaModel> groupedData =
+          await getDetailPalawijaByUser(date, desaId);
 
-    // Data structure to hold the aggregated data
-    var groupedByAll = <String, Map<String, Map<String, Map<String, int>>>>{};
+      var groupedByAll = <String, Map<String, Map<String, Map<String, int>>>>{};
 
-    // Aggregate the data
-    for (var row in groupedData) {
-      groupedByAll
-          .putIfAbsent(row.palawijaName, () => {})
-          .putIfAbsent(row.jenisLahan, () => {})
-          .putIfAbsent(row.jenisBantuan, () => {})
-          .update(row.tipeData, (value) => value + row.nilai,
-              ifAbsent: () => row.nilai);
-    }
+      for (var row in groupedData) {
+        groupedByAll
+            .putIfAbsent(row.palawijaName, () => {})
+            .putIfAbsent(row.jenisLahan, () => {})
+            .putIfAbsent(row.jenisBantuan, () => {})
+            .update(row.tipeData, (value) => value + row.nilai,
+                ifAbsent: () => row.nilai);
+      }
 
-    // Convert aggregated data into the desired structure
-    var result = <String, JenisPalawija>{};
+      var result = <String, JenisPalawija>{};
 
-    groupedByAll.forEach((jenisPalawija, lahanMap) {
-      var lahanData = <String, JenisLahan>{};
-      int totalJenisPalawija = 0;
+      groupedByAll.forEach((jenisPalawija, lahanMap) {
+        var lahanData = <String, JenisLahan>{};
+        int totalJenisPalawija = 0;
 
-      lahanMap.forEach((jenisLahan, bantuanMap) {
-        var bantuanData = <String, JenisBantuan>{};
-        int totalJenisLahan = 0;
+        lahanMap.forEach((jenisLahan, bantuanMap) {
+          var bantuanData = <String, JenisBantuan>{};
+          int totalJenisLahan = 0;
 
-        bantuanMap.forEach((jenisBantuan, tipeDataMap) {
-          var tipeDataEntries = <String, TipeData>{};
-          int totalJenisBantuan = 0;
+          bantuanMap.forEach((jenisBantuan, tipeDataMap) {
+            var tipeDataEntries = <String, TipeData>{};
+            int totalJenisBantuan = 0;
 
-          tipeDataMap.forEach((tipeData, nilai) {
-            tipeDataEntries[tipeData] = TipeData(data: {tipeData: nilai});
-            totalJenisBantuan += nilai;
+            tipeDataMap.forEach((tipeData, nilai) {
+              tipeDataEntries[tipeData] = TipeData(data: {tipeData: nilai});
+              totalJenisBantuan += nilai;
+            });
+
+            bantuanData[jenisBantuan] = JenisBantuan(
+                tipeData: tipeDataEntries, total: totalJenisBantuan);
+            totalJenisLahan += totalJenisBantuan;
           });
 
-          bantuanData[jenisBantuan] =
-              JenisBantuan(tipeData: tipeDataEntries, total: totalJenisBantuan);
-          totalJenisLahan += totalJenisBantuan;
+          lahanData[jenisLahan] =
+              JenisLahan(jenisBantuan: bantuanData, total: totalJenisLahan);
+          totalJenisPalawija += totalJenisLahan;
         });
 
-        lahanData[jenisLahan] =
-            JenisLahan(jenisBantuan: bantuanData, total: totalJenisLahan);
-        totalJenisPalawija += totalJenisLahan;
+        result[jenisPalawija] =
+            JenisPalawija(jenisLahan: lahanData, total: totalJenisPalawija);
       });
 
-      result[jenisPalawija] =
-          JenisPalawija(jenisLahan: lahanData, total: totalJenisPalawija);
-    });
-
-    return result;
+      return result;
+    } catch (e) {
+      log("Get kesimpulan data palawija error: $e");
+      return {};
+    }
   }
 }

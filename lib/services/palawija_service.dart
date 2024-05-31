@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
@@ -10,41 +11,54 @@ import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PalawijaService {
-  Future<void> getPalawija() async {
+  final String baseUrl = ConfigApp().baseUrl;
+
+  Future<bool> getPalawija() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete('palawija');
 
-      final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}palawija'),
-      );
+      final Response result = await get(Uri.parse('${baseUrl}palawija'));
 
       if (result.statusCode != 200) {
-        throw Exception(
-            "Failed to get palawija: ${result.statusCode} - ${result.body}");
+        log("Failed to get palawija: ${result.statusCode} - ${result.body}");
+        return false;
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
+      if (jsonResult['data'] == null) {
+        log("Failed to get palawija: Invalid response structure");
+        return false;
+      }
 
       List<PalawijaModel> palawija = (jsonResult['data'] as List)
           .map((element) => PalawijaModel.fromJson(element))
           .toList();
 
-      Batch batch = db.batch();
-      for (var item in palawija) {
-        batch.insert('palawija', item.toMap());
+      if (palawija.isNotEmpty) {
+        Batch batch = db.batch();
+        for (var item in palawija) {
+          batch.insert(
+            'palawija',
+            item.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+        }
+        await batch.commit(noResult: true);
+        log("Get palawija sukses");
       }
-      await batch.commit(noResult: true);
-      log("get palawija sukses");
+      return true;
     } catch (e) {
-      throw Exception("Failed to save palawija to database: $e");
+      EasyLoading.showToast("Internal Server Error");
+      log("Failed to save palawija to database: $e");
+      throw Exception("Internal Server Error");
     }
   }
 
   Future<bool> store(Map<String, dynamic> data) async {
     try {
       final Response result = await post(
-        Uri.parse('${ConfigApp().baseUrl}palawija/store'),
+        Uri.parse('${baseUrl}palawija/store'),
         headers: {
           "Content-Type": "application/json",
         },
@@ -58,6 +72,7 @@ class PalawijaService {
 
       return true;
     } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
       log("Gagal menyimpan data: $e");
       return false;
     }
@@ -66,7 +81,7 @@ class PalawijaService {
   Future<bool> update(Map<String, dynamic> data, String id) async {
     try {
       final Response result = await patch(
-        Uri.parse('${ConfigApp().baseUrl}palawija/update/$id'),
+        Uri.parse('${baseUrl}palawija/update/$id'),
         headers: {
           "Content-Type": "application/json",
         },
@@ -74,57 +89,67 @@ class PalawijaService {
       );
 
       if (result.statusCode != 200) {
-        log("Gagal mengupdate data1: ${result.statusCode} - ${result.body}");
+        log("Gagal mengupdate data: ${result.statusCode} - ${result.body}");
         return false;
       }
 
       return true;
     } catch (e) {
-      log("Gagal mengupdate data2: $e");
+      EasyLoading.showToast("Internal Server Error");
+      log("Gagal mengupdate data: $e");
       return false;
     }
   }
 
-  Future<void> getDetailPalawijaByUser() async {
+  Future<bool> getDetailPalawijaByUser() async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       await db.delete('detailPalawija');
 
-      final id = await UserLoginModel().getUserId();
+      final String? userId = await UserLoginModel().getUserId();
       final Response result = await get(
-        Uri.parse('${ConfigApp().baseUrl}palawija/showByUser/$id'),
+        Uri.parse('${baseUrl}palawija/showByUser/$userId'),
       );
 
       if (result.statusCode != 200) {
         log("Failed to get detail palawija: ${result.statusCode} - ${result.body}");
+        return false;
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
-
-      List<DetailPalawijaModel> detail = [];
-      for (var element in jsonResult['data'] as List) {
-        DetailPalawijaModel detailPalawijaModel =
-            DetailPalawijaModel.fromJson(element);
-        detail.add(detailPalawijaModel);
+      if (jsonResult['data'] == null) {
+        log("Failed to get detail palawija: data is null");
+        return false;
       }
+
+      List<DetailPalawijaModel> detail = (jsonResult['data'] as List)
+          .map((element) => DetailPalawijaModel.fromJson(element))
+          .toList();
 
       if (detail.isNotEmpty) {
         Batch batch = db.batch();
         for (var item in detail) {
-          batch.insert('detailPalawija', item.toMap());
+          batch.insert(
+            'detailPalawija',
+            item.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
         }
         await batch.commit(noResult: true);
-        log("get detail palawija sukses");
+        log("Get detail palawija sukses");
       }
+      return true;
     } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
       log("Failed to get detail palawija: $e");
+      throw Exception("Internal Server Error");
     }
   }
 
-  Future<bool> deletaDetailById(int id) async {
+  Future<bool> deleteDetailById(int id) async {
     try {
       final Response result = await delete(
-        Uri.parse('${ConfigApp().baseUrl}palawija/deletaDetailById/$id'),
+        Uri.parse('${baseUrl}palawija/deleteDetailById/$id'),
       );
 
       if (result.statusCode != 200) {
@@ -134,6 +159,7 @@ class PalawijaService {
 
       return true;
     } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
       log("Gagal menghapus data: $e");
       return false;
     }

@@ -37,7 +37,7 @@ class DetailPalawijaModel {
       jenisBantuan: json['jenis_bantuan'],
       idJenisPalawija: json['id_jenis_palawija'].toString(),
       tipeData: json['tipe_data'],
-      nilai: json['nilai'],
+      nilai: int.parse(json['nilai']),
       desaName: json['desa']['name'],
       palawijaName: json['palawija'] == null ? '' : json['palawija']['name'],
       date: json['date'],

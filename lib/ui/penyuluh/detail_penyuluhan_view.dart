@@ -33,8 +33,7 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
 
   @override
   void initState() {
-    setState(() {
-    });
+    setState(() {});
     super.initState();
     _tabController = TabController(
       length: tabs.length,

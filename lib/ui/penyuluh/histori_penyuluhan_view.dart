@@ -76,9 +76,9 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         backgroundColor: ColorTheme().primaryColor,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           EasyLoading.show(status: "Sinkronisasi Data");
-          _synchronizeData();
+          await _synchronizeData();
           EasyLoading.dismiss();
         },
         backgroundColor: ColorTheme().primaryColor,
