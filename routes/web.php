@@ -11,7 +11,6 @@ use App\Http\Controllers\WEB\Operator\Tanaman\TanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\Master\WilayahController;
 use App\Http\Controllers\WEB\Operator\User\PertanianController;
 use App\Http\Controllers\WEB\Operator\Master\PengairanController;
-use App\Http\Controllers\WEB\Operator\Tanaman\Kategori\KategoriTanamanPalawijaController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Operator\User\PanganController;
@@ -20,9 +19,10 @@ use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
-use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
+use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,9 +66,6 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('penyuluh', PenyuluhController::class);
                 Route::resource('pangan', PanganController::class);
             });
-            Route::prefix('kategori')->group(function () {
-                Route::resource('tanaman_palawija', KategoriTanamanPalawijaController::class);
-            });
             Route::prefix('tanaman')->group(function () {
                 Route::resource('padi', TanamanPadiController::class);
                 Route::resource('palawija', TanamanPalawijaController::class);
@@ -87,13 +84,17 @@ Route::middleware(['autentikasi'])->group(function () {
     Route::group(['middleware' => ['can:pertanian']], function () {
         Route::prefix('pertanian')->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'pertanian']);
+            Route::prefix('prediksi')->group(function () {
+                Route::get('/padi', [PrediksiPadiController::class, 'index']);
+            });
         });
     });
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
-            Route::resource('pengguna/penyuluh', UptdPenyuluhController::class);
-            Route::post('pengguna/penyuluh/penugasan', [UptdPenyuluhController::class, 'penugasan']);
+            Route::resource('pengguna/penyuluh', UptdAkunPenyuluhController::class);
+            Route::post('pengguna/penyuluh/penugasan', [UptdAkunPenyuluhController::class, 'penugasan']);
+            Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);

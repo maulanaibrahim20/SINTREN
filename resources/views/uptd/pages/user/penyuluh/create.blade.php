@@ -55,18 +55,6 @@
                                 <div class="invalid-feedback">Please provide a valid zip.</div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
-                                <label for="validationCustom15">Desa</label>
-                                <select name="desa" id="desa" class="form-control form-select select2">
-                                    <option value="">-- pilih --</option>
-                                    @foreach ($desa as $data)
-                                        <option value="{{ $data->id }}">
-                                            {{ $data->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         @include('template.component.button')
                     </form>
                 </div>

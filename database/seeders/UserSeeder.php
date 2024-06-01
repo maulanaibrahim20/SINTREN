@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             'user_id' => $penyuluh['id'],
             'no_telp' => '081272121',
             'kecamatan_id' =>  '3212170',
-            'createdBy' => 'admin',
+            'createdBy' => $penyuluh['id'],
         ]);
         $pangan = User::factory()->create([
             'username' => 'pangan',
