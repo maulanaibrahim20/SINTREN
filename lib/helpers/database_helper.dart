@@ -1,16 +1,16 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class PenyuluhDatabaseHelper {
-  static final PenyuluhDatabaseHelper _instance =
-      PenyuluhDatabaseHelper._internal();
+class DatabaseHelper {
+  static final DatabaseHelper _instance =
+      DatabaseHelper._internal();
   static Database? _database;
 
-  factory PenyuluhDatabaseHelper() {
+  factory DatabaseHelper() {
     return _instance;
   }
 
-  PenyuluhDatabaseHelper._internal();
+  DatabaseHelper._internal();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -32,6 +32,7 @@ class PenyuluhDatabaseHelper {
       CREATE TABLE desa (
         id TEXT PRIMARY KEY,
         name TEXT,
+        kecamatan_id TEXT,
         lahan_sawah INTEGER,
         lahan_non_sawah INTEGER,
         total_luas_lahan INTEGER

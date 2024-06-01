@@ -41,7 +41,7 @@ class _AdminLandingViewState extends State<AdminLandingView> {
       child: BottomNavigationBar(
         landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
         type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: false,
+        showUnselectedLabels: true,
         showSelectedLabels: true,
         elevation: 2,
         onTap: (index) {

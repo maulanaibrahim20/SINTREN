@@ -1,454 +1,241 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
+import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/ui/admin/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class AdminDetailDesaView extends StatefulWidget {
-  const AdminDetailDesaView({super.key});
+  const AdminDetailDesaView({super.key, this.desaId, this.desaName});
+
+  final String? desaId;
+  final String? desaName;
 
   @override
   State<AdminDetailDesaView> createState() => _AdminDetailDesaViewState();
 }
 
 class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
-  bool isSearchOpen = false;
+  final adminC = AdminController();
+  TextEditingController search = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    log(widget.desaId!);
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       appBar: AppBar(
         foregroundColor: ColorTheme().whiteColor,
-        title: isSearchOpen
-            ? PreferredSize(
-                preferredSize: const Size.fromHeight(60.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: const Icon(
-                        Icons.clear,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isSearchOpen = false;
-                        });
-                      },
-                    ),
-                    hintText: 'Cari berdasarkan desa/tanggal...',
-                    filled: true,
-                    fillColor: ColorTheme().whiteColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16.0),
-                  ),
-                  // onChanged: controller.updateSearchText,
-                ),
-              )
-            : Text(
-                'Detail Desa',
-                style: StyleTheme().styleWhite.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
+        title: Text(
+          'Detail Desa ${UserController().toCamelCase(widget.desaName!)}',
+          style: StyleTheme().styleWhite.copyWith(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
-        actions: [
-          isSearchOpen
-              ? const SizedBox.shrink()
-              : IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    color: ColorTheme().whiteColor,
-                  ),
-                  onPressed: () {
-                    setState(
-                      () {
-                        isSearchOpen = true;
-                      },
-                    );
-                  },
-                ),
-        ],
+        ),
         backgroundColor: ColorTheme().primaryColor,
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: 'filter_detail_desa',
-        onPressed: () {},
+        shape: const CircleBorder(),
+        heroTag: 'sinkron_detail',
+        onPressed: () {
+          setState(() {});
+        },
         backgroundColor: ColorTheme().primaryColor,
         foregroundColor: ColorTheme().whiteColor,
         child: const Icon(
-          Icons.filter_list,
+          Icons.refresh_rounded,
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            surfaceTintColor: ColorTheme().whiteColor,
-            elevation: 3,
-            child: Column(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: ColorTheme().primaryColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
+      body: FutureBuilder<List<dynamic>>(
+        future: Future.wait([
+          adminC.getHistoriPenyuluhan(),
+          adminC.getLuasLahanDesa(),
+        ]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error,
+                    color: Colors.grey,
+                    size: 50,
                   ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    child: Text(
-                      "Desa Lohbener",
-                      style: StyleTheme()
-                          .styleWhite
-                          .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
+                  Text(
+                    "Internal Server Error",
+                    style: StyleTheme().styleBlack.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
                   ),
+                ],
+              ),
+            );
+          } else {
+            final historiList =
+                (snapshot.data?[0] as List<HistoriPenyuluhanModel>)
+                    .where((histori) {
+              return histori.desaId == widget.desaId!;
+            });
+            final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
+
+            int getLuasDesa(String id) {
+              for (LuasWilayahModel wilayah in luasDesaList) {
+                if (wilayah.id == id) {
+                  return wilayah.totalLuasLahan;
+                }
+              }
+              return 0;
+            }
+
+            if (historiList.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.assignment,
+                      color: Colors.grey,
+                      size: 50,
+                    ),
+                    Text(
+                      "Penyuluhan Belum Dilakukan",
+                      style: StyleTheme().styleBlack.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 150,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: historiList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var displayList = historiList.toList();
+                  HistoriPenyuluhanModel desa = displayList[index];
+                  return GestureDetector(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DetailPenyuluhanView(
+                            index: 0,
+                            date: desa.date,
+                            desaId: desa.desaId,
+                            desaName: desa.desaName,
+                          ),
+                        ),
+                      );
+                      setState(() {});
+                    },
+                    child: Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      elevation: 3,
+                      surfaceTintColor: ColorTheme().whiteColor,
+                      color: ColorTheme().whiteColor,
+                      child: Column(
                         children: [
+                          const SizedBox(height: 20),
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
                               children: [
-                                Text(
-                                  "Progres penyuluhan \nbulan ini :",
-                                  style: StyleTheme().styleBlack,
-                                ),
-                                RichText(
-                                  text: TextSpan(
-                                    text: "90",
-                                    style: StyleTheme().stylePrimary.copyWith(
-                                        fontSize: 64,
-                                        fontWeight: FontWeight.w500),
-                                    children: [
-                                      TextSpan(
-                                        text: "%",
-                                        style: StyleTheme()
-                                            .stylePrimary
-                                            .copyWith(fontSize: 32),
-                                      ),
-                                    ],
+                                Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: ColorTheme().linearColor,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.home_rounded,
+                                      color: ColorTheme().whiteColor,
+                                      size: 30,
+                                    ),
                                   ),
                                 ),
+                                const SizedBox(width: 15),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Desa ${UserController().toCamelCase(desa.desaName)}",
+                                      style: StyleTheme().stylePrimary.copyWith(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      UserController().convertDate(desa.date),
+                                      style: StyleTheme().styleBlack.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700],
+                                          fontSize: 14),
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
                           ),
-                          Container(
-                            height: 130,
-                            width: 3,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          text: "Penyuluh: ",
-                                          style: StyleTheme().styleBlack,
-                                          children: [
-                                            TextSpan(
-                                              text: "\nSammir Emrich",
-                                              style: StyleTheme()
-                                                  .styleBlack
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye_rounded,
-                                          color: ColorTheme().primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          text: "Total Luas Lahan: ",
-                                          style: StyleTheme().styleBlack,
-                                          children: [
-                                            TextSpan(
-                                              text: "\n100 hektar",
-                                              style: StyleTheme()
-                                                  .styleBlack
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye_rounded,
-                                          color: ColorTheme().primaryColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 5),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              width: MediaQuery.of(context).size.width * 0.7,
-              height: 30,
-              decoration: BoxDecoration(
-                color: ColorTheme().primaryColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
-                  topRight: Radius.circular(50),
-                ),
-              ),
-              child: Text(
-                "Laporan Penyuluhan",
-                style: StyleTheme()
-                    .styleWhite
-                    .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView(
-              children: [
-                Column(
-                  children: List.generate(
-                    10,
-                    (index) {
-                      return Card(
-                        margin:
-                            const EdgeInsets.only(right: 15, left: 15, bottom: 10),
-                        surfaceTintColor: ColorTheme().whiteColor,
-                        elevation: 3,
-                        child: SizedBox(
-                          height: 180,
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
+                          const SizedBox(height: 10),
+                          Stack(
                             children: [
+                              const Divider(thickness: 2, color: Colors.grey),
                               Container(
-                                width: 10,
-                                decoration: BoxDecoration(
-                                    color: ColorTheme().primaryColor,
-                                    borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        topLeft: Radius.circular(10))),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Hibrida",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 16),
-                                          ),
-                                          Text(
-                                            "Tidak Terverifikasi",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(color: Colors.red),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Lahan Sawah",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "1/5/2024",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Irigasi Tersier",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "Bantuan Pemerintah",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Tanaman Akhir Bulan Lalu:",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "1000",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Tanam:",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "100",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Panen:",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "100",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Puso/Rusak:",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "100",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Tanaman Akhir Bulan Ini:",
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            "900",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                color: ColorTheme().whiteColor,
+                                margin: const EdgeInsets.only(left: 20),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  "Progres bulan ini",
+                                  style: StyleTheme()
+                                      .styleBlack
+                                      .copyWith(color: Colors.black87),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 90),
-              ],
-            ),
-          ),
-        ],
+                          const SizedBox(height: 10),
+                          LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width - 40,
+                            animation: true,
+                            lineHeight: 30,
+                            animationDuration: 2000,
+                            percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
+                                ? 1
+                                : desa.nilai / getLuasDesa(desa.desaId),
+                            center: Text(
+                              "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
+                              style: StyleTheme().styleWhite.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 14),
+                            ),
+                            barRadius: const Radius.circular(10),
+                            linearGradient: ColorTheme().linearColor,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        },
       ),
     );
   }

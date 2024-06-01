@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
-import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
+import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
@@ -15,7 +15,7 @@ class PalawijaService {
 
   Future<bool> getPalawija() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete('palawija');
 
       final Response result = await get(Uri.parse('${baseUrl}palawija'));
@@ -103,7 +103,7 @@ class PalawijaService {
 
   Future<bool> getDetailPalawijaByUser() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete('detailPalawija');
 
       final String? userId = await UserLoginModel().getUserId();

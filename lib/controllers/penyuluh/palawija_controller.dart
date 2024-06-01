@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
+import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
-import 'package:sintren_mobile/services/palawija_service.dart';
+import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PalawijaController {
@@ -45,7 +45,7 @@ class PalawijaController {
         return false;
       }
 
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.insert(
         'detailPalawija',
         data,
@@ -87,7 +87,7 @@ class PalawijaController {
         return false;
       }
 
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final localData = Map<String, dynamic>.from(data)..remove("user_id");
 
       await db.update(
@@ -118,7 +118,7 @@ class PalawijaController {
         return;
       }
 
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete(
         'detailPalawija',
         where: "id = ?",
@@ -136,7 +136,7 @@ class PalawijaController {
 
   Future<List<PalawijaModel>> getPalawija() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('palawija');
       return List<PalawijaModel>.from(
           maps.map((map) => PalawijaModel.fromJson(map)));
@@ -148,7 +148,7 @@ class PalawijaController {
 
   Future<List<DesaModel>> getDesa() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('desa');
       return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
     } catch (e) {
@@ -160,7 +160,7 @@ class PalawijaController {
   Future<List<DetailPalawijaModel>> getDetailPalawijaByUser(
       String date, String desaId) async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPalawija',
         where: 'date LIKE ? AND desa_id = ?',
@@ -177,7 +177,7 @@ class PalawijaController {
 
   Future<DetailPalawijaModel?> getDetailPalawijaById(int? id) async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final maps = await db.query(
         'detailPalawija',
         where: 'id = ?',

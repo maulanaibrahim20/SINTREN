@@ -9,6 +9,7 @@ class UserLoginModel {
   static const String _usernameKey = 'username';
   static const String _roleKey = 'role';
   static const String _kecamatanIdKey = 'kecamatanId';
+  static const String _kecamatanNameKey = 'kecamatanName';
   static const String _addressKey = 'address';
   static const String _phoneKey = 'phone';
 
@@ -45,6 +46,11 @@ class UserLoginModel {
   Future<void> setKecamatanId(String kecamatanId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(_kecamatanIdKey, kecamatanId);
+  }
+
+  Future<void> setKecamatanName(String kecamatanName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(_kecamatanNameKey, kecamatanName);
   }
 
   Future<void> setAddress(String address) async {
@@ -92,6 +98,11 @@ class UserLoginModel {
     return prefs.getString(_kecamatanIdKey);
   }
 
+  Future<String?> getKecamatanName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_kecamatanNameKey);
+  }
+
   Future<String?> getAddress() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_addressKey);
@@ -112,6 +123,7 @@ class UserLoginModel {
     await prefs.remove(_usernameKey);
     await prefs.remove(_roleKey);
     await prefs.remove(_kecamatanIdKey);
+    await prefs.remove(_kecamatanNameKey);
     await prefs.remove(_addressKey);
     await prefs.remove(_phoneKey);
     EasyLoading.dismiss();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
+import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/ui/admin/admin_landing_view.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
@@ -24,12 +25,20 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
 
   Future<void> _initializeDataWithTimeout() async {
     try {
-      await UserController().synchronizeData(statusNotifier).timeout(const Duration(minutes: 1));
+      if (widget.role == "PENYULUH") {
+        await PenyuluhController()
+            .synchronizeData(statusNotifier)
+            .timeout(const Duration(minutes: 1));
+      } else if (widget.role == "PERTANIAN" || widget.role == "UPTD") {
+        await AdminController()
+            .synchronizeData(statusNotifier)
+            .timeout(const Duration(minutes: 1));
+      }
     } catch (e) {
       setState(() {
         _initializationError = true;
       });
-      if (!isDialogShown) { 
+      if (!isDialogShown) {
         isDialogShown = true;
         _showRetryDialog();
       }

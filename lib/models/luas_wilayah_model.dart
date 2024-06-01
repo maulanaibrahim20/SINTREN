@@ -1,6 +1,7 @@
 class LuasWilayahModel {
   final String id;
   final String name;
+  final String kecamatanId;
   final int luasLahanSawah;
   final int luasLahanNonSawah;
   final int totalLuasLahan;
@@ -9,19 +10,24 @@ class LuasWilayahModel {
     required this.luasLahanSawah,
     required this.luasLahanNonSawah,
     required this.totalLuasLahan,
+    required this.kecamatanId,
     required this.id,
     required this.name,
   });
 
   factory LuasWilayahModel.fromJson(Map<String, dynamic> json) {
     return LuasWilayahModel(
-      id: json['id'],
-      name: json['name'],
-      luasLahanNonSawah:
-          int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
-      luasLahanSawah: int.parse(json['luas_lahan_wilayah']['lahan_sawah']),
-      totalLuasLahan: int.parse(json['luas_lahan_wilayah']['lahan_sawah']) +
-          int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
+      id: json['desa_id'],
+      name: json['desa']['name'],
+      kecamatanId: json['kecamatan_id'].toString(),
+      // luasLahanNonSawah:
+      //     int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
+      // luasLahanSawah: int.parse(json['luas_lahan_wilayah']['lahan_sawah']),
+      // totalLuasLahan: int.parse(json['luas_lahan_wilayah']['lahan_sawah']) +
+      //     int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
+      luasLahanNonSawah: json['lahan_non_sawah'],
+      luasLahanSawah: json['lahan_sawah'],
+      totalLuasLahan: json['lahan_sawah'] + json['lahan_non_sawah'],
     );
   }
 
@@ -29,6 +35,7 @@ class LuasWilayahModel {
     return LuasWilayahModel(
       id: map['id'],
       name: map['name'],
+      kecamatanId: map['kecamatan_id'],
       luasLahanNonSawah: map['lahan_non_sawah'],
       luasLahanSawah: map['lahan_sawah'],
       totalLuasLahan: map['total_luas_lahan'],
@@ -39,6 +46,7 @@ class LuasWilayahModel {
     return {
       'id': id,
       'name': name,
+      'kecamatan_id': kecamatanId,
       'lahan_sawah': luasLahanSawah,
       'lahan_non_sawah': luasLahanNonSawah,
       'total_luas_lahan': totalLuasLahan,

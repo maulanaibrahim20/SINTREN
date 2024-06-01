@@ -3,10 +3,7 @@ import 'dart:developer';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
-import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
-import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
-import 'package:sqflite/sqflite.dart';
 
 class UserService {
   Future<bool> login(
@@ -39,8 +36,9 @@ class UserService {
 
       final Map<String, dynamic> dataJson = jsonResult['data'];
       final detail = dataJson['detail'];
+      final kecamatan = dataJson['kecamatan'];
 
-      updateUserLoginModel(dataJson, detail);
+      updateUserLoginModel(dataJson, detail, kecamatan);
       log("Login successful");
       return true;
     } catch (e) {
@@ -50,8 +48,8 @@ class UserService {
     }
   }
 
-  void updateUserLoginModel(
-      Map<String, dynamic> dataJson, Map<String, dynamic> detail) {
+  void updateUserLoginModel(Map<String, dynamic> dataJson,
+      Map<String, dynamic> detail, Map<String, dynamic> kecamatan) {
     UserLoginModel()
       ..setLogin(true)
       ..setEmail(dataJson['email'])
@@ -60,6 +58,7 @@ class UserService {
       ..setUserId(dataJson['id'])
       ..setUsername(dataJson['username'])
       ..setKecamatanId(detail['kecamatan_id'].toString())
+      ..setKecamatanName(kecamatan['name'])
       ..setAddress(detail['alamat'])
       ..setPhone(detail['no_telp']);
   }
@@ -130,61 +129,15 @@ class UserService {
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
       final dataJson = jsonResult['data'];
       final detail = dataJson['detail'];
+      final kecamatan = dataJson['detail'];
 
-      updateUserLoginModel(dataJson, detail);
+      updateUserLoginModel(dataJson, detail, kecamatan);
 
       return true;
     } catch (e) {
       log("Error getting user: $e");
       EasyLoading.showToast("Internal Server Error");
       return false;
-    }
-  }
-
-  Future<bool> getDataPenyuluhanDesa() async {
-    final String url = '${ConfigApp().baseUrl}getAssignment';
-    final dbHelper = PenyuluhDatabaseHelper();
-    final userModel = UserLoginModel();
-
-    try {
-      final Database db = await dbHelper.database;
-      await db.delete('desa');
-
-      final String? userId = await userModel.getUserId();
-
-      final Response response = await get(Uri.parse('$url/$userId'));
-
-      if (response.statusCode != 200) {
-        log("Failed to get desa: ${response.statusCode} - ${response.body}");
-        return false;
-      }
-
-      final Map<String, dynamic> jsonResult = jsonDecode(response.body);
-      if (jsonResult['data'] == null) {
-        log("Failed to get desa: data is null");
-        return false;
-      }
-
-      List<LuasWilayahModel> desa = (jsonResult['data'] as List)
-          .map((element) => LuasWilayahModel.fromJson(element))
-          .toList();
-
-      Batch batch = db.batch();
-      for (var item in desa) {
-        batch.insert(
-          'desa',
-          item.toMap(),
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
-      }
-
-      await batch.commit(noResult: true);
-      log("Get data penyuluhan desa sukses");
-      return true;
-    } catch (e) {
-      EasyLoading.showToast("Internal Server Error");
-      log("Failed to get desa: $e");
-      throw Exception("Internal Server Error");
     }
   }
 }

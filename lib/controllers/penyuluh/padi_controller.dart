@@ -1,14 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
+import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
 import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
-import 'package:sintren_mobile/services/padi_service.dart';
+import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PadiController {
@@ -50,7 +50,7 @@ class PadiController {
         ..['pengairan_name'] = map['pengairan_name'] ?? ''
         ..['padi_name'] = map["padi_name"];
 
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.insert(
         'detailPadi',
         dataForDatabase,
@@ -95,7 +95,7 @@ class PadiController {
         return false;
       }
 
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final localData = Map<String, dynamic>.from(data)..remove("user_id");
 
       await db.update(
@@ -126,7 +126,7 @@ class PadiController {
         return;
       }
 
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete(
         'detailPadi',
         where: "id = ?",
@@ -144,7 +144,7 @@ class PadiController {
 
   Future<List<PengairanModel>> getPengairan() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('pengairan');
 
       return List<PengairanModel>.from(
@@ -157,7 +157,7 @@ class PadiController {
 
   Future<List<PadiModel>> getPadi() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('padi');
 
       return List<PadiModel>.from(maps.map((map) => PadiModel.fromJson(map)));
@@ -169,7 +169,7 @@ class PadiController {
 
   Future<List<DesaModel>> getDesa() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('desa');
 
       return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
@@ -182,7 +182,7 @@ class PadiController {
   Future<List<DetailPadiModel>> getDetailPadiByUser(
       String date, String desaId) async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPadi',
         where: 'date LIKE ? AND desa_id = ?',
@@ -200,7 +200,7 @@ class PadiController {
 
   Future<DetailPadiModel?> getDetailPadiById(int? id) async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       final maps = await db.query(
         'detailPadi',
         where: 'id = ?',
@@ -215,25 +215,6 @@ class PadiController {
     } catch (e) {
       log("Get detail padi by id error: $e");
       return null;
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getGroupedData(
-      String date, String desaId) async {
-    try {
-      final db = await PenyuluhDatabaseHelper().database;
-
-      final List<Map<String, dynamic>> result = await db.rawQuery('''
-        SELECT pengairan_name, jenis_lahan, tipe_data, SUM(nilai) as total_nilai
-        FROM detailPadi
-        WHERE date LIKE ? AND desa_id = ?
-        GROUP BY pengairan_name, jenis_lahan, tipe_data
-      ''', ['%$date%', desaId]);
-
-      return result;
-    } catch (e) {
-      log("Get grouped data error: $e");
-      return [];
     }
   }
 

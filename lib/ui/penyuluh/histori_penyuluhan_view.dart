@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
+import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
-import 'package:sintren_mobile/services/padi_service.dart';
-import 'package:sintren_mobile/services/palawija_service.dart';
-import 'package:sintren_mobile/services/user_service.dart';
+import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
+import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
+import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
@@ -24,11 +25,12 @@ class HistoriPenyuluhanView extends StatefulWidget {
 
 class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
   final userC = UserController();
+  final penyuluhC = PenyuluhController();
   late List<DesaModel> desaList;
   late DesaModel? selectedDesaValue;
 
   Future<void> _synchronizeData() async {
-    await UserService().getDataPenyuluhanDesa();
+    await PenyuluhService().getDataPenyuluhanDesa();
     await PadiService().getDetailPadiByUser();
     await PalawijaService().getDetailPalawijaByUser();
     setState(() {});
@@ -103,10 +105,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
           Icons.refresh_rounded,
         ),
       ),
-      body: FutureBuilder<List<dynamic>>(
+      body: 
+      FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          userC.getHistoriPenyuluhan(),
-          userC.getLuasLahanDesa(),
+          penyuluhC.getHistoriPenyuluhan(),
+          penyuluhC.getLuasLahanDesa(),
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

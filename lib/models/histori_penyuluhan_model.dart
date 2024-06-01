@@ -13,10 +13,11 @@ class HistoriPenyuluhanModel {
 
   factory HistoriPenyuluhanModel.fromJson(Map<String, dynamic> json) {
     return HistoriPenyuluhanModel(
-        date: json['month_year'],
-        desaId: json['desa_id'],
-        desaName: json['desa_name'],
-        nilai: json['total_nilai']);
+      date: json['month_year'],
+      desaId: json['desa_id'],
+      desaName: json['desa_name'],
+      nilai: (json['total_nilai'] as num).toInt(),
+    );
   }
 
   Map<String, dynamic> toMap() {

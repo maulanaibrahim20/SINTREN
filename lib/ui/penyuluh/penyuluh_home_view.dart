@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
@@ -24,11 +25,12 @@ class PenyuluhHomeView extends StatefulWidget {
 
 class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
   final userC = UserController();
+  final penyuluhC = PenyuluhController();
   late Future<List<DesaModel>> desa;
 
   Future<void> _initializeData() async {
     setState(() {
-      desa = userC.getDesa();
+      desa = penyuluhC.getDesa();
     });
   }
 
@@ -57,7 +59,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
           });
 
           try {
-            await userC.synchronizeData(statusNotifier);
+            await penyuluhC.synchronizeData(statusNotifier);
           } finally {
             EasyLoading.dismiss();
           }
@@ -320,8 +322,8 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
               Expanded(
                 child: FutureBuilder<List<dynamic>>(
                   future: Future.wait([
-                    userC.getHistoriPenyuluhanBulanIni(),
-                    userC.getLuasLahanDesa(),
+                    penyuluhC.getHistoriPenyuluhanBulanIni(),
+                    penyuluhC.getLuasLahanDesa(),
                   ]),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -448,7 +450,8 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                                             FontWeight.bold),
                                               ),
                                               Text(
-                                                userC.convertDate(desa.date),
+                                                userC
+                                                    .convertDate(desa.date),
                                                 style: StyleTheme()
                                                     .styleBlack
                                                     .copyWith(

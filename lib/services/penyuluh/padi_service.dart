@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart';
 import 'package:sintren_mobile/config/config_app.dart';
-import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
+import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
@@ -16,7 +16,7 @@ class PadiService {
 
   Future<bool> getPengairan() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete('pengairan');
 
       final Response result = await get(Uri.parse('${baseUrl}pengairan'));
@@ -58,7 +58,7 @@ class PadiService {
 
   Future<bool> getPadi() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete('padi');
 
       final Response result = await get(Uri.parse('${baseUrl}padi'));
@@ -146,7 +146,7 @@ class PadiService {
 
   Future<bool> getDetailPadiByUser() async {
     try {
-      final db = await PenyuluhDatabaseHelper().database;
+      final db = await DatabaseHelper().database;
       await db.delete('detailPadi');
 
       final String? id = await UserLoginModel().getUserId();
