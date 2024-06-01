@@ -3,6 +3,7 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_padi_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_palawija_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/histori_penyuluhan_view.dart';
 
 class DetailPenyuluhanView extends StatefulWidget {
   const DetailPenyuluhanView(
@@ -46,6 +47,20 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: ColorTheme().whiteColor,
+          ),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const HistoriPenyuluhanView()),
+              (route) => false,
+            );
+          },
+        ),
         elevation: 0,
         centerTitle: false,
         foregroundColor: ColorTheme().whiteColor,

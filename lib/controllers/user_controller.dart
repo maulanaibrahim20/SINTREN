@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:sintren_mobile/helpers/penyuluh_dbhelper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
@@ -182,7 +183,7 @@ class UserController {
             month_year,
             desa_id
         ORDER BY
-            month_year, desa_id;
+            month_year DESC, desa_id;
       ''';
 
       final List<Map<String, dynamic>> maps = await db.rawQuery(query);
@@ -237,7 +238,7 @@ class UserController {
             month_year,
             desa_id
         ORDER BY
-            month_year, desa_id;
+            month_year DESC, desa_id;
       ''';
 
       final List<Map<String, dynamic>> mapsCurrentMonth =
@@ -270,6 +271,7 @@ class UserController {
   Future<void> synchronizeData(ValueNotifier<String> statusNotifier) async {
     try {
       statusNotifier.value = 'Memulai sinkronisasi...';
+      await initializeDateFormatting('id_ID', null);
 
       statusNotifier.value = 'Mendapatkan data pengairan...';
       await PadiService().getPengairan();

@@ -30,7 +30,9 @@ class PadiController {
         "jenis_bantuan": map['jenis_bantuan'],
         "id_jenis_padi": map['id_jenis_padi'],
         "date": map['date'],
-        "id_jenis_pengairan": map['jenis_lahan'] == 'non sawah' ? null : map['id_jenis_pengairan'],
+        "id_jenis_pengairan": map['jenis_lahan'] == 'non sawah'
+            ? null
+            : map['id_jenis_pengairan'],
         "tipe_data": map['tipe_data'],
         "nilai": map['nilai'],
       };
@@ -79,7 +81,9 @@ class PadiController {
         "jenis_bantuan": map['jenis_bantuan'],
         "id_jenis_padi": map['id_jenis_padi'],
         "date": map['date'],
-        "id_jenis_pengairan": map['jenis_lahan'] == 'non sawah' ? null : map['id_jenis_pengairan'],
+        "id_jenis_pengairan": map['jenis_lahan'] == 'non sawah'
+            ? null
+            : map['id_jenis_pengairan'],
         "tipe_data": map['tipe_data'],
         "nilai": map['nilai'],
       };
@@ -143,7 +147,8 @@ class PadiController {
       final db = await PenyuluhDatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('pengairan');
 
-      return List<PengairanModel>.from(maps.map((map) => PengairanModel.fromJson(map)));
+      return List<PengairanModel>.from(
+          maps.map((map) => PengairanModel.fromJson(map)));
     } catch (e) {
       log("Get pengairan error: $e");
       return [];
@@ -174,16 +179,19 @@ class PadiController {
     }
   }
 
-  Future<List<DetailPadiModel>> getDetailPadiByUser(String date, String desaId) async {
+  Future<List<DetailPadiModel>> getDetailPadiByUser(
+      String date, String desaId) async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPadi',
         where: 'date LIKE ? AND desa_id = ?',
         whereArgs: ['%$date%', desaId],
+        orderBy: 'date DESC',
       );
 
-      return List<DetailPadiModel>.from(maps.map((map) => DetailPadiModel.fromMap(map)));
+      return List<DetailPadiModel>.from(
+          maps.map((map) => DetailPadiModel.fromMap(map)));
     } catch (e) {
       log("Get detail padi by user error: $e");
       return [];
@@ -210,7 +218,8 @@ class PadiController {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getGroupedData(String date, String desaId) async {
+  Future<List<Map<String, dynamic>>> getGroupedData(
+      String date, String desaId) async {
     try {
       final db = await PenyuluhDatabaseHelper().database;
 
@@ -228,9 +237,11 @@ class PadiController {
     }
   }
 
-  Future<Map<String, JenisPadi>> getKesimpulanDataPadi(String date, String desaId) async {
+  Future<Map<String, JenisPadi>> getKesimpulanDataPadi(
+      String date, String desaId) async {
     try {
-      List<DetailPadiModel> groupedData = await getDetailPadiByUser(date, desaId);
+      List<DetailPadiModel> groupedData =
+          await getDetailPadiByUser(date, desaId);
 
       var groupedByAll = <String, Map<String, Map<String, Map<String, int>>>>{};
 
@@ -239,7 +250,8 @@ class PadiController {
             .putIfAbsent(row.padiName, () => {})
             .putIfAbsent(row.jenisLahan, () => {})
             .putIfAbsent(row.jenisBantuan, () => {})
-            .update(row.tipeData, (value) => value + row.nilai, ifAbsent: () => row.nilai);
+            .update(row.tipeData, (value) => value + row.nilai,
+                ifAbsent: () => row.nilai);
       }
 
       var result = <String, JenisPadi>{};
@@ -261,15 +273,18 @@ class PadiController {
               totalJenisBantuan += nilai;
             });
 
-            bantuanData[jenisBantuan] = JenisBantuan(tipeData: tipeDataEntries, total: totalJenisBantuan);
+            bantuanData[jenisBantuan] = JenisBantuan(
+                tipeData: tipeDataEntries, total: totalJenisBantuan);
             totalJenisLahan += totalJenisBantuan;
           });
 
-          lahanData[jenisLahan] = JenisLahan(jenisBantuan: bantuanData, total: totalJenisLahan);
+          lahanData[jenisLahan] =
+              JenisLahan(jenisBantuan: bantuanData, total: totalJenisLahan);
           totalJenisPadi += totalJenisLahan;
         });
 
-        result[jenisPadi] = JenisPadi(jenisLahan: lahanData, total: totalJenisPadi);
+        result[jenisPadi] =
+            JenisPadi(jenisLahan: lahanData, total: totalJenisPadi);
       });
 
       return result;
@@ -279,9 +294,11 @@ class PadiController {
     }
   }
 
-  Future<Map<String, JenisPengairan>> getKesimpulanDataPengairan(String date, String desaId) async {
+  Future<Map<String, JenisPengairan>> getKesimpulanDataPengairan(
+      String date, String desaId) async {
     try {
-      List<DetailPadiModel> groupedData = await getDetailPadiByUser(date, desaId);
+      List<DetailPadiModel> groupedData =
+          await getDetailPadiByUser(date, desaId);
 
       var groupedByPengairan = <String, JenisPengairan>{};
 
@@ -299,13 +316,14 @@ class PadiController {
         var tipeDataEntry = pengairanDataEntry.tipeData
             .putIfAbsent(tipeData, () => TipeData(data: {}));
 
-        tipeDataEntry.data[tipeData] = (tipeDataEntry.data[tipeData] ?? 0) + nilai;
+        tipeDataEntry.data[tipeData] =
+            (tipeDataEntry.data[tipeData] ?? 0) + nilai;
         pengairanDataEntry.total += nilai;
       }
 
       groupedByPengairan.forEach((jenisPengairan, jenisPengairanEntry) {
-        int totalJenisPengairan = jenisPengairanEntry.pengairanData.values
-            .fold(0, (sum, pengairanDataEntry) => sum + pengairanDataEntry.total);
+        int totalJenisPengairan = jenisPengairanEntry.pengairanData.values.fold(
+            0, (sum, pengairanDataEntry) => sum + pengairanDataEntry.total);
         jenisPengairanEntry.total = totalJenisPengairan;
       });
 

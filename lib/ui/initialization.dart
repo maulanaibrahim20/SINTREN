@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:sintren_mobile/services/padi_service.dart';
-import 'package:sintren_mobile/services/palawija_service.dart';
-import 'package:sintren_mobile/services/user_service.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/admin/admin_landing_view.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
@@ -23,40 +20,19 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
   final ValueNotifier<String> statusNotifier =
       ValueNotifier<String>('Memulai aplikasi...');
   bool _initializationError = false;
-
-  Future<void> _initializeData() async {
-    statusNotifier.value = 'Memulai inisialisasi...';
-    await initializeDateFormatting('id_ID', null);
-
-    if (widget.role == "PENYULUH") {
-      statusNotifier.value = 'Mendapatkan data pengairan...';
-      await PadiService().getPengairan();
-
-      statusNotifier.value = 'Mendapatkan data padi...';
-      await PadiService().getPadi();
-
-      statusNotifier.value = 'Mendapatkan data palawija...';
-      await PalawijaService().getPalawija();
-    }
-
-    statusNotifier.value = 'Mendapatkan data desa...';
-    await UserService().getDataPenyuluhanDesa();
-
-    statusNotifier.value = 'Mendapatkan data penyuluhan...';
-    await PadiService().getDetailPadiByUser();
-    await PalawijaService().getDetailPalawijaByUser();
-
-    statusNotifier.value = 'Selesai inisialisasi';
-  }
+  bool isDialogShown = false;
 
   Future<void> _initializeDataWithTimeout() async {
     try {
-      await _initializeData().timeout(const Duration(minutes: 1));
+      await UserController().synchronizeData(statusNotifier).timeout(const Duration(minutes: 1));
     } catch (e) {
       setState(() {
         _initializationError = true;
       });
-      _showRetryDialog();
+      if (!isDialogShown) { 
+        isDialogShown = true;
+        _showRetryDialog();
+      }
     }
   }
 
@@ -111,7 +87,6 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SplashScreen(statusNotifier: statusNotifier);
         } else if (snapshot.hasError) {
-          _showRetryDialog();
           return SplashScreen(statusNotifier: statusNotifier);
         } else {
           if (widget.isLogin ?? false) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
@@ -96,10 +97,24 @@ class DetailPadiViewState extends State<DetailPadiView> {
                           gradient: ColorTheme().linearColor,
                         ),
                         child: Center(
-                          child: Icon(
-                            Icons.add,
-                            color: ColorTheme().whiteColor,
-                            size: 25,
+                          child: GestureDetector(
+                            onTap: () {
+                              DesaModel desa = DesaModel(
+                                  id: widget.desaId, name: widget.desaName);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => FormPadiView(
+                                            desa: desa,
+                                            onCreate: true,
+                                            date: "${widget.date}-01",
+                                          )));
+                            },
+                            child: Icon(
+                              Icons.add,
+                              color: ColorTheme().whiteColor,
+                              size: 25,
+                            ),
                           ),
                         ),
                       ),

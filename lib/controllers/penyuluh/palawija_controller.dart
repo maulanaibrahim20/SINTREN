@@ -165,6 +165,7 @@ class PalawijaController {
         'detailPalawija',
         where: 'date LIKE ? AND desa_id = ?',
         whereArgs: ['%$date%', desaId],
+        orderBy: 'date DESC',
       );
       return List<DetailPalawijaModel>.from(
           maps.map((map) => DetailPalawijaModel.fromMap(map)));

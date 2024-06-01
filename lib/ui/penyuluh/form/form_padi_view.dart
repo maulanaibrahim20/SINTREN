@@ -14,10 +14,13 @@ import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.da
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class FormPadiView extends StatefulWidget {
-  const FormPadiView({super.key, this.detail, required this.onCreate});
+  const FormPadiView(
+      {super.key, this.detail, required this.onCreate, this.desa, this.date});
 
   final DetailPadiModel? detail;
   final bool onCreate;
+  final DesaModel? desa;
+  final String? date;
 
   @override
   State<FormPadiView> createState() => _FormPadiViewState();
@@ -71,6 +74,10 @@ class _FormPadiViewState extends State<FormPadiView> {
         selectedJenisPadiValue = null;
         selectedTipeDataValue = '';
       }
+
+      if (widget.desa != null) {
+        selectedDesaValue = widget.desa;
+      }
       _isLoading = false;
     });
   }
@@ -84,6 +91,12 @@ class _FormPadiViewState extends State<FormPadiView> {
     // if (widget.detail != null) {
     //   final DateTime parsedDate = DateTime.parse(widget.detail!.date);
 
+    //   firstDate = DateTime(parsedDate.year, parsedDate.month, 1);
+    //   lastDate = DateTime(parsedDate.year, parsedDate.month + 1, 0);
+    // }
+    // log(widget.date ?? "");
+    // if (widget.date != null) {
+    //   final DateTime parsedDate = DateTime.parse(widget.date ?? '');
     //   firstDate = DateTime(parsedDate.year, parsedDate.month, 1);
     //   lastDate = DateTime(parsedDate.year, parsedDate.month + 1, 0);
     // }
@@ -146,13 +159,14 @@ class _FormPadiViewState extends State<FormPadiView> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailPenyuluhanView(
-                                index: 0,
-                                date: date.text.substring(0, 7),
-                                desaId: selectedDesaValue!.id,
-                                desaName: selectedDesaValue!.name,
-                              )),
-                      (Route<dynamic> route) => route.isFirst,
+                        builder: (context) => DetailPenyuluhanView(
+                          index: 0,
+                          date: date.text.substring(0, 7),
+                          desaId: selectedDesaValue!.id,
+                          desaName: selectedDesaValue!.name,
+                        ),
+                      ),
+                      (route) => false,
                     );
                   }
                 });
@@ -193,6 +207,26 @@ class _FormPadiViewState extends State<FormPadiView> {
                   key: formKey,
                   child: ListView(
                     children: [
+                      TextFormFieldComponent(
+                        style: StyleTheme().styleBlack.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: 15),
+                        readOnly: true,
+                        icon: Icons.date_range_rounded,
+                        hint: "Pilih Tanggal",
+                        label: "Tanggal Penyuluhan",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a date';
+                          }
+                          return null;
+                        },
+                        obsecure: false,
+                        controller: date,
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                      ),
+                      const SizedBox(height: 10),
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Desa',
@@ -217,26 +251,6 @@ class _FormPadiViewState extends State<FormPadiView> {
                           setState(() {
                             selectedDesaValue = newValue!;
                           });
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormFieldComponent(
-                        style: StyleTheme().styleBlack.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 15),
-                        readOnly: true,
-                        icon: Icons.date_range_rounded,
-                        hint: "Pilih Tanggal",
-                        label: "Tanggal Penyuluhan",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a date';
-                          }
-                          return null;
-                        },
-                        obsecure: false,
-                        controller: date,
-                        onTap: () {
-                          _selectDate(context);
                         },
                       ),
                       const SizedBox(height: 10),

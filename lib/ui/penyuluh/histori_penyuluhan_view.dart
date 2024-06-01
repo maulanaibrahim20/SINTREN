@@ -13,6 +13,7 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
   const HistoriPenyuluhanView({super.key});
@@ -55,6 +56,20 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         flexibleSpace: Container(
           decoration: BoxDecoration(gradient: ColorTheme().linearColor),
         ),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: ColorTheme().whiteColor,
+          ),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const PenyuluhHomeView()),
+              (route) => false,
+            );
+          },
+        ),
         title: Text(
           'Histori Penyuluhan',
           style: StyleTheme().styleWhite.copyWith(
@@ -76,6 +91,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         backgroundColor: ColorTheme().primaryColor,
       ),
       floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
         onPressed: () async {
           EasyLoading.show(status: "Sinkronisasi Data");
           await _synchronizeData();

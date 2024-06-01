@@ -13,10 +13,13 @@ import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.da
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class FormPalawijaView extends StatefulWidget {
-  const FormPalawijaView({super.key, this.detail, required this.onCreate});
+  const FormPalawijaView(
+      {super.key, this.detail, required this.onCreate, this.desa, this.date});
 
   final DetailPalawijaModel? detail;
   final bool onCreate;
+  final DesaModel? desa;
+  final String? date;
 
   @override
   State<FormPalawijaView> createState() => _FormPalawijaViewState();
@@ -63,6 +66,9 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
         selectedDesaValue = null;
         selectedJenisPalawijaValue = null;
         selectedTipeDataValue = '';
+      }
+      if (widget.desa != null) {
+        selectedDesaValue = widget.desa;
       }
       _isLoading = false;
     });
@@ -133,7 +139,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                                 desaId: selectedDesaValue!.id,
                                 desaName: selectedDesaValue!.name,
                               )),
-                      (Route<dynamic> route) => route.isFirst,
+                      (route) => false,
                     );
                   }
                 });
@@ -177,6 +183,26 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      TextFormFieldComponent(
+                        style: StyleTheme().styleBlack.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: 15),
+                        readOnly: true,
+                        icon: Icons.date_range_rounded,
+                        hint: "Pilih Tanggal",
+                        label: "Tanggal Penyuluhan",
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select a date';
+                          }
+                          return null;
+                        },
+                        obsecure: false,
+                        controller: date,
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                      ),
+                      const SizedBox(height: 10),
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Desa',
@@ -201,24 +227,6 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           setState(() {
                             selectedDesaValue = newValue!;
                           });
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormFieldComponent(
-                        readOnly: true,
-                        icon: Icons.date_range_rounded,
-                        hint: "Pilih Tanggal",
-                        label: "Tanggal Penyuluhan",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a date';
-                          }
-                          return null;
-                        },
-                        obsecure: false,
-                        controller: date,
-                        onTap: () {
-                          _selectDate(context);
                         },
                       ),
                       const SizedBox(height: 10),
@@ -340,10 +348,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       const SizedBox(height: 10),
                       TextFormFieldComponent(
-                        controller: value = TextEditingController(
-                            text: widget.detail == null
-                                ? ""
-                                : widget.detail!.nilai.toString()),
+                        controller: value,
                         icon: Icons.numbers,
                         hint: "Masukkan Nilai",
                         label: "Nilai",
@@ -357,6 +362,10 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                             value.text = value!;
                           });
                         },
+                        style: StyleTheme().styleBlack.copyWith(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
                       ),
                     ],
                   ),
