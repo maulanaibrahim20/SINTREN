@@ -1,19 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Penyuluh;
 
 use App\Http\Controllers\Controller;
-use App\Models\Operator\TanamanPalawija;
-use App\Models\Penyuluh\JenisPalawija;
-use App\Models\Penyuluh\LaporanPalawija;
+use App\Models\Operator\TanamanPadi;
+use App\Models\Penyuluh\LaporanPadi;
+use App\Models\Penyuluh\Pengairan;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
-class PalawijaController extends Controller
+class PadiController extends Controller
 {
-    public function getJenisPalawija()
+    public function getPengairan()
     {
-        $pengairan = TanamanPalawija::all();
+        $pengairan = Pengairan::all();
+        $responseData = [
+            'status' => 'success',
+            'message' => 'Get data successful',
+            'data' => $pengairan
+        ];
+        return response()->json($responseData);
+    }
+
+    public function getPadi()
+    {
+        $pengairan = TanamanPadi::all();
         $responseData = [
             'status' => 'success',
             'message' => 'Get data successful',
@@ -25,9 +36,9 @@ class PalawijaController extends Controller
     public function showAllByUser($id)
     {
         try {
-            $laporanPalawija = LaporanPalawija::where('user_id', $id)->with(['desa', 'palawija'])->get();
+            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan','padi'])->get();
 
-            if ($laporanPalawija->isEmpty()) {
+            if ($laporanPadi->isEmpty()) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Data kosong.',
@@ -38,7 +49,7 @@ class PalawijaController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil mendapatkan data',
-                'data' => $laporanPalawija
+                'data' => $laporanPadi
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -51,7 +62,7 @@ class PalawijaController extends Controller
 
     public function deletaDetailById($id)
     {
-        $item = LaporanPalawija::find($id);
+        $item = LaporanPadi::find($id);
 
         if (!$item) {
             return response()->json([
@@ -76,23 +87,24 @@ class PalawijaController extends Controller
             'user_id' => 'required|string',
             'kecamatan_id' => 'required|string',
             'desa_id' => 'required|string',
-            'date' => 'required|string|max:255',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'id_jenis_palawija' => 'required|string|max:255',
+            'id_jenis_padi' => 'required|integer',
+            'date' => 'required|string|max:255',
+            'id_jenis_pengairan' => 'integer|nullable',
             'tipe_data' => 'required|string|max:255',
             'nilai' => 'required|numeric',
         ]);
 
         try {
-            $palawija = new LaporanPalawija();
-            $palawija->fill($validated);
-            $palawija->save();
+            $padi = new LaporanPadi();
+            $padi->fill($validated);
+            $padi->save();
 
             $responseData = [
                 'status' => 'success',
                 'message' => 'Berhasil menyimpan data',
-                'data' => $palawija,
+                'data' => $padi,
             ];
             return response()->json($responseData, 201);
         } catch (QueryException $e) {
@@ -121,20 +133,21 @@ class PalawijaController extends Controller
             'date' => 'required|string|max:255',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'id_jenis_palawija' => 'required|string|max:255',
+            'id_jenis_padi' => 'required|string|max:255',
+            'id_jenis_pengairan' => 'integer|nullable',
             'tipe_data' => 'required|string|max:255',
             'nilai' => 'required|numeric',
         ]);
 
         try {
-            $palawija = LaporanPalawija::findOrFail($id);
-            $palawija->fill($validated);
-            $palawija->save();
+            $padi = LaporanPadi::findOrFail($id);
+            $padi->fill($validated);
+            $padi->save();
 
             $responseData = [
                 'status' => 'success',
                 'message' => 'Berhasil mengupdate data',
-                'data' => $palawija,
+                'data' => $padi,
             ];
             return response()->json($responseData, 200);
         } catch (QueryException $e) {

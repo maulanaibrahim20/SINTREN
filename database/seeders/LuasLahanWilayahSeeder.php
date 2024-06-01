@@ -16,31 +16,73 @@ class LuasLahanWilayahSeeder extends Seeder
     {
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
-            'desa_id' => '3212010007',
+            'desa_id' => '3212170001',
             'lahan_sawah' => 500,
             'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
-            'desa_id' => '3212010008',
+            'desa_id' => '3212170002',
             'lahan_sawah' => 500,
             'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
-            'desa_id' => '3212010009',
+            'desa_id' => '3212170003',
             'lahan_sawah' => 500,
             'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
-            'desa_id' => '3212010010',
+            'desa_id' => '3212170004',
             'lahan_sawah' => 500,
             'lahan_non_sawah' => 500
         ]);
         LuasLahanWilayah::create([
             'kecamatan_id' => 3212170,
-            'desa_id' => '3212010011',
+            'desa_id' => '3212170005',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170006',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170007',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170008',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170009',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170010',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170011',
+            'lahan_sawah' => 500,
+            'lahan_non_sawah' => 500
+        ]);
+        LuasLahanWilayah::create([
+            'kecamatan_id' => 3212170,
+            'desa_id' => '3212170015',
             'lahan_sawah' => 500,
             'lahan_non_sawah' => 500
         ]);

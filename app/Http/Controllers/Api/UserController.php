@@ -56,6 +56,7 @@ class UserController extends Controller
             'email' => $user->email,
             'username' => $user->username,
             'detail' => $detail,
+            'kecamatan' => $detail->kecamatan,
             'role_name' => $role ? $role->name : 'No Role'
         ];
 
@@ -187,39 +188,6 @@ class UserController extends Controller
                 'status' => 'success',
                 'message' => 'Data berhasil didapatkan',
                 'data' => $userData
-            ], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data tidak ditemukan.',
-                'data' => null
-            ], 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
-                'data' => null
-            ], 500);
-        }
-    }
-
-    public function getAssignment($id)
-    {
-        try {
-            $assignments = User::with(['desas.luasLahanWilayah'])->find($id);
-
-            if (is_null($assignments)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data kosong',
-                    'data' => null
-                ], 201);
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil didapatkan',
-                'data' => $assignments->desas
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
