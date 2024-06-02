@@ -8,6 +8,8 @@ use App\Models\Pertanian\Pertanian;
 use App\Models\Role;
 use App\Models\Uptd\Uptd;
 use App\Models\User;
+use App\Models\Verification;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -56,6 +58,7 @@ class UserController extends Controller
             'email' => $user->email,
             'username' => $user->username,
             'detail' => $detail,
+            'kecamatan' => $detail->kecamatan,
             'role_name' => $role ? $role->name : 'No Role'
         ];
 
@@ -203,36 +206,90 @@ class UserController extends Controller
         }
     }
 
-    public function getAssignment($id)
+    public function getVerification()
     {
+        $verify = Verification::all();
+        $responseData = [
+            'status' => 'success',
+            'message' => 'Get data successful',
+            'data' => $verify
+        ];
+        return response()->json($responseData);
+    }
+
+    public function storeVerify(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'kecamatan_id' => 'required|string',
+            'desa_id' => 'required|string',
+            'date' => 'required|string',
+            'isVerify' => 'required|string',
+        ]);
+
         try {
-            $assignments = User::with(['desas.luasLahanWilayah'])->find($id);
+            $padi = new Verification();
+            $padi->fill($validated);
+            $padi->save();
 
-            if (is_null($assignments)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data kosong',
-                    'data' => null
-                ], 201);
-            }
-
-            return response()->json([
+            $responseData = [
                 'status' => 'success',
-                'message' => 'Data berhasil didapatkan',
-                'data' => $assignments->desas
-            ], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
+                'message' => 'Berhasil menyimpan data',
+                'data' => $padi,
+            ];
+            return response()->json($responseData, 201);
+        } catch (QueryException $e) {
+            $responseData = [
                 'status' => 'error',
-                'message' => 'Data tidak ditemukan.',
+                'message' => 'Gagal menyimpan data. Database error: ' . $e->getMessage(),
                 'data' => null
-            ], 404);
+            ];
+            return response()->json($responseData, 500);
         } catch (\Exception $e) {
-            return response()->json([
+            $responseData = [
                 'status' => 'error',
-                'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
+                'message' => 'Gagal menyimpan data. ' . $e->getMessage(),
                 'data' => null
-            ], 500);
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function updateVerify(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'kecamatan_id' => 'required|string',
+            'desa_id' => 'required|string',
+            'date' => 'required|string',
+            'isVerify' => 'required|string',
+        ]);
+
+        try {
+            $padi = Verification::findOrFail($id);
+            $padi->fill($validated);
+            $padi->save();
+
+            $responseData = [
+                'status' => 'success',
+                'message' => 'Berhasil mengupdate data',
+                'data' => $padi,
+            ];
+            return response()->json($responseData, 200);
+        } catch (QueryException $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal mengupdate data. Database error: ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
+        } catch (\Exception $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal mengupdate data. ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
         }
     }
 }
