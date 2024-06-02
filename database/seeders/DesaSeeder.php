@@ -55,12 +55,16 @@ class DesaSeeder extends Seeder
             $data = $response->json();
             $allData = array_merge($allData, $data);
         }
+
+        $desas = [];
         foreach ($allData as $desa) {
-            DB::table('desas')->insert([
+            $desas[] = [
                 'id' => $desa['id'],
                 'district_id' => $desa['district_id'],
                 'name' => $desa['name'],
-            ]);
+            ];
         }
+
+        DB::table('desas')->insert($desas);
     }
 }

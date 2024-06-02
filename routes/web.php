@@ -21,6 +21,8 @@ use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
+use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +59,8 @@ Route::middleware(['auth'])->name('web.')->group(function () {
 Route::middleware(['autentikasi'])->group(function () {
 
     Route::get('ambil_desa', [GetWilayahController::class, 'ambil_desa']);
+    Route::get('ambil_desa_filtering', [GetWilayahController::class, 'ambil_desa_filtering']);
+
 
     Route::group(['middleware' => ['can:operator']], function () {
         Route::prefix('operator')->group(function () {
@@ -86,7 +90,15 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'pertanian']);
             Route::prefix('prediksi')->group(function () {
                 Route::get('/padi', [PrediksiPadiController::class, 'index']);
+                Route::post('/padi', [PrediksiPadiController::class, 'predict']);
+                // Route::post('/padi', [PrediksiPadiController::class, 'predict']);
+                Route::post('/padi', [PrediksiPadiController::class, 'menghitungRegresi']);
             });
+            Route::get('data_padi', [DataLaporanPadiController::class, 'index']);
+            Route::post('data_padi/filter', [DataLaporanPadiController::class, 'filter']);
+            Route::get('data_padi/exportPdf', [DataLaporanPadiController::class, 'exportPdf']);
+
+            Route::get('data_palawija', [DataLaporanPalawijaController::class, 'index']);
         });
     });
 
