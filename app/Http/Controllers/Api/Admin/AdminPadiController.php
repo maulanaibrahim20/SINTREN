@@ -11,7 +11,12 @@ class AdminPadiController extends Controller
     public function showAllByKecamatan($id)
     {
         try {
-            $laporanPadi = LaporanPadi::where('kecamatan_id', $id)->with(['desa', 'pengairan','padi'])->get();
+            if ($id == "dinas") {
+                $laporanPadi = LaporanPadi::with(['desa', 'pengairan','padi'])->get();
+            } else {
+                $laporanPadi = LaporanPadi::where('kecamatan_id', $id)->with(['desa', 'pengairan','padi'])->get();
+            }
+
 
             if ($laporanPadi->isEmpty()) {
                 return response()->json([

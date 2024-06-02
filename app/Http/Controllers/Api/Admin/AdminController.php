@@ -13,7 +13,11 @@ class AdminController extends Controller
     public function getDesa($id)
     {
         try {
-            $assignments = LuasLahanWilayah::with('desa')->where('kecamatan_id',$id)->get();
+            if($id == "dinas"){
+                $assignments = LuasLahanWilayah::with('desa')->get();
+            }else{
+                $assignments = LuasLahanWilayah::with('desa')->where('kecamatan_id',$id)->get();
+            }
 
             if (is_null($assignments)) {
                 return response()->json([

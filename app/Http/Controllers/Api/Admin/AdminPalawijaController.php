@@ -11,7 +11,12 @@ class AdminPalawijaController extends Controller
     public function showAllByKecamatan($id)
     {
         try {
-            $laporanPalawija = LaporanPalawija::where('kecamatan_id', $id)->with(['desa', 'palawija'])->get();
+            if ($id == "dinas") {
+                $laporanPalawija = LaporanPalawija::with(['desa', 'palawija'])->get();
+            } else {
+                $laporanPalawija = LaporanPalawija::where('kecamatan_id', $id)->with(['desa', 'palawija'])->get();
+            }
+
 
             if ($laporanPalawija->isEmpty()) {
                 return response()->json([
