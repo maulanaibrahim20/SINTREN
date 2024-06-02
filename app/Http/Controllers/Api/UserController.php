@@ -224,7 +224,7 @@ class UserController extends Controller
             'kecamatan_id' => 'required|string',
             'desa_id' => 'required|string',
             'date' => 'required|string',
-            'isVerify' => 'required|bool',
+            'isVerify' => 'required|string',
         ]);
 
         try {
@@ -262,7 +262,7 @@ class UserController extends Controller
             'kecamatan_id' => 'required|string',
             'desa_id' => 'required|string',
             'date' => 'required|string',
-            'isVerify' => 'required|bool',
+            'isVerify' => 'required|string',
         ]);
 
         try {

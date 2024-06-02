@@ -11,6 +11,14 @@ class Verification extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'kecamatan_id',
+        'desa_id',
+        'date',
+        'isVerify',
+    ];
+
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');

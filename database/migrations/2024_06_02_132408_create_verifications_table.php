@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('desa_id', 25);
             $table->unsignedBigInteger('kecamatan_id');
             $table->uuid('user_id');
-            $table->boolean('isVerify');
+            $table->enum('isVerify', ['true', 'false']);
             $table->timestamps();
 
             $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
