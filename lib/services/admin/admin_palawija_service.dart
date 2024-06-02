@@ -18,9 +18,17 @@ class AdminPalawijaService {
       await db.delete('detailPalawija');
 
       final String? id = await UserLoginModel().getKecamatanId();
-      final Response result = await get(
+      final String? role = await UserLoginModel().getRole();
+
+      Response result = await get(
         Uri.parse('${baseUrl}palawija/showByKecamatan/$id'),
       );
+
+      if (role == "PERTANIAN") {
+        result = await get(
+          Uri.parse('${baseUrl}padi/showByKecamatan/dinas'),
+        );
+      }
 
       if (result.statusCode != 200) {
         log("Failed to get detail palawija: ${result.statusCode} - ${result.body}");

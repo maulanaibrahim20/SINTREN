@@ -20,8 +20,13 @@ class AdminService {
       await db.delete('desa');
 
       final String? id = await userModel.getKecamatanId();
+      final String? role = await userModel.getRole();
 
-      final Response response = await get(Uri.parse('$url/$id'));
+      Response response = await get(Uri.parse('$url/$id'));
+      
+      if(role == "PERTANIAN"){
+        response = await get(Uri.parse('$url/dinas'));
+      }
 
       if (response.statusCode != 200) {
         log("Failed to get desa: ${response.statusCode} - ${response.body}");

@@ -35,8 +35,8 @@ class UserService {
       }
 
       final Map<String, dynamic> dataJson = jsonResult['data'];
-      final detail = dataJson['detail'];
-      final kecamatan = dataJson['kecamatan'];
+      final Map<String, dynamic> detail = dataJson['detail'];
+      final Map<String, dynamic>? kecamatan = dataJson['kecamatan'];
 
       updateUserLoginModel(dataJson, detail, kecamatan);
       log("Login successful");
@@ -49,7 +49,7 @@ class UserService {
   }
 
   void updateUserLoginModel(Map<String, dynamic> dataJson,
-      Map<String, dynamic> detail, Map<String, dynamic> kecamatan) {
+      Map<String, dynamic> detail, Map<String, dynamic>? kecamatan) {
     UserLoginModel()
       ..setLogin(true)
       ..setEmail(dataJson['email'])
@@ -58,7 +58,7 @@ class UserService {
       ..setUserId(dataJson['id'])
       ..setUsername(dataJson['username'])
       ..setKecamatanId(detail['kecamatan_id'].toString())
-      ..setKecamatanName(kecamatan['name'])
+      ..setKecamatanName(kecamatan?['name'] ?? "")
       ..setAddress(detail['alamat'])
       ..setPhone(detail['no_telp']);
   }

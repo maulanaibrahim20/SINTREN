@@ -18,9 +18,16 @@ class AdminPadiService {
       await db.delete('detailPadi');
 
       final String? id = await UserLoginModel().getKecamatanId();
-      final Response result = await get(
+      final String? role = await UserLoginModel().getRole();
+      Response result = await get(
         Uri.parse('${baseUrl}padi/showByKecamatan/$id'),
       );
+      
+      if (role == "PERTANIAN") {
+        result = await get(
+          Uri.parse('${baseUrl}padi/showByKecamatan/dinas'),
+        );
+      }
 
       if (result.statusCode != 200) {
         log("Failed to get detail padi: ${result.statusCode} - ${result.body}");

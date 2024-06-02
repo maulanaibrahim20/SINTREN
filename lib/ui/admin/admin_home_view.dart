@@ -74,7 +74,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Kecamatan ${UserController().toCamelCase(kecamatan ?? "")}",
+                              kecamatan == ""
+                                  ? "Dinas Pertanian Indramayu"
+                                  : "Kecamatan ${UserController().toCamelCase(kecamatan ?? "")}",
                               style: StyleTheme().styleWhite.copyWith(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
@@ -242,7 +244,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Kecamatan ${UserController().toCamelCase(kecamatan ?? "")}",
+                                        kecamatan == ""
+                                            ? "Kabupaten Indramayu"
+                                            : "Kecamatan ${UserController().toCamelCase(kecamatan ?? "")}",
                                         style: StyleTheme()
                                             .stylePrimary
                                             .copyWith(
