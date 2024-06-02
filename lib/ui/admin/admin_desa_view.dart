@@ -205,7 +205,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                     },
                     child: Card(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                          horizontal: 20, vertical: 10),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,

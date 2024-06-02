@@ -65,6 +65,7 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
+                  isDialogShown = false;
                   _initializationError = false;
                 });
                 _initializeDataWithTimeout();
@@ -73,7 +74,6 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 SystemNavigator.pop();
               },
               child: const Text('Tutup Aplikasi'),

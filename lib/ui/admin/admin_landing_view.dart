@@ -1,8 +1,8 @@
+import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
+import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/ui/admin/admin_desa_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_home_view.dart';
-import 'package:sintren_mobile/ui/admin/admin_padi_view.dart';
-import 'package:sintren_mobile/ui/admin/admin_palawija_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 
@@ -14,96 +14,48 @@ class AdminLandingView extends StatefulWidget {
 }
 
 class _AdminLandingViewState extends State<AdminLandingView> {
-  int _tabIndex = 0; // State untuk menyimpan indeks tab
+  int _tabIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: buildBottomNavigationMenu(context),
+      bottomNavigationBar: BottomBarInspiredInside(
+        items: const [
+          TabItem(
+            icon: Icons.villa_rounded,
+            title: 'Desa',
+          ),
+          TabItem(
+            icon: Icons.home_rounded,
+            title: 'Beranda',
+          ),
+          TabItem(
+            icon: Icons.task_rounded,
+            title: 'Penyuluhan',
+          ),
+        ],
+        radius: 10,
+        height: 40,
+        iconSize: 24,
+        backgroundColor: ColorTheme().primaryColor,
+        color: ColorTheme().whiteColor,
+        colorSelected: ColorTheme().primaryColor,
+        indexSelected: _tabIndex,
+        onTap: (int index) => setState(() {
+          _tabIndex = index;
+        }),
+        chipStyle:
+            ChipStyle(convexBridge: true, background: ColorTheme().whiteColor),
+        itemStyle: ItemStyle.circle,
+        animated: false,
+      ),
       body: IndexedStack(
         index: _tabIndex,
         children: const [
-          AdminHomeView(),
-          AdminPadiView(),
-          AdminPalawijaView(),
           AdminDesaView(),
+          AdminHomeView(),
           AdminPenyuluhanView(),
-        ],
-      ),
-    );
-  }
-
-  Widget buildBottomNavigationMenu(BuildContext context) {
-    return MediaQuery(
-      data: MediaQuery.of(context)
-          .copyWith(textScaler: const TextScaler.linear(1.0)),
-      child: BottomNavigationBar(
-        landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        elevation: 2,
-        onTap: (index) {
-          setState(() {
-            _tabIndex = index; // Perbarui indeks tab saat tab dipilih
-          });
-        },
-        currentIndex: _tabIndex, // Tentukan indeks yang aktif
-        backgroundColor: ColorTheme().primaryColor,
-        unselectedItemColor: ColorTheme().whiteColor.withOpacity(0.5),
-        selectedItemColor: ColorTheme().whiteColor,
-        unselectedLabelStyle: TextStyle(
-          color: ColorTheme().whiteColor.withOpacity(0.5),
-          fontWeight: FontWeight.w500,
-          fontSize: 12,
-        ),
-        selectedLabelStyle: TextStyle(
-          color: ColorTheme().whiteColor,
-          fontWeight: FontWeight.w500,
-          fontSize: 12,
-        ),
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.home,
-              size: 30.0,
-            ),
-            label: 'Beranda',
-            backgroundColor: ColorTheme().primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.drafts,
-              size: 30.0,
-            ),
-            label: 'Padi',
-            backgroundColor: ColorTheme().primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.note,
-              size: 30.0,
-            ),
-            label: 'Palawija',
-            backgroundColor: ColorTheme().primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.villa,
-              size: 30.0,
-            ),
-            label: 'Desa',
-            backgroundColor: ColorTheme().primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.account_circle,
-              size: 30.0,
-            ),
-            label: 'Penyuluhan',
-            backgroundColor: ColorTheme().primaryColor,
-          ),
         ],
       ),
     );

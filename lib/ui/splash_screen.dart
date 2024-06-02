@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   final ValueNotifier<String> statusNotifier;
 
   const SplashScreen({super.key, required this.statusNotifier});
 
   @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
   Widget build(BuildContext context) {
+    bool isError = false;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -47,8 +53,13 @@ class SplashScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ValueListenableBuilder<String>(
-                      valueListenable: statusNotifier,
+                      valueListenable: widget.statusNotifier,
                       builder: (context, status, child) {
+                        if (status.startsWith('Error:')) {
+                          setState(() {
+                            isError = true;
+                          });
+                        }
                         return Text(
                           status.startsWith('Error:')
                               ? status
@@ -63,10 +74,13 @@ class SplashScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 10),
-                    LinearProgressIndicator(
-                      backgroundColor: Colors.white.withOpacity(0.5),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
+                    isError
+                        ? const SizedBox.shrink()
+                        : LinearProgressIndicator(
+                            backgroundColor: Colors.white.withOpacity(0.5),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
+                          ),
                   ],
                 ),
               ),

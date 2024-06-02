@@ -281,7 +281,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                             ),
                             const SizedBox(height: 10),
                             LinearPercentIndicator(
-                              width: MediaQuery.of(context).size.width - 40,
+                              width: MediaQuery.of(context).size.width - 30,
                               animation: true,
                               lineHeight: 30,
                               animationDuration: 2000,
