@@ -3,7 +3,6 @@ import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
-import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
@@ -13,16 +12,18 @@ class DetailPadiView extends StatefulWidget {
       {super.key,
       required this.date,
       required this.desaId,
-      this.desaName = ""});
+      this.desaName = "",
+      required this.isVerify});
   final String date;
   final String desaId;
   final String desaName;
+  final bool isVerify;
 
   @override
-  State<DetailPadiView> createState() => DetailPadiViewState();
+  State<DetailPadiView> createState() => _DetailPadiViewState();
 }
 
-class DetailPadiViewState extends State<DetailPadiView> {
+class _DetailPadiViewState extends State<DetailPadiView> {
   final padiC = PadiController();
   bool isOpen = false;
 
@@ -89,245 +90,197 @@ class DetailPadiViewState extends State<DetailPadiView> {
                           ),
                         ],
                       ),
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: ColorTheme().linearColor,
-                        ),
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              DesaModel desa = DesaModel(
-                                  id: widget.desaId, name: widget.desaName);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => FormPadiView(
-                                            desa: desa,
-                                            onCreate: true,
-                                            date: "${widget.date}-01",
-                                          )));
-                            },
-                            child: Icon(
-                              Icons.add,
-                              color: ColorTheme().whiteColor,
-                              size: 25,
+                      widget.isVerify
+                          ? const SizedBox.shrink()
+                          : Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: ColorTheme().linearColor,
+                              ),
+                              child: Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    DesaModel desa = DesaModel(
+                                        id: widget.desaId,
+                                        name: widget.desaName);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => FormPadiView(
+                                                  desa: desa,
+                                                  onCreate: true,
+                                                  date: "${widget.date}-01",
+                                                )));
+                                  },
+                                  child: Icon(
+                                    Icons.add,
+                                    color: ColorTheme().whiteColor,
+                                    size: 25,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Divider(thickness: 2),
-                Visibility(
-                  visible: isOpen,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height -
-                          400, // Sesuaikan batas tinggi sesuai kebutuhan Anda
-                    ),
-                    child: SingleChildScrollView(
-                      child: FutureBuilder(
-                        future: Future.wait([
-                          padiC.getKesimpulanDataPengairan(
-                              widget.date, widget.desaId),
-                          padiC.getKesimpulanDataPadi(
-                              widget.date, widget.desaId)
-                        ]),
-                        builder:
-                            (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Center(
-                                child: Text('Error: ${snapshot.error}'));
-                          } else {
-                            final pengairanData = snapshot.data![0]
-                                as Map<String, JenisPengairan>;
-                            final padiData =
-                                snapshot.data![1] as Map<String, JenisPadi>;
-
-                            if (pengairanData.isEmpty && padiData.isEmpty) {
-                              return const Center(
-                                  child: Text('No data available'));
-                            } else {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20, bottom: 5),
-                                    child: Text("Data Padi",
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500)),
-                                  ),
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height -
-                                              150,
-                                    ),
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: padiData.length,
-                                      itemBuilder: (context, index) {
-                                        String jenisPadi =
-                                            padiData.keys.elementAt(index);
-                                        JenisPadi padiDataItem =
-                                            padiData[jenisPadi]!;
-                                        return ExpansionTile(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text('Jenis: $jenisPadi'),
-                                              Text(padiDataItem.total
-                                                  .toString()),
-                                            ],
-                                          ),
-                                          children: padiDataItem
-                                              .jenisLahan.entries
-                                              .map((lahanEntry) {
-                                            final jenisLahan = lahanEntry.key;
-                                            final lahanData = lahanEntry.value;
-                                            return ExpansionTile(
-                                              title: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                      'Lahan: ${UserController().toCamelCase(jenisLahan)}'),
-                                                  Text(lahanData.total
-                                                      .toString()),
-                                                ],
-                                              ),
-                                              children: lahanData
-                                                  .jenisBantuan.entries
-                                                  .map((bantuanEntry) {
-                                                final jenisBantuan =
-                                                    bantuanEntry.key;
-                                                final bantuanData =
-                                                    bantuanEntry.value;
-                                                return ExpansionTile(
-                                                  title: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                          'Bantuan: ${UserController().toCamelCase(jenisBantuan)}'),
-                                                      Text(bantuanData.total
-                                                          .toString()),
-                                                    ],
-                                                  ),
-                                                  children: bantuanData
-                                                      .tipeData.entries
-                                                      .map((tipeEntry) {
-                                                    final tipeData =
-                                                        tipeEntry.key;
-                                                    final nilai = tipeEntry
-                                                            .value
-                                                            .data[tipeData] ??
-                                                        0;
-                                                    return ListTile(
-                                                      title: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                              'Data ${UserController().toCamelCase(tipeData)}'),
-                                                          Text(nilai.toString())
-                                                        ],
-                                                      ),
-                                                    );
-                                                  }).toList(),
-                                                );
-                                              }).toList(),
-                                            );
-                                          }).toList(),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  if (pengairanData.isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, bottom: 5, top: 5),
-                                      child: Text("Data Pengairan",
-                                          style: StyleTheme()
-                                              .styleBlack
-                                              .copyWith(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w500)),
-                                    ),
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height -
-                                              150,
-                                    ),
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: pengairanData.length,
-                                      itemBuilder: (context, index) {
-                                        String jenisPengairan =
-                                            pengairanData.keys.elementAt(index);
-                                        JenisPengairan pengairanDataItem =
-                                            pengairanData[jenisPengairan]!;
-                                        return ExpansionTile(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                  'Jenis: ${UserController().toCamelCase(jenisPengairan)}'),
-                                              Text(pengairanDataItem.total
-                                                  .toString()),
-                                            ],
-                                          ),
-                                          children: [
-                                            for (var entry in pengairanDataItem
-                                                .pengairanData.entries)
-                                              ListTile(
-                                                title: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                        'Data ${UserController().toCamelCase(entry.key)}'),
-                                                    Text(entry.value.total
-                                                        .toString()),
-                                                  ],
-                                                ),
-                                              ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          }
-                        },
+                Stack(
+                  children: [
+                    const Divider(thickness: 2),
+                    Container(
+                      color: ColorTheme().whiteColor,
+                      margin: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Ringkasan penyuluhan bulan ini",
+                        style: StyleTheme()
+                            .styleBlack
+                            .copyWith(color: Colors.black87, fontSize: 14),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: FutureBuilder(
+                    future:
+                        padiC.getDetailPadiByUser(widget.date, widget.desaId),
+                    builder: ((context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.error,
+                                color: Colors.grey,
+                                size: 50,
+                              ),
+                              Text(
+                                "Internal Server Error",
+                                style: StyleTheme().styleBlack.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey),
+                              ),
+                              Text(
+                                snapshot.error.toString(),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.red,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        final itemList = snapshot.data ?? [];
+                        Map<String, int> totalValues = {
+                          'panen': 0,
+                          'tanam': 0,
+                          'puso/rusak': 0,
+                        };
+
+                        for (var item in itemList) {
+                          if (totalValues.containsKey(item.tipeData)) {
+                            totalValues[item.tipeData] =
+                                totalValues[item.tipeData]! + item.nilai;
+                          } else {
+                            totalValues[item.tipeData] = item.nilai;
+                          }
+                        }
+
+                        if (itemList.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.receipt_long,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  "Data Kosong",
+                                  style: StyleTheme().styleBlack.copyWith(
+                                      color: Colors.grey,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
+                          );
+                        }
+
+                        int total = totalValues['panen']! +
+                            totalValues['tanam']! -
+                            totalValues['puso/rusak']!;
+
+                        return Column(
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: totalValues.entries.map((entry) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${UserController().toCamelCase(entry.key)}:",
+                                        style: StyleTheme()
+                                            .styleBlack
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      Text(
+                                        '${entry.value} hektar',
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            const Divider(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total Tanaman Bulan Ini:',
+                                    style: StyleTheme()
+                                        .styleBlack
+                                        .copyWith(fontSize: 16),
+                                  ),
+                                  Text(
+                                    '$total hektar',
+                                    style: StyleTheme().styleBlack.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                    }),
                   ),
                 ),
+                const Divider(thickness: 2),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -338,12 +291,14 @@ class DetailPadiViewState extends State<DetailPadiView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Detail Data Penyuluhan",
+                        "Lihat Selengkapnya",
                         style: StyleTheme().stylePrimary.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                       Icon(
-                        !isOpen ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                        !isOpen
+                            ? Icons.arrow_right_outlined
+                            : Icons.arrow_drop_up,
                         color: ColorTheme().primaryColor,
                       ),
                     ],
@@ -433,7 +388,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                               right: 10, left: 10, bottom: 15),
                           elevation: 3,
                           child: SizedBox(
-                            height: 180,
+                            height: widget.isVerify ? 130 : 180,
                             width: MediaQuery.of(context).size.width,
                             child: Row(
                               children: [
@@ -518,86 +473,98 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                           ],
                                         ),
                                         const SizedBox(height: 10),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: ElevatedButton.icon(
-                                                onPressed: () async {
-                                                  await Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          FormPadiView(
-                                                        detail: data,
-                                                        onCreate: false,
+                                        widget.isVerify
+                                            ? const SizedBox.shrink()
+                                            : Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: ElevatedButton.icon(
+                                                      onPressed: () async {
+                                                        await Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (_) =>
+                                                                FormPadiView(
+                                                              detail: data,
+                                                              onCreate: false,
+                                                            ),
+                                                          ),
+                                                        ).then((value) =>
+                                                            setState(() {}));
+                                                      },
+                                                      icon: Icon(Icons.edit,
+                                                          color: ColorTheme()
+                                                              .primaryColor),
+                                                      label: Text('Edit',
+                                                          style: StyleTheme()
+                                                              .stylePrimary
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      14)),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        surfaceTintColor:
+                                                            ColorTheme()
+                                                                .whiteColor,
+                                                        side: BorderSide(
+                                                            color: ColorTheme()
+                                                                .primaryColor,
+                                                            width: 2),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ).then((value) =>
-                                                      setState(() {}));
-                                                },
-                                                icon: Icon(Icons.edit,
-                                                    color: ColorTheme()
-                                                        .primaryColor),
-                                                label: Text('Edit',
-                                                    style: StyleTheme()
-                                                        .stylePrimary
-                                                        .copyWith(
-                                                            fontSize: 14)),
-                                                style: ElevatedButton.styleFrom(
-                                                  surfaceTintColor:
-                                                      ColorTheme().whiteColor,
-                                                  side: BorderSide(
-                                                      color: ColorTheme()
-                                                          .primaryColor,
-                                                      width: 2),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              flex: 1,
-                                              child: ElevatedButton.icon(
-                                                onPressed: () async {
-                                                  bool? shouldDelete =
-                                                      await _showDeleteConfirmationDialog(
-                                                          context);
-                                                  if (shouldDelete == true) {
-                                                    await padiC
-                                                        .deleteDetailById(
-                                                            data.id);
-                                                    setState(() {});
-                                                  }
-                                                },
-                                                icon: const Icon(Icons.delete,
-                                                    color: Colors.red),
-                                                label: Text('Hapus',
-                                                    style: StyleTheme()
-                                                        .stylePrimary
-                                                        .copyWith(
-                                                            fontSize: 14,
-                                                            color: Colors.red)),
-                                                style: ElevatedButton.styleFrom(
-                                                  surfaceTintColor:
-                                                      ColorTheme().whiteColor,
-                                                  side: const BorderSide(
-                                                      color: Colors.red,
-                                                      width: 2),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: ElevatedButton.icon(
+                                                      onPressed: () async {
+                                                        bool? shouldDelete =
+                                                            await _showDeleteConfirmationDialog(
+                                                                context);
+                                                        if (shouldDelete ==
+                                                            true) {
+                                                          await padiC
+                                                              .deleteDetailById(
+                                                                  data.id);
+                                                          setState(() {});
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.delete,
+                                                          color: Colors.red),
+                                                      label: Text('Hapus',
+                                                          style: StyleTheme()
+                                                              .stylePrimary
+                                                              .copyWith(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .red)),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        surfaceTintColor:
+                                                            ColorTheme()
+                                                                .whiteColor,
+                                                        side: const BorderSide(
+                                                            color: Colors.red,
+                                                            width: 2),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
+                                                ],
+                                              )
                                       ],
                                     ),
                                   ),

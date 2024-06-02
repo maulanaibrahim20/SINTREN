@@ -34,7 +34,6 @@ class PenyuluhService {
         return false;
       }
 
-      log(response.body);
       List<LuasWilayahModel> desa = (jsonResult['data'] as List)
           .map((element) => LuasWilayahModel.fromJson(element))
           .toList();

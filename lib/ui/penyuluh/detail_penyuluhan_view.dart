@@ -11,12 +11,13 @@ class DetailPenyuluhanView extends StatefulWidget {
       required this.index,
       required this.date,
       required this.desaId,
-      this.desaName = ""});
+      this.desaName = "", required this.isVerify});
 
   final int index;
   final String date;
   final String desaId;
   final String desaName;
+  final bool isVerify;
 
   @override
   State<DetailPenyuluhanView> createState() => _DetailPenyuluhanViewState();
@@ -116,11 +117,13 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
                     date: widget.date,
                     desaId: widget.desaId,
                     desaName: widget.desaName,
+                    isVerify: widget.isVerify,
                   ),
                   DetailPalawijaView(
                     date: widget.date,
                     desaId: widget.desaId,
                     desaName: widget.desaName,
+                    isVerify: widget.isVerify,
                   )
                 ],
               ),

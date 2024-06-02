@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
-import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
 import 'package:sintren_mobile/models/padi_model.dart';
@@ -167,18 +166,6 @@ class PadiController {
     }
   }
 
-  Future<List<DesaModel>> getDesa() async {
-    try {
-      final db = await DatabaseHelper().database;
-      final List<Map<String, dynamic>> maps = await db.query('desa');
-
-      return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
-    } catch (e) {
-      log("Get desa error: $e");
-      return [];
-    }
-  }
-
   Future<List<DetailPadiModel>> getDetailPadiByUser(
       String date, String desaId) async {
     try {
@@ -189,7 +176,6 @@ class PadiController {
         whereArgs: ['%$date%', desaId],
         orderBy: 'date DESC',
       );
-
       return List<DetailPadiModel>.from(
           maps.map((map) => DetailPadiModel.fromMap(map)));
     } catch (e) {

@@ -1,15 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
 import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
@@ -33,6 +36,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
     await PenyuluhService().getDataPenyuluhanDesa();
     await PadiService().getDetailPadiByUser();
     await PalawijaService().getDetailPalawijaByUser();
+    await UserService().getVerify();
     setState(() {});
   }
 
@@ -43,7 +47,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
   }
 
   Future<void> _initializeData() async {
-    desaList = await PadiController().getDesa();
+    desaList = await PenyuluhController().getDesa();
     selectedDesaValue = null;
   }
 
@@ -105,11 +109,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
           Icons.refresh_rounded,
         ),
       ),
-      body: 
-      FutureBuilder<List<dynamic>>(
+      body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
           penyuluhC.getHistoriPenyuluhan(),
           penyuluhC.getLuasLahanDesa(),
+          userC.getVerify(),
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -138,6 +142,9 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
             final historiList =
                 snapshot.data?[0] as List<HistoriPenyuluhanModel>;
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
+            final verifyList = snapshot.data?[2] as List<VerifyModel>;
+
+            log(verifyList.toString());
 
             int getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
@@ -195,6 +202,8 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                             date: desa.date,
                             desaId: desa.desaId,
                             desaName: desa.desaName,
+                            isVerify: userC.getStatusVerify(
+                                verifyList, desa.date, desa.desaId),
                           ),
                         ),
                       );
@@ -202,7 +211,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                     },
                     child: Card(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                          horizontal: 20, vertical: 10),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
@@ -212,6 +221,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
+                              mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
                                   height: 50,
@@ -229,23 +239,49 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Desa ${UserController().toCamelCase(desa.desaName)}",
-                                      style: StyleTheme().stylePrimary.copyWith(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      userC.convertDate(desa.date),
-                                      style: StyleTheme().styleBlack.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[700],
-                                          fontSize: 14),
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Desa ${UserController().toCamelCase(desa.desaName)}",
+                                        style: StyleTheme()
+                                            .stylePrimary
+                                            .copyWith(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        userC.convertDate(desa.date),
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[700],
+                                            fontSize: 14),
+                                      ),
+                                      if (userC.getStatusVerify(
+                                          verifyList, desa.date, desa.desaId))
+                                        Text(
+                                          "Terverifikasi",
+                                          style:
+                                              StyleTheme().styleBlack.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14,
+                                                    color: Colors.green,
+                                                  ),
+                                        )
+                                      else
+                                        Text(
+                                          "Belum Diverifikasi",
+                                          style:
+                                              StyleTheme().styleBlack.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 14,
+                                                    color: Colors.red,
+                                                  ),
+                                        ),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),

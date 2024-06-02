@@ -9,6 +9,7 @@ import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
 import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 
 class PenyuluhController {
   Future<List<DesaModel>> getDesa() async {
@@ -16,7 +17,7 @@ class PenyuluhController {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('desa');
 
-      return maps.map((map) => DesaModel.fromJson(map)).toList();
+      return List<DesaModel>.from(maps.map((map) => DesaModel.fromJson(map)));
     } catch (e) {
       log("Get desa error: $e");
       return [];
@@ -140,12 +141,13 @@ class PenyuluhController {
 
       statusNotifier.value = 'Mendapatkan data penyuluhan...';
       await PadiService().getDetailPadiByUser();
-      statusNotifier.value = 'Sinkronisasi selesai...';
       await PalawijaService().getDetailPalawijaByUser();
+
+      statusNotifier.value = 'Sinkronisasi selesai...';
+      await UserService().getVerify();
     } catch (error) {
       statusNotifier.value = 'Error: ${error.toString()}';
       throw Exception("Internal Server Error");
     }
   }
-
 }

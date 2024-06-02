@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
-import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
-import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
@@ -93,147 +91,161 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Divider(thickness: 2),
-                Visibility(
-                  visible: isOpen,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height -
-                          400, // Sesuaikan batas tinggi sesuai kebutuhan Anda
-                    ),
-                    child: SingleChildScrollView(
-                      child: FutureBuilder(
-                        future: PalawijaController().getKesimpulanDataPalawija(
-                            widget.date, widget.desaId),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Center(
-                                child: Text('Error: ${snapshot.error}'));
-                          } else {
-                            final palawijaData =
-                                snapshot.data as Map<String, JenisPalawija>;
-
-                            if (palawijaData.isEmpty) {
-                              return const Center(
-                                  child: Text('No data available'));
-                            } else {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20, bottom: 5),
-                                    child: Text("Data Palawija",
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500)),
-                                  ),
-                                  ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height -
-                                              150,
-                                    ),
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: palawijaData.length,
-                                      itemBuilder: (context, index) {
-                                        String jenisPalawija =
-                                            palawijaData.keys.elementAt(index);
-                                        JenisPalawija palawijaDataItem =
-                                            palawijaData[jenisPalawija]!;
-                                        return ExpansionTile(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                  'Jenis: ${UserController().toCamelCase(jenisPalawija)}'),
-                                              Text(palawijaDataItem.total
-                                                  .toString()),
-                                            ],
-                                          ),
-                                          children: palawijaDataItem
-                                              .jenisLahan.entries
-                                              .map((lahanEntry) {
-                                            final jenisLahan = lahanEntry.key;
-                                            final lahanData = lahanEntry.value;
-                                            return ExpansionTile(
-                                              title: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                      'Lahan: ${UserController().toCamelCase(jenisLahan)}'),
-                                                  Text(lahanData.total
-                                                      .toString()),
-                                                ],
-                                              ),
-                                              children: lahanData
-                                                  .jenisBantuan.entries
-                                                  .map((bantuanEntry) {
-                                                final jenisBantuan =
-                                                    bantuanEntry.key;
-                                                final bantuanData =
-                                                    bantuanEntry.value;
-                                                return ExpansionTile(
-                                                  title: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                          'Bantuan: ${UserController().toCamelCase(jenisBantuan)}'),
-                                                      Text(bantuanData.total
-                                                          .toString()),
-                                                    ],
-                                                  ),
-                                                  children: bantuanData
-                                                      .tipeData.entries
-                                                      .map((tipeEntry) {
-                                                    final tipeData =
-                                                        tipeEntry.key;
-                                                    final nilai = tipeEntry
-                                                            .value
-                                                            .data[tipeData] ??
-                                                        0;
-                                                    return ListTile(
-                                                      title: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                              'Data ${UserController().toCamelCase(tipeData)}'),
-                                                          Text(nilai.toString())
-                                                        ],
-                                                      ),
-                                                    );
-                                                  }).toList(),
-                                                );
-                                              }).toList(),
-                                            );
-                                          }).toList(),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-                          }
-                        },
+                Stack(
+                  children: [
+                    const Divider(thickness: 2),
+                    Container(
+                      color: ColorTheme().whiteColor,
+                      margin: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Ringkasan penyuluhan bulan ini",
+                        style: StyleTheme()
+                            .styleBlack
+                            .copyWith(color: Colors.black87, fontSize: 14),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: FutureBuilder(
+                    future:
+                        palawijaC.getDetailPalawijaByDesa(widget.date, widget.desaId),
+                    builder: ((context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.error,
+                                color: Colors.grey,
+                                size: 50,
+                              ),
+                              Text(
+                                "Internal Server Error",
+                                style: StyleTheme().styleBlack.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey),
+                              ),
+                              Text(
+                                snapshot.error.toString(),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.red,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        final itemList = snapshot.data ?? [];
+                        Map<String, int> totalValues = {
+                          'panen': 0,
+                          'tanam': 0,
+                          'puso/rusak': 0,
+                        };
+
+                        for (var item in itemList) {
+                          if (totalValues.containsKey(item.tipeData)) {
+                            totalValues[item.tipeData] =
+                                totalValues[item.tipeData]! + item.nilai;
+                          } else {
+                            totalValues[item.tipeData] = item.nilai;
+                          }
+                        }
+
+                        if (itemList.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.receipt_long,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  "Data Kosong",
+                                  style: StyleTheme().styleBlack.copyWith(
+                                      color: Colors.grey,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            ),
+                          );
+                        }
+
+                        int total = totalValues['panen']! +
+                            totalValues['tanam']! -
+                            totalValues['puso/rusak']!;
+
+                        return Column(
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: totalValues.entries.map((entry) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${UserController().toCamelCase(entry.key)}:",
+                                        style: StyleTheme()
+                                            .styleBlack
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      Text(
+                                        '${entry.value} hektar',
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            const Divider(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total Tanaman Bulan Ini:',
+                                    style: StyleTheme()
+                                        .styleBlack
+                                        .copyWith(fontSize: 16),
+                                  ),
+                                  Text(
+                                    '$total hektar',
+                                    style: StyleTheme().styleBlack.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+                      }
+                    }),
                   ),
                 ),
+                const Divider(thickness: 2),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -244,12 +256,14 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Detail Data Penyuluhan",
+                        "Lihat Selengkapnya",
                         style: StyleTheme().stylePrimary.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                       Icon(
-                        !isOpen ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+                        !isOpen
+                            ? Icons.arrow_right_outlined
+                            : Icons.arrow_drop_up,
                         color: ColorTheme().primaryColor,
                       ),
                     ],

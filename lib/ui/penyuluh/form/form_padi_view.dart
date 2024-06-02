@@ -1,12 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
+import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
+import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
@@ -32,6 +35,7 @@ class _FormPadiViewState extends State<FormPadiView> {
   late List<DesaModel> desaList;
   late List<PengairanModel> pengiranList;
   late List<PadiModel> padiList;
+  late List<VerifyModel> verifyList;
   bool _isLoading = true;
   late String selectedJenisLahanValue;
   late String selectedBantuanValue;
@@ -49,9 +53,10 @@ class _FormPadiViewState extends State<FormPadiView> {
   }
 
   Future<void> _initializeData() async {
-    desaList = await padiC.getDesa();
+    desaList = await PenyuluhController().getDesa();
     pengiranList = await padiC.getPengairan();
     padiList = await padiC.getPadi();
+    verifyList = await UserController().getVerify();
     setState(() {
       if (widget.detail != null) {
         value.text = widget.detail!.nilai.toString();
@@ -153,6 +158,16 @@ class _FormPadiViewState extends State<FormPadiView> {
                 "tipe_data": selectedTipeDataValue,
                 "nilai": value.text,
               };
+
+              bool isVerified = UserController().getStatusVerify(
+                  verifyList, date.text.substring(0, 7), selectedDesaValue!.id);
+
+              if (isVerified) {
+                EasyLoading.showToast(
+                    "Gagal menyimpan data. Data pada desa dan bulan yang dipilih sudah diverifikasi.");
+                return;
+              }
+
               if (widget.onCreate) {
                 padiC.store(data).then((value) {
                   if (value) {
@@ -164,6 +179,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           date: date.text.substring(0, 7),
                           desaId: selectedDesaValue!.id,
                           desaName: selectedDesaValue!.name,
+                          isVerify: false,
                         ),
                       ),
                       (route) => false,

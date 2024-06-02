@@ -9,6 +9,7 @@ import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 
 class AdminController {
   Future<void> synchronizeData(ValueNotifier<String> statusNotifier) async {
@@ -24,6 +25,7 @@ class AdminController {
       await AdminPalawijaService().getDetailPalawijaByKecamatan();
 
       statusNotifier.value = 'Sinkronisasi selesai...';
+      await UserService().getVerify();
     } catch (error) {
       statusNotifier.value = 'Error: ${error.toString()}';
       throw Exception("Internal Server Error");

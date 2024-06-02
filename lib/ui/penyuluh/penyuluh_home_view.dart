@@ -6,6 +6,7 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
@@ -324,6 +325,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                   future: Future.wait([
                     penyuluhC.getHistoriPenyuluhanBulanIni(),
                     penyuluhC.getLuasLahanDesa(),
+                    userC.getVerify(),
                   ]),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -353,6 +355,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                           snapshot.data?[0] as List<HistoriPenyuluhanModel>;
                       final luasDesaList =
                           snapshot.data?[1] as List<LuasWilayahModel>;
+                      final verifyList = snapshot.data?[2] as List<VerifyModel>;
 
                       int getLuasDesa(String id) {
                         for (LuasWilayahModel wilayah in luasDesaList) {
@@ -401,6 +404,8 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                       date: desa.date,
                                       desaId: desa.desaId,
                                       desaName: desa.desaName,
+                                      isVerify: userC.getStatusVerify(
+                                          verifyList, desa.date, desa.desaId),
                                     ),
                                   ),
                                 ).then((value) => setState(() {}));
@@ -450,8 +455,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                                             FontWeight.bold),
                                               ),
                                               Text(
-                                                userC
-                                                    .convertDate(desa.date),
+                                                userC.convertDate(desa.date),
                                                 style: StyleTheme()
                                                     .styleBlack
                                                     .copyWith(
@@ -489,7 +493,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                     const SizedBox(height: 10),
                                     LinearPercentIndicator(
                                       width: MediaQuery.of(context).size.width -
-                                          40,
+                                          30,
                                       animation: true,
                                       lineHeight: 30,
                                       animationDuration: 2000,

@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
+import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
@@ -30,6 +32,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
   final palawijaC = PalawijaController();
   late List<DesaModel> desaList;
   late List<PalawijaModel> palawijaList;
+  late List<VerifyModel> verifyList;
   late String selectedJenisLahanValue;
   late String selectedBantuanValue;
   late DesaModel? selectedDesaValue;
@@ -48,6 +51,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
   Future<void> _initializeData() async {
     desaList = await palawijaC.getDesa();
     palawijaList = await palawijaC.getPalawija();
+    verifyList = await UserController().getVerify();
     setState(() {
       if (widget.detail != null) {
         value = TextEditingController(text: widget.detail!.nilai.toString());
@@ -120,25 +124,38 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
             if (formKey.currentState!.validate()) {
               final data = {
                 "desa_id": selectedDesaValue!.id,
+                "desa_name": selectedDesaValue!.name,
                 "jenis_lahan": selectedJenisLahanValue,
                 "jenis_bantuan": selectedBantuanValue,
-                "date": date.text,
                 "id_jenis_palawija": selectedJenisPalawijaValue!.id,
+                "palawija_name": selectedJenisPalawijaValue!.name,
+                "date": date.text,
                 "tipe_data": selectedTipeDataValue,
-                "nilai": value.text
+                "nilai": value.text,
               };
+              bool isVerified = UserController().getStatusVerify(
+                  verifyList, date.text.substring(0, 7), selectedDesaValue!.id);
+
+              if (isVerified) {
+                EasyLoading.showToast(
+                    "Gagal menyimpan data. Data pada desa dan bulan yang dipilih sudah diverifikasi.");
+                return;
+              }
+
               if (widget.onCreate) {
                 palawijaC.store(data).then((value) {
                   if (value) {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DetailPenyuluhanView(
-                                index: 1,
-                                date: date.text.substring(0, 7),
-                                desaId: selectedDesaValue!.id,
-                                desaName: selectedDesaValue!.name,
-                              )),
+                        builder: (context) => DetailPenyuluhanView(
+                          index: 1,
+                          date: date.text.substring(0, 7),
+                          desaId: selectedDesaValue!.id,
+                          desaName: selectedDesaValue!.name,
+                          isVerify: false,
+                        ),
+                      ),
                       (route) => false,
                     );
                   }
@@ -240,7 +257,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           (value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(UserController().toCamelCase(value)),
                             );
                           },
                         ).toList(),
@@ -297,7 +314,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           (value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(UserController().toCamelCase(value)),
                             );
                           },
                         ).toList(),

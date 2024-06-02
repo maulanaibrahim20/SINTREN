@@ -45,10 +45,14 @@ class PalawijaController {
         return false;
       }
 
+      final dataForDatabase = Map<String, dynamic>.from(data)
+        ..['desa_name'] = map['desa_name']
+        ..['palawija_name'] = map["palawija_name"];
+
       final db = await DatabaseHelper().database;
       await db.insert(
         'detailPalawija',
-        data,
+        dataForDatabase,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
 
@@ -167,6 +171,7 @@ class PalawijaController {
         whereArgs: ['%$date%', desaId],
         orderBy: 'date DESC',
       );
+
       return List<DetailPalawijaModel>.from(
           maps.map((map) => DetailPalawijaModel.fromMap(map)));
     } catch (e) {

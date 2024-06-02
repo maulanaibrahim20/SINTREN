@@ -2,8 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance =
-      DatabaseHelper._internal();
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
   static Database? _database;
 
   factory DatabaseHelper() {
@@ -50,7 +49,7 @@ class DatabaseHelper {
         name TEXT
       )
     ''');
-     await db.execute('''
+    await db.execute('''
       CREATE TABLE palawija (
         id TEXT PRIMARY KEY,
         name TEXT
@@ -88,6 +87,16 @@ class DatabaseHelper {
         tipe_data TEXT,
         date TEXT,
         nilai INTEGER
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE verify (
+        id INTEGER PRIMARY KEY,
+        date TEXT,
+        desa_id TEXT,
+        kecamatan_id TEXT,
+        user_id TEXT,
+        isVerify TEXT
       )
     ''');
   }

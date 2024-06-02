@@ -6,9 +6,11 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/admin/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -31,6 +33,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
     await AdminService().getDataPenyuluhanDesa();
     await AdminPadiService().getDetailPadiByKecamatan();
     await AdminPalawijaService().getDetailPalawijaByKecamatan();
+    await UserService().getVerify();
     setState(() {});
   }
 
@@ -73,26 +76,24 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
               _filter(context);
             },
           ),
+          IconButton(
+              onPressed: () async {
+                EasyLoading.show(status: "Sinkronisasi Data");
+                await _synchronizeData();
+                EasyLoading.dismiss();
+              },
+              icon: Icon(
+                Icons.refresh_rounded,
+                color: ColorTheme().whiteColor,
+              ))
         ],
         backgroundColor: ColorTheme().primaryColor,
-      ),
-      floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        onPressed: () async {
-          EasyLoading.show(status: "Sinkronisasi Data");
-          await _synchronizeData();
-          EasyLoading.dismiss();
-        },
-        backgroundColor: ColorTheme().primaryColor,
-        foregroundColor: ColorTheme().whiteColor,
-        child: const Icon(
-          Icons.refresh_rounded,
-        ),
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
           adminC.getHistoriPenyuluhan(),
           adminC.getLuasLahanDesa(),
+          userC.getVerify(),
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -121,6 +122,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
             final historiList =
                 snapshot.data?[0] as List<HistoriPenyuluhanModel>;
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
+            final verifyList = snapshot.data?[2] as List<VerifyModel>;
 
             int getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
@@ -168,6 +170,10 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                           .where((desa) => desa.desaId == selectedDesaValue!.id)
                           .toList();
                   HistoriPenyuluhanModel desa = displayList[index];
+
+                  bool isVerify =
+                      userC.getStatusVerify(verifyList, desa.date, desa.desaId);
+
                   return GestureDetector(
                     onTap: () async {
                       await Navigator.push(
@@ -273,19 +279,58 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                 horizontal: 10, vertical: 10),
                             child: ElevatedButton.icon(
                               onPressed: () {
-                                _showConfirmationDialog(context);
-                                // Navigator.push(context,
-                                //     MaterialPageRoute(builder: (_) => AddPadiView()));
+                                _showConfirmationDialog(context).then((value) {
+                                  if (value) {
+                                    final dataVerify = userC.getDataVerify(
+                                        verifyList, desa.date, desa.desaId);
+                                    final data = {
+                                      "desa_id": desa.desaId,
+                                      "date": desa.date,
+                                      "isVerify": dataVerify == null
+                                          ? !isVerify
+                                              ? "true"
+                                              : "false"
+                                          : dataVerify.isVerify == "true"
+                                              ? "false"
+                                              : "true",
+                                    };
+                                    EasyLoading.show(status: "Loading...");
+                                    if (dataVerify == null) {
+                                      userC
+                                          .storeVerify(data)
+                                          .then((value) => setState(() {}));
+                                    } else {
+                                      userC
+                                          .updateVerify(
+                                              dataVerify.id.toString(), data)
+                                          .then((value) => setState(() {}));
+                                    }
+                                    EasyLoading.dismiss();
+                                  }
+                                });
                               },
-                              icon: const Icon(Icons.verified_outlined,
-                                  color: Colors.green),
-                              label: Text('Verifikasi',
+                              icon: isVerify
+                                  ? const Icon(
+                                      Icons.cancel_outlined,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(Icons.verified_outlined,
+                                      color: Colors.green),
+                              label: Text(
+                                  isVerify
+                                      ? "Batalkan Verifikasi"
+                                      : 'Verifikasi',
                                   style: StyleTheme().stylePrimary.copyWith(
-                                      fontSize: 14, color: Colors.green)),
+                                      fontSize: 14,
+                                      color: isVerify
+                                          ? Colors.red
+                                          : Colors.green)),
                               style: ElevatedButton.styleFrom(
                                   surfaceTintColor: ColorTheme().whiteColor,
-                                  side: const BorderSide(
-                                      color: Colors.green, width: 2),
+                                  side: BorderSide(
+                                      color:
+                                          isVerify ? Colors.red : Colors.green,
+                                      width: 2),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
                                   ),
@@ -311,7 +356,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: Icon(
+          icon: const Icon(
             Icons.warning_rounded,
             size: 80,
             color: Colors.amber,
@@ -322,7 +367,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text("Pastikan periksa data sebelum melakukan verifikasi."),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Text(
                 "Anda yakin ingin melanjutkan aksi?",
                 style: StyleTheme()
@@ -348,7 +393,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                 Navigator.of(context).pop(true); // Kembali dengan nilai true
               },
               child: Text(
-                "Verifikasi",
+                "Lanjutkan",
                 style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
               ),
             ),
