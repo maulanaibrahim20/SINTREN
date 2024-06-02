@@ -32,6 +32,9 @@ Route::post('/login', [UserController::class, 'login']);
 Route::patch('/users/{id}', [UserController::class, 'update']);
 Route::get('/getUserById/{id}', [UserController::class, 'getUserById']);
 Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
+Route::get('/getVerify', [UserController::class, 'getVerification']);
+Route::post('/verify/store',[UserController::class,'storeVerify']);
+Route::patch('/verify/update/{id}',[UserController::class,'updateVerify']);
 
 // PENYULUH END POINT
 Route::get('/penyuluh/getDesa/{id}', [PenyuluhController::class, 'getDesa']);

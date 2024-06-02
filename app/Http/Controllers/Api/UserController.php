@@ -8,6 +8,8 @@ use App\Models\Pertanian\Pertanian;
 use App\Models\Role;
 use App\Models\Uptd\Uptd;
 use App\Models\User;
+use App\Models\Verification;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -201,6 +203,93 @@ class UserController extends Controller
                 'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
                 'data' => null
             ], 500);
+        }
+    }
+
+    public function getVerification()
+    {
+        $verify = Verification::all();
+        $responseData = [
+            'status' => 'success',
+            'message' => 'Get data successful',
+            'data' => $verify
+        ];
+        return response()->json($responseData);
+    }
+
+    public function storeVerify(Request $request)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'kecamatan_id' => 'required|string',
+            'desa_id' => 'required|string',
+            'date' => 'required|string',
+            'isVerify' => 'required|bool',
+        ]);
+
+        try {
+            $padi = new Verification();
+            $padi->fill($validated);
+            $padi->save();
+
+            $responseData = [
+                'status' => 'success',
+                'message' => 'Berhasil menyimpan data',
+                'data' => $padi,
+            ];
+            return response()->json($responseData, 201);
+        } catch (QueryException $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal menyimpan data. Database error: ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
+        } catch (\Exception $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal menyimpan data. ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
+        }
+    }
+
+    public function updateVerify(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'user_id' => 'required|string',
+            'kecamatan_id' => 'required|string',
+            'desa_id' => 'required|string',
+            'date' => 'required|string',
+            'isVerify' => 'required|bool',
+        ]);
+
+        try {
+            $padi = Verification::findOrFail($id);
+            $padi->fill($validated);
+            $padi->save();
+
+            $responseData = [
+                'status' => 'success',
+                'message' => 'Berhasil mengupdate data',
+                'data' => $padi,
+            ];
+            return response()->json($responseData, 200);
+        } catch (QueryException $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal mengupdate data. Database error: ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
+        } catch (\Exception $e) {
+            $responseData = [
+                'status' => 'error',
+                'message' => 'Gagal mengupdate data. ' . $e->getMessage(),
+                'data' => null
+            ];
+            return response()->json($responseData, 500);
         }
     }
 }
