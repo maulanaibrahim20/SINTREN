@@ -25,7 +25,7 @@ class DataLaporanPadiController extends Controller
     public function index()
     {
         // Menambah batas waktu eksekusi menjadi 60 detik
-        set_time_limit(60);
+        set_time_limit(300);
 
         $laporanPadi = Cache::remember('laporanPadi', 600, function () {
             return $this->laporanPadi->with('kecamatan')->get();
