@@ -126,5 +126,6 @@ class LuasLahanWilayahSeeder extends Seeder
                 'lahan_non_sawah' => $faker->randomFloat(2, 100, 1000),
             ]);
         }
+        dd($desa_id, $kecamatan_id, $desaKecamatan);
     }
 }
