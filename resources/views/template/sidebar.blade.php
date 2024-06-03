@@ -343,6 +343,15 @@
                         </li>
                     </ul>
                 </li>
+                <li class="sub-category">
+                    <h3>Laporan</h3>
+                </li>
+                <li>
+                    <a class="side-menu__item {{ Request::segment(3) == 'laporan_pangan' ? 'active' : '' }}"
+                        href="{{ url('/pangan/data/laporan_pangan') }}"><i
+                            class="side-menu__icon fa fa-folder-o"></i><span class="side-menu__label">Laporan Pangan
+                            </span></a>
+                </li>
                 @endcan
                 <li class="sub-category">
                     <h3>Pengaturan</h3>

@@ -12,7 +12,7 @@ use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
 use App\Models\User;
 
-class LaporanPanganController extends Controller
+class DataPanganController extends Controller
 {
     protected $laporanpangan;
     protected $pasar;
@@ -53,9 +53,9 @@ class LaporanPanganController extends Controller
             'datapangan' => $datapangan,
         ];
 
-        return view('pangan.views.pangan.laporan_pangan.index', $data);
+        return view('pangan.views.pangan.data_pangan.index', $data);
     }
-    
+
     // public function index()
     // {
     //     $data = [
@@ -84,7 +84,7 @@ class LaporanPanganController extends Controller
             'datapangan' => $this->laporanpangan::where('user_id', Auth::user()->id)->get(),
         ];
 
-        return view('pangan.views.pangan.laporan_pangan.create', $data);
+        return view('pangan.views.pangan.data_pangan.create', $data);
     }
 
 
@@ -153,7 +153,7 @@ class LaporanPanganController extends Controller
             'breadcrumb_active' => 'View Data Stok Pangan',
 
         ];
-        return view('pangan.views.pangan.laporan_pangan.show', $data);
+        return view('pangan.views.pangan.data_pangan.show', $data);
     }
 
 
@@ -170,7 +170,7 @@ class LaporanPanganController extends Controller
             'datapangan' => $this->laporanpangan::where('user_id', Auth::user()->id)->get(),
         ];
 
-        return view('pangan.views.pangan.laporan_pangan.update', $data);
+        return view('pangan.views.pangan.data_pangan.update', $data);
     }
 
 
