@@ -26,10 +26,10 @@
                     <div class="dropdown ms-auto">
                         <form style="display: inline;" action="{{ url('/pertanian/data_padi/exportPdf') }}" method="get"
                             target="_blank">
-                            @if (session('filterKecamatan' && 'filterDesa'))
-                                <input type="hidden" name="filterKecamatan" value="{{ session('filterKecamatan') }}">
-                                <input type="hidden" name="filterDesa" value="{{ session('filterDesa') }}">
-                                <input type="hidden" name="filterDate" value="{{ session('filterDate') }}">
+                            @if (session('filterKecamatanData') && session('filterDesaData'))
+                                <input type="hidden" name="filterKecamatan" value="{{ session('filterKecamatanData') }}">
+                                <input type="hidden" name="filterDesa" value="{{ session('filterDesaData') }}">
+                                <input type="hidden" name="filterDate" value="{{ session('filterDateData') }}">
                             @endif
                             <button class="btn btn-outline-default fw-bold text-primary" type="submit">
                                 <i class="fa fa-print fw-semibold"></i> Export PDF

@@ -53,7 +53,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->getKecamatan->name }}</td>
-                                        <td>{{ $data->getDesa->name }}</td>
+                                        <td>{{ $data->desa->name }}</td>
                                         <td>{{ number_format($data->lahan_sawah, 0, ',', '.') }} ha</td>
                                         <td>{{ number_format($data->lahan_non_sawah, 0, ',', '.') }} ha</td>
                                         <td class="text-center">
