@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Penyuluh\LuasLahanWilayah;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class LuasLahanWilayahSeeder extends Seeder
 {
@@ -118,14 +119,16 @@ class LuasLahanWilayahSeeder extends Seeder
 
         $faker = \Faker\Factory::create();
 
+        DB::table("luas_lahan_wilayah")->truncate();
+
+
         foreach ($desaKecamatan as $desa_id => $kecamatan_id) {
             LuasLahanWilayah::create([
                 'kecamatan_id' => $kecamatan_id,
-                'desa_id' => $desa_id,
+                'desa_id' => strval($desa_id),
                 'lahan_sawah' => $faker->randomFloat(2, 100, 1000),
                 'lahan_non_sawah' => $faker->randomFloat(2, 100, 1000),
             ]);
         }
-        dd($desa_id, $kecamatan_id, $desaKecamatan);
     }
 }
