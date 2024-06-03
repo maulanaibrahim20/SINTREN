@@ -6,6 +6,7 @@ use App\Models\Penyuluh\LaporanPadi;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 
@@ -123,13 +124,16 @@ class LaporanPadiSeeder extends Seeder
         $endDate = Carbon::create(2023, 12, 31);
 
         $currentDate = $startDate->copy();
-        while ($currentDate->lte($endDate)) { 
+
+        DB::table("laporan_padis")->truncate();
+
+        while ($currentDate->lte($endDate)) {
             $desa_id = array_rand($desaKecamatan);
             $kecamatan_id = $desaKecamatan[$desa_id];
 
             LaporanPadi::create([
                 'user_id' => Str::uuid(),
-                'desa_id' => $desa_id,
+                'desa_id' => strval($desa_id),
                 'kecamatan_id' => $kecamatan_id,
                 'date' => $currentDate->toDateString(),
                 'jenis_lahan' => rand(0, 1) == 1 ? 'sawah' : 'non sawah',

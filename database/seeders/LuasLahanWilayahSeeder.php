@@ -121,6 +121,9 @@ class LuasLahanWilayahSeeder extends Seeder
         
         DB::table("luas_lahan_wilayah")->truncate();
 
+        DB::table("luas_lahan_wilayah")->truncate();
+
+
         foreach ($desaKecamatan as $desa_id => $kecamatan_id) {
             LuasLahanWilayah::create([
                 'kecamatan_id' => $kecamatan_id,
@@ -129,6 +132,5 @@ class LuasLahanWilayahSeeder extends Seeder
                 'lahan_non_sawah' => $faker->randomFloat(2, 100, 1000),
             ]);
         }
-        dd($desa_id, $kecamatan_id, $desaKecamatan);
     }
 }
