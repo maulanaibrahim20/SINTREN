@@ -24,17 +24,21 @@
                 <div class="card-header">
                     <h3 class="card-title">Data Laporan Luas Tanaman Padi</h3>
                     <div class="dropdown ms-auto">
-                        <form style="display: inline;" action="{{ url('/pertanian/data_padi/exportPdf') }}" method="get"
-                            target="_blank">
-                            @if (session('filterKecamatanData') && session('filterDesaData'))
-                                <input type="hidden" name="filterKecamatan" value="{{ session('filterKecamatanData') }}">
-                                <input type="hidden" name="filterDesa" value="{{ session('filterDesaData') }}">
-                                <input type="hidden" name="filterDate" value="{{ session('filterDateData') }}">
-                            @endif
-                            <button class="btn btn-outline-default fw-bold text-primary" type="submit">
-                                <i class="fa fa-print fw-semibold"></i> Export PDF
-                            </button>
-                        </form>
+                        @if (empty(session('filtering')))
+                        @else
+                            <form style="display: inline;" action="{{ url('/pertanian/data_padi/exportPdf') }}"
+                                method="get" target="_blank">
+                                @if (session('filterKecamatanData') && session('filterDesaData'))
+                                    <input type="hidden" name="filterKecamatan"
+                                        value="{{ session('filterKecamatanData') }}">
+                                    <input type="hidden" name="filterDesa" value="{{ session('filterDesaData') }}">
+                                    <input type="hidden" name="filterDate" value="{{ session('filterDateData') }}">
+                                @endif
+                                <button class="btn btn-outline-default fw-bold text-primary" type="submit">
+                                    <i class="fa fa-print fw-semibold"></i> Export PDF
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -191,9 +195,9 @@
                 });
             });
 
-            let selectedKecamatan = "{{ session('filtering.kecamatan_id') }}";
-            if (selectedKecamatan) {
-                $("#filterKecamatan").val(selectedKecamatan).trigger('change');
+            let filterKecamatan = $("#filterKecamatan").val();
+            if (filterKecamatan) {
+                $("#filterKecamatan").trigger('change');
             }
         });
     </script>

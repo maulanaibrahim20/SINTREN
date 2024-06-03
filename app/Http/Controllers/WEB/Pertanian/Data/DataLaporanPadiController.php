@@ -24,19 +24,9 @@ class DataLaporanPadiController extends Controller
     }
     public function index()
     {
-        // Menambah batas waktu eksekusi menjadi 60 detik
-        // set_time_limit(300);
-
-        $laporanPadi = Cache::remember('laporanPadi', 600, function () {
-            return $this->laporanPadi->with('kecamatan')->get();
-        });
-
-        $filterKecamatan = Cache::remember('filterKecamatan', 600, function () use ($laporanPadi) {
-            return $this->kecamatan::whereIn('id', $laporanPadi->pluck('kecamatan_id'))->get();
-        });
-
-        $data['laporanPadi'] = $laporanPadi;
-        $data['filterKecamatan'] = $filterKecamatan;
+        $kecamatanId = $this->laporanPadi::pluck('kecamatan_id');
+        $data['filterKecamatan'] = $this->kecamatan::whereIn('id', $kecamatanId)->get();
+        $data['laporanPadi'] = $this->laporanPadi::all();
 
         return view('pertanian.pages.data.padi.index', $data);
     }
@@ -49,9 +39,9 @@ class DataLaporanPadiController extends Controller
         ];
 
         $this->validate($request, [
-            'filterKecamatan' => 'required',
-            'filterDesa' => 'required',
-            'dateRange' => 'required',
+            'filterKecamatan' => 'nullable',
+            'filterDesa' => 'nullable',
+            'dateRange' => 'nullable',
         ], $messages);
 
         return DB::transaction(function () use ($request) {
@@ -59,13 +49,22 @@ class DataLaporanPadiController extends Controller
             $filterDesa = $request->input('filterDesa');
             $dateRange = $request->input('dateRange');
 
-            list($startDate, $endDate) = explode(' to ', $dateRange);
+            $query = $this->laporanPadi::query();
 
-            $filter = $this->laporanPadi
-                ::where('kecamatan_id', $filterKecamatan)
-                ->where('desa_id', $filterDesa)
-                ->whereBetween('date', [$startDate, $endDate])
-                ->get();
+            if ($filterKecamatan) {
+                $query->where('kecamatan_id', $filterKecamatan);
+            }
+
+            if ($filterDesa) {
+                $query->where('desa_id', $filterDesa);
+            }
+
+            if ($dateRange) {
+                list($startDate, $endDate) = explode(' to ', $dateRange);
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+
+            $filter = $query->get();
 
             return back()->with([
                 'filtering' => $filter,
@@ -80,13 +79,18 @@ class DataLaporanPadiController extends Controller
 
     public function exportPdf(Request $request)
     {
+        ini_set('memory_limit', '512M');
+        ini_set('max_execution_time', 300);
+
         $filterKecamatanId = $request->input('filterKecamatan');
         $filterDesaId = $request->input('filterDesa');
         $filterDate = $request->input('filterDate');
 
-        // Menguraikan rentang tanggal dari filterDate
         if (!empty($filterDate)) {
             [$startDate, $endDate] = explode(' to ', $filterDate);
+        } else {
+            $startDate = null;
+            $endDate = null;
         }
 
         $query = $this->laporanPadi::query();
@@ -100,10 +104,11 @@ class DataLaporanPadiController extends Controller
         }
 
         if (!empty($filterDate)) {
-            $query->whereBetween('date', [$startDate, $endDate]);
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
         $filterKecamatanName = !empty($filterKecamatanId) ? Kecamatan::find($filterKecamatanId)->name : null;
+
         $filterDesaName = !empty($filterDesaId) ? Desa::find($filterDesaId)->name : null;
 
         $viewData = [
@@ -114,13 +119,16 @@ class DataLaporanPadiController extends Controller
             'filterDate' => $filterDate
         ];
 
-        $pdf = Pdf::loadView('pertanian.pages.data.padi.pdf.index', ['laporanPadiPdf' => []], $viewData)->setPaper("a4");
+        $html = view('pertanian.pages.data.padi.pdf.header', $viewData)->render();
 
-        $query->chunk(1000, function ($dataTransaksi) use ($pdf) {
+        $query->chunk(1000, function ($dataTransaksi) use (&$html) {
             $data['laporanPadiPdf'] = $dataTransaksi;
-            $pdf->loadView('pertanian.pages.data.padi.pdf.index', $data)->appendPDF();
+            $html .= view('pertanian.pages.data.padi.pdf.content', $data)->render();
         });
 
+        $html .= view('pertanian.pages.data.padi.pdf.footer')->render();
+
+        $pdf = Pdf::loadHTML($html)->setPaper("a4");
         return $pdf->stream('data_laporan_padi.pdf');
     }
 }

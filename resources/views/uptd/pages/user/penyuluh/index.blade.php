@@ -126,7 +126,7 @@
                             <select class="form-control select2" name="desa[]" id="desa" data-placeholder="Pilih Desa"
                                 multiple>
                                 @foreach ($desa as $data)
-                                    <option value="{{ $data['getDesa']['id'] }}">{{ $data['getDesa']['name'] }}</option>
+                                    <option value="{{ $data['desa']['id'] }}">{{ $data['desa']['name'] }}</option>
                                 @endforeach
                             </select>
                         </div>
