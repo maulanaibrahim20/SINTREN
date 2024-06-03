@@ -32,26 +32,26 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         name TEXT,
         kecamatan_id TEXT,
-        lahan_sawah INTEGER,
-        lahan_non_sawah INTEGER,
-        total_luas_lahan INTEGER
+        lahan_sawah REAL,
+        lahan_non_sawah REAL,
+        total_luas_lahan REAL
       )
     ''');
     await db.execute('''
       CREATE TABLE pengairan (
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         name TEXT
       )
     ''');
     await db.execute('''
       CREATE TABLE padi (
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         name TEXT
       )
     ''');
     await db.execute('''
       CREATE TABLE palawija (
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         name TEXT
       )
     ''');
@@ -63,14 +63,14 @@ class DatabaseHelper {
         desa_name TEXT,
         kecamatan_id TEXT,
         jenis_lahan TEXT,
-        id_jenis_padi TEXT,
+        id_jenis_padi INTEGER,
         padi_name TEXT,
         jenis_bantuan TEXT,
-        id_jenis_pengairan TEXT,
+        id_jenis_pengairan INTEGER,
         pengairan_name TEXT,
         tipe_data TEXT,
         date TEXT,
-        nilai INTEGER
+        nilai REAL
       )
     ''');
     await db.execute('''
@@ -82,11 +82,11 @@ class DatabaseHelper {
         kecamatan_id TEXT,
         jenis_lahan TEXT,
         jenis_bantuan TEXT,
-        id_jenis_palawija TEXT,
+        id_jenis_palawija INTEGER,
         palawija_name TEXT,
         tipe_data TEXT,
         date TEXT,
-        nilai INTEGER
+        nilai REAL
       )
     ''');
     await db.execute('''

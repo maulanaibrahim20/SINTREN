@@ -138,7 +138,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                 snapshot.data?[0] as List<HistoriPenyuluhanModel>;
             final desaList = snapshot.data?[1] as List<LuasWilayahModel>;
 
-            int getNilaiByDesaId(String desaId) {
+            double getNilaiByDesaId(String desaId) {
               try {
                 return historiList
                     .firstWhere((element) => element.desaId == desaId)

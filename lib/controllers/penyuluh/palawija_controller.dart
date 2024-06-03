@@ -205,7 +205,7 @@ class PalawijaController {
       List<DetailPalawijaModel> groupedData =
           await getDetailPalawijaByUser(date, desaId);
 
-      var groupedByAll = <String, Map<String, Map<String, Map<String, int>>>>{};
+      var groupedByAll = <String, Map<String, Map<String, Map<String, double>>>>{};
 
       for (var row in groupedData) {
         groupedByAll
@@ -220,15 +220,15 @@ class PalawijaController {
 
       groupedByAll.forEach((jenisPalawija, lahanMap) {
         var lahanData = <String, JenisLahan>{};
-        int totalJenisPalawija = 0;
+        double totalJenisPalawija = 0;
 
         lahanMap.forEach((jenisLahan, bantuanMap) {
           var bantuanData = <String, JenisBantuan>{};
-          int totalJenisLahan = 0;
+          double totalJenisLahan = 0;
 
           bantuanMap.forEach((jenisBantuan, tipeDataMap) {
             var tipeDataEntries = <String, TipeData>{};
-            int totalJenisBantuan = 0;
+            double totalJenisBantuan = 0;
 
             tipeDataMap.forEach((tipeData, nilai) {
               tipeDataEntries[tipeData] = TipeData(data: {tipeData: nilai});

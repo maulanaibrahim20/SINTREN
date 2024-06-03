@@ -2,7 +2,7 @@ class HistoriPenyuluhanModel {
   final String date;
   final String desaId;
   final String desaName;
-  final int nilai;
+  final double nilai;
 
   HistoriPenyuluhanModel({
     required this.date,
@@ -16,7 +16,7 @@ class HistoriPenyuluhanModel {
       date: json['month_year'],
       desaId: json['desa_id'],
       desaName: json['desa_name'],
-      nilai: (json['total_nilai'] as num).toInt(),
+      nilai: (json['total_nilai'] as num).toDouble(),
     );
   }
 

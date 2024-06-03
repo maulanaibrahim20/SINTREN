@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
@@ -26,7 +24,6 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.desaId!);
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       appBar: AppBar(
@@ -88,7 +85,7 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
             });
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
 
-            int getLuasDesa(String id) {
+            double getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
                 if (wilayah.id == id) {
                   return wilayah.totalLuasLahan;

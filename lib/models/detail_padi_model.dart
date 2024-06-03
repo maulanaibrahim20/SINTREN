@@ -5,14 +5,14 @@ class DetailPadiModel {
   final String desaName;
   final String kecamatanId;
   final String jenisLahan;
-  final String idJenisPadi;
+  final int idJenisPadi;
   final String padiName;
   final String jenisBantuan;
-  final String idJenisPengairan;
+  final int idJenisPengairan;
   final String pengairanName;
   final String date;
   final String tipeData;
-  final int nilai;
+  final double nilai;
 
   DetailPadiModel({
     required this.desaName,
@@ -32,21 +32,19 @@ class DetailPadiModel {
   });
 
   factory DetailPadiModel.fromJson(Map<String, dynamic> json) {
-    return DetailPadiModel(
+   return DetailPadiModel(
       id: json['id'],
-      userId: json['user_id'],
-      desaId: json['desa_id'],
-      kecamatanId: json['kecamatan_id'],
+      userId: json['user_id'].toString(),
+      desaId: json['desa_id'].toString(),
+      kecamatanId: json['kecamatan_id'].toString(),
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
       tipeData: json['tipe_data'],
-      // nilai: int.parse(json['nilai']),
-      nilai: json['nilai'],
+      nilai: double.parse(json['nilai'].toString()),
       desaName: json['desa']['name'],
-      // idJenisPengairan: json['id_jenis_pengairan'] ?? '',
-      idJenisPengairan: json['id_jenis_pengairan'].toString(),
+      idJenisPengairan: json['id_jenis_pengairan'] ?? 0,
       pengairanName: json['pengairan'] == null ? '' : json['pengairan']['name'],
-      idJenisPadi: json['id_jenis_padi'].toString(),
+      idJenisPadi: json['id_jenis_padi'],
       padiName: json['padi'] == null ? '' : json['padi']['name'],
       date: json['date'],
     );
@@ -63,9 +61,9 @@ class DetailPadiModel {
       tipeData: json['tipe_data'],
       nilai: json['nilai'],
       desaName: json['desa_name'],
-      idJenisPengairan: json['id_jenis_pengairan'].toString(),
-      pengairanName: json['pengairan_name'].toString(),
-      idJenisPadi: json['id_jenis_padi'].toString(),
+      idJenisPengairan: json['id_jenis_pengairan'],
+      pengairanName: json['pengairan_name'],
+      idJenisPadi: json['id_jenis_padi'],
       padiName: json['padi_name'],
       date: json['date'],
     );

@@ -2,9 +2,9 @@ class LuasWilayahModel {
   final String id;
   final String name;
   final String kecamatanId;
-  final int luasLahanSawah;
-  final int luasLahanNonSawah;
-  final int totalLuasLahan;
+  final double luasLahanSawah;
+  final double luasLahanNonSawah;
+  final double totalLuasLahan;
 
   LuasWilayahModel({
     required this.luasLahanSawah,
@@ -16,18 +16,28 @@ class LuasWilayahModel {
   });
 
   factory LuasWilayahModel.fromJson(Map<String, dynamic> json) {
+    double parseDouble(dynamic value) {
+      if (value is int) {
+        return value.toDouble();
+      } else if (value is double) {
+        return value;
+      } else if (value is String) {
+        return double.tryParse(value) ?? 0.0;
+      } else {
+        throw ArgumentError('Cannot convert $value to double');
+      }
+    }
+
+    double luasLahanSawah = parseDouble(json['lahan_sawah']);
+    double luasLahanNonSawah = parseDouble(json['lahan_non_sawah']);
+
     return LuasWilayahModel(
       id: json['desa_id'],
       name: json['desa']['name'],
       kecamatanId: json['kecamatan_id'].toString(),
-      // luasLahanNonSawah:
-      //     int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
-      // luasLahanSawah: int.parse(json['luas_lahan_wilayah']['lahan_sawah']),
-      // totalLuasLahan: int.parse(json['luas_lahan_wilayah']['lahan_sawah']) +
-      //     int.parse(json['luas_lahan_wilayah']['lahan_non_sawah']),
-      luasLahanNonSawah: json['lahan_non_sawah'],
-      luasLahanSawah: json['lahan_sawah'],
-      totalLuasLahan: json['lahan_sawah'] + json['lahan_non_sawah'],
+      luasLahanNonSawah: luasLahanNonSawah,
+      luasLahanSawah: luasLahanSawah,
+      totalLuasLahan: luasLahanSawah + luasLahanNonSawah,
     );
   }
 

@@ -124,7 +124,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
             final verifyList = snapshot.data?[2] as List<VerifyModel>;
 
-            int getLuasDesa(String id) {
+            double getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
                 if (wilayah.id == id) {
                   return wilayah.totalLuasLahan;

@@ -1,12 +1,12 @@
 class PengairanModel {
-  final String id;
+  final int id;
   final String name;
 
   PengairanModel({required this.id, required this.name});
 
   factory PengairanModel.fromJson(Map<String, dynamic> json) {
     return PengairanModel(
-      id: json['id'].toString(),
+      id: json['id'],
       name: json['name'],
     );
   }

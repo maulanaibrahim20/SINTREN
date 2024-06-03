@@ -210,7 +210,8 @@ class PadiController {
       List<DetailPadiModel> groupedData =
           await getDetailPadiByUser(date, desaId);
 
-      var groupedByAll = <String, Map<String, Map<String, Map<String, int>>>>{};
+      var groupedByAll =
+          <String, Map<String, Map<String, Map<String, double>>>>{};
 
       for (var row in groupedData) {
         groupedByAll
@@ -225,15 +226,15 @@ class PadiController {
 
       groupedByAll.forEach((jenisPadi, lahanMap) {
         var lahanData = <String, JenisLahan>{};
-        int totalJenisPadi = 0;
+        double totalJenisPadi = 0;
 
         lahanMap.forEach((jenisLahan, bantuanMap) {
           var bantuanData = <String, JenisBantuan>{};
-          int totalJenisLahan = 0;
+          double totalJenisLahan = 0;
 
           bantuanMap.forEach((jenisBantuan, tipeDataMap) {
             var tipeDataEntries = <String, TipeData>{};
-            int totalJenisBantuan = 0;
+            double totalJenisBantuan = 0;
 
             tipeDataMap.forEach((tipeData, nilai) {
               tipeDataEntries[tipeData] = TipeData(data: {tipeData: nilai});
@@ -270,11 +271,11 @@ class PadiController {
       var groupedByPengairan = <String, JenisPengairan>{};
 
       for (var row in groupedData) {
-        if (row.jenisLahan != 'Lahan Sawah') continue;
+        if (row.jenisLahan != 'sawah') continue;
 
         String jenisPengairan = row.pengairanName;
         String tipeData = row.tipeData;
-        int nilai = row.nilai;
+        double nilai = row.nilai;
 
         var jenisPengairanEntry = groupedByPengairan.putIfAbsent(
             jenisPengairan, () => JenisPengairan(pengairanData: {}));
@@ -289,8 +290,9 @@ class PadiController {
       }
 
       groupedByPengairan.forEach((jenisPengairan, jenisPengairanEntry) {
-        int totalJenisPengairan = jenisPengairanEntry.pengairanData.values.fold(
-            0, (sum, pengairanDataEntry) => sum + pengairanDataEntry.total);
+        double totalJenisPengairan = jenisPengairanEntry.pengairanData.values
+            .fold(
+                0, (sum, pengairanDataEntry) => sum + pengairanDataEntry.total);
         jenisPengairanEntry.total = totalJenisPengairan;
       });
 

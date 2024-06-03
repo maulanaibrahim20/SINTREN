@@ -74,7 +74,7 @@ class AdminController {
     }
   }
 
-  Future<int> getTotalLuasLahanKecamatan() async {
+  Future<double> getTotalLuasLahanKecamatan() async {
     try {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('desa');
@@ -82,7 +82,7 @@ class AdminController {
       List<LuasWilayahModel> luasWilayahList =
           maps.map((map) => LuasWilayahModel.fromMap(map)).toList();
 
-      int totalLuasLahan =
+      double totalLuasLahan =
           luasWilayahList.fold(0, (sum, item) => sum + item.totalLuasLahan);
 
       return totalLuasLahan;
@@ -92,7 +92,7 @@ class AdminController {
     }
   }
 
-  Future<int> getTotalNilaiPenyuluhanBulanIni() async {
+  Future<double> getTotalNilaiPenyuluhanBulanIni() async {
     try {
       List<HistoriPenyuluhanModel> historiList = await getHistoriPenyuluhan();
 
@@ -103,7 +103,7 @@ class AdminController {
       List<HistoriPenyuluhanModel> currentMonthHistori =
           historiList.where((item) => item.date == currentMonthYear).toList();
 
-      int sumTotalNilai =
+      double sumTotalNilai =
           currentMonthHistori.fold(0, (sum, item) => sum + item.nilai);
 
       return sumTotalNilai;

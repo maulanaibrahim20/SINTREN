@@ -1,33 +1,33 @@
 class TipeData {
-  final Map<String, int> data;
+  final Map<String, double> data;
 
   TipeData({required this.data});
 }
 
 class JenisBantuan {
   final Map<String, TipeData> tipeData;
-  final int total;
+  final double total;
 
   JenisBantuan({required this.tipeData, required this.total});
 }
 
 class JenisLahan {
   final Map<String, JenisBantuan> jenisBantuan;
-  final int total;
+  final double total;
 
   JenisLahan({required this.jenisBantuan, required this.total});
 }
 
 class JenisPadi {
   final Map<String, JenisLahan> jenisLahan;
-  final int total;
+  final double total;
 
   JenisPadi({required this.jenisLahan, required this.total});
 }
 
 class PengairanData {
   final Map<String, TipeData> tipeData;
-  int total;
+  double total;
 
   PengairanData({required this.tipeData, required this.total});
 }
@@ -35,7 +35,7 @@ class PengairanData {
 
 class JenisPengairan {
   final Map<String, PengairanData> pengairanData;
-  int total; 
+  double total; 
 
   JenisPengairan({required this.pengairanData, this.total = 0}); 
 

@@ -6,11 +6,11 @@ class DetailPalawijaModel {
   final String kecamatanId;
   final String jenisLahan;
   final String jenisBantuan;
-  final String idJenisPalawija;
+  final int idJenisPalawija;
   final String palawijaName;
   final String date;
   final String tipeData;
-  final int nilai;
+  final double nilai;
 
   DetailPalawijaModel({
     required this.desaName,
@@ -30,15 +30,15 @@ class DetailPalawijaModel {
   factory DetailPalawijaModel.fromJson(Map<String, dynamic> json) {
     return DetailPalawijaModel(
       id: json['id'],
-      userId: json['user_id'],
-      desaId: json['desa_id'],
-      kecamatanId: json['kecamatan_id'],
+      userId: json['user_id'].toString(),
+      desaId: json['desa_id'].toString(),
+      kecamatanId: json['kecamatan_id'].toString(),
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPalawija: json['id_jenis_palawija'].toString(),
+      idJenisPalawija: json['id_jenis_palawija'],
       tipeData: json['tipe_data'],
-      // nilai: int.parse(json['nilai']),
-      nilai: json['nilai'],
+      nilai: double.parse(json['nilai'].toString()),
+      // nilai: json['nilai'],
       desaName: json['desa']['name'],
       palawijaName: json['palawija'] == null ? '' : json['palawija']['name'],
       date: json['date'],
@@ -53,7 +53,7 @@ class DetailPalawijaModel {
       kecamatanId: json['kecamatan_id'],
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPalawija: json['id_jenis_palawija'].toString(),
+      idJenisPalawija: json['id_jenis_palawija'],
       tipeData: json['tipe_data'],
       nilai: json['nilai'],
       desaName: json['desa_name'],

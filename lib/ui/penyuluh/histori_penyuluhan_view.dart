@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -144,9 +142,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
             final verifyList = snapshot.data?[2] as List<VerifyModel>;
 
-            log(verifyList.toString());
-
-            int getLuasDesa(String id) {
+            double getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
                 if (wilayah.id == id) {
                   return wilayah.totalLuasLahan;

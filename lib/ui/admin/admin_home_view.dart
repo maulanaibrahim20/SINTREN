@@ -24,8 +24,8 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   final adminC = AdminController();
   String? kecamatan;
   double? presentasePenyuluhan;
-  int? penyuluhanBulanIni;
-  int? totalLuasLahanKecamatan;
+  double? penyuluhanBulanIni;
+  double? totalLuasLahanKecamatan;
   Future<void> _initializedData() async {
     kecamatan = await UserLoginModel().getKecamatanName();
     penyuluhanBulanIni = await adminC.getTotalNilaiPenyuluhanBulanIni();
