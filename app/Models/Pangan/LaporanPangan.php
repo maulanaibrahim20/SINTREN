@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Models\Pangan;
+use App\Models\User;
+use App\Models\Pasar\Pasar;
+use App\Models\Pangan\KategoriPangan;
+
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,4 +12,19 @@ use Illuminate\Database\Eloquent\Model;
 class LaporanPangan extends Model
 {
     use HasFactory;
+    protected $table = 'laporan_pangans';
+    protected $guarded = [''];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function pasar()
+    {
+        return $this->belongsTo(Pasar::class, 'pasar_id');
+    }
+    public function kategori_pangan()
+    {
+        return $this->belongsTo(KategoriPangan::class, 'kategori_pangan_id');
+    }
 }

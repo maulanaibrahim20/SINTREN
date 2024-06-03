@@ -24,6 +24,7 @@ use App\Http\Controllers\WEB\Uptd\User\UptdAkunPenyuluhController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
 use App\Http\Controllers\PANGAN\KategoriPanganController;
+use App\Http\Controllers\PANGAN\LaporanPanganController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -130,6 +131,9 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::resource('/user/pasar', UserPasarController::class);
             Route::resource('/create/data_pasar', PasarController::class);
             Route::resource('/create/kategori_pangan', KategoriPanganController::class);
+
+            Route::post('/create/data_pangan/kirim/{id}', [LaporanPanganController::class, 'kirimkan']);
+            Route::resource('/create/data_pangan', LaporanPanganController::class);
         });
     });
 });

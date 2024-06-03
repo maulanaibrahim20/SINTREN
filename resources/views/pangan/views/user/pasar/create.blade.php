@@ -79,7 +79,6 @@
 @section('script')
     <script>
         $(document).ready(function() {
-<<<<<<< HEAD
             $('.needs-validation').submit(function(event) {
                 event.preventDefault();
 

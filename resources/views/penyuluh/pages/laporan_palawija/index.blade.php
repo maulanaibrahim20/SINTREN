@@ -52,16 +52,6 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-<<<<<<< HEAD
-                                            @if ($data->status == 'terkirim')
-                                                <span class="badge bg-success-transparent text-warning fw-semibold">Terkirim
-                                                </span>
-                                            @elseif ($data->status == '_terkirim')
-                                                <span class="badge bg-danger-transparent text-danger fw-semibold">
-                                                    Terkirim
-                                                </span>
-                                            @endif
-=======
                                             <div class="d-flex contact-image">
                                                 <div class="d-flex mt-1 flex-column ms-2">
                                                     <h6 class="mb-0 fs-14 fw-semibold text-dark">Kecamatan : <span
@@ -71,7 +61,6 @@
                                                         class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span>
                                                 </div>
                                             </div>
->>>>>>> ac05a750b36994399cfd86af854b2d7ca9ef60b8
                                         </td>
                                         <td>{{ $data->jenis_lahan }}</td>
                                         <td>{{ $data->date }}</td>
@@ -82,16 +71,6 @@
                                                 class="btn btn-info">
                                                 <i class="ti ti-eye"></i>
                                             </a>
-<<<<<<< HEAD
-                                            @if ($data->status == 'terkirim')
-                                            @elseif($data->status == '_terkirim')
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#largeModal{{ $data->id }}">
-                                                    <i class="fa fa-paper-plane"></i>
-                                                </button>
-                                            @endif
-=======
->>>>>>> ac05a750b36994399cfd86af854b2d7ca9ef60b8
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/penyuluh/create/laporan_palawija/' . $data->id) }}"
                                                 style="display: inline;" method="POST">

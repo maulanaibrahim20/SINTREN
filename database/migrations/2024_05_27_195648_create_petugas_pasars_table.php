@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('petugas_pasars', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id', 50);
-            $table->integer('pasar_id');
-            $table->string('alamat', 50);
+            $table->string('user_id');
+            $table->string('pasar_id');
+            $table->text('alamat');
             $table->string('no_telp', 15);
             $table->timestamps();
         });

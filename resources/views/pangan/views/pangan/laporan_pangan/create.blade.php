@@ -1,141 +1,150 @@
 @extends('index')
-@section('title', 'Tambah Data Stok Pangan | Pangan')
+@section('title', 'Tambah Data Stok Pangan')
 @section('content')
-    <div class="main-container container-fluid">
-        <div class="page-header d-sm-flex d-block">
-            <ol class="breadcrumb mb-sm-0 mb-3">
-                <!-- breadcrumb -->
-                <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
-                <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
-                <!-- End breadcrumb -->
-            </ol>
-        </div>
+    <div class="page-header d-sm-flex d-block">
+        <ol class="breadcrumb mb-sm-0 mb-3">
+            <!-- breadcrumb -->
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/pangan/create/data_pangan') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
+        </ol><!-- End breadcrumb -->
     </div>
-    <div class="row row-cards">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">{{ $title }}</h3>
                 </div>
-                <form action="{{ url('/pangan/create/data_pangan') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Pilih Tanggal</label>
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <i class="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
+                <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form action="{{ url('/pangan/create/data_pangan') }}" method="POST" id="myForm">
+                        <div class="card-body">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="select2Basic" class="form-label">Pilih Tanggal</label>
+                                        <div class="input-group">
+                                            <div class="input-group-text">
+                                                <i class="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
+                                            </div>
+                                            <input type="text" class="form-control" name="date" id="date"
+                                                placeholder="Pilih Tanggal">
                                         </div>
-                                        <input type="text" class="form-control" name="date" id="date"
-                                            placeholder="Pilih Tanggal">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="select2Basic" class="form-label">Pasar</label>
+                                        <select id="pasar" class="form-control form-select select2"
+                                            aria-label="Default select example" name="pasar_id">
+                                            <option value="">-- Pilih --</option>
+                                            @foreach ($pasar as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="select2Basic" class="form-label">Kategori Pangan</label>
+                                        <select id="kategoripangan" class="form-control form-select select2"
+                                            aria-label="Default select example" name="kategori_pangan_id">
+                                            <option value="">-- Pilih --</option>
+                                            @foreach ($kategoripangan as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Pasar Penugasan</label>
-                                    <select id="desa" class="form-control select2 form-select"
-                                        aria-label="Default select example" data-placeholder="Pilih Desa" name="desa">
-                                        <option value="">-- Pilih Pasar --</option>
-                                        @foreach ($penugasanDesa as $item)
-                                            <option value="{{ $item->desa_id }}">
-                                                {{ $item->desa->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Nama Pangan</label>
+                                    <input type="text" class="form-control" name="name">
                                 </div>
-                            </div>
+                                </div> 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Pilih Jenis Lahan</label>
-                                    <select id="jenis_lahan" class="form-control select2 form-select"
-                                        data-placeholder="Pilih Jenis Lahan" aria-label="Default select example"
-                                        name="jenis_lahan">
-                                        <option value="">-- Pilih --</option>
-                                        <option value="lahan sawah">Lahan Sawah</option>
-                                        <option value="non sawah">Bukan Sawah/Non Sawah</option>
-                                    </select>
+                                    <label class="form-label">Kebutuhan</label>
+                                    <input type="number" class="form-control" name="kebutuhan">
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
+                            </div> 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Pilih Jenis Bantuan</label>
-                                    <select id="jenis_bantuan" class="form-control select2 form-select"
-                                        data-placeholder="Pilih Jenis Bantuan" aria-label="Default select example"
-                                        name="jenis_bantuan">
-                                        <option value="">-- Pilih --</option>
-                                        <option value="bantuan pemerintah">Bantuan Pemerintah</option>
-                                        <option value="non bantuan pemerintah">Bukan Bantuan Pemerintah/Non Bantuan
-                                            Pemerintah
-                                        </option>
-                                    </select>
+                                    <label class="form-label">Ketersediaan</label>
+                                    <input type="number" class="form-control" name="ketersediaan">
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Jenis Padi</label>
-                                    <select id="jenis_padi" class="form-control select2 form-select"
-                                        aria-label="Default select example" data-placeholder="Pilih Jenis Padi"
-                                        name="jenis_padi">
-                                        <option value="">-- Pilih Padi --</option>
-                                        @foreach ($jenis_padi as $padi)
-                                            <option value="{{ $padi['id'] }}">{{ $padi['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Jenis Pengairan</label>
-                                    <select id="jenis_pengairan" class="form-control select2 form-select"
-                                        aria-label="Default select example" data-placeholder="Pilih Jenis Pengairan"
-                                        name="jenis_pengairan">
-                                        <option value="">-- Pilih Pengairan --</option>
-                                        @foreach ($pengairan as $peng)
-                                            <option value="{{ $peng['id'] }}">{{ $peng['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
+                            <div class="row">   
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Pilih Inputan</label>
-                                    <select id="jenis_data" class="form-control select2 form-select"
-                                        data-placeholder="Pilih Jenis Data" aria-label="Default select example"
-                                        name="jenis_data">
-                                        <option value="">-- Pilih --</option>
-                                        <option value="tanam">Tanam</option>
-                                        <option value="panen">Panen</option>
-                                        <option value="puso/rusak">Puso/Rusak</option>
-                                    </select>
+                                    <label class="form-label">Neraca</label>
+                                    <input type="number" class="form-control" name="neraca">
                                 </div>
-                            </div>
+                            </div> 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Nilai</label>
-                                    <input class="form-control" type="text" name="nilai">
+                                    <label class="form-label">Harga</label>
+                                    <input type="number" class="form-control" name="harga">
                                 </div>
+                            </div> 
+                            </div>
+                            </div> 
+                        </div>
+                        <div class="card-footer">
+                            <div class="col-md-12">
+                                <button type="reset" class="btn ripple btn-warning mr-3">Cancel</button>
+                                <button type="submit" class="btn ripple btn-success mr-3">Kirim</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="col-md-12">
-                            <button type="reset" class="btn ripple btn-warning mr-3">Cancel</button>
-                            <button type="submit" class="btn ripple btn-success mr-3">Kirim</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-@endsection
 
+@endsection
 @section('script')
-    <script></script>
+    <script>
+        $('.deleteBtn').on('click', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var deleteForm = $('#deleteForm' + id);
+
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Data akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            });
+        });
+    </script>
 @endsection

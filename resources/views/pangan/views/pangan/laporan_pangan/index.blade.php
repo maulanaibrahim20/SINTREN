@@ -9,8 +9,7 @@
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/pangan/create/data_pangan') }}" class="btn bg-primary-transparent"
-                    data-bs-toggle="tooltip" title="Add New User" data-bs-placement="bottom">
+                <a href="{{ url('/pangan/create/data_pangan/create') }}" class="btn bg-primary-transparent">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
@@ -59,24 +58,37 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            <div class="d-flex contact-image">
-                                                <div class="d-flex mt-1 flex-column ms-2">
-                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">Pasar : <span
-                                                            class="badge bg-primary me-1 my-1">{{ $data->pasar->name }}</span>
-                                                    </h6>
-                                                    {{-- <span class="fs-12 text-muted">Desa : <span
-                                                            class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span> --}}
-                                                </div>
-                                            </div>
+                                            @if ($data->status == '0')
+                                                <span class="badge bg-danger-transparent text-danger fw-semibold">Belum
+                                                    Terkirim
+                                                </span>
+                                            @elseif ($data->status == '1')
+                                                <span class="badge bg-succes-transparent text-warning fw-semibold">
+                                                    Terkirim
+                                                </span>
+                                            @endif
                                         </td>
-                                        <td>{{ $data->kategori_pangan }}</td>
+                                        <td>{{ $data->pasar ? $data->pasar->name : 'Pasar Tidak Ditemukan' }}</td>
+                                        <td>{{ $data->name }}</td>
                                         <td>{{ $data->date }}</td>
+                                        <td>{{ formatRibuan($data->kebutuhan) }}</td>
+                                        <td>{{ formatRibuan($data->ketersediaan) }}</td>
+                                        <td>{{ formatRibuan($data->neraca) }}</td>
+                                        <td>{{ formatRibuan($data->harga) }}</td>
                                         <td class="text-center">
+                                            <form id="statusForm{{ $data->id }}"
+                                                action="{{ url('/pangan/create/data_pangan/kirim/' . $data->id) }}"
+                                                style="display: inline;" method="POST">
+                                                @method('POST')
+                                                @csrf
+                                                <button type="button" class="btn btn-secondary kirimBtn"
+                                                    data-id="{{ $data->id }}"><i
+                                                        class="fa fa-paper-plane-o"></i></button>
+                                            </form>
                                             <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
                                             <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
-                                                class="btn btn-primary">
-                                                <i class="ti ti-eye"></i></a>
+                                                class="btn btn-primary"><i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
                                                 action="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
@@ -116,6 +128,26 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     deleteForm.submit();
+                }
+            });
+        });
+        $('.kirimBtn').on('click', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var statusForm = $('#statusForm' + id);
+
+            Swal.fire({
+                title: 'Anda yakin?',
+                text: "Data akan dikirimkan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Kirimkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    statusForm.submit();
                 }
             });
         });
