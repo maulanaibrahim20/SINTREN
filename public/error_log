@@ -5,3 +5,41 @@
 [22-Apr-2024 13:26:16 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/sintren/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
 [28-May-2024 15:55:13 Asia/Jakarta] PHP Fatal error:  Cannot use App\Http\Controllers\WEB\Uptd\User\UptdPenyuluhController as UptdPenyuluhController because the name is already in use in /home/sintrenm/sintren/routes/web.php on line 24
 [28-May-2024 15:55:35 Asia/Jakarta] PHP Fatal error:  Cannot use App\Http\Controllers\WEB\Uptd\User\PenyuluhController as PenyuluhController because the name is already in use in /home/sintrenm/sintren/routes/web.php on line 24
+[29-May-2024 04:28:32 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:28:32 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:28:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/sintrenm/SINTREN/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/sintrenm/SINTREN/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:33 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:33 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:33 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/sintrenm/SINTREN/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/sintrenm/SINTREN/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:34 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:34 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:34 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/sintrenm/SINTREN/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/sintrenm/SINTREN/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:38 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:38 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:38 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/sintrenm/SINTREN/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/sintrenm/SINTREN/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:53 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:53 UTC] PHP Warning:  require(/home/sintrenm/SINTREN/public/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/sintrenm/SINTREN/public/index.php on line 34
+[29-May-2024 04:29:53 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/sintrenm/SINTREN/public/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/sintrenm/SINTREN/public/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/sintrenm/SINTREN/public/index.php on line 34
+[02-Jun-2024 22:23:57 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
+[02-Jun-2024 22:40:00 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
+[03-Jun-2024 13:42:39 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
+[03-Jun-2024 13:51:02 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
+[03-Jun-2024 13:56:33 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 60 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
+[03-Jun-2024 15:13:38 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
+[03-Jun-2024 15:14:19 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 515
+[03-Jun-2024 15:15:19 Asia/Jakarta] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/sintrenm/SINTREN/vendor/symfony/polyfill-mbstring/Mbstring.php on line 660
