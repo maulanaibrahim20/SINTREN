@@ -14,6 +14,6 @@ class KosongkanTableSeeder extends Seeder
     public function run(): void
     {
 
-        DB::table('laporan_padis')->truncate();
+        DB::table('luas_lahan_wilayah')->truncate();
     }
 }
