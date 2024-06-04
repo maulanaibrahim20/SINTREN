@@ -309,11 +309,27 @@ class PrediksiPadiController extends Controller
             $detailedPredictions[] = $description;
         }
 
+        $totalError = 0;
+        $totalData = $sampaiTahun - $dariTahun + 1;
+
+        foreach ($predictions as $key => $prediction) {
+            $tahun = $prediction['year'];
+            $nilaiPrediksi = $prediction['predicted_value'];
+            $error = abs(($targets[$key] - $nilaiPrediksi) / $targets[$key]) * 100;
+            $totalError += $error;
+        }
+
+        $hasilMape = $totalError / $totalData;
+        $tanpaRound = $hasilMape;
+        $mape = round($hasilMape);
+
         return view('pertanian.pages.prediksi.padi.view', [
             'tipeData' => $tipeDataDescription,
             'labels' => $labels,
             'targets' => $targets,
-            'detailedPredictions' => $detailedPredictions
+            'detailedPredictions' => $detailedPredictions,
+            'tanpaRound' => $tanpaRound,
+            'mape' => $mape
         ]);
     }
 

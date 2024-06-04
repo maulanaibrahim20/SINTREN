@@ -1,17 +1,76 @@
 @extends('index')
 @section('title', 'Hasil')
 @section('content')
-    <div>
-        <p>Tipe Data: {{ $tipeData }}</p>
-        <canvas id="myChart" width="200" height="100"></canvas>
+    <div class="card">
+        <div class="card-header">
+            <h2>Data Prediksi</h2>
+        </div>
+        <div class="card-body">
+            <p>Tipe Data: {{ $tipeData }}</p>
+            <canvas id="myChart" width="200" height="100"></canvas>
+        </div>
     </div>
-    <div>
-        <h3>Detail Perhitungan Nilai:</h3>
-        <ul>
-            @foreach ($detailedPredictions as $description)
-                <li>{{ $description }}</li>
-            @endforeach
-        </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h2>Kriteria Interpretasi MAPE</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+                            <thead>
+                                <tr>
+                                    <th>MAPE (%)</th>
+                                    <th>Akurasi</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>&lt; 10 %</td>
+                                    <td>Sangat Baik</td>
+                                    <td>Sangat akurat, prediksi sangat baik</td>
+                                </tr>
+                                <tr>
+                                    <td>10-20 %</td>
+                                    <td>Baik</td>
+                                    <td>Baik, prediksi cukup akurat</td>
+                                </tr>
+                                <tr>
+                                    <td>20-50 %</td>
+                                    <td>Layak / Memadai</td>
+                                    <td>Cukup akurat, tapi ada ruang untuk perbaikan</td>
+                                </tr>
+                                <tr>
+                                    <td>&gt; 50 %</td>
+                                    <td>Sangat Buruk</td>
+                                    <td>Tidak akurat, prediksi sangat buruk</td>
+                                </tr>
+                                <tr>
+                                    <td>Hasil</td>
+                                    <td>Mean Absolute Percent Error (MAPE): <strong>{{ $tanpaRound }}%</strong></td>
+                                    <td>Mean Absolute Percent Error (MAPE): <strong>{{ $mape }}%</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-header">
+            <h2>Detail Perhitungan Nilai</h2>
+        </div>
+        <div class="card-body">
+            <h3>Detail Perhitungan Nilai:</h3>
+            <ul>
+                @foreach ($detailedPredictions as $description)
+                    <li>{{ $description }}</li>
+                @endforeach
+            </ul>
+        </div>
     </div>
 @endsection
 
