@@ -118,11 +118,9 @@ class LuasLahanWilayahSeeder extends Seeder
         ];
 
         $faker = \Faker\Factory::create();
-        
-        DB::table("luas_lahan_wilayah")->truncate();
+
 
         DB::table("luas_lahan_wilayah")->truncate();
-
 
         foreach ($desaKecamatan as $desa_id => $kecamatan_id) {
             LuasLahanWilayah::create([

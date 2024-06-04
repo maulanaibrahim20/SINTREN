@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class LaporanPalawija extends Model
 {
     use HasFactory;
+    protected $table = 'laporan_palawijas';
     protected $guarded = [''];
 
     public function desa()

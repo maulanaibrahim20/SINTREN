@@ -18,6 +18,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $roles = ['OPERATOR', 'PERTANIAN', 'UPTD', 'PENYULUH', 'PANGAN', 'PETUGAS PASAR'];
+
+        foreach ($roles as $role) {
+            Role::create([
+                'name' => $role,
+            ]);
+        }
+
         User::factory()->create([
             'username' => 'operator',
             'role_id' => Role::OPERATOR,
