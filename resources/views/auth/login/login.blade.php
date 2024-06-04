@@ -36,18 +36,12 @@
                                             <input type="text" class="form-control" placeholder="Username"
                                                 name="username" id="username">
                                         </div>
-                                        @error('username')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
                                         <div class="input-group mb-4">
                                             <span class="input-group-addon bg-white"><i
                                                     class="fa fa-unlock-alt text-dark"></i></span>
                                             <input type="password" class="form-control" placeholder="Password"
                                                 name="password" id="password">
                                         </div>
-                                        @error('password')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
                                         <div class="row">
                                             <div>
                                                 <button type="submit" class="btn btn-primary d-grid w-100">Log in</button>

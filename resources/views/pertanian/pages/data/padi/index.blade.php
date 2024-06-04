@@ -11,16 +11,6 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
                 <div class="card-header">
                     <h3 class="card-title">Data Laporan Luas Tanaman Padi</h3>
                     <div class="dropdown ms-auto">
@@ -111,19 +101,10 @@
                                             <td>{{ $data->jenis_lahan }}</td>
                                             <td>{{ $data->date }}</td>
                                             <td class="text-center">
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
-                                                    class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                <a href="{{ url('/pertanian/data_padi/show/' . $data->id) }}"
                                                     class="btn btn-primary">
-                                                    <i class="ti ti-eye"></i></a>
-                                                <form id="deleteForm{{ $data->id }}"
-                                                    action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
-                                                    style="display: inline;" method="POST">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="button" class="btn btn-danger deleteBtn"
-                                                        data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
-                                                </form>
+                                                    <i class="ti ti-eye"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -145,20 +126,9 @@
                                             <td>{{ $filter->jenis_lahan }}</td>
                                             <td>{{ $filter->date }}</td>
                                             <td class="text-center">
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $filter->id . '/edit') }}"
-                                                    class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $filter->id) }}"
+                                                <a href="{{ url('/pertanian/data_padi/show/' . $filter->id) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti ti-eye"></i></a>
-                                                <form id="deleteForm{{ $filter->id }}"
-                                                    action="{{ url('/penyuluh/create/laporan_padi/' . $filter->id) }}"
-                                                    style="display: inline;" method="POST">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="button" class="btn btn-danger deleteBtn"
-                                                        data-id="{{ $filter->id }}"><i
-                                                            class="ti ti-trash"></i></button>
-                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

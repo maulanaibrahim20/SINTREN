@@ -31,6 +31,12 @@ class DataLaporanPadiController extends Controller
         return view('pertanian.pages.data.padi.index', $data);
     }
 
+    public function show($id)
+    {
+        $data['show'] = $this->laporanPadi::find($id);
+        return view('pertanian.pages.data.padi.show', $data);
+    }
+
 
     public function filter(Request $request)
     {
@@ -104,7 +110,7 @@ class DataLaporanPadiController extends Controller
         }
 
         if (!empty($filterDate)) {
-            $query->whereBetween('tanggal', [$startDate, $endDate]);
+            $query->whereBetween('date', [$startDate, $endDate]);
         }
 
         $filterKecamatanName = !empty($filterKecamatanId) ? Kecamatan::find($filterKecamatanId)->name : null;

@@ -90,15 +90,17 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'pertanian']);
             Route::prefix('prediksi')->group(function () {
                 Route::get('/padi', [PrediksiPadiController::class, 'index']);
-                Route::post('/padi', [PrediksiPadiController::class, 'predict']);
-                // Route::post('/padi', [PrediksiPadiController::class, 'predict']);
                 Route::post('/padi', [PrediksiPadiController::class, 'menghitungRegresi']);
             });
             Route::get('data_padi', [DataLaporanPadiController::class, 'index']);
+            Route::get('data_padi/show/{id}', [DataLaporanPadiController::class, 'show']);
             Route::post('data_padi/filter', [DataLaporanPadiController::class, 'filter']);
             Route::get('data_padi/exportPdf', [DataLaporanPadiController::class, 'exportPdf']);
 
             Route::get('data_palawija', [DataLaporanPalawijaController::class, 'index']);
+            Route::get('data_palawija/show/{id}', [DataLaporanPalawijaController::class, 'show']);
+            Route::post('data_palawija/filter', [DataLaporanPalawijaController::class, 'filter']);
+            Route::get('data_palawija/exportPdf', [DataLaporanPalawijaController::class, 'exportPdf']);
         });
     });
 
