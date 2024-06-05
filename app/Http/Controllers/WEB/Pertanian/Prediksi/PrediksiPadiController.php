@@ -235,7 +235,6 @@ class PrediksiPadiController extends Controller
 
     public function menghitungRegresi(Request $request)
     {
-        // Validasi input
         $request->validate([
             'tipeData' => 'required|in:tanam,panen,puso/rusak',
             'dariTahun' => 'required|integer|min:2010|max:2023',
@@ -254,6 +253,7 @@ class PrediksiPadiController extends Controller
         $tipeDataDescription = $tipeDataDescriptions[$tipeData] ?? 'Jenis Data Tidak Diketahui';
 
         $data = $this->getTotalPerYear($tipeData, $dariTahun, $sampaiTahun);
+        $actualData = $data; // Store actual data for comparison
 
         $samples = [];
         $targets = [];
@@ -270,8 +270,7 @@ class PrediksiPadiController extends Controller
 
         $predictions = [];
         $prevValue = null;
-
-        for ($year = $dariTahun; $year <= $sampaiTahun + 1; $year++) {
+        for ($year = $dariTahun; $year <= 2030; $year++) {
             $predictedValue = $regression->predict([$year]);
 
             if ($year > $sampaiTahun) {
@@ -311,12 +310,13 @@ class PrediksiPadiController extends Controller
 
         $totalError = 0;
         $totalData = $sampaiTahun - $dariTahun + 1;
-
         foreach ($predictions as $key => $prediction) {
-            $tahun = $prediction['year'];
-            $nilaiPrediksi = $prediction['predicted_value'];
-            $error = abs(($targets[$key] - $nilaiPrediksi) / $targets[$key]) * 100;
-            $totalError += $error;
+            if ($key < count($actualData)) {
+                $tahun = $prediction['year'];
+                $nilaiPrediksi = $prediction['predicted_value'];
+                $error = abs(($targets[$key] - $nilaiPrediksi) / $targets[$key]) * 100;
+                $totalError += $error;
+            }
         }
 
         $hasilMape = $totalError / $totalData;
@@ -326,12 +326,14 @@ class PrediksiPadiController extends Controller
         return view('pertanian.pages.prediksi.padi.view', [
             'tipeData' => $tipeDataDescription,
             'labels' => $labels,
-            'targets' => $targets,
+            'actualData' => array_values($actualData),
+            'predictedData' => array_column($predictions, 'predicted_value'),
             'detailedPredictions' => $detailedPredictions,
             'tanpaRound' => $tanpaRound,
             'mape' => $mape
         ]);
     }
+
 
     private function getTotalPerYear($tipeData, $dariTahun, $sampaiTahun)
     {

@@ -79,25 +79,49 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             // Data prediksi dari controller
             const labels = @json($labels);
-            const targets = @json($targets);
+            const actualData = @json($actualData);
+            const predictedData = @json($predictedData);
 
             // Inisialisasi data label
             const data = {
                 labels: labels,
                 datasets: [{
-                    label: 'Prediksi Nilai Tahunan',
-                    data: targets,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
+                        label: 'Nilai Aktual Tahunan',
+                        data: actualData,
+                        fill: false,
+                        borderColor: 'rgb(54, 162, 235)', // Biru untuk data aktual
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Prediksi Nilai Tahunan',
+                        data: predictedData,
+                        fill: false,
+                        borderColor: 'rgb(255, 99, 132)', // Merah untuk data prediksi
+                        tension: 0.1
+                    }
+                ]
             };
 
             // Konfigurasi grafik
             const config = {
                 type: 'line',
                 data: data,
-                options: {}
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tahun'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Nilai'
+                            }
+                        }
+                    }
+                }
             };
 
             // Render grafik ke canvas
@@ -107,4 +131,5 @@
             );
         });
     </script>
+
 @endsection
