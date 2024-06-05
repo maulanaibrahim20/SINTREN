@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Export\LaporanPanganExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Pangan\KategoriPangan;
 use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
@@ -23,7 +25,7 @@ class LaporanPanganController extends Controller
         LaporanPangan $laporanpangan,
         Pasar $pasar,
         KategoriPangan $kategoripangan,
-        User $user,
+        User $user
     ) {
         $this->laporanpangan = $laporanpangan;
         $this->pasar = $pasar;
@@ -33,7 +35,10 @@ class LaporanPanganController extends Controller
 
     public function index(Request $request)
     {
-        $query = $this->laporanpangan::with('pasar')->where('user_id', Auth::user()->id);
+        // Mulai query dengan data yang memiliki status terkirim (status = 1)
+        $query = $this->laporanpangan::with('pasar')
+            ->where('user_id', Auth::user()->id)
+            ->where('status', 1); // Filter data dengan status terkirim
 
         if ($request->has('start_date') && $request->start_date) {
             $query->where('date', '>=', $request->start_date);
@@ -46,32 +51,36 @@ class LaporanPanganController extends Controller
         $datapangan = $query->get();
 
         $data = [
-            'title' => 'Data Stok Pangan',
+            'title' => 'Laporan Pangan',
             'breadcrumb' => 'Dashboard',
-            'breadcrumb_active' => 'Data Stok Pangan',
+            'breadcrumb_active' => 'Laporan Pangan',
             'button_create' => 'Tambah Data Stok Pangan',
             'datapangan' => $datapangan,
         ];
 
         return view('pangan.views.pangan.laporan_pangan.index', $data);
     }
-    
-    // public function index()
-    // {
-    //     $data = [
-    //         'title' => 'Data Stok Pangan',
-    //         'breadcrumb' => 'Dashboard',
-    //         'breadcrumb_active' => 'Data Stok Pangan',
-    //         'button_create' => 'Tambah Data Stok Pangan',
-    //         'datapangan' => $this->laporanpangan::with('pasar')->where('user_id', Auth::user()->id)->get(),
 
-    //     ];
-    //     return view('pangan.views.pangan.laporan_pangan.index', $data);
-    // }
+    public function export(Request $request)
+    {
+        $query = $this->laporanpangan::with('pasar')
+            ->where('user_id', Auth::user()->id)
+            ->where('status', 1); // Filter data dengan status terkirim
 
-    /**
-     * Show the form for creating a new resource.
-     */
+        if ($request->has('start_date') && $request->start_date) {
+            $query->where('date', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && $request->end_date) {
+            $query->where('date', '<=', $request->end_date);
+        }
+
+        $datapangan = $query->get();
+
+        // Proses ekspor ke file Excel
+        return Excel::download(new LaporanPanganExport($datapangan), 'laporan_pangan.xlsx');
+    }
+
     public function create()
     {
         $data = [
@@ -87,18 +96,10 @@ class LaporanPanganController extends Controller
         return view('pangan.views.pangan.laporan_pangan.create', $data);
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // dd($request->kebutuhan);
         try {
             DB::beginTransaction();
-        // Bersihkan input harga dari pemisah ribuan dan ganti koma dengan titik
-        // $harga = str_replace('.', '', $request->harga);
-        // $harga = str_replace(',', '.', $harga);
             $this->laporanpangan->create($request->all() +[
                 'user_id' => Auth::user()->id,
                 'pasar_id' => $request->pasar_id,
@@ -120,42 +121,34 @@ class LaporanPanganController extends Controller
     }
 
     public function kirimkan(Request $request, $id)
-{
-    try {
-        DB::beginTransaction();
+    {
+        try {
+            DB::beginTransaction();
 
-        $laporanpangan = LaporanPangan::findOrFail($id);
-        $laporanpangan->update([
-            'status' => true,
-        ]);
+            $laporanpangan = LaporanPangan::findOrFail($id);
+            $laporanpangan->update([
+                'status' => true,
+            ]);
 
-        DB::commit();
-        // return redirect()->route('data_pangan.index')->with('success', 'Data Laporan Pangan Berhasil Dikirim!');
-        return redirect()->back()->with('success', 'Data Stok Pangan Berhasil Dikirim!');
-    } catch (\Exception $e) {
-        DB::rollback();
-        return back()->with('error', 'Error Data Stok Pangan Gagal Dikirim! ' . $e->getMessage());
+            DB::commit();
+            return redirect()->back()->with('success', 'Data Stok Pangan Berhasil Dikirim!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Error Data Stok Pangan Gagal Dikirim! ' . $e->getMessage());
+        }
     }
-}
 
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $laporanpangan = $this->laporanpangan::findOrFail($id);
         $data = [
             'laporanpangan' => $laporanpangan,
-            // 'title' => 'View Data Stok Pangan',
             'breadcrumb' => 'Dashboard',
             'breadcrumb_1' => 'Data Stok Pangan',
             'breadcrumb_active' => 'View Data Stok Pangan',
-
         ];
         return view('pangan.views.pangan.laporan_pangan.show', $data);
     }
-
 
     public function edit(string $id)
     {
@@ -173,10 +166,8 @@ class LaporanPanganController extends Controller
         return view('pangan.views.pangan.laporan_pangan.update', $data);
     }
 
-
     public function update(Request $request, string $id)
     {
-        // dd($request->pasar_id);
         try {
             DB::beginTransaction();
 
@@ -201,13 +192,10 @@ class LaporanPanganController extends Controller
         }
     }
 
-
-
     public function destroy(string $id)
     {
         try {
             DB::beginTransaction();
-
 
             $laporanpangan = $this->laporanpangan::findOrFail($id);
             $laporanpangan->delete();

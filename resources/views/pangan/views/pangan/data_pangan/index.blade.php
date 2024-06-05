@@ -70,18 +70,20 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $totalKebutuhan = 0;
+                                    $totalKetersediaan = 0;
+                                    $totalNeraca = 0;
+                                    $totalHarga = 0;
+                                @endphp
                                 @foreach ($datapangan as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
                                             @if ($data->status == '0')
-                                                <span class="badge bg-danger-transparent text-danger fw-semibold">Belum
-                                                    Terkirim
-                                                </span>
+                                                <span class="badge bg-danger-transparent text-danger fw-semibold">Belum Terkirim</span>
                                             @elseif ($data->status == '1')
-                                                <span class="badge bg-succes-transparent text-warning fw-semibold">
-                                                    Terkirim
-                                                </span>
+                                                <span class="badge bg-success-transparent text-warning fw-semibold">Terkirim</span>
                                             @endif
                                         </td>
                                         <td>{{ $data->pasar ? $data->pasar->name : 'Pasar Tidak Ditemukan' }}</td>
@@ -93,39 +95,47 @@
                                         <td>{{ formatRibuan($data->harga) }}</td>
                                         <td class="text-center">
                                             @if (!$data->status)
-                                                <form id="statusForm{{ $data->id }}"
-                                                    action="{{ url('/pangan/create/data_pangan/kirim/' . $data->id) }}"
-                                                    style="display: inline;" method="POST">
+                                                <form id="statusForm{{ $data->id }}" action="{{ url('/pangan/create/data_pangan/kirim/' . $data->id) }}" style="display: inline;" method="POST">
                                                     @method('POST')
                                                     @csrf
-                                                    <button type="button" class="btn btn-secondary kirimBtn"
-                                                        data-id="{{ $data->id }}"><i class="fa fa-paper-plane-o"></i></button>
+                                                    <button type="button" class="btn btn-secondary kirimBtn" data-id="{{ $data->id }}"><i class="fa fa-paper-plane-o"></i></button>
                                                 </form>
-                                                <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}"
-                                                    class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
                                             @endif
-                                            <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
-                                                class="btn btn-primary"><i class="ti ti-eye"></i></a>
-                                            <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
-                                                style="display: inline;" method="POST">
+                                            <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}" class="btn btn-primary"><i class="ti ti-eye"></i></a>
+                                            <form id="deleteForm{{ $data->id }}" action="{{ url('/pangan/create/data_pangan/' . $data->id) }}" style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
-                                                <button type="button" class="btn btn-danger deleteBtn"
-                                                    data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
+                                                <button type="button" class="btn btn-danger deleteBtn" data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
                                             </form>
                                         </td>
                                     </tr>
+                                    @php
+                                        $totalKebutuhan += $data->kebutuhan;
+                                        $totalKetersediaan += $data->ketersediaan;
+                                        $totalNeraca += $data->neraca;
+                                        $totalHarga += $data->harga;
+                                    @endphp
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" class="text-center">Total</th>
+                                    <th>{{ formatRibuan($totalKebutuhan) }}</th>
+                                    <th>{{ formatRibuan($totalKetersediaan) }}</th>
+                                    <th>{{ formatRibuan($totalNeraca) }}</th>
+                                    <th>{{ formatRibuan($totalHarga) }}</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
+
 @section('script')
     <script>
         $('.deleteBtn').on('click', function(e) {
@@ -148,6 +158,7 @@
                 }
             });
         });
+
         $('.kirimBtn').on('click', function(e) {
             e.preventDefault();
             var id = $(this).data('id');
@@ -169,7 +180,7 @@
             });
         });
 
-                // Filter button click event
+        // Filter button click event
         $('#filterButton').on('click', function() {
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();

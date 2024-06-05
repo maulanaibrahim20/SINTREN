@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Data Stok Pangan | Pangan')
+@section('title', 'Laporan Pangan | Pangan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -7,16 +7,6 @@
             <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
-        <div class="ms-auto">
-            <div>
-                <a href="{{ url('/pangan/create/data_pangan/create') }}" class="btn bg-primary-transparent">
-                    <span>
-                        <i class="fa fa-plus"></i>
-                    </span>
-                    {{ $button_create }}
-                </a>
-            </div>
-        </div>
     </div>
 
     <!-- Filter Tanggal Mulai dan Akhir -->
@@ -31,6 +21,9 @@
         </div>
         <div class="col-md-2 d-flex align-items-end">
             <button class="btn btn-primary" id="filterButton">Filter</button>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <a href="{{ route('export.laporan.pangan', ['start_date' => 'your_start_date', 'end_date' => 'your_end_date']) }}" class="btn btn-success">Export to Excel</a>
         </div>
     </div>
 
@@ -57,31 +50,28 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Status</th>
-                                    {{--  <th class="wd-15p border-bottom-0">Nama Petugas</th> --}}
                                     <th class="wd-15p border-bottom-0">Pasar</th>
                                     <th class="wd-20p border-bottom-0">Nama Pangan</th>
                                     <th class="wd-20p border-bottom-0">Tanggal</th>
-                                    {{-- <th class="wd-20p border-bottom-0">Kategori Pangan</th> --}}
                                     <th class="wd-20p border-bottom-0">Kebutuhan(Ton)</th>
                                     <th class="wd-20p border-bottom-0">Ketersediaan(Ton)</th>
                                     <th class="wd-20p border-bottom-0">Neraca(Ton)</th>
                                     <th class="wd-20p border-bottom-0">Harga(Rp/Kg)</th>
-                                    <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $totalKebutuhan = 0;
+                                    $totalKetersediaan = 0;
+                                    $totalNeraca = 0;
+                                    $totalHarga = 0;
+                                @endphp
                                 @foreach ($datapangan as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            @if ($data->status == '0')
-                                                <span class="badge bg-danger-transparent text-danger fw-semibold">Belum
-                                                    Terkirim
-                                                </span>
-                                            @elseif ($data->status == '1')
-                                                <span class="badge bg-succes-transparent text-warning fw-semibold">
-                                                    Terkirim
-                                                </span>
+                                            @if ($data->status == '1')
+                                                <span class="badge bg-success-transparent text-warning fw-semibold">Terkirim</span>
                                             @endif
                                         </td>
                                         <td>{{ $data->pasar ? $data->pasar->name : 'Pasar Tidak Ditemukan' }}</td>
@@ -91,89 +81,39 @@
                                         <td>{{ formatRibuan($data->ketersediaan) }}</td>
                                         <td>{{ formatRibuan($data->neraca) }}</td>
                                         <td>{{ formatRibuan($data->harga) }}</td>
-                                        <td class="text-center">
-                                            @if (!$data->status)
-                                                <form id="statusForm{{ $data->id }}"
-                                                    action="{{ url('/pangan/create/data_pangan/kirim/' . $data->id) }}"
-                                                    style="display: inline;" method="POST">
-                                                    @method('POST')
-                                                    @csrf
-                                                    <button type="button" class="btn btn-secondary kirimBtn"
-                                                        data-id="{{ $data->id }}"><i class="fa fa-paper-plane-o"></i></button>
-                                                </form>
-                                                <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}"
-                                                    class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            @endif
-                                            <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
-                                                class="btn btn-primary"><i class="ti ti-eye"></i></a>
-                                            <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/pangan/create/data_pangan/' . $data->id) }}"
-                                                style="display: inline;" method="POST">
-                                                @method('DELETE')
-                                                @csrf
-                                                <button type="button" class="btn btn-danger deleteBtn"
-                                                    data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
-                                            </form>
-                                        </td>
                                     </tr>
+                                    @php
+                                        $totalKebutuhan += $data->kebutuhan;
+                                        $totalKetersediaan += $data->ketersediaan;
+                                        $totalNeraca += $data->neraca;
+                                        $totalHarga += $data->harga;
+                                    @endphp
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" class="text-center">Total</th>
+                                    <th>{{ formatRibuan($totalKebutuhan) }}</th>
+                                    <th>{{ formatRibuan($totalKetersediaan) }}</th>
+                                    <th>{{ formatRibuan($totalNeraca) }}</th>
+                                    <th>{{ formatRibuan($totalHarga) }}</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
+
 @section('script')
     <script>
-        $('.deleteBtn').on('click', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            var deleteForm = $('#deleteForm' + id);
-
-            Swal.fire({
-                title: 'Anda yakin?',
-                text: "Data akan dihapus secara permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteForm.submit();
-                }
-            });
-        });
-        $('.kirimBtn').on('click', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            var statusForm = $('#statusForm' + id);
-
-            Swal.fire({
-                title: 'Anda yakin?',
-                text: "Data akan dikirimkan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Kirimkan!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    statusForm.submit();
-                }
-            });
-        });
-
-                // Filter button click event
+        // Filter button click event
         $('#filterButton').on('click', function() {
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
-            var url = "{{ url('/pangan/create/data_pangan') }}?start_date=" + startDate + "&end_date=" + endDate;
+            var url = "{{ url('/pangan/data/laporan_pangan') }}?start_date=" + startDate + "&end_date=" + endDate;
             window.location.href = url;
         });
     </script>

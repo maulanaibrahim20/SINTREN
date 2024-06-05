@@ -26,6 +26,7 @@ use App\Http\Controllers\PANGAN\PasarController;
 use App\Http\Controllers\PANGAN\KategoriPanganController;
 use App\Http\Controllers\PANGAN\LaporanPanganController;
 use App\Http\Controllers\PANGAN\DataPanganController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -135,6 +136,9 @@ Route::middleware(['autentikasi'])->group(function () {
 
             Route::post('/create/data_pangan/kirim/{id}', [DataPanganController::class, 'kirimkan']);
             Route::resource('/create/data_pangan', DataPanganController::class);
+            Route::resource('/data/laporan_pangan', LaporanPanganController::class);
+
+            Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
         });
     });
 });
