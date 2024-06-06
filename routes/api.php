@@ -59,6 +59,8 @@ Route::delete('/palawija/deletaDetailById/{id}', [PalawijaController::class, 'de
 Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
 Route::get('/padi/showByKecamatan/{id}',[AdminPadiController::class,'showAllByKecamatan']);
 Route::get('/palawija/showByKecamatan/{id}',[AdminPalawijaController::class,'showAllByKecamatan']);
+Route::post('/padi/prediksi',[AdminPadiController::class,'menghitungRegresi']);
+Route::get('/padi',[AdminPadiController::class,'dataPadi']);
 
 Route::get('/desa',[WilayahController::class,'getDesa']);
 Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);

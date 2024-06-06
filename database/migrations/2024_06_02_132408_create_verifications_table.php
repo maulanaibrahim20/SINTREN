@@ -13,16 +13,11 @@ return new class extends Migration
     {
         Schema::create('verifications', function (Blueprint $table) {
             $table->id();
-            $table->string('date', 50);
-            $table->string('desa_id', 25);
-            $table->unsignedBigInteger('kecamatan_id');
-            $table->uuid('user_id');
-            $table->enum('isVerify', ['true', 'false']);
+            $table->unsignedBigInteger('laporan_id');
+            $table->string('user_id',50)->nullable();
+            $table->enum('status', ['terima', 'tolak','tunggu']);
+            $table->text('catatan')->nullable();
             $table->timestamps();
-
-            $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
-            $table->foreign('desa_id')->references('id')->on('desas')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

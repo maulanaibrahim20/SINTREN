@@ -12,11 +12,10 @@ class Verification extends Model
     use HasFactory;
 
     protected $fillable = [
+        'laporan_id',
         'user_id',
-        'kecamatan_id',
-        'desa_id',
-        'date',
-        'isVerify',
+        'status',
+        'catatan'
     ];
 
     public function kecamatan()
