@@ -18,6 +18,7 @@
     <title>{{ config('app.name') }} | @yield('title')</title>
 
     @include('template.component.style_css')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
     @yield('css')
 
 </head>
@@ -770,6 +771,7 @@
             });
         });
     </script>
+    {{-- <script src="https://cdnjs.com/libraries/Chart.js"></script> --}}
     @yield('script')
 
 </body>

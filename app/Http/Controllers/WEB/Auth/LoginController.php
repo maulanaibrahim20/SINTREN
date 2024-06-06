@@ -29,31 +29,24 @@ class LoginController extends Controller
     {
         $user = $this->user->where('username', $request->username)->first();
         if (!$user) {
-            Alert::error('Maaf, Akun Anda Tidak Ditemukan');
-            return redirect(route('login.index'))->with('error', 'Maaf, Akun Anda Tidak Ditemukan');
+            return redirect(route('login.index'))->with('error', 'Periksa kembali username dan password anda');
         }
         if (!Hash::check($request->password, $user->password)) {
-            Alert::error('Maaf Pasword Anda Salah!');
-            return redirect(route('login.index'))->with('error', 'Password Anda Salah');
+            return redirect(route('login.index'))->with('error', 'Periksa kembali username dan password anda');
         }
         if (Auth::attempt(["username" => $request->username, "password" => $request->password])) {
             $request->session()->regenerate();
 
             if ($user->role_id == Role::OPERATOR) {
-                Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
-                return redirect("/operator/dashboard");
+                return redirect("/operator/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::PERTANIAN) {
-                Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
-                return redirect("/pertanian/dashboard");
+                return redirect("/pertanian/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::UPTD) {
-                Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
                 return redirect("/uptd/dashboard");
             } else if ($user->role_id == Role::PENYULUH) {
-                Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
-                return redirect("/penyuluh/dashboard");
+                return redirect("/penyuluh/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::PANGAN) {
-                Alert::success('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
-                return redirect("/pangan/dashboard");
+                return redirect("/pangan/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             }
         }
         return back()->with('error', 'Gagal melakukan autentikasi');

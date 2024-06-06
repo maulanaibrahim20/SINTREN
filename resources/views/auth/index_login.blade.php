@@ -39,6 +39,24 @@
 
     @include('auth.component.style_js')
     @include('sweetalert::alert')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    @if (session('success'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: "Berhasil",
+                text: "{{ session('success') }}",
+                icon: "success"
+            });
+        </script>
+    @endif
+    @if (session('error'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: "{{ session('error') }}",
+                icon: "error"
+            });
+        </script>
+    @endif
 
 
 </body>

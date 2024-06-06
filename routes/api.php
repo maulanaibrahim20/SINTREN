@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminController;
+use App\Http\Controllers\Api\Admin\AdminPadiController;
+use App\Http\Controllers\Api\Admin\AdminPalawijaController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\PadiController;
-use App\Http\Controllers\Api\PalawijaController;
 use App\Http\Controllers\Api\WilayahController;
 use App\Http\Controllers\Api\PasarController;
+use App\Http\Controllers\Api\Penyuluh\PadiController;
+use App\Http\Controllers\Api\Penyuluh\PalawijaController;
+use App\Http\Controllers\Api\Penyuluh\PenyuluhController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +31,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [UserController::class, 'login']);
 Route::patch('/users/{id}', [UserController::class, 'update']);
 Route::get('/getUserById/{id}', [UserController::class, 'getUserById']);
-Route::get('/getAssignment/{id}', [UserController::class, 'getAssignment']);
 Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
+
+// PENYULUH END POINT
+Route::get('/penyuluh/getDesa/{id}', [PenyuluhController::class, 'getDesa']);
 
 // PADI END POINT
 Route::get('/pengairan',[PadiController::class,'getPengairan']);
@@ -46,6 +52,12 @@ Route::patch('/palawija/update/{id}',[PalawijaController::class,'update']);
 Route::get('/palawija/showByUser/{id}',[PalawijaController::class,'showAllByUser']);
 Route::delete('/palawija/deletaDetailById/{id}', [PalawijaController::class, 'deletaDetailById']);
 
+// ADMIN END POINT
+Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
+Route::get('/padi/showByKecamatan/{id}',[AdminPadiController::class,'showAllByKecamatan']);
+Route::get('/palawija/showByKecamatan/{id}',[AdminPalawijaController::class,'showAllByKecamatan']);
+Route::post('/padi/prediksi',[AdminPadiController::class,'menghitungRegresi']);
+Route::patch('/verify/{id}',[AdminController::class,'verify']);
 
 Route::get('/desa',[WilayahController::class,'getDesa']);
 Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);

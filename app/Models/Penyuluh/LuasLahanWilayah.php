@@ -22,7 +22,7 @@ class LuasLahanWilayah extends Model
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
 
-    public function getDesa()
+    public function desa()
     {
         return $this->belongsTo(Desa::class, 'desa_id');
     }

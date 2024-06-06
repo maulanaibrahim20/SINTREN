@@ -71,7 +71,7 @@
                         <h3>Kelola Data Pengguna</h3>
                     </li>
                     <li
-                        class="slide {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh'|| Request::segment(3) == 'pangan' ? 'is-expanded' : '' }}">
+                        class="slide {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' || Request::segment(3) == 'pangan' ? 'is-expanded' : '' }}">
                         <a class="side-menu__item {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' || Request::segment(3) == 'pangan' ? 'active open' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon ti ti-user"></i>
@@ -97,8 +97,8 @@
                                                         Penyuluh</a>
                                                 </li>
                                                 <li><a href="{{ url('/operator/user/pangan') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'pangan' ? 'active' : '' }}">Pengguna
-                                                    Pangan</a>
+                                                        class="slide-item {{ Request::segment(3) == 'pangan' ? 'active' : '' }}">Pengguna
+                                                        Pangan</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -169,6 +169,54 @@
                     </li>
                 @endcan
                 @can('pertanian')
+                    <li class="sub-category">
+                        <h3>Data Laporan</h3>
+                    </li>
+                    <li
+                        class="slide {{ Request::segment(2) == 'data_padi' || Request::segment(2) == 'data_palawija' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(2) == 'data_padi' || Request::segment(2) == 'data_palawija' ? 'active open' : '' }}"
+                            data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fa fa-files-o"></i>
+                            <span class="side-menu__label">Laporan</span><i class="angle fe fe-chevron-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side29">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">Data</a></li>
+                                                <li><a href="{{ url('/pertanian/data_padi') }}"
+                                                        class="slide-item {{ Request::segment(2) == 'data_padi' ? 'active' : '' }}">
+                                                        Data Padi
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('/pertanian/data_palawija') }}"
+                                                        class="slide-item {{ Request::segment(2) == 'data_palawija' ? 'active' : '' }}">
+                                                        Data Palawija
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sub-category">
+                        <h3>Prediksi</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'padi' ? 'active' : '' }}"
+                            href="{{ url('/pertanian/prediksi/padi') }}"><i class="side-menu__icon fa fa-leaf"></i><span
+                                class="side-menu__label">Prediksi Padi</span>
+                        </a>
+                        <a class="side-menu__item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}"
+                            href="{{ url('/pertanian/prediksi/palawija') }}"><i
+                                class="side-menu__icon fa fa-pagelines"></i><span class="side-menu__label">Prediksi
+                                Palawija</span>
+                        </a>
+                    </li>
                 @endcan
                 @can('uptd')
                     <li class="sub-category">
@@ -275,34 +323,35 @@
 
                 {{-- yuan diana --}}
                 @can('pangan')
-                <li class="sub-category">
-                    <h3>Pasar</h3>
-                </li>
-                <li
-                    class="slide {{ Request::segment(3) == 'pasar' || Request::segment(3) == 'data_pasar' ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item {{ Request::segment(3) == 'pasar' || Request::segment(3) == 'data_pasar' ? 'active open' : '' }}"
-                        data-bs-toggle="slide" href="javascript:void(0)">
-                        <i class="side-menu__icon fa fa-files-o"></i>
-                        <span class="side-menu__label">Pasar</span><i class="angle fe fe-chevron-right"></i></a>
-                    <ul class="slide-menu">
-                        <li class="panel sidetab-menu">
-                            <div class="panel-body tabs-menu-body p-0 border-0">
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="side29">
-                                        <ul class="sidemenu-list">
-                                            <li class="side-menu-label1"><a href="javascript:void(0)">Pasar</a></li>
-                                            <li><a href="{{ url('/pangan/user/pasar') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'pasar' ? 'active' : '' }}">
-                                                    Data Pengguna Pasar
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ url('/pangan/create/data_pasar') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'data_pasar' ? 'active' : '' }}">
-                                                    Data Pasar
-                                                </a>
-                                            </li>
-                                        </ul>
+                    <li class="sub-category">
+                        <h3>Pasar</h3>
+                    </li>
+                    <li
+                        class="slide {{ Request::segment(3) == 'pasar' || Request::segment(3) == 'data_pasar' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'pasar' || Request::segment(3) == 'data_pasar' ? 'active open' : '' }}"
+                            data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fa fa-files-o"></i>
+                            <span class="side-menu__label">Pasar</span><i class="angle fe fe-chevron-right"></i></a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side29">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">Pasar</a></li>
+                                                <li><a href="{{ url('/pangan/user/pasar') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'pasar' ? 'active' : '' }}">
+                                                        Data Pengguna Pasar
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('/pangan/create/data_pasar') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'data_pasar' ? 'active' : '' }}">
+                                                        Data Pasar
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -392,12 +441,9 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
+                            </li>
+                        </ul>
+                    </li>
                 @endcan
                 <li class="sub-category">
                     <h3>Pengaturan</h3>

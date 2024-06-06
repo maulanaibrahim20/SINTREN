@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('laporan_padis', function (Blueprint $table) {
             $table->id();
             $table->string('user_id', 50);
-            $table->string('desa_id', 50);
-            $table->string('kecamatan_id', 25);
+            $table->string('desa_id', 100);
+            $table->string('kecamatan_id', 100);
             $table->string('date', 50);
             $table->enum('jenis_lahan', ['sawah', 'non sawah']);
             $table->integer('id_jenis_padi');

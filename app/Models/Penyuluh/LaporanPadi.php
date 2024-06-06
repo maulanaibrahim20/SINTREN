@@ -4,7 +4,9 @@ namespace App\Models\Penyuluh;
 
 use App\Models\Operator\Padi;
 use App\Models\Operator\TanamanPadi;
+use App\Models\Uptd\VerifyPadi;
 use App\Models\User;
+use App\Models\Verification;
 use App\Models\Wilayah\Desa;
 use App\Models\Wilayah\Kecamatan;
 use Illuminate\Database\Eloquent\Model;
@@ -42,5 +44,10 @@ class LaporanPadi extends Model
     public function padi()
     {
         return $this->belongsTo(TanamanPadi::class, 'id_jenis_padi');
+    }
+
+    public function verify()
+    {
+        return $this->belongsTo(VerifyPadi::class, 'id','laporan_id');
     }
 }
