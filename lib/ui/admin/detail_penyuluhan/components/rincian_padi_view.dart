@@ -58,7 +58,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
               surfaceTintColor: ColorTheme().whiteColor,
               color: ColorTheme().whiteColor,
               child: ConstrainedBox(
-                constraints: BoxConstraints(),
+                constraints: const BoxConstraints(),
                 child: FutureBuilder(
                   future: Future.wait([
                     padiC.getKesimpulanDataPengairan(
@@ -77,14 +77,14 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                           snapshot.data![1] as Map<String, JenisPadi>;
 
                       if (pengairanData.isEmpty && padiData.isEmpty) {
-                        return const Center(child: Text('No data available'));
+                        return const SizedBox.shrink();
                       } else {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Divider(),
+                              const Divider(),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 5),
@@ -93,7 +93,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500)),
                               ),
-                              Divider(),
+                              const Divider(),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxHeight:
@@ -210,8 +210,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                                 fontSize: 14),
                                                       ),
                                                       Text(
-                                                        nilai.toString() +
-                                                            " hektar",
+                                                        "$nilai hektar",
                                                         style: StyleTheme()
                                                             .styleBlack
                                                             .copyWith(
@@ -232,7 +231,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                   },
                                 ),
                               ),
-                              Divider(),
+                              const Divider(),
                               if (pengairanData.isNotEmpty) ...[
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -242,7 +241,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500)),
                                 ),
-                                Divider(),
+                                const Divider(),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxHeight:

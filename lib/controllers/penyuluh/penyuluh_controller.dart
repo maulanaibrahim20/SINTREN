@@ -9,7 +9,6 @@ import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
 import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
-import 'package:sintren_mobile/services/user_service.dart';
 
 class PenyuluhController {
   Future<List<DesaModel>> getDesa() async {
@@ -141,10 +140,9 @@ class PenyuluhController {
 
       statusNotifier.value = 'Mendapatkan data penyuluhan...';
       await PadiService().getDetailPadiByUser();
-      await PalawijaService().getDetailPalawijaByUser();
 
       statusNotifier.value = 'Sinkronisasi selesai...';
-      await UserService().getVerify();
+      await PalawijaService().getDetailPalawijaByUser();
     } catch (error) {
       statusNotifier.value = 'Error: ${error.toString()}';
       throw Exception("Internal Server Error");

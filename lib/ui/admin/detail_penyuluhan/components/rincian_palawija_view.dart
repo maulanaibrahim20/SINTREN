@@ -58,7 +58,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
               surfaceTintColor: ColorTheme().whiteColor,
               color: ColorTheme().whiteColor,
               child: ConstrainedBox(
-                constraints: BoxConstraints(),
+                constraints: const BoxConstraints(),
                 child: FutureBuilder(
                   future: palawijaC.getKesimpulanDataPalawija(
                       widget.date, widget.desaId),
@@ -72,14 +72,14 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                           snapshot.data as Map<String, JenisPalawija>;
 
                       if (palawijaData.isEmpty) {
-                        return const Center(child: Text('No data available'));
+                        return const SizedBox.shrink();
                       } else {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Divider(),
+                              const Divider(),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 5),
@@ -88,7 +88,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500)),
                               ),
-                              Divider(),
+                              const Divider(),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxHeight:
@@ -142,8 +142,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                                                     .copyWith(fontSize: 14),
                                               ),
                                               Text(
-                                                lahanData.total.toString() +
-                                                    " hektar",
+                                                "${lahanData.total} hektar",
                                                 style: StyleTheme()
                                                     .styleBlack
                                                     .copyWith(

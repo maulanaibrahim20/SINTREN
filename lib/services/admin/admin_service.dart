@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:http/http.dart';
@@ -23,8 +24,8 @@ class AdminService {
       final String? role = await userModel.getRole();
 
       Response response = await get(Uri.parse('$url/$id'));
-      
-      if(role == "PERTANIAN"){
+
+      if (role == "PERTANIAN") {
         response = await get(Uri.parse('$url/dinas'));
       }
 
@@ -59,6 +60,22 @@ class AdminService {
       EasyLoading.showToast("Internal Server Error");
       log("Failed to get desa: $e");
       throw Exception("Internal Server Error");
+    }
+  }
+
+  Future<PrediksiModel> getPrediksiPadi() async {
+    final response =
+        await get(Uri.parse('${ConfigApp().baseUrl}padi/prediksi'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == 'success') {
+        return PrediksiModel.fromJson(data['data']);
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } else {
+      throw Exception('Failed to load data');
     }
   }
 }

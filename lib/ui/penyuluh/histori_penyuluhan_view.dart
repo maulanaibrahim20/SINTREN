@@ -6,11 +6,9 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
-import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
 import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
-import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
@@ -34,7 +32,6 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
     await PenyuluhService().getDataPenyuluhanDesa();
     await PadiService().getDetailPadiByUser();
     await PalawijaService().getDetailPalawijaByUser();
-    await UserService().getVerify();
     setState(() {});
   }
 
@@ -111,7 +108,6 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         future: Future.wait([
           penyuluhC.getHistoriPenyuluhan(),
           penyuluhC.getLuasLahanDesa(),
-          userC.getVerify(),
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -140,7 +136,6 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
             final historiList =
                 snapshot.data?[0] as List<HistoriPenyuluhanModel>;
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
-            final verifyList = snapshot.data?[2] as List<VerifyModel>;
 
             double getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
@@ -198,8 +193,6 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                             date: desa.date,
                             desaId: desa.desaId,
                             desaName: desa.desaName,
-                            isVerify: userC.getStatusVerify(
-                                verifyList, desa.date, desa.desaId),
                           ),
                         ),
                       );
@@ -255,27 +248,6 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                             color: Colors.grey[700],
                                             fontSize: 14),
                                       ),
-                                      if (userC.getStatusVerify(
-                                          verifyList, desa.date, desa.desaId))
-                                        Text(
-                                          "Terverifikasi",
-                                          style:
-                                              StyleTheme().styleBlack.copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                    color: Colors.green,
-                                                  ),
-                                        )
-                                      else
-                                        Text(
-                                          "Belum Diverifikasi",
-                                          style:
-                                              StyleTheme().styleBlack.copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                    color: Colors.red,
-                                                  ),
-                                        ),
                                     ],
                                   ),
                                 )
@@ -370,43 +342,31 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                 });
               },
             ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKeyUP.currentState!.validate()) {
-                        setState(() {
-                          selectedDesaValue = null;
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorTheme().primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width * 0.27, 50)),
-                    child: Text("Reset", style: StyleTheme().styleWhite),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width * 0.27, 50)),
-                    child: Text(
-                      'Tutup',
-                      style: StyleTheme().styleBlack,
-                    ),
-                  ),
-                ],
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(false); // Kembali dengan nilai false
+                },
+                child: Text(
+                  "Tutup",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(color: Colors.red, fontSize: 16),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (formKeyUP.currentState!.validate()) {
+                    setState(() {
+                      selectedDesaValue = null;
+                    });
+                  }
+                },
+                child: Text(
+                  "Reset",
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                ),
               ),
             ],
           ),

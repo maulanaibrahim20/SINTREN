@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
+import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class HomeChart {
+  final List<int> labels;
+  final List<double> targets;
+  HomeChart({required this.labels, required this.targets});
+
   final List<Color> gradientColors = [
     ColorTheme().secondaryColor,
     ColorTheme().thirdColor
@@ -11,19 +16,11 @@ class HomeChart {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     TextStyle style = TextStyle(fontSize: 12, color: ColorTheme().primaryColor);
     Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = Text('MAR', style: style);
-        break;
-      case 5:
-        text = Text('JUN', style: style);
-        break;
-      case 8:
-        text = Text('SEP', style: style);
-        break;
-      default:
-        text = Text('', style: style);
-        break;
+    int yearIndex = value.toInt();
+    if (yearIndex >= 0 && yearIndex < labels.length) {
+      text = Text(labels[yearIndex].toString(), style: style);
+    } else {
+      text = Text('', style: style);
     }
 
     return SideTitleWidget(
@@ -38,35 +35,45 @@ class HomeChart {
         fontSize: 15,
         color: ColorTheme().primaryColor);
     String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 2:
-        text = '15K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 4:
-        text = '50k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
+    if (value % 5000 == 0) {
+      text = '${value ~/ 1000}K';
+    } else {
+      return Container();
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
   LineChartData mainData() {
+    double maxValue = targets.reduce((a, b) => a > b ? a : b);
+    double maxY = ((maxValue / 5000).ceil() * 5000) * 1;
+
     return LineChartData(
+      backgroundColor: Colors.white,
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipColor: (LineBarSpot getToolTipColor) {
+            return ColorTheme().primaryColor;
+          },
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            return touchedSpots.map((spot) {
+              return LineTooltipItem(
+                '${spot.y}',
+                StyleTheme().styleWhite.copyWith(fontWeight: FontWeight.w500),
+              );
+            }).toList();
+          },
+        ),
+        touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+          if (touchResponse == null || touchResponse.lineBarSpots == null) {
+            return;
+          }
+        },
+      ),
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        horizontalInterval: 1,
+        horizontalInterval: 5000,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
@@ -100,7 +107,7 @@ class HomeChart {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 1,
+            interval: 5000,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 42,
           ),
@@ -111,20 +118,14 @@ class HomeChart {
         border: Border.all(color: Colors.white),
       ),
       minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
+      maxX: labels.length - 1.toDouble(),
+      minY: (targets.reduce((a, b) => a < b ? a : b) / 10000).floor() *
+          10000.toDouble(),
+      maxY: maxY,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: List.generate(targets.length,
+              (index) => FlSpot(index.toDouble(), targets[index])),
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,

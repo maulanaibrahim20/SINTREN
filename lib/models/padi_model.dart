@@ -1,12 +1,12 @@
 class PadiModel {
-  final int id;
+  final String id;
   final String name;
 
   PadiModel({required this.id, required this.name});
 
   factory PadiModel.fromJson(Map<String, dynamic> json) {
     return PadiModel(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
     );
   }

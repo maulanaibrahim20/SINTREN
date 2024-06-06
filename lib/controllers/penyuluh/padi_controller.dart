@@ -47,7 +47,9 @@ class PadiController {
         ..['id_jenis_pengairan'] ??= ''
         ..['desa_name'] = map['desa_name']
         ..['pengairan_name'] = map['pengairan_name'] ?? ''
-        ..['padi_name'] = map["padi_name"];
+        ..['padi_name'] = map["padi_name"]
+        ..['status'] = 'tunggu'
+        ..['catatan'] = '';
 
       final db = await DatabaseHelper().database;
       await db.insert(
@@ -95,7 +97,10 @@ class PadiController {
       }
 
       final db = await DatabaseHelper().database;
-      final localData = Map<String, dynamic>.from(data)..remove("user_id");
+      final localData = Map<String, dynamic>.from(data)
+        ..remove("user_id")
+        ..['status'] = 'tunggu'
+        ..['catatan'] = '';
 
       await db.update(
         'detailPadi',

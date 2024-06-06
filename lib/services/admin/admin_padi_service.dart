@@ -22,7 +22,7 @@ class AdminPadiService {
       Response result = await get(
         Uri.parse('${baseUrl}padi/showByKecamatan/$id'),
       );
-      
+
       if (role == "PERTANIAN") {
         result = await get(
           Uri.parse('${baseUrl}padi/showByKecamatan/dinas'),

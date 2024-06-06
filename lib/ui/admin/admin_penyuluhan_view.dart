@@ -6,11 +6,9 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
-import 'package:sintren_mobile/models/verify_model.dart';
 import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
-import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/admin/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -33,7 +31,6 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
     await AdminService().getDataPenyuluhanDesa();
     await AdminPadiService().getDetailPadiByKecamatan();
     await AdminPalawijaService().getDetailPalawijaByKecamatan();
-    await UserService().getVerify();
     setState(() {});
   }
 
@@ -93,7 +90,6 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
         future: Future.wait([
           adminC.getHistoriPenyuluhan(),
           adminC.getLuasLahanDesa(),
-          userC.getVerify(),
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -122,7 +118,6 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
             final historiList =
                 snapshot.data?[0] as List<HistoriPenyuluhanModel>;
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
-            final verifyList = snapshot.data?[2] as List<VerifyModel>;
 
             double getLuasDesa(String id) {
               for (LuasWilayahModel wilayah in luasDesaList) {
@@ -170,9 +165,6 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                           .where((desa) => desa.desaId == selectedDesaValue!.id)
                           .toList();
                   HistoriPenyuluhanModel desa = displayList[index];
-
-                  bool isVerify =
-                      userC.getStatusVerify(verifyList, desa.date, desa.desaId);
 
                   return GestureDetector(
                     onTap: () async {
@@ -273,70 +265,6 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                             ),
                             barRadius: const Radius.circular(10),
                             linearGradient: ColorTheme().linearColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                _showConfirmationDialog(context).then((value) {
-                                  if (value) {
-                                    final dataVerify = userC.getDataVerify(
-                                        verifyList, desa.date, desa.desaId);
-                                    final data = {
-                                      "desa_id": desa.desaId,
-                                      "date": desa.date,
-                                      "isVerify": dataVerify == null
-                                          ? !isVerify
-                                              ? "true"
-                                              : "false"
-                                          : dataVerify.isVerify == "true"
-                                              ? "false"
-                                              : "true",
-                                    };
-                                    EasyLoading.show(status: "Loading...");
-                                    if (dataVerify == null) {
-                                      userC
-                                          .storeVerify(data)
-                                          .then((value) => setState(() {}));
-                                    } else {
-                                      userC
-                                          .updateVerify(
-                                              dataVerify.id.toString(), data)
-                                          .then((value) => setState(() {}));
-                                    }
-                                    EasyLoading.dismiss();
-                                  }
-                                });
-                              },
-                              icon: isVerify
-                                  ? const Icon(
-                                      Icons.cancel_outlined,
-                                      color: Colors.red,
-                                    )
-                                  : const Icon(Icons.verified_outlined,
-                                      color: Colors.green),
-                              label: Text(
-                                  isVerify
-                                      ? "Batalkan Verifikasi"
-                                      : 'Verifikasi',
-                                  style: StyleTheme().stylePrimary.copyWith(
-                                      fontSize: 14,
-                                      color: isVerify
-                                          ? Colors.red
-                                          : Colors.green)),
-                              style: ElevatedButton.styleFrom(
-                                  surfaceTintColor: ColorTheme().whiteColor,
-                                  side: BorderSide(
-                                      color:
-                                          isVerify ? Colors.red : Colors.green,
-                                      width: 2),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  fixedSize: Size(
-                                      MediaQuery.of(context).size.width, 30)),
-                            ),
                           ),
                         ],
                       ),
@@ -442,43 +370,31 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                 });
               },
             ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKeyUP.currentState!.validate()) {
-                        setState(() {
-                          selectedDesaValue = null;
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorTheme().primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width * 0.27, 50)),
-                    child: Text("Reset", style: StyleTheme().styleWhite),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width * 0.27, 50)),
-                    child: Text(
-                      'Tutup',
-                      style: StyleTheme().styleBlack,
-                    ),
-                  ),
-                ],
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(false); // Kembali dengan nilai false
+                },
+                child: Text(
+                  "Tutup",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(color: Colors.red, fontSize: 16),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (formKeyUP.currentState!.validate()) {
+                    setState(() {
+                      selectedDesaValue = null;
+                    });
+                  }
+                },
+                child: Text(
+                  "Reset",
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                ),
               ),
             ],
           ),

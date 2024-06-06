@@ -151,22 +151,15 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
 
                   if (itemList.isEmpty) {
                     return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.receipt_long,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Data Kosong",
-                            style: StyleTheme().styleBlack.copyWith(
-                                color: Colors.grey,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Data Kosong",
+                          style: StyleTheme().styleBlack.copyWith(
+                              color: Colors.grey,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     );
                   }
@@ -217,7 +210,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                                   .copyWith(fontSize: 14),
                             ),
                             Text(
-                              '$total hektar',
+                              '${total < 0 ? 0 : total} hektar',
                               style: StyleTheme().styleBlack.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w500),
                             ),
@@ -231,7 +224,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
             ),
           ),
           const Divider(thickness: 2),
-          widget.isRincian
+          widget.isRincian 
               ? const SizedBox.shrink()
               : GestureDetector(
                   onTap: () {

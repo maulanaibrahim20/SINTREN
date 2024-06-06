@@ -5,14 +5,16 @@ class DetailPadiModel {
   final String desaName;
   final String kecamatanId;
   final String jenisLahan;
-  final int idJenisPadi;
+  final String idJenisPadi;
   final String padiName;
   final String jenisBantuan;
-  final int idJenisPengairan;
+  final String idJenisPengairan;
   final String pengairanName;
   final String date;
   final String tipeData;
   final double nilai;
+  final String status;
+  final String catatan;
 
   DetailPadiModel({
     required this.desaName,
@@ -29,10 +31,12 @@ class DetailPadiModel {
     required this.tipeData,
     required this.nilai,
     required this.date,
+    required this.status,
+    required this.catatan,
   });
 
   factory DetailPadiModel.fromJson(Map<String, dynamic> json) {
-   return DetailPadiModel(
+    return DetailPadiModel(
       id: json['id'],
       userId: json['user_id'].toString(),
       desaId: json['desa_id'].toString(),
@@ -42,11 +46,13 @@ class DetailPadiModel {
       tipeData: json['tipe_data'],
       nilai: double.parse(json['nilai'].toString()),
       desaName: json['desa']['name'],
-      idJenisPengairan: json['id_jenis_pengairan'] ?? 0,
+      idJenisPengairan: json['id_jenis_pengairan']?.toString() ?? "",
       pengairanName: json['pengairan'] == null ? '' : json['pengairan']['name'],
-      idJenisPadi: json['id_jenis_padi'],
+      idJenisPadi: json['id_jenis_padi'].toString(),
       padiName: json['padi'] == null ? '' : json['padi']['name'],
       date: json['date'],
+      status: json['verify']['status'],
+      catatan: json['verify']['catatan'] ?? "",
     );
   }
 
@@ -66,6 +72,8 @@ class DetailPadiModel {
       idJenisPadi: json['id_jenis_padi'],
       padiName: json['padi_name'],
       date: json['date'],
+      status: json['status'],
+      catatan: json['catatan'],
     );
   }
 
@@ -85,6 +93,8 @@ class DetailPadiModel {
       'tipe_data': tipeData,
       'nilai': nilai,
       'date': date,
+      'status': status,
+      'catatan': catatan,
     };
   }
 }

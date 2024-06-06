@@ -8,17 +8,16 @@ import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/components/rincian_
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
 
 class RingkasanPadiWidget extends StatefulWidget {
-  const RingkasanPadiWidget(
-      {super.key,
-      required this.date,
-      required this.desaId,
-      required this.desaName,
-      required this.isVerify,
-      required this.isRincian});
+  const RingkasanPadiWidget({
+    super.key,
+    required this.date,
+    required this.desaId,
+    required this.desaName,
+    required this.isRincian,
+  });
   final String date;
   final String desaId;
   final String desaName;
-  final bool isVerify;
   final bool isRincian;
 
   @override
@@ -79,7 +78,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                     ),
                   ],
                 ),
-                widget.isVerify
+                widget.isRincian
                     ? const SizedBox.shrink()
                     : Container(
                         height: 40,
@@ -186,22 +185,15 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
 
                   if (itemList.isEmpty) {
                     return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.receipt_long,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Data Kosong",
-                            style: StyleTheme().styleBlack.copyWith(
-                                color: Colors.grey,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Data Kosong",
+                          style: StyleTheme().styleBlack.copyWith(
+                              color: Colors.grey,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     );
                   }
@@ -252,7 +244,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                                   .copyWith(fontSize: 14),
                             ),
                             Text(
-                              '$total hektar',
+                              '${total < 0 ? 0 : total}  hektar',
                               style: StyleTheme().styleBlack.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w500),
                             ),
@@ -277,7 +269,6 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                             date: widget.date,
                             desaId: widget.desaId,
                             desaName: widget.desaName,
-                            isVerify: widget.isVerify,
                             isRincian: true),
                       ),
                     );

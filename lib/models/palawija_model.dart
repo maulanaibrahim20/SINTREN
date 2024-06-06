@@ -1,12 +1,12 @@
 class PalawijaModel {
-  final int id;
+  final String id;
   final String name;
 
   PalawijaModel({required this.id, required this.name});
 
   factory PalawijaModel.fromJson(Map<String, dynamic> json) {
     return PalawijaModel(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
     );
   }

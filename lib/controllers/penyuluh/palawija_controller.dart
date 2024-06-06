@@ -47,7 +47,9 @@ class PalawijaController {
 
       final dataForDatabase = Map<String, dynamic>.from(data)
         ..['desa_name'] = map['desa_name']
-        ..['palawija_name'] = map["palawija_name"];
+        ..['palawija_name'] = map["palawija_name"]
+        ..['status'] = 'tunggu'
+        ..['catatan'] = '';
 
       final db = await DatabaseHelper().database;
       await db.insert(
@@ -92,7 +94,10 @@ class PalawijaController {
       }
 
       final db = await DatabaseHelper().database;
-      final localData = Map<String, dynamic>.from(data)..remove("user_id");
+      final localData = Map<String, dynamic>.from(data)
+        ..remove("user_id")
+        ..['status'] = 'tunggu'
+        ..['catatan'] = '';
 
       await db.update(
         'detailPalawija',
@@ -205,7 +210,8 @@ class PalawijaController {
       List<DetailPalawijaModel> groupedData =
           await getDetailPalawijaByUser(date, desaId);
 
-      var groupedByAll = <String, Map<String, Map<String, Map<String, double>>>>{};
+      var groupedByAll =
+          <String, Map<String, Map<String, Map<String, double>>>>{};
 
       for (var row in groupedData) {
         groupedByAll

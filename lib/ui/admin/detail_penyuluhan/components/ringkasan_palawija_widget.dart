@@ -152,22 +152,15 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
 
                   if (itemList.isEmpty) {
                     return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.receipt_long,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                          Text(
-                            "Data Kosong",
-                            style: StyleTheme().styleBlack.copyWith(
-                                color: Colors.grey,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Data Kosong",
+                          style: StyleTheme().styleBlack.copyWith(
+                              color: Colors.grey,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     );
                   }
@@ -218,7 +211,7 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                                   .copyWith(fontSize: 14),
                             ),
                             Text(
-                              '$total hektar',
+                              '${total < 0 ? 0 : total} hektar',
                               style: StyleTheme().styleBlack.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w500),
                             ),

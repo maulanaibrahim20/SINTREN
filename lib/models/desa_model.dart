@@ -9,7 +9,7 @@ class DesaModel {
 
   factory DesaModel.fromJson(Map<String, dynamic> json) {
     return DesaModel(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
     );
   }

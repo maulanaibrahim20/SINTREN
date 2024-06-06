@@ -39,19 +39,19 @@ class DatabaseHelper {
     ''');
     await db.execute('''
       CREATE TABLE pengairan (
-        id INTEGER PRIMARY KEY,
+        id TEXT PRIMARY KEY,
         name TEXT
       )
     ''');
     await db.execute('''
       CREATE TABLE padi (
-        id INTEGER PRIMARY KEY,
+        id TEXT PRIMARY KEY,
         name TEXT
       )
     ''');
     await db.execute('''
       CREATE TABLE palawija (
-        id INTEGER PRIMARY KEY,
+        id TEXT PRIMARY KEY,
         name TEXT
       )
     ''');
@@ -63,14 +63,16 @@ class DatabaseHelper {
         desa_name TEXT,
         kecamatan_id TEXT,
         jenis_lahan TEXT,
-        id_jenis_padi INTEGER,
+        id_jenis_padi TEXT,
         padi_name TEXT,
         jenis_bantuan TEXT,
-        id_jenis_pengairan INTEGER,
+        id_jenis_pengairan TEXT,
         pengairan_name TEXT,
         tipe_data TEXT,
         date TEXT,
-        nilai REAL
+        nilai REAL,
+        status TEXT,
+        catatan TEXT
       )
     ''');
     await db.execute('''
@@ -82,21 +84,13 @@ class DatabaseHelper {
         kecamatan_id TEXT,
         jenis_lahan TEXT,
         jenis_bantuan TEXT,
-        id_jenis_palawija INTEGER,
+        id_jenis_palawija TEXT,
         palawija_name TEXT,
         tipe_data TEXT,
         date TEXT,
-        nilai REAL
-      )
-    ''');
-    await db.execute('''
-      CREATE TABLE verify (
-        id INTEGER PRIMARY KEY,
-        date TEXT,
-        desa_id TEXT,
-        kecamatan_id TEXT,
-        user_id TEXT,
-        isVerify TEXT
+        nilai REAL,
+        status TEXT,
+        catatan TEXT
       )
     ''');
   }

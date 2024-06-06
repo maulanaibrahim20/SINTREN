@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
@@ -22,10 +24,9 @@ class AdminController {
 
       statusNotifier.value = 'Mendapatkan data penyuluhan...';
       await AdminPadiService().getDetailPadiByKecamatan();
-      await AdminPalawijaService().getDetailPalawijaByKecamatan();
 
       statusNotifier.value = 'Sinkronisasi selesai...';
-      await UserService().getVerify();
+      await AdminPalawijaService().getDetailPalawijaByKecamatan();
     } catch (error) {
       statusNotifier.value = 'Error: ${error.toString()}';
       throw Exception("Internal Server Error");
@@ -122,6 +123,54 @@ class AdminController {
     } catch (e) {
       log("Get desa error: $e");
       return [];
+    }
+  }
+
+  Future<bool> verify(
+      String dataId, Map<String, dynamic> map, bool isPalawija) async {
+    EasyLoading.show(status: "Loading...");
+    try {
+      final id = await UserLoginModel().getUserId();
+      final data = {
+        "user_id": id,
+        "status": map['status'],
+        "catatan": map['catatan']
+      };
+
+      final result = await UserService().verify(data, dataId);
+
+      if (!result) {
+        EasyLoading.showToast("Gagal mengupdate data");
+        return false;
+      }
+
+      final db = await DatabaseHelper().database;
+      final localData = {
+        "status": map['status'],
+        "catatan": map['catatan'],
+      };
+
+      String dbName = 'detailPadi';
+
+      if (isPalawija) {
+        dbName = 'detailPalawija';
+      }
+
+      await db.update(
+        dbName,
+        localData,
+        where: 'id = ?',
+        whereArgs: [dataId],
+      );
+
+      EasyLoading.showToast("Berhasil verify data");
+      return true;
+    } catch (e) {
+      EasyLoading.showToast("Gagal verify data");
+      log("Verify error: $e");
+      return false;
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 }

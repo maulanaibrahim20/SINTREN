@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
@@ -28,13 +30,14 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
       if (widget.role == "PENYULUH") {
         await PenyuluhController()
             .synchronizeData(statusNotifier)
-            .timeout(const Duration(minutes: 1));
+            .timeout(const Duration(minutes: 5));
       } else if (widget.role == "PERTANIAN" || widget.role == "UPTD") {
         await AdminController()
             .synchronizeData(statusNotifier)
-            .timeout(const Duration(minutes: 1));
+            .timeout(const Duration(minutes: 5));
       }
     } catch (e) {
+      log("error initialized: $e");
       setState(() {
         _initializationError = true;
       });

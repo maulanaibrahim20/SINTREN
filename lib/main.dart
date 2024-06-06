@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
@@ -10,20 +11,24 @@ void main() async {
   runApp(MyApp(isLogin: isLogin, role: role));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool? isLogin;
   final String? role;
 
   const MyApp({super.key, this.isLogin, this.role});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Application",
       builder: EasyLoading.init(),
-      home: InitializationWrapper(isLogin: isLogin, role: role),
+      home: InitializationWrapper(isLogin: widget.isLogin, role: widget.role),
     );
   }
 }
-

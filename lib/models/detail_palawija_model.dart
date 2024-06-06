@@ -6,11 +6,13 @@ class DetailPalawijaModel {
   final String kecamatanId;
   final String jenisLahan;
   final String jenisBantuan;
-  final int idJenisPalawija;
+  final String idJenisPalawija;
   final String palawijaName;
   final String date;
   final String tipeData;
   final double nilai;
+  final String status;
+  final String catatan;
 
   DetailPalawijaModel({
     required this.desaName,
@@ -25,6 +27,8 @@ class DetailPalawijaModel {
     required this.tipeData,
     required this.nilai,
     required this.date,
+    required this.status,
+    required this.catatan,
   });
 
   factory DetailPalawijaModel.fromJson(Map<String, dynamic> json) {
@@ -41,7 +45,8 @@ class DetailPalawijaModel {
       // nilai: json['nilai'],
       desaName: json['desa']['name'],
       palawijaName: json['palawija'] == null ? '' : json['palawija']['name'],
-      date: json['date'],
+      date: json['date'], status: json['verify']['status'],
+      catatan: json['verify']['catatan'],
     );
   }
 
@@ -59,6 +64,8 @@ class DetailPalawijaModel {
       desaName: json['desa_name'],
       palawijaName: json['palawija_name'],
       date: json['date'],
+      status: json['status'],
+      catatan: json['catatan'],
     );
   }
 
@@ -76,6 +83,8 @@ class DetailPalawijaModel {
       'tipe_data': tipeData,
       'nilai': nilai,
       'date': date,
+      'status': status,
+      'catatan': catatan,
     };
   }
 }

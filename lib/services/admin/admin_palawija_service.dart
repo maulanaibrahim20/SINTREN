@@ -26,7 +26,7 @@ class AdminPalawijaService {
 
       if (role == "PERTANIAN") {
         result = await get(
-          Uri.parse('${baseUrl}padi/showByKecamatan/dinas'),
+          Uri.parse('${baseUrl}palawija/showByKecamatan/dinas'),
         );
       }
 

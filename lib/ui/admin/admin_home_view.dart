@@ -4,7 +4,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
+import 'package:sintren_mobile/services/admin/admin_service.dart';
 import 'package:sintren_mobile/ui/admin/components/home_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -201,9 +203,44 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                                 margin: const EdgeInsets.only(top: 10),
                                 width: MediaQuery.of(context).size.width,
                                 height: 200,
-                                child: LineChart(
-                                  HomeChart().mainData(),
-                                ),
+                                child: FutureBuilder<PrediksiModel>(
+                                    future: AdminService().getPrediksiPadi(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Icon(
+                                                Icons.error,
+                                                color: Colors.grey,
+                                                size: 50,
+                                              ),
+                                              Text(
+                                                "Internal Server Error",
+                                                style: StyleTheme()
+                                                    .styleBlack
+                                                    .copyWith(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.grey),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      } else {
+                                        final prediksiList = snapshot.data;
+                                        return LineChart(
+                                          HomeChart(labels: prediksiList!.labels,targets: prediksiList.targets).mainData(),
+                                        );
+                                      }
+                                    }),
                               ),
                             ],
                           ),
