@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('verifications', function (Blueprint $table) {
+        Schema::create('table_verify_padis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('laporan_id');
-            $table->string('user_id',50)->nullable();
-            $table->enum('status', ['terima', 'tolak','tunggu']);
+            $table->string('user_id', 50)->nullable();
+            $table->enum('status', ['terima', 'tolak', 'tunggu']);
             $table->text('catatan')->nullable();
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('verifications');
+        Schema::dropIfExists('table_verify_padis');
     }
 };

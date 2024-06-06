@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Penyuluh\LuasLahanWilayah;
-use App\Models\User;
-use App\Models\Verification;
-use App\Models\Wilayah\Desa;
+use App\Models\Uptd\VerifyPadi;
+use App\Models\Uptd\VerifyPalawija;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +60,10 @@ class AdminController extends Controller
 
         DB::beginTransaction();
         try {
-            $verification = Verification::where('laporan_id', $id)->firstOrFail();
+            $verification = VerifyPadi::where('laporan_id', $id)->firstOrFail();
+            if($request->tipe == 'palawija'){
+                $verification = VerifyPalawija::where('laporan_id', $id)->firstOrFail();
+            }
             $verification->fill($validated);
             $verification->save();
 

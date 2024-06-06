@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Penyuluh;
 use App\Http\Controllers\Controller;
 use App\Models\Operator\TanamanPalawija;
 use App\Models\Penyuluh\LaporanPalawija;
-use App\Models\Verification;
+use App\Models\Uptd\VerifyPalawija;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +56,7 @@ class PalawijaController extends Controller
         DB::beginTransaction();
         try {
             $item = LaporanPalawija::findOrFail($id);
-            $verify = Verification::where('laporan_id', $id)->first();
+            $verify = VerifyPalawija::where('laporan_id', $id)->first();
 
             if ($verify) {
                 $verify->delete();
@@ -107,7 +107,7 @@ class PalawijaController extends Controller
         try {
             $palawija = LaporanPalawija::create($validated);
 
-            $verify = Verification::create([
+            $verify = VerifyPalawija::create([
                 'laporan_id' => $palawija->id,
                 'status' => 'tunggu'
             ]);
@@ -162,7 +162,7 @@ class PalawijaController extends Controller
             $palawija->fill($validated);
             $palawija->save();
 
-            $verify = Verification::where('laporan_id', $palawija->id)->firstOrFail();
+            $verify = VerifyPalawija::where('laporan_id', $palawija->id)->firstOrFail();
             $verify->status = 'tunggu';
             $verify->save();
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Operator\TanamanPadi;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
-use App\Models\Verification;
+use App\Models\Uptd\VerifyPadi;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,7 +68,7 @@ class PadiController extends Controller
         DB::beginTransaction();
         try {
             $item = LaporanPadi::findOrFail($id);
-            $verify = Verification::where('laporan_id', $id)->first();
+            $verify = VerifyPadi::where('laporan_id', $id)->first();
 
             if ($verify) {
                 $verify->delete();
@@ -118,7 +118,7 @@ class PadiController extends Controller
         try {
             $padi = LaporanPadi::create($validated);
 
-            $verify = Verification::create([
+            $verify = VerifyPadi::create([
                 'laporan_id' => $padi->id,
                 'status' => 'tunggu'
             ]);
@@ -174,7 +174,7 @@ class PadiController extends Controller
             $padi->fill($validated);
             $padi->save();
 
-            $verify = Verification::where('laporan_id', $padi->id)->firstOrFail();
+            $verify = VerifyPadi::where('laporan_id', $padi->id)->firstOrFail();
             $verify->status = 'tunggu';
             $verify->save();
 

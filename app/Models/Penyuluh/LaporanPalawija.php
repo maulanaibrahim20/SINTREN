@@ -3,6 +3,7 @@
 namespace App\Models\Penyuluh;
 
 use App\Models\Operator\TanamanPalawija;
+use App\Models\Uptd\VerifyPalawija;
 use App\Models\User;
 use App\Models\Verification;
 use App\Models\Wilayah\Desa;
@@ -36,6 +37,6 @@ class LaporanPalawija extends Model
     }
     public function verify()
     {
-        return $this->belongsTo(Verification::class, 'laporan_id');
+        return $this->belongsTo(VerifyPalawija::class, 'id','laporan_id');
     }
 }
