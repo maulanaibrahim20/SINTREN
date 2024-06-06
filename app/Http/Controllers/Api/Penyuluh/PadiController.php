@@ -27,11 +27,11 @@ class PadiController extends Controller
 
     public function getPadi()
     {
-        $pengairan = TanamanPadi::all();
+        $padi = TanamanPadi::all();
         $responseData = [
             'status' => 'success',
             'message' => 'Get data successful',
-            'data' => $pengairan
+            'data' => $padi
         ];
         return response()->json($responseData);
     }
