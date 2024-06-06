@@ -22,7 +22,7 @@
         <div class="col-md-2 d-flex align-items-end">
             <button class="btn btn-primary" id="filterButton">Filter</button>
         </div>
-        <div class="col-md-2 d-flex align-items-end">
+        <div class="col-md-6 d-flex align-items-end justify-content-end">
             <a href="{{ route('export.laporan.pangan', ['start_date' => 'your_start_date', 'end_date' => 'your_end_date']) }}" class="btn btn-success">Export to Excel</a>
         </div>
     </div>

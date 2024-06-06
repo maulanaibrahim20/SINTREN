@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Export\LaporanPanganExport;
+use App\Exports\ExportLaporanPangan;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Pangan\KategoriPangan;
 use App\Models\Pangan\LaporanPangan;
@@ -78,46 +78,7 @@ class LaporanPanganController extends Controller
         $datapangan = $query->get();
 
         // Proses ekspor ke file Excel
-        return Excel::download(new LaporanPanganExport($datapangan), 'laporan_pangan.xlsx');
-    }
-
-    public function create()
-    {
-        $data = [
-            'title' => 'Tambah Data Stok Pangan',
-            'breadcrumb' => 'Dashboard',
-            'breadcrumb_1' => 'Data Stok Pangan',
-            'breadcrumb_active' => 'Tambah Data Stok Pangan',
-            'kategoripangan' => $this->kategoripangan::all(),
-            'pasar' => $this->pasar::all(),
-            'datapangan' => $this->laporanpangan::where('user_id', Auth::user()->id)->get(),
-        ];
-
-        return view('pangan.views.pangan.laporan_pangan.create', $data);
-    }
-
-    public function store(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $this->laporanpangan->create($request->all() +[
-                'user_id' => Auth::user()->id,
-                'pasar_id' => $request->pasar_id,
-                'kategori_pangan_id' => $request->kategori_pangan_id,
-                'name' => $request->name,
-                'kebutuhan' => $request->kebutuhan,
-                'ketersediaan' => $request->ketersediaan,
-                'neraca' => $request->neraca,
-                'harga' => $request->harga,
-                'date' => $request->date,
-            ]);
-            DB::commit();
-
-            return redirect('/pangan/create/data_pangan')->with('success', 'Data Stok Pangan Berhasil Ditambahkan!');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Error Data Stok Pangan Gagal Ditambahkan!' . $e->getMessage());
-        }
+        return Excel::download(new ExportLaporanPangan($datapangan), 'laporan_pangan.xlsx');
     }
 
     public function kirimkan(Request $request, $id)
@@ -126,85 +87,14 @@ class LaporanPanganController extends Controller
             DB::beginTransaction();
 
             $laporanpangan = LaporanPangan::findOrFail($id);
-            $laporanpangan->update([
-                'status' => true,
-            ]);
+            $laporanpangan->status = 1; // Ubah status menjadi 1 (Terkirim)
+            $laporanpangan->save();
 
             DB::commit();
             return redirect()->back()->with('success', 'Data Stok Pangan Berhasil Dikirim!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Error Data Stok Pangan Gagal Dikirim! ' . $e->getMessage());
-        }
-    }
-
-    public function show(string $id)
-    {
-        $laporanpangan = $this->laporanpangan::findOrFail($id);
-        $data = [
-            'laporanpangan' => $laporanpangan,
-            'breadcrumb' => 'Dashboard',
-            'breadcrumb_1' => 'Data Stok Pangan',
-            'breadcrumb_active' => 'View Data Stok Pangan',
-        ];
-        return view('pangan.views.pangan.laporan_pangan.show', $data);
-    }
-
-    public function edit(string $id)
-    {
-        $editPangan = $this->laporanpangan::findOrFail($id);
-        $data = [
-            'breadcrumb' => 'Dashboard',
-            'breadcrumb_1' => 'Data Stok Pangan',
-            'breadcrumb_active' => 'Edit Data Stok Pangan',
-            'editPangan' => $editPangan,
-            'kategoripangan' => $this->kategoripangan::all(),
-            'pasar' => $this->pasar::all(),
-            'datapangan' => $this->laporanpangan::where('user_id', Auth::user()->id)->get(),
-        ];
-
-        return view('pangan.views.pangan.laporan_pangan.update', $data);
-    }
-
-    public function update(Request $request, string $id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $laporanpangan = $this->laporanpangan::findOrFail($id);
-            $laporanpangan->update([
-                'user_id' => Auth::user()->id,
-                'pasar_id' => $request->pasar_id,
-                'kategori_pangan_id' => $request->kategori_pangan_id,
-                'name' => $request->name,
-                'kebutuhan' => $request->kebutuhan,
-                'ketersediaan' => $request->ketersediaan,
-                'neraca' => $request->neraca,
-                'harga' => $request->harga,
-                'date' => $request->date,
-            ]);
-
-            DB::commit();
-            return redirect('/pangan/create/data_pangan')->with('success', 'Data Stok Pangan Berhasil Diperbarui!');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Error Data Stok Pangan Gagal Diperbarui! ' . $e->getMessage());
-        }
-    }
-
-    public function destroy(string $id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $laporanpangan = $this->laporanpangan::findOrFail($id);
-            $laporanpangan->delete();
-
-            DB::commit();
-            return redirect('/pangan/create/data_pangan')->with('success', 'Data Stok Pangan Berhasil Dihapus!');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with('error', 'Error Data Stok Pangan Gagal Dihapus! ' . $e->getMessage());
         }
     }
 }
