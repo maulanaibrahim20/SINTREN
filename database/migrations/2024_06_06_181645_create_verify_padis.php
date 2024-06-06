@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('table_verify_palawijas', function (Blueprint $table) {
+        Schema::create('verify_padis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('laporan_id');
             $table->string('user_id', 50)->nullable();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('table_verify_palawijas');
+        Schema::dropIfExists('table_verify_padis');
     }
 };
