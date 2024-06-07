@@ -143,8 +143,11 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Text(
-                                        UserController()
-                                            .toCamelCase(data.status),
+                                        data.status == "terima"
+                                            ? "Terverifikasi"
+                                            : data.status == "tolak"
+                                                ? "Data Ditolak"
+                                                : "Menunggu Verifikasi",
                                         style: StyleTheme().styleWhite.copyWith(
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -206,8 +209,33 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                 const Divider(),
                                 if (data.status == "tolak") ...[
                                   ElevatedButton.icon(
-                                    onPressed: () {
-                                      _showUlasanDialog(context, data);
+                                    onPressed: () async {
+                                      String? shouldUlasan =
+                                          await _showUlasanDialog(
+                                              context, data);
+                                      if (shouldUlasan == "edit") {
+                                        await Navigator.push(
+                                          // ignore: use_build_context_synchronously
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => FormPadiView(
+                                              detail: data,
+                                              onCreate: false,
+                                            ),
+                                          ),
+                                        ).then((value) {
+                                          setState(() {});
+                                        });
+                                      } else if (shouldUlasan == "delete") {
+                                        bool? shouldDelete =
+                                            await _showDeleteConfirmationDialog(
+                                                // ignore: use_build_context_synchronously
+                                                context);
+                                        if (shouldDelete == true) {
+                                          await padiC.deleteDetailById(data.id);
+                                          setState(() {});
+                                        }
+                                      }
                                     },
                                     icon: Icon(Icons.remove_red_eye,
                                         color: ColorTheme().primaryColor),
@@ -358,7 +386,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
     );
   }
 
-  Future<bool> _showUlasanDialog(
+  Future<String> _showUlasanDialog(
       BuildContext context, DetailPadiModel data) async {
     return await showDialog(
       context: context,
@@ -377,7 +405,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
-                Navigator.pop(context);
+                Navigator.of(context).pop("tutup");
               },
               child: Text(
                 "Tutup",
@@ -387,16 +415,8 @@ class _DetailPadiViewState extends State<DetailPadiView> {
               ),
             ),
             TextButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => FormPadiView(
-                      detail: data,
-                      onCreate: false,
-                    ),
-                  ),
-                ).then((value) => setState(() {}));
+              onPressed: () {
+                Navigator.of(context).pop("edit");
               },
               child: Text(
                 "Edit",
@@ -404,13 +424,8 @@ class _DetailPadiViewState extends State<DetailPadiView> {
               ),
             ),
             TextButton(
-              onPressed: () async {
-                bool? shouldDelete =
-                    await _showDeleteConfirmationDialog(context);
-                if (shouldDelete == true) {
-                  await padiC.deleteDetailById(data.id);
-                  setState(() {});
-                }
+              onPressed: () {
+                Navigator.of(context).pop("delete");
               },
               child: Text(
                 "Delete",

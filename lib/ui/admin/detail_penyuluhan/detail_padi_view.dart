@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
@@ -22,6 +23,8 @@ class DetailPadiView extends StatefulWidget {
 
 class DetailPadiViewState extends State<DetailPadiView> {
   final padiC = AdminPadiController();
+  TextEditingController ulasan = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   bool isOpen = false;
 
   @override
@@ -106,98 +109,198 @@ class DetailPadiViewState extends State<DetailPadiView> {
                       DetailPadiModel data = itemList[index];
                       return Card(
                         surfaceTintColor: ColorTheme().whiteColor,
-                        margin: const EdgeInsets.only(
-                            right: 10, left: 10, bottom: 15),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 10),
                         elevation: 3,
-                        child: SizedBox(
-                          height: 130,
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 10,
-                                decoration: BoxDecoration(
-                                    color: ColorTheme().primaryColor,
-                                    borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        topLeft: Radius.circular(10))),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        data.padiName,
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      data.padiName,
+                                      style: StyleTheme().styleBlack.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 3),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: data.status == "terima"
+                                            ? Colors.green
+                                            : data.status == "tolak"
+                                                ? Colors.red
+                                                : Colors.amber,
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            UserController()
-                                                .toCamelCase(data.jenisBantuan),
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            data.date,
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                        ],
+                                      child: Text(
+                                        data.status == "terima"
+                                            ? "Terverifikasi"
+                                            : data.status == "tolak"
+                                                ? "Data Ditolak"
+                                                : "Membutuhkan Verifikasi",
+                                        style: StyleTheme().styleWhite.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                          Text(
-                                            UserController().toCamelCase(
-                                                data.pengairanName),
-                                            style: StyleTheme().styleBlack,
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            UserController()
-                                                .toCamelCase(data.tipeData),
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                          ),
-                                          Text(
-                                            data.nilai.toString(),
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
-                              ),
-                            ],
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      UserController()
+                                          .toCamelCase(data.jenisBantuan),
+                                      style: StyleTheme().styleBlack,
+                                    ),
+                                    Text(
+                                      data.date,
+                                      style: StyleTheme().styleBlack,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
+                                      style: StyleTheme().styleBlack,
+                                    ),
+                                    Text(
+                                      UserController()
+                                          .toCamelCase(data.pengairanName),
+                                      style: StyleTheme().styleBlack,
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      UserController()
+                                          .toCamelCase(data.tipeData),
+                                      style: StyleTheme().styleBlack.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text(
+                                      "${data.nilai} hektar",
+                                      style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                if (data.status == "tunggu") ...[
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                            bool? shouldVerify =
+                                                await _showVerifyDialog(
+                                                    context);
+                                            if (shouldVerify == true) {
+                                              await AdminController().verify(
+                                                dataId: data.id.toString(),
+                                                map: {
+                                                  "status": "terima",
+                                                  "catatan": "oke"
+                                                },
+                                                isPalawija: false,
+                                              );
+                                              setState(() {});
+                                            }
+                                          },
+                                          icon: const Icon(
+                                              Icons.verified_outlined,
+                                              color: Colors.green),
+                                          label: Text('Verifikasi',
+                                              style: StyleTheme()
+                                                  .stylePrimary
+                                                  .copyWith(
+                                                      fontSize: 14,
+                                                      color: Colors.green)),
+                                          style: ElevatedButton.styleFrom(
+                                            surfaceTintColor:
+                                                ColorTheme().whiteColor,
+                                            side: const BorderSide(
+                                                color: Colors.green, width: 2),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        flex: 1,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                            bool? shouldReject =
+                                                await _showRejectedDialog(
+                                                    context);
+                                            if (shouldReject == true) {
+                                              await AdminController().verify(
+                                                dataId: data.id.toString(),
+                                                map: {
+                                                  "status": "tolak",
+                                                  "catatan": ulasan.text
+                                                },
+                                                isPalawija: false,
+                                              );
+                                              setState(() {
+                                                ulasan.clear();
+                                              });
+                                            }
+                                          },
+                                          icon: const Icon(
+                                              Icons.dangerous_outlined,
+                                              color: Colors.red),
+                                          label: Text('Tolak',
+                                              style: StyleTheme()
+                                                  .stylePrimary
+                                                  .copyWith(
+                                                      fontSize: 14,
+                                                      color: Colors.red)),
+                                          style: ElevatedButton.styleFrom(
+                                            surfaceTintColor:
+                                                ColorTheme().whiteColor,
+                                            side: const BorderSide(
+                                                color: Colors.red, width: 2),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                                const SizedBox(height: 5),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -209,6 +312,123 @@ class DetailPadiViewState extends State<DetailPadiView> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<bool> _showVerifyDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Column(
+            children: [
+              Text('Konfirmasi Aksi'),
+              Divider(),
+            ],
+          ),
+          content: Text(
+            "Apakah anda yakin ingin memverifikasi data ini?",
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(false);
+              },
+              child: Text(
+                "Tidak",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: 14, color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(
+                "Ya",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _showRejectedDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Form(
+          key: formKey,
+          child: AlertDialog(
+            title: const Column(
+              children: [
+                Text('Konfirmasi Aksi'),
+                Divider(),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Apakah anda yakin ingin menolak data ini?",
+                  style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+                ),
+                const SizedBox(height: 10),
+                const Text("Berikan Ulasan:"),
+                TextFormField(
+                  controller: ulasan,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: ColorTheme().whiteColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  maxLines: 5,
+                  validator: (value) {
+                    return value == null || value.isEmpty
+                        ? "Ulasan tidak boleh kosong"
+                        : null;
+                  },
+                )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () async {
+                  setState(() {
+                    ulasan.clear();
+                  });
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(
+                  "Tidak",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(fontSize: 14, color: Colors.red),
+                ),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (formKey.currentState!.validate()) {
+                    Navigator.of(context).pop(true);
+                  }
+                },
+                child: Text(
+                  "Ya",
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

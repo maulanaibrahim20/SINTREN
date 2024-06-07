@@ -41,7 +41,16 @@ class AdminController {
             strftime('%Y-%m', date) AS month_year,
             desa_id,
             desa_name,
-            SUM(nilai) AS total_nilai
+            SUM(nilai) AS total_nilai,
+            (SELECT COUNT(*) FROM (
+                SELECT date, desa_id, desa_name, status FROM detailPadi
+                UNION ALL
+                SELECT date, desa_id, desa_name, status FROM detailPalawija
+            ) AS status_data
+            WHERE status = 'tunggu' AND
+                  strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+                  status_data.desa_id = combined_data.desa_id
+            ) AS total_tunggu
         FROM (
             SELECT date, desa_id, desa_name, nilai FROM detailPadi
             UNION ALL
@@ -127,14 +136,17 @@ class AdminController {
   }
 
   Future<bool> verify(
-      String dataId, Map<String, dynamic> map, bool isPalawija) async {
+      {required String dataId,
+      required Map<String, dynamic> map,
+      required bool isPalawija}) async {
     EasyLoading.show(status: "Loading...");
     try {
       final id = await UserLoginModel().getUserId();
       final data = {
         "user_id": id,
         "status": map['status'],
-        "catatan": map['catatan']
+        "catatan": map['catatan'],
+        "tipe": isPalawija ? 'palawija' : 'padi',
       };
 
       final result = await UserService().verify(data, dataId);
@@ -163,10 +175,10 @@ class AdminController {
         whereArgs: [dataId],
       );
 
-      EasyLoading.showToast("Berhasil verify data");
+      EasyLoading.showToast("Berhasil verifikasi data");
       return true;
     } catch (e) {
-      EasyLoading.showToast("Gagal verify data");
+      EasyLoading.showToast("Gagal verifikasi data");
       log("Verify error: $e");
       return false;
     } finally {

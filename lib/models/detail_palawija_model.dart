@@ -39,14 +39,14 @@ class DetailPalawijaModel {
       kecamatanId: json['kecamatan_id'].toString(),
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
-      idJenisPalawija: json['id_jenis_palawija'],
+      idJenisPalawija: json['id_jenis_palawija'].toString(),
       tipeData: json['tipe_data'],
       nilai: double.parse(json['nilai'].toString()),
-      // nilai: json['nilai'],
       desaName: json['desa']['name'],
       palawijaName: json['palawija'] == null ? '' : json['palawija']['name'],
-      date: json['date'], status: json['verify']['status'],
-      catatan: json['verify']['catatan'],
+      date: json['date'],
+      status: json['verify'] == null ? "" : json['verify']['status'],
+      catatan: json['verify'] == null ? "" : json['verify']['catatan'] ?? "",
     );
   }
 

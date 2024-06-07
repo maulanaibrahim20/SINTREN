@@ -248,6 +248,12 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                             color: Colors.grey[700],
                                             fontSize: 14),
                                       ),
+                                      if (desa.totalTunggu > 0)
+                                      Text(
+                                        "${desa.totalTunggu} data ditolak",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 14, color: Colors.red),
+                                      )
                                     ],
                                   ),
                                 )

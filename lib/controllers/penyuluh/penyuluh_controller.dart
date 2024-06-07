@@ -31,7 +31,16 @@ class PenyuluhController {
             strftime('%Y-%m', date) AS month_year,
             desa_id,
             desa_name,
-            SUM(nilai) AS total_nilai
+            SUM(nilai) AS total_nilai,
+            (SELECT COUNT(*) FROM (
+                SELECT date, desa_id, desa_name, status FROM detailPadi
+                UNION ALL
+                SELECT date, desa_id, desa_name, status FROM detailPalawija
+            ) AS status_data
+            WHERE status = 'tolak' AND
+                  strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+                  status_data.desa_id = combined_data.desa_id
+            ) AS total_tunggu
         FROM (
             SELECT date, desa_id, desa_name, nilai FROM detailPadi
             UNION ALL
@@ -80,7 +89,16 @@ class PenyuluhController {
             strftime('%Y-%m', date) AS month_year,
             desa_id,
             desa_name,
-            SUM(nilai) AS total_nilai
+            SUM(nilai) AS total_nilai,
+            (SELECT COUNT(*) FROM (
+                SELECT date, desa_id, desa_name, status FROM detailPadi
+                UNION ALL
+                SELECT date, desa_id, desa_name, status FROM detailPalawija
+            ) AS status_data
+            WHERE status = 'tolak' AND
+                  strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+                  status_data.desa_id = combined_data.desa_id
+            ) AS total_tunggu
         FROM (
             SELECT date, desa_id, desa_name, nilai FROM detailPadi
             UNION ALL

@@ -51,8 +51,8 @@ class DetailPadiModel {
       idJenisPadi: json['id_jenis_padi'].toString(),
       padiName: json['padi'] == null ? '' : json['padi']['name'],
       date: json['date'],
-      status: json['verify']['status'],
-      catatan: json['verify']['catatan'] ?? "",
+      status: json['verify'] == null ? "" : json['verify']['status'],
+      catatan: json['verify'] == null ? "" : json['verify']['catatan'] ?? "",
     );
   }
 

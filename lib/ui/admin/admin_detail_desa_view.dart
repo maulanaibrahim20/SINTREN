@@ -140,7 +140,7 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                     },
                     child: Card(
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                          horizontal: 15, vertical: 10),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
@@ -183,6 +183,12 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                                           color: Colors.grey[700],
                                           fontSize: 14),
                                     ),
+                                    if (desa.totalTunggu > 0)
+                                      Text(
+                                        "${desa.totalTunggu} data belum diverifikasi",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 14, color: Colors.red),
+                                      )
                                   ],
                                 )
                               ],
@@ -208,7 +214,7 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                           ),
                           const SizedBox(height: 10),
                           LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 40,
+                            width: MediaQuery.of(context).size.width - 30,
                             animation: true,
                             lineHeight: 30,
                             animationDuration: 2000,

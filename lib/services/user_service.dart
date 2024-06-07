@@ -141,7 +141,7 @@ class UserService {
     }
   }
 
-   Future<bool> verify(Map<String, dynamic> data, String id) async {
+  Future<bool> verify(Map<String, dynamic> data, String id) async {
     try {
       final Response result = await patch(
         Uri.parse('${ConfigApp().baseUrl}verify/$id'),

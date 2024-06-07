@@ -212,6 +212,8 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                 const SizedBox(width: 15),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       "Desa ${UserController().toCamelCase(desa.desaName)}",
@@ -226,6 +228,12 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                           color: Colors.grey[700],
                                           fontSize: 14),
                                     ),
+                                    if (desa.totalTunggu > 0)
+                                      Text(
+                                        "${desa.totalTunggu} data belum diverifikasi",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 14, color: Colors.red),
+                                      )
                                   ],
                                 )
                               ],
@@ -266,6 +274,7 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                             barRadius: const Radius.circular(10),
                             linearGradient: ColorTheme().linearColor,
                           ),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
@@ -276,58 +285,6 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
           }
         },
       ),
-    );
-  }
-
-  Future<bool> _showConfirmationDialog(BuildContext context) async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          icon: const Icon(
-            Icons.warning_rounded,
-            size: 80,
-            color: Colors.amber,
-          ),
-          title: const Text("Konfirmasi Aksi"),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("Pastikan periksa data sebelum melakukan verifikasi."),
-              const SizedBox(height: 5),
-              Text(
-                "Anda yakin ingin melanjutkan aksi?",
-                style: StyleTheme()
-                    .styleBlack
-                    .copyWith(fontWeight: FontWeight.w500, fontSize: 14),
-              )
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
-              },
-              child: Text(
-                "Batal",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Kembali dengan nilai true
-              },
-              child: Text(
-                "Lanjutkan",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 
