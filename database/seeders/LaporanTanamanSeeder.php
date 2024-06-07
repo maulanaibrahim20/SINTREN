@@ -140,7 +140,7 @@ class LaporanTanamanSeeder extends Seeder
                 'kecamatan_id' => $kecamatan_id,
                 'date' => $currentDate->toDateString(),
                 'jenis_lahan' => rand(0, 1) == 1 ? 'sawah' : 'non sawah',
-                'id_jenis_padi' => rand(1, 3),
+                'id_jenis_padi' => rand(1, 2),
                 'jenis_bantuan' => rand(0, 1) == 1 ? 'bantuan pemerintah' : 'non bantuan pemerintah',
                 'id_jenis_pengairan' => rand(1, 3),
                 'tipe_data' => ['panen', 'tanam', 'puso/rusak'][rand(0, 2)],

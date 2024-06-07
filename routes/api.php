@@ -32,9 +32,6 @@ Route::post('/login', [UserController::class, 'login']);
 Route::patch('/users/{id}', [UserController::class, 'update']);
 Route::get('/getUserById/{id}', [UserController::class, 'getUserById']);
 Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
-Route::get('/getVerify', [UserController::class, 'getVerification']);
-Route::post('/verify/store',[UserController::class,'storeVerify']);
-Route::patch('/verify/update/{id}',[UserController::class,'updateVerify']);
 
 // PENYULUH END POINT
 Route::get('/penyuluh/getDesa/{id}', [PenyuluhController::class, 'getDesa']);
@@ -59,6 +56,8 @@ Route::delete('/palawija/deletaDetailById/{id}', [PalawijaController::class, 'de
 Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
 Route::get('/padi/showByKecamatan/{id}',[AdminPadiController::class,'showAllByKecamatan']);
 Route::get('/palawija/showByKecamatan/{id}',[AdminPalawijaController::class,'showAllByKecamatan']);
+Route::post('/padi/prediksi',[AdminPadiController::class,'menghitungRegresi']);
+Route::patch('/verify/{id}',[AdminController::class,'verify']);
 
 Route::get('/desa',[WilayahController::class,'getDesa']);
 Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);

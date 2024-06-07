@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Operator\TanamanPadi;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
+use App\Models\Uptd\VerifyPadi;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class PadiController extends Controller
 {
@@ -24,11 +27,11 @@ class PadiController extends Controller
 
     public function getPadi()
     {
-        $pengairan = TanamanPadi::all();
+        $padi = TanamanPadi::all();
         $responseData = [
             'status' => 'success',
             'message' => 'Get data successful',
-            'data' => $pengairan
+            'data' => $padi
         ];
         return response()->json($responseData);
     }
@@ -36,7 +39,7 @@ class PadiController extends Controller
     public function showAllByUser($id)
     {
         try {
-            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan','padi'])->get();
+            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan', 'padi', 'verify'])->get();
 
             if ($laporanPadi->isEmpty()) {
                 return response()->json([
@@ -60,27 +63,42 @@ class PadiController extends Controller
         }
     }
 
-    public function deletaDetailById($id)
+    public function deleteDetailById($id)
     {
-        $item = LaporanPadi::find($id);
+        DB::beginTransaction();
+        try {
+            $item = LaporanPadi::findOrFail($id);
+            $verify = VerifyPadi::where('laporan_id', $id)->first();
 
-        if (!$item) {
+            if ($verify) {
+                $verify->delete();
+            }
+
+            $item->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil menghapus data',
+                'data' => null
+            ], 200);
+        } catch (QueryException $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => 'Data tidak ditemukan',
+                'message' => 'Gagal menghapus data. Database error: ' . $e->getMessage(),
                 'data' => null
-            ], 404);
+            ], 500);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal menghapus data. ' . $e->getMessage(),
+                'data' => null
+            ], 500);
         }
-
-        $item->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Berhasil menghapus data',
-            'data' => null
-        ], 200);
     }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -96,31 +114,42 @@ class PadiController extends Controller
             'nilai' => 'required|numeric',
         ]);
 
+        DB::beginTransaction();
         try {
-            $padi = new LaporanPadi();
-            $padi->fill($validated);
-            $padi->save();
+            $padi = LaporanPadi::create($validated);
 
-            $responseData = [
+            $verify = VerifyPadi::create([
+                'laporan_id' => $padi->id,
+                'status' => 'tunggu'
+            ]);
+
+            DB::commit();
+
+            return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil menyimpan data',
                 'data' => $padi,
-            ];
-            return response()->json($responseData, 201);
+            ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validasi gagal: ' . $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
         } catch (QueryException $e) {
-            $responseData = [
+            DB::rollBack();
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal menyimpan data. Database error: ' . $e->getMessage(),
-                'data' => null
-            ];
-            return response()->json($responseData, 500);
+                'data' => null,
+            ], 500);
         } catch (\Exception $e) {
-            $responseData = [
+            DB::rollBack();
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal menyimpan data. ' . $e->getMessage(),
-                'data' => null
-            ];
-            return response()->json($responseData, 500);
+                'data' => null,
+            ], 500);
         }
     }
 
@@ -133,16 +162,23 @@ class PadiController extends Controller
             'date' => 'required|string|max:255',
             'jenis_lahan' => 'required|string|max:255',
             'jenis_bantuan' => 'required|string|max:255',
-            'id_jenis_padi' => 'required|string|max:255',
+            'id_jenis_padi' => 'required|integer',
             'id_jenis_pengairan' => 'integer|nullable',
             'tipe_data' => 'required|string|max:255',
             'nilai' => 'required|numeric',
         ]);
 
+        DB::beginTransaction();
         try {
             $padi = LaporanPadi::findOrFail($id);
             $padi->fill($validated);
             $padi->save();
+
+            $verify = VerifyPadi::where('laporan_id', $padi->id)->firstOrFail();
+            $verify->status = 'tunggu';
+            $verify->save();
+
+            DB::commit();
 
             $responseData = [
                 'status' => 'success',
@@ -150,20 +186,26 @@ class PadiController extends Controller
                 'data' => $padi,
             ];
             return response()->json($responseData, 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validasi gagal: ' . $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
         } catch (QueryException $e) {
-            $responseData = [
+            DB::rollBack();
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal mengupdate data. Database error: ' . $e->getMessage(),
-                'data' => null
-            ];
-            return response()->json($responseData, 500);
+                'data' => null,
+            ], 500);
         } catch (\Exception $e) {
-            $responseData = [
+            DB::rollBack();
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Gagal mengupdate data. ' . $e->getMessage(),
-                'data' => null
-            ];
-            return response()->json($responseData, 500);
+                'data' => null,
+            ], 500);
         }
     }
 }
