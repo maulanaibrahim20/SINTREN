@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Laporan Padi | Penyuluh')
+@section('title', 'Detail Desa Laporan Padi')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -21,18 +21,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
                 <div class="card-header">
-                    <h3 class="card-title">Data Laporan Luas Tanaman Padi</h3>
+                    <h3 class="card-title">Data Laporan Luas Tanaman Padi Desa {{ $desa->desa->name }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -40,31 +30,45 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Desa</th>
-                                    <th class="wd-15p border-bottom-0">Verifikasi</th>
+                                    <th class="wd-15p border-bottom-0">Alamat</th>
                                     <th class="wd-20p border-bottom-0">Tanggal Input</th>
+                                    <th class="wd-20p border-bottom-0">Jenis Lahan</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($padi as $data)
+                                @foreach ($showDesa as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            {{ $data->name }}
+                                            <div class="d-flex contact-image">
+                                                <div class="d-flex mt-1 flex-column ms-2">
+                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">Kecamatan : <span
+                                                            class="badge bg-primary me-1 my-1">{{ $data->kecamatan->name }}</span>
+                                                    </h6>
+                                                    <span class="fs-12 text-muted">Desa : <span
+                                                            class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td>
-                                            @if ($data->isVerify == 'false')
-                                                <span class="badge bg-danger">Belum Diverifikasi</span>
-                                            @else
-                                                <span class="badge bg-success">Sudah Diverifikasi</span>
-                                            @endif
+                                            {{ $data->date }}
                                         </td>
-                                        <td>{{ $data->month_year }}</td>
+                                        <td>{{ $data->jenis_lahan }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('/penyuluh/create/laporan_padi/show/' . $data->desa_id) }}"
+                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
+                                                class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-eye"></i></a>
+                                            <form id="deleteForm{{ $data->id }}"
+                                                action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                style="display: inline;" method="POST">
+                                                @method('DELETE')
+                                                @csrf
+                                                <button type="button" class="btn btn-danger deleteBtn"
+                                                    data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -75,27 +79,4 @@
             </div>
         </div>
     </div>
-@endsection
-@section('script')
-    <script>
-        $('.deleteBtn').on('click', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            var deleteForm = $('#deleteForm' + id);
-            Swal.fire({
-                title: 'Anda yakin?',
-                text: "Data akan dihapus secara permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteForm.submit();
-                }
-            });
-        });
-    </script>
 @endsection

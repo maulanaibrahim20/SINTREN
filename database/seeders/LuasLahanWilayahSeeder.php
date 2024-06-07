@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Penyuluh\LuasLahanWilayah;
+use App\Models\Uptd\PenugasanPenyuluh;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -118,6 +120,7 @@ class LuasLahanWilayahSeeder extends Seeder
         ];
 
         $faker = \Faker\Factory::create();
+        $userId = User::where('role_id', 4)->first();
 
 
         DB::table("luas_lahan_wilayah")->truncate();
@@ -128,6 +131,17 @@ class LuasLahanWilayahSeeder extends Seeder
                 'desa_id' => strval($desa_id),
                 'lahan_sawah' => $faker->randomFloat(2, 100, 1000),
                 'lahan_non_sawah' => $faker->randomFloat(2, 100, 1000),
+            ]);
+        }
+
+        DB::table('penugasan_penyuluh')->truncate();
+
+        $desaIdPenyuluh = ['3212170001', '3212170002', '3212170003', '3212170004', '3212170005', '3212170006', '3212170007'];
+
+        foreach ($desaIdPenyuluh as $desaId) {
+            PenugasanPenyuluh::create([
+                'user_id' => $userId->id,
+                'desa_id' => $desaId,
             ]);
         }
     }

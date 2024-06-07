@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\LaporanPalawija;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -127,6 +128,7 @@ class LaporanTanamanSeeder extends Seeder
         $currentDate = $startDate->copy();
 
         DB::table("laporan_padis")->truncate();
+
 
         while ($currentDate->lte($endDate)) {
             $desa_id = array_rand($desaKecamatan);
