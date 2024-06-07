@@ -24,6 +24,7 @@ use App\Http\Controllers\PANGAN\PasarController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
+use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
@@ -91,6 +92,8 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::prefix('prediksi')->group(function () {
                 Route::get('/padi', [PrediksiPadiController::class, 'index']);
                 Route::post('/padi', [PrediksiPadiController::class, 'menghitungRegresi']);
+                Route::get('/padiSp', [PrediksiSpPadiController::class, 'indexSP']);
+                Route::post('/padiSp', [PrediksiSpPadiController::class, 'menghitungRegresiSP']);
             });
             Route::get('data_padi', [DataLaporanPadiController::class, 'index']);
             Route::get('data_padi/show/{id}', [DataLaporanPadiController::class, 'show']);
@@ -125,6 +128,7 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/getDesa', [LaporanPadiController::class, 'getDesa']);
             Route::prefix('create')->group(function () {
                 Route::resource('laporan_padi', LaporanPadiController::class);
+                Route::get('laporan_padi/show/{desa_id}', [LaporanPadiController::class, 'showDesa']);
                 Route::resource('laporan_palawija', LaporanPalawijaController::class);
                 Route::post('/laporan_palawija/kirim', [LaporanPalawijaController::class, 'kirimkan']);
             });

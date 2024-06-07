@@ -31,10 +31,33 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between allign-items-center">
+                    <h3 class="card-title mb-0">Trend Rata Rata Hasil
+                        ({{ $prediksi->first()->tipe_data ?? 'Data tidak tersedia' }})</h3>
+                    <div class="dropdown ms-auto">
+                        <button
+                            class="btn btn-outline-default btn-sm fw-bold text-primary fs-12 d-flex align-items-center dropdown-toggle"
+                            type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-box-arrow-up-right fw-semibold me-2"></i> Monthly
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Weekly</a></li>
+                            <li><a class="dropdown-item" href="#">Yearly</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body py-0">
+                    <div id="laporan" class="chartsh chart-dropshadow"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header custom-header d-flex justify-content-between align-items-center border-bottom">
-                    <h3 class="card-title">Trend Pertanian</h3>
+                    <h3 class="card-title">Trend Rata Rata Hasil Padi
+                        ({{ $prediksiSPData->first()->id ?? 'Data tidak tersedia' }})</h3>
                     <div class="dropdown">
                         <a href="javascript:void(0);"
                             class="d-flex align-items-center bg-primary btn btn-sm mx-1 fw-semibold"
@@ -48,27 +71,13 @@
                     </div>
                 </div>
                 <div class="card-body pb-0">
-                    <div class="d-flex ms-5">
-                        <div>
-                            <p class="mb-0 fs-15 text-muted">
-                                This month
-                            </p>
-                            <span class="text-primary fs-20 fw-semibold"><i
-                                    class="fe fe-dollar-sign fs-13"></i>815,320</span>
-                        </div>
-                        <div class="ms-5">
-                            <p class="mb-0 fs-15 text-muted">
-                                Last month
-                            </p>
-                            <span class="fs-20 text-secondary fw-semibold"><i
-                                    class="fe fe-dollar-sign fs-13"></i>743,950</span>
-                        </div>
-                    </div>
-                    <div id="revenue_chart">
+                    <div id="laporanSP">
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row">
         <div class="col-xl-5 col-lg-12 col-md-12 col-sm-12">
             <div class="row row-sm">
                 <div class="col-sm-6 col-lg-6">
@@ -161,4 +170,206 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            index2(); // Panggil fungsi untuk menginisialisasi chart
+            revenueChart3(); // Panggil fungsi untuk menginisialisasi chart
+
+        });
+
+        function index2() {
+            // Data dari controller
+            var prediksi = @json($prediksi);
+
+            var years = prediksi.map(item => item.tahun);
+            var predictedValues = prediksi.map(item => item.nilai_prediksi);
+            var actualValues = prediksi.map(item => item.nilai_aktual);
+
+            var options = {
+                series: [{
+                        name: "Prediksi",
+                        data: predictedValues,
+                    },
+                    {
+                        name: "Aktual",
+                        data: actualValues,
+                    }
+                ],
+                chart: {
+                    height: 310,
+                    type: "line",
+                    zoom: {
+                        enabled: false,
+                    },
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    width: 2,
+                    curve: "smooth",
+                },
+                xaxis: {
+                    categories: years,
+                    axisBorder: {
+                        show: true,
+                        color: "rgba(119, 119, 142, 0.05)",
+                    },
+                    axisTicks: {
+                        show: true,
+                        color: "rgba(119, 119, 142, 0.05)",
+                    },
+                },
+                grid: {
+                    borderColor: "rgba(119, 119, 142, 0.1)",
+                },
+            };
+
+            document.querySelector("#laporan").innerHTML = " ";
+            var chart = new ApexCharts(document.querySelector("#laporan"), options);
+            chart.render();
+        }
+
+        function revenueChart3() {
+            setTimeout(() => {
+
+                var prediksiSPData = {!! json_encode($prediksiSPData) !!};
+                var tahun = prediksiSPData.map(data => data.tahun);
+
+                var options = {
+                    series: [{
+                            name: "Nilai Aktual",
+                            type: "line",
+                            data: prediksiSPData.map(data => data.nilai_aktual),
+
+                        },
+                        {
+                            name: "Nilai Prediksi",
+                            type: "bar",
+                            data: prediksiSPData.map(data => data.nilai_prediksi),
+
+                        },
+                    ],
+                    chart: {
+                        height: 250,
+                        stacked: false,
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+
+                    stroke: {
+                        width: [2, 1],
+                        curve: "smooth",
+                        // dashArray: [8, 0],
+                    },
+                    markers: {
+                        size: [2, 0],
+                    },
+                    legend: {
+                        show: true,
+                        position: 'top',
+                        horizontalAlign: 'right',
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        labels: {
+                            colors: '#74767c',
+                        },
+                        markers: {
+                            width: 7,
+                            height: 7,
+                            strokeWidth: 0,
+                            radius: 12,
+                            offsetX: 0,
+                            offsetY: 0
+                        },
+                    },
+                    plotOptions: {
+                        bar: {
+                            columnWidth: "30%",
+                            borderRadius: 4,
+                        },
+                    },
+
+                    colors: ['#5eba00', myVarVal],
+
+                    fill: {
+                        opacity: [1, 1],
+                        gradient: {
+                            inverseColors: false,
+                            shade: "light",
+                            type: "vertical",
+                            opacityFrom: 0.85,
+                            opacityTo: 0.55,
+                            stops: [0, 100, 100, 100],
+                        },
+                    },
+
+                    labels: tahun,
+
+                    grid: {
+                        show: true,
+                        borderColor: "rgba(119, 119, 142, 0.1)",
+                    },
+                    xaxis: {
+                        labels: {
+                            show: true,
+                            style: {
+                                color: ["#76839ac9"]
+                            }
+                        },
+                        axisBorder: {
+                            show: false,
+                        },
+
+                        lines: {
+                            show: false,
+                            color: "#fff",
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                    },
+                    yaxis: {
+                        show: true,
+                        labels: {
+                            show: true,
+                            style: {
+                                color: ["#76839ab0"]
+                            }
+                        },
+                        axisTicks: {
+                            show: false,
+                        },
+                        lines: {
+                            show: false,
+                        },
+                        min: 0,
+                    },
+
+                    tooltip: {
+                        shared: true,
+                        intersect: false,
+                        y: {
+                            formatter: function(y) {
+                                if (typeof y !== "undefined") {
+                                    return y.toFixed(0) + " points";
+                                }
+                                return y;
+                            },
+                        },
+                    },
+                };
+
+                document.querySelector("#laporanSP").innerHTML = "";
+                var revenue_chart = new ApexCharts(document.querySelector("#laporanSP"), options);
+                revenue_chart.render();
+            }, 100);
+        }
+    </script>
 @endsection

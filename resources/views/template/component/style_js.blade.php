@@ -26,7 +26,6 @@
 <script src="{{ url('/assets') }}/plugins/chart/utils.js"></script>
 
 <!-- Custom-charts js-->
-<script src="{{ url('/assets') }}/js/index3.js"></script>
 
 <!-- FORMVALIDATION JS -->
 <script src="{{ url('/assets') }}/js/form-validation.js"></script>
@@ -58,6 +57,9 @@
 
 <!-- Index js-->
 <script src="{{ url('/assets') }}/js/index1.js"></script>
+<script src="{{ url('/assets') }}/js/index2.js"></script>
+<script src="{{ url('/assets') }}/js/index3.js"></script>
+
 
 <!-- Color Theme js -->
 <script src="{{ url('/assets') }}/js/themeColors.js"></script>
@@ -104,5 +106,5 @@
 
 
 <!-- Flatpickr js -->
-<script src="{{url('/assets')}}/plugins/flatpickr/flatpickr.js"></script>
-<script src="{{url('/assets')}}/js/flatpickr.js"></script>
+<script src="{{ url('/assets') }}/plugins/flatpickr/flatpickr.js"></script>
+<script src="{{ url('/assets') }}/js/flatpickr.js"></script>
