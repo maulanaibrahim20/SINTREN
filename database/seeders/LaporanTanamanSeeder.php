@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\LaporanPalawija;
+use App\Models\Uptd\VerifyPadi;
+use App\Models\Uptd\VerifyPalawija;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -134,7 +136,7 @@ class LaporanTanamanSeeder extends Seeder
             $desa_id = array_rand($desaKecamatan);
             $kecamatan_id = $desaKecamatan[$desa_id];
 
-            LaporanPadi::create([
+            $laporanPadi = LaporanPadi::create([
                 'user_id' => Str::uuid(),
                 'desa_id' => strval($desa_id),
                 'kecamatan_id' => $kecamatan_id,
@@ -145,6 +147,13 @@ class LaporanTanamanSeeder extends Seeder
                 'id_jenis_pengairan' => rand(1, 3),
                 'tipe_data' => ['panen', 'tanam', 'puso/rusak'][rand(0, 2)],
                 'nilai' => rand(100, 1000),
+            ]);
+
+            VerifyPadi::create([
+                'laporan_id' => $laporanPadi->id,
+                'user_id' => $laporanPadi->user_id,
+                'status' => 'tunggu',
+                'catatan' => null,
             ]);
 
             $currentDate->addDay();
@@ -158,7 +167,7 @@ class LaporanTanamanSeeder extends Seeder
             $desa_id = array_rand($desaKecamatan);
             $kecamatan_id = $desaKecamatan[$desa_id];
 
-            LaporanPalawija::create([
+            $laporanPalawija = LaporanPalawija::create([
                 'user_id' => Str::uuid(),
                 'desa_id' => strval($desa_id),
                 'kecamatan_id' => $kecamatan_id,
@@ -168,6 +177,13 @@ class LaporanTanamanSeeder extends Seeder
                 'jenis_bantuan' => rand(0, 1) == 1 ? 'bantuan pemerintah' : 'non bantuan pemerintah',
                 'tipe_data' => ['panen', 'tanam', 'puso/rusak'][rand(0, 2)],
                 'nilai' => rand(100, 1000),
+            ]);
+
+            VerifyPalawija::create([
+                'laporan_id' => $laporanPalawija->id,
+                'user_id' => $laporanPalawija->user_id,
+                'status' => 'tunggu',
+                'catatan' => null,
             ]);
 
             $currentDate->addDay();
