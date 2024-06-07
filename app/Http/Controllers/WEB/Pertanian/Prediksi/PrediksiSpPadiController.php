@@ -122,7 +122,7 @@ class PrediksiSpPadiController extends Controller
             ]);
         }
 
-        return view('pertanian.pages.prediksi.padiSp.regresiSP', [
+        return view('pertanian.pages.prediksi.padiSp.regresiSp', [
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
