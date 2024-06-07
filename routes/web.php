@@ -24,6 +24,7 @@ use App\Http\Controllers\PANGAN\PasarController;
 use App\Http\Controllers\PANGAN\KategoriPanganController;
 use App\Http\Controllers\PANGAN\LaporanPanganController;
 use App\Http\Controllers\PANGAN\DataPanganController;
+use App\Http\Controllers\PANGAN\GrafikPanganController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
@@ -153,6 +154,12 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::resource('/data/laporan_pangan', LaporanPanganController::class);
 
             Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
+            // Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPangan']);
+            Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPanganindex']);
+            Route::get('/grafik/neraca_pangan', [GrafikPanganController::class, 'grafikNeracaPanganindex']);
+            Route::get('/grafik/tren_ketahanan_pangan', [GrafikPanganController::class, 'grafikTrenKetahananPanganindex']);
+            Route::get('/grafik/harga_pangan', [GrafikPanganController::class, 'grafikHargaPanganindex']);
+
         });
     });
 });

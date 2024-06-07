@@ -50,11 +50,12 @@ class LaporanPanganController extends Controller
 
         $datapangan = $query->get();
 
+
         $data = [
             'title' => 'Laporan Pangan',
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Laporan Pangan',
-            'button_create' => 'Tambah Data Stok Pangan',
+            // 'button_create' => 'Tambah Data Stok Pangan',
             'datapangan' => $datapangan,
         ];
 

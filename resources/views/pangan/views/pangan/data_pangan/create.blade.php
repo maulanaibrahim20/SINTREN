@@ -81,35 +81,35 @@
                                     <label class="form-label">Nama Pangan</label>
                                     <input type="text" class="form-control" name="name">
                                 </div>
-                                </div> 
+                                </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">Kebutuhan</label>
+                                    <label class="form-label">Kebutuhan(TON)</label>
                                     <input type="number" class="form-control" name="kebutuhan">
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">Ketersediaan</label>
+                                    <label class="form-label">Ketersediaan (TON)</label>
                                     <input type="number" class="form-control" name="ketersediaan">
                                 </div>
                             </div>
                             </div>
-                            <div class="row">   
+                            <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Neraca</label>
+                                    <label class="form-label">Neraca (TON)</label>
                                     <input type="number" class="form-control" name="neraca">
                                 </div>
-                            </div> 
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Harga</label>
+                                    <label class="form-label">Harga (Rp/Kg)</label>
                                     <input type="number" class="form-control" name="harga">
                                 </div>
-                            </div> 
                             </div>
-                            </div> 
+                            </div>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <div class="col-md-12">

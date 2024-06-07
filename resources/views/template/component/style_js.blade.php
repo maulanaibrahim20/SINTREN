@@ -106,3 +106,6 @@
 <!-- Flatpickr js -->
 <script src="{{url('/assets')}}/plugins/flatpickr/flatpickr.js"></script>
 <script src="{{url('/assets')}}/js/flatpickr.js"></script>
+
+<!-- chart js -->
+<script src="{{ url('/assets') }}/js/chart.js"></script>

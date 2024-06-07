@@ -14,8 +14,8 @@ class ExportLaporanPangan implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        // Ambil data laporan pangan dari model
-        $laporanPangan = LaporanPangan::all();
+        // Ambil data laporan pangan dari model dengan kondisi status terkirim
+        $laporanPangan = LaporanPangan::where('status', 1)->get(); // Mengambil data yang hanya berstatus 'terkirim'
 
         // Inisialisasi variabel total
         $totalKebutuhan = 0;
@@ -80,3 +80,4 @@ class ExportLaporanPangan implements FromCollection, WithHeadings
         ];
     }
 }
+
