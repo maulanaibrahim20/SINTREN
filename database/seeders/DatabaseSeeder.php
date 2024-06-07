@@ -13,9 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(UserSeeder::class);
-        $this->call(WilayahSeeder::class);
-        $this->call(MasterTanamanSeeder::class);
-        $this->call(PasarSeeder::class);
+        $this->call([
+            UserSeeder::class,
+            WilayahSeeder::class,
+            LuasLahanWilayahSeeder::class,
+            MasterTanamanSeeder::class,
+            // LaporanTanamanSeeder::class,
+            PasarSeeder::class,
+        ]);
     }
 }
