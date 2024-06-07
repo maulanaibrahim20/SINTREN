@@ -19,7 +19,6 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->enum('isVerify', ['true', 'false']);
             $table->timestamps();
-
             $table->foreign('kecamatan_id')->references('id')->on('kecamatans')->onDelete('cascade');
             $table->foreign('desa_id')->references('id')->on('desas')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

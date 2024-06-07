@@ -7,6 +7,8 @@ use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Penyuluh\LuasLahanWilayah;
 use App\Models\Penyuluh\Penyuluh;
+use App\Models\Prediksi;
+use App\Models\PrediksiSp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
@@ -55,8 +57,14 @@ class DashboardController extends Controller
                 $data[$key] = 0;
             }
         }
-        return view('pertanian.pages.dashboard.index', $data);
+
+        $prediksi = Prediksi::select('tahun', 'nilai_prediksi', 'nilai_aktual', 'tipe_data')->get();
+        $prediksiSP = PrediksiSp::select('tahun', 'nilai_prediksi', 'nilai_aktual')->get();
+
+        // Kirim data ke view
+        return view('pertanian.pages.dashboard.index', array_merge($data, ['prediksi' => $prediksi, 'prediksiSPData' => $prediksiSP]));
     }
+
 
     public function uptd()
     {
