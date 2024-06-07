@@ -79,7 +79,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
     DateTime firstDate = DateTime(now.year, now.month - 1, 1);
     DateTime lastDate = DateTime(now.year, now.month + 1, 0);
 
-    if (!widget.onCreate) {
+    if (widget.date != null || widget.detail != null) {
       late DateTime parsedDate;
       if (widget.date != null) {
         parsedDate = DateTime.parse(widget.date!);

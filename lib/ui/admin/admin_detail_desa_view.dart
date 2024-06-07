@@ -146,7 +146,30 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                       color: ColorTheme().whiteColor,
                       child: Column(
                         children: [
-                          const SizedBox(height: 20),
+                          if (desa.totalTunggu > 0)
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                height: 30,
+                                width: 250,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 20),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  "${desa.totalTunggu} Data Belum Diverifikasi",
+                                  style: StyleTheme().styleWhite.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Row(
@@ -183,12 +206,6 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                                           color: Colors.grey[700],
                                           fontSize: 14),
                                     ),
-                                    if (desa.totalTunggu > 0)
-                                      Text(
-                                        "${desa.totalTunggu} data belum diverifikasi",
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontSize: 14, color: Colors.red),
-                                      )
                                   ],
                                 )
                               ],
