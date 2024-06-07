@@ -26,6 +26,10 @@ class RedirectIfAuthenticated
                 return redirect("/uptd/dashboard");
             } else if (Auth::user()->role_id == 4) {
                 return redirect("/penyuluh/dashboard");
+            } else if (Auth::user()->role_id == 5) {
+                return redirect("/pangan/dashboard");
+            } else if (Auth::user()->role_id == 6) {
+                return redirect("/petugas_pasar/dashboard");
             }
         }
 
