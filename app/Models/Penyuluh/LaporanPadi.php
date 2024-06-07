@@ -48,6 +48,6 @@ class LaporanPadi extends Model
 
     public function verify()
     {
-        return $this->belongsTo(VerifyPadi::class, 'id','laporan_id');
+        return $this->hasOne(VerifyPadi::class, 'id', 'laporan_id');
     }
 }

@@ -41,7 +41,6 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Desa</th>
-                                    <th class="wd-15p border-bottom-0">Verifikasi</th>
                                     <th class="wd-20p border-bottom-0">Tanggal Input</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
@@ -53,14 +52,7 @@
                                         <td>
                                             {{ $data->name }}
                                         </td>
-                                        <td>
-                                            @if ($data->isVerify == 'false')
-                                                <span class="badge bg-danger">Belum Diverifikasi</span>
-                                            @else
-                                                <span class="badge bg-success">Sudah Diverifikasi</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $data->month_year }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->month_year)->translatedFormat('F-Y') }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('/penyuluh/create/laporan_padi/show/' . $data->desa_id) }}"
                                                 class="btn btn-primary">

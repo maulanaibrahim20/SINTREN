@@ -33,6 +33,7 @@
                                     <th class="wd-15p border-bottom-0">Alamat</th>
                                     <th class="wd-20p border-bottom-0">Tanggal Input</th>
                                     <th class="wd-20p border-bottom-0">Jenis Lahan</th>
+                                    <th class="wd-20p border-bottom-0">Verifikasi</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
@@ -55,6 +56,19 @@
                                             {{ $data->date }}
                                         </td>
                                         <td>{{ $data->jenis_lahan }}</td>
+                                        <td>
+                                            @if ($data->verifyPadi)
+                                                @if ($data->verifyPadi->status == 'tolak')
+                                                    <span class="badge bg-danger me-1 my-1">Tolak</span>
+                                                @elseif($data->verifyPadi->status == 'tunggu')
+                                                    <span class="badge bg-success me-1 my-1">Tunggu</span>
+                                                @elseif($data->verifyPadi->status == 'terima')
+                                                    <span class="badge bg-primary me-1 my-1">Terima</span>
+                                                @endif
+                                            @else
+                                                <span class="badge bg-secondary me-1 my-1">Belum Diverifikasi</span>
+                                            @endif
+                                        </td>
                                         <td class="text-center">
                                             <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>

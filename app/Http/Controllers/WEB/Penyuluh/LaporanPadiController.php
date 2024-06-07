@@ -13,7 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Uptd\PenugasanPenyuluh;
-use App\Models\Verification;
+use App\Models\Uptd\VerifyPadi;
 
 class LaporanPadiController extends Controller
 {
@@ -23,7 +23,7 @@ class LaporanPadiController extends Controller
     protected $desa;
     protected $pengairan;
     protected $laporanpadi;
-    protected $verification;
+    protected $verifyPadi;
     protected $penugasanDesa;
 
 
@@ -34,7 +34,7 @@ class LaporanPadiController extends Controller
         Pengairan $pengairan,
         LaporanPadi $laporanpadi,
         PenugasanPenyuluh $penugasanDesa,
-        Verification $verification,
+        VerifyPadi $verifyPadi,
     ) {
         $this->jenis_padi = $jenis_padi;
         $this->kecamatan = $kecamatan;
@@ -42,39 +42,28 @@ class LaporanPadiController extends Controller
         $this->pengairan = $pengairan;
         $this->laporanpadi = $laporanpadi;
         $this->penugasanDesa = $penugasanDesa;
-        $this->verification = $verification;
+        $this->verifyPadi = $verifyPadi;
     }
 
     public function index()
     {
-        $subquery = DB::table('laporan_padis')
+        $results = DB::table('laporan_padis')
             ->select(
                 DB::raw("DATE_FORMAT(laporan_padis.date, '%Y-%m') AS month_year"),
                 'laporan_padis.desa_id',
                 'desas.name',
-                DB::raw("SUM(laporan_padis.nilai) AS total_nilai"),
-                DB::raw("MAX(verifications.id) AS id"),
-                DB::raw("MAX(verifications.isVerify) AS isVerify")
+                DB::raw("SUM(laporan_padis.nilai) AS total_nilai")
             )
             ->join('desas', 'desas.id', '=', 'laporan_padis.desa_id')
-            ->leftJoin('verifications', function ($join) {
-                $join->on('laporan_padis.desa_id', '=', 'verifications.desa_id')
-                    ->whereRaw("DATE_FORMAT(laporan_padis.date, '%Y-%m') = DATE_FORMAT(verifications.date, '%Y-%m')");
-            })
-            ->groupBy('month_year', 'laporan_padis.desa_id', 'desas.name');
-
-        $query = DB::table(DB::raw("({$subquery->toSql()}) as subquery"))
-            ->mergeBindings($subquery)
-            ->select('month_year', 'desa_id', 'name', 'total_nilai', DB::raw("CASE WHEN id IS NOT NULL THEN isVerify ELSE 'false' END AS isVerify"))
+            ->groupBy('month_year', 'laporan_padis.desa_id', 'desas.name')
             ->orderBy('month_year', 'asc')
-            ->orderBy('desa_id', 'asc')
+            ->orderBy('laporan_padis.desa_id')
             ->get();
 
         $desaId = $this->penugasanDesa::pluck('desa_id')->toArray();
         $data = [
-            'padi' => $query->whereIn('desa_id', $desaId)->sortBy('created_at'),
+            'padi' => $results->whereIn('desa_id', $desaId)->sortBy('created_at'),
         ];
-
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
 
@@ -95,7 +84,7 @@ class LaporanPadiController extends Controller
     {
         DB::beginTransaction();
         try {
-            $this->laporanpadi->create([
+            $laporanPadi = $this->laporanpadi->create([
                 'user_id' => Auth::user()->id,
                 'desa_id' => $request['desa'],
                 'kecamatan_id' => Auth::user()->penyuluh->kecamatan->id,
@@ -106,6 +95,12 @@ class LaporanPadiController extends Controller
                 'date' => $request->date,
                 'tipe_data' => $request['jenis_data'],
                 'nilai' => $request['nilai'],
+            ]);
+            $this->verifyPadi->create([
+                'laporan_padi' => $laporanPadi['id'],
+                'user_id' => Auth::user()->id,
+                'status' => 'tunggu',
+                'catatan' => null
             ]);
 
             DB::commit();
@@ -118,8 +113,9 @@ class LaporanPadiController extends Controller
 
     public function showDesa($desa_id)
     {
-        $data['showDesa'] = $this->laporanpadi::where('desa_id', $desa_id)->get();
         $data['desa'] = $this->laporanpadi::where('desa_id', $desa_id)->first();
+        $data['verify'] = $this->verifyPadi::where('laporan_id', $data['desa']->id)->get();
+        $data['showDesa'] = $this->laporanpadi::with('verify')->where('desa_id', $desa_id)->get();
         return view('penyuluh.pages.laporan_padi.showDesa', $data)->with('success', 'Data Desa Berhasil Ditampilkan!');
     }
 
