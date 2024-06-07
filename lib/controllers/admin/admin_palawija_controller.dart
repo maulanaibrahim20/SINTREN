@@ -4,7 +4,7 @@ import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 
 class AdminPalawijaController {
-    Future<List<DetailPalawijaModel>> getDetailPalawijaByDesa(
+  Future<List<DetailPalawijaModel>> getDetailPalawijaByDesa(
       String date, String desaId) async {
     try {
       final db = await DatabaseHelper().database;
@@ -21,5 +21,4 @@ class AdminPalawijaController {
       return [];
     }
   }
-
 }

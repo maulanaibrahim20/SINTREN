@@ -4,7 +4,7 @@ import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 
 class AdminPadiController {
-    Future<List<DetailPadiModel>> getDetailPadiByDesa(
+  Future<List<DetailPadiModel>> getDetailPadiByDesa(
       String date, String desaId) async {
     try {
       final db = await DatabaseHelper().database;
@@ -26,5 +26,4 @@ class AdminPadiController {
   getKesimpulanDataPengairan(String date, String desaId) {}
 
   getKesimpulanDataPadi(String date, String desaId) {}
-
 }

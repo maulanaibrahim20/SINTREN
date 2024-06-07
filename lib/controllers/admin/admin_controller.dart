@@ -5,6 +5,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
+import 'package:sintren_mobile/models/detail_combined_model.dart';
+import 'package:sintren_mobile/models/detail_padi_model.dart';
+import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
@@ -183,6 +186,54 @@ class AdminController {
       return false;
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  Future<List<DetailCombinedModel>> getDetailCombinedByStatus() async {
+    try {
+      final db = await DatabaseHelper().database;
+
+      // Query for detailPadi with status = 'tunggu'
+      final List<Map<String, dynamic>> padiMaps = await db.query(
+        'detailPadi',
+        where: 'status = ?',
+        whereArgs: ['tunggu'],
+        orderBy: 'date DESC',
+      );
+
+      List<DetailCombinedModel> detailPadiList = padiMaps.map((map) {
+        var padiModel = DetailPadiModel.fromMap(map);
+        return DetailCombinedModel(
+            date: padiModel.date, type: 'padi', data: padiModel);
+      }).toList();
+
+      // Query for detailPalawija with status = 'tunggu'
+      final List<Map<String, dynamic>> palawijaMaps = await db.query(
+        'detailPalawija',
+        where: 'status = ?',
+        whereArgs: ['tunggu'],
+        orderBy: 'date DESC',
+      );
+
+      List<DetailCombinedModel> detailPalawijaList = palawijaMaps.map((map) {
+        var palawijaModel = DetailPalawijaModel.fromMap(map);
+        return DetailCombinedModel(
+            date: palawijaModel.date, type: 'palawija', data: palawijaModel);
+      }).toList();
+
+      // Combine results
+      List<DetailCombinedModel> combinedList = [
+        ...detailPadiList,
+        ...detailPalawijaList
+      ];
+
+      // Sort combined list by date in descending order
+      combinedList.sort((a, b) => b.date.compareTo(a.date));
+
+      return combinedList;
+    } catch (e) {
+      log("Get detail combined by status tunggu error: $e");
+      return [];
     }
   }
 }
