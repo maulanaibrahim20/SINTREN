@@ -76,63 +76,27 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Alamat</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
-                                    <th class="wd-20p border-bottom-0">Tanggal Input</th>
+                                    <th class="wd-15p border-bottom-0">Desa</th>
+                                    <th class="wd-15p border-bottom-0">Tanggal</th>
+                                    <th class="wd-20p border-bottom-0">Total Nilai Laporan</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @if (empty(session('filtering'))) --}}
                                 @foreach ($laporanPadi as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="d-flex contact-image">
-                                                <div class="d-flex mt-1 flex-column ms-2">
-                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">Kecamatan : <span
-                                                            class="badge bg-primary me-1 my-1">{{ $data->kecamatan->name }}</span>
-                                                    </h6>
-                                                    <span class="fs-12 text-muted">Desa : <span
-                                                            class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $data->jenis_lahan }}</td>
-                                        <td>{{ $data->date }}</td>
+                                        <td>{{ $data->name }}</td>
+                                        <td>{{ $data->month_year }}</td>
+                                        <td>{{ $data->total_nilai }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('/pertanian/data_padi/show/' . $data->id) }}"
+                                            <a href="{{ url('/uptd/laporan/padi/showDetailLaporan/' . $data->desa_id) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-eye"></i>
                                             </a>
                                         </td>
                                     </tr>
                                 @endforeach
-                                {{-- @else --}}
-                                {{-- @foreach (session('filtering') as $filter)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>
-                                                <div class="d-flex contact-image">
-                                                    <div class="d-flex mt-1 flex-column ms-2">
-                                                        <h6 class="mb-0 fs-14 fw-semibold text-dark">Kecamatan : <span
-                                                                class="badge bg-primary me-1 my-1">{{ $filter->kecamatan->name }}</span>
-                                                        </h6>
-                                                        <span class="fs-12 text-muted">Desa : <span
-                                                                class="badge bg-info me-1 my-1">{{ $filter->desa->name }}</span></span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>{{ $filter->jenis_lahan }}</td>
-                                            <td>{{ $filter->date }}</td>
-                                            <td class="text-center">
-                                                <a href="{{ url('/pertanian/data_padi/show/' . $filter->id) }}"
-                                                    class="btn btn-primary">
-                                                    <i class="ti ti-eye"></i></a>
-                                            </td>
-                                        </tr>
-                                    @endforeach --}}
-                                {{-- @endif --}}
                             </tbody>
                         </table>
                     </div>

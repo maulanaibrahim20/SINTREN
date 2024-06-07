@@ -17,7 +17,7 @@ class VerifyPadi extends Model
         'catatan'
     ];
 
-    public function padi()
+    public function laporanPadi()
     {
         return $this->belongsTo(LaporanPadi::class, 'laporan_id');
     }

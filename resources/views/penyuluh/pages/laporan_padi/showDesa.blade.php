@@ -57,32 +57,48 @@
                                         </td>
                                         <td>{{ $data->jenis_lahan }}</td>
                                         <td>
-                                            @if ($data->verifyPadi)
-                                                @if ($data->verifyPadi->status == 'tolak')
+                                            @if ($data->verify)
+                                                @if ($data->verify->status == 'tolak')
                                                     <span class="badge bg-danger me-1 my-1">Tolak</span>
-                                                @elseif($data->verifyPadi->status == 'tunggu')
+                                                @elseif($data->verify->status == 'tunggu')
                                                     <span class="badge bg-success me-1 my-1">Tunggu</span>
-                                                @elseif($data->verifyPadi->status == 'terima')
+                                                @elseif($data->verify->status == 'terima')
                                                     <span class="badge bg-primary me-1 my-1">Terima</span>
                                                 @endif
-                                            @else
-                                                <span class="badge bg-secondary me-1 my-1">Belum Diverifikasi</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
-                                                class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
-                                                class="btn btn-primary">
-                                                <i class="ti ti-eye"></i></a>
-                                            <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
-                                                style="display: inline;" method="POST">
-                                                @method('DELETE')
-                                                @csrf
-                                                <button type="button" class="btn btn-danger deleteBtn"
-                                                    data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
-                                            </form>
+                                            @if ($data->verify->status == 'tunggu')
+                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
+                                                    class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                    class="btn btn-primary">
+                                                    <i class="ti ti-eye"></i></a>
+                                                <form id="deleteForm{{ $data->id }}"
+                                                    action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                    style="display: inline;" method="POST">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button type="button" class="btn btn-danger deleteBtn"
+                                                        data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
+                                                </form>
+                                            @elseif($data->verify->status == 'tolak')
+                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
+                                                    class="btn btn-warning"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                    class="btn btn-primary">
+                                                    <i class="ti ti-eye"></i></a>
+                                                <form id="deleteForm{{ $data->id }}"
+                                                    action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                    style="display: inline;" method="POST">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button type="button" class="btn btn-danger deleteBtn"
+                                                        data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
+                                                </form>
+                                            @elseif($data->verify->status == 'terima')
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @endforeach

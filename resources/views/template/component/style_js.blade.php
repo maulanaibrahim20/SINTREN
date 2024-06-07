@@ -108,3 +108,11 @@
 <!-- Flatpickr js -->
 <script src="{{ url('/assets') }}/plugins/flatpickr/flatpickr.js"></script>
 <script src="{{ url('/assets') }}/js/flatpickr.js"></script>
+
+<!-- INTERNAL SUMMERNOTE Editor JS -->
+<script src="{{ url('/assets') }}/plugins/summernote/summernote1.js"></script>
+<script src="{{ url('/assets') }}/js/summernote.js"></script>
+
+<!-- INTERNAL FORMEDITOR JS -->
+<script src="{{ url('/assets') }}/plugins/quill/quill.min.js"></script>
+<script src="{{ url('/assets') }}/js/form-editor2.js"></script>

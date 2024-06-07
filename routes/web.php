@@ -114,6 +114,8 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
+                Route::get('padi/showDetailLaporan/{desa_id}', [LaporanUptdPadiController::class, 'showDetailLaporanKecamatan']);
+                Route::post('padi/changeStatus/{id}', [LaporanUptdPadiController::class, 'changeStatus']);
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
             });
             Route::prefix('master')->group(function () {
