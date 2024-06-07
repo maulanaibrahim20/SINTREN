@@ -130,7 +130,10 @@ class LaporanTanamanSeeder extends Seeder
         $currentDate = $startDate->copy();
 
         DB::table("laporan_padis")->truncate();
-
+        DB::table("verify_padis")->truncate();
+        DB::table("verify_palawijas")->truncate();
+        DB::table("prediksis")->truncate();
+        DB::table("prediksi_sps")->truncate();
 
         while ($currentDate->lte($endDate)) {
             $desa_id = array_rand($desaKecamatan);
