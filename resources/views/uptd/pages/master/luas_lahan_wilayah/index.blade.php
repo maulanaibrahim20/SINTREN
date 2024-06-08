@@ -39,7 +39,7 @@
                                 @forelse ($luas_wilayah as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->getKecamatan->name }}</td>
+                                        <td>{{ $data->desa->name }}</td>
                                         <td>{{ $data->jenis_lahan }}</td>
                                         <td>{{ number_format($data->luas_lahan_wilayah, 0, ',', '.') }} ha</td>
                                     </tr>
@@ -53,34 +53,16 @@
                                 <tr>
                                     <td colspan="3" style="text-align: right;"><strong>Lahan Yang Sudah Disuluh:</strong>
                                     </td>
-                                    <td>
-                                        @if ($getTanamanAkhirBulanLaporan)
-                                            {{ $getTanamanAkhirBulanLaporan }} ha
-                                        @else
-                                            Data tidak tersedia
-                                        @endif
-                                    </td>
+                                    <td>{{ number_format($total_luas_sawah, 0, ',', '.') }} ha</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" style="text-align: right;"><strong>Lahan Yang Belum Disuluh:</strong>
                                     </td>
-                                    <td>
-                                        @if ($selisih)
-                                            {{ $selisih }} ha
-                                        @else
-                                            Data tidak tersedia
-                                        @endif
-                                    </td>
+                                    <td>{{ number_format($total_luas_non_sawah, 0, ',', '.') }} ha</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" style="text-align: right;"><strong>Total Luas Lahan:</strong></td>
-                                    <td>
-                                        @if ($luas_wilayah->sum('luas_lahan_wilayah'))
-                                            {{ number_format($luas_wilayah->sum('luas_lahan_wilayah'), 0, ',', '.') }} ha
-                                        @else
-                                            Data tidak tersedia
-                                        @endif
-                                    </td>
+                                    <td>{{ number_format($total_luas_wilayah, 0, ',', '.') }} ha</td>
                                 </tr>
                             </tbody>
                         </table>
