@@ -1,18 +1,18 @@
 @extends('index')
-@section('title', 'Detail Laporan Padi')
+@section('title', 'Detail Laporan Palawija')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
             <!-- breadcrumb -->
-            <li class="breadcrumb-item"><a href="{{ url('/uptd/dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Laporan Padi</li>
+            <li class="breadcrumb-item"><a href="{{ url('/penyuluh/dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Laporan Palawija</li>
         </ol><!-- End breadcrumb -->
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Data Laporan Luas Tanaman Padi Desa {{ $desa->desa->name }}</h3>
+                    <h3 class="card-title">Data Laporan Luas Tanaman Palawija Desa {{ $desa->desa->name }}</h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -80,7 +80,7 @@
         <div id="largeModal{{ $itemShow->id }}" class="modal fade">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content ">
-                    <form action="{{ url('/uptd/laporan/padi/changeStatus/' . $itemShow->id) }}" method="POST">
+                    <form action="{{ url('/uptd/laporan/palawija/changeStatus/' . $itemShow->id) }}" method="POST">
                         @csrf
                         <div class="modal-header pd-x-20">
                             <h6 class="modal-title">Detail Laporan Palawija</h6>
@@ -171,5 +171,4 @@
             </div>
         </div>
     @endforeach
-
 @endsection

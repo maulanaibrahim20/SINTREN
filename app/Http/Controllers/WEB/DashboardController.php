@@ -70,7 +70,7 @@ class DashboardController extends Controller
     {
         $data = [
             'countPenyuluh' => $this->penyuluh->count(),
-            'CountLaporanPadi' => $this->laporanPadi->count(),
+            'CountLaporanPadi' => $this->laporanPadi::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->count(),
             'CountLaporanPalawija' => $this->laporanPalawija->count(),
         ];
 

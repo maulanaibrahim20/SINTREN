@@ -116,7 +116,10 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
                 Route::get('padi/showDetailLaporan/{desa_id}', [LaporanUptdPadiController::class, 'showDetailLaporanKecamatan']);
                 Route::post('padi/changeStatus/{id}', [LaporanUptdPadiController::class, 'changeStatus']);
+
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
+                Route::get('palawija/showDetailLaporan/{desa_id}', [LaporanUptdPalawijaController::class, 'showDetailLaporanKecamatan']);
+                Route::post('palawija/changeStatus/{id}', [LaporanUptdPalawijaController::class, 'changeStatus']);
             });
             Route::prefix('master')->group(function () {
                 Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);

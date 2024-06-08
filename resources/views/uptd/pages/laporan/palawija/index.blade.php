@@ -1,15 +1,48 @@
 @extends('index')
 @section('title', 'Laporan UPTD Palawija')
 @section('content')
-    <div class="page-content">
-        <div class="container text-center text-dark">
-            <div class="construction ">
-                <div class="text-dark">
-                    <div class="card-body ">
-                        <h2 class="font mb-4">Coming Soon</h2>
-                        <h4 class="mt-5 text-dark">Our Website is under construction, follows us for more updates !
-                        </h4>
-                        <br>
+    <div class="page-header d-sm-flex d-block">
+        <ol class="breadcrumb mb-sm-0 mb-3">
+            <!-- breadcrumb -->
+            <li class="breadcrumb-item"><a href="{{ url('/uptd/dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Laporan Palawija</li>
+        </ol><!-- End breadcrumb -->
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Laporan Luas Tanaman Palawija</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
+                            <thead>
+                                <tr>
+                                    <th class="wd-15p border-bottom-0">No</th>
+                                    <th class="wd-15p border-bottom-0">Desa</th>
+                                    <th class="wd-15p border-bottom-0">Tanggal</th>
+                                    <th class="wd-20p border-bottom-0">Total Nilai Laporan</th>
+                                    <th class="wd-20p border-bottom-0 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($laporanPalawija as $data)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $data->name }}</td>
+                                        <td>{{ $data->month_year }}</td>
+                                        <td>{{ $data->total_nilai }}</td>
+                                        <td class="text-center">
+                                            <a href="{{ url('/uptd/laporan/palawija/showDetailLaporan/' . $data->desa_id) }}"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

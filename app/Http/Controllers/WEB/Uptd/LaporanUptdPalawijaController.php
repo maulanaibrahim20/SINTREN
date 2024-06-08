@@ -3,12 +3,72 @@
 namespace App\Http\Controllers\WEB\Uptd;
 
 use App\Http\Controllers\Controller;
+use App\Models\Penyuluh\LaporanPalawija;
+use App\Models\Uptd\VerifyPalawija;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LaporanUptdPalawijaController extends Controller
 {
+    protected $laporanPalawija, $verifyPalawija;
+
+    public function __construct(LaporanPalawija $laporanPalawija, VerifyPalawija $verifyPalawija)
+    {
+        $this->laporanPalawija = $laporanPalawija;
+        $this->verifyPalawija = $verifyPalawija;
+    }
     public function index()
     {
-        return view('uptd.pages.laporan.palawija.index');
+        $results = DB::table('laporan_padis')
+            ->select(
+                DB::raw("DATE_FORMAT(laporan_padis.date, '%Y-%m') AS month_year"),
+                'laporan_padis.desa_id',
+                'desas.name',
+                'laporan_padis.kecamatan_id',
+                DB::raw('SUM(laporan_padis.nilai) AS total_nilai')
+            )
+            ->join('desas', 'desas.id', '=', 'laporan_padis.desa_id')
+            ->groupBy(
+                DB::raw("DATE_FORMAT(laporan_padis.date, '%Y-%m')"),
+                'laporan_padis.desa_id',
+                'desas.name',
+                'laporan_padis.kecamatan_id'
+            )
+            ->orderBy('month_year')
+            ->orderBy('laporan_padis.desa_id')
+            ->get();
+        $kecamatanId = Auth::user()->uptd->kecamatan_id;
+        $data['laporanPalawija'] = $results->where('kecamatan_id', $kecamatanId)->sortBy('created_at');
+        return view('uptd.pages.laporan.palawija.index', $data);
+    }
+
+    public function showDetailLaporanKecamatan($desa_id)
+    {
+        $data['desa'] = $this->laporanPalawija::where('desa_id', $desa_id)->first();
+        $data['verify'] = $this->verifyPalawija::where('laporan_id', $data['desa']->id)->get();
+        $data['showDesa'] = $this->laporanPalawija::with('verify')->where('desa_id', $desa_id)->get();
+        return view('uptd.pages.laporan.palawija.showDetailLaporan', $data);
+    }
+
+    public function changeStatus(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $verifyPalawija = $this->verifyPalawija::where('laporan_id', $id)->first();
+
+            if ($verifyPalawija) {
+                $verifyPalawija->status = $request->status;
+                $verifyPalawija->catatan = $request->catatan;
+
+                $verifyPalawija->save();
+            }
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Status berhasil diubah');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Status gagal diubah: ' . $e->getMessage());
+        }
     }
 }
