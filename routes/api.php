@@ -57,6 +57,7 @@ Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
 Route::get('/padi/showByKecamatan/{id}',[AdminPadiController::class,'showAllByKecamatan']);
 Route::get('/palawija/showByKecamatan/{id}',[AdminPalawijaController::class,'showAllByKecamatan']);
 Route::post('/padi/prediksi',[AdminPadiController::class,'menghitungRegresi']);
+Route::post('/padi/prediksiSp',[AdminPadiController::class,'menghitungRegresiSP']);
 Route::patch('/verify/{id}',[AdminController::class,'verify']);
 
 Route::get('/desa',[WilayahController::class,'getDesa']);
