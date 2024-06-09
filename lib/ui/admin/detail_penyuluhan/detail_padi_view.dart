@@ -6,6 +6,7 @@ import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/ui/admin/detail_penyuluhan/components/ringkasan_padi_widget.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 
 class DetailPadiView extends StatefulWidget {
   const DetailPadiView(
@@ -26,9 +27,12 @@ class DetailPadiViewState extends State<DetailPadiView> {
   TextEditingController ulasan = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isOpen = false;
+  late List<String> status = ['terima', 'tolak', 'tunggu'];
+  late String selectedStatus;
 
   @override
   void initState() {
+    selectedStatus = "";
     setState(() {});
     super.initState();
   }
@@ -37,6 +41,17 @@ class DetailPadiViewState extends State<DetailPadiView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        onPressed: () async {
+          _filter(context);
+        },
+        backgroundColor: ColorTheme().primaryColor,
+        foregroundColor: ColorTheme().whiteColor,
+        child: const Icon(
+          Icons.filter_list,
+        ),
+      ),
       body: ListView(
         children: [
           RingkasanPadiWidget(
@@ -105,9 +120,18 @@ class DetailPadiViewState extends State<DetailPadiView> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero,
-                  itemCount: itemList.length,
+                   itemCount: (selectedStatus.isEmpty)
+                      ? itemList.length
+                      : itemList
+                          .where((data) => data.status == selectedStatus)
+                          .length,
                   itemBuilder: (BuildContext context, int index) {
-                    DetailPadiModel data = itemList[index];
+                    var displayList = (selectedStatus.isEmpty)
+                        ? itemList
+                        : itemList
+                            .where((data) => data.status == selectedStatus)
+                            .toList();
+                    DetailPadiModel data = displayList[index];
                     return Card(
                       surfaceTintColor: ColorTheme().whiteColor,
                       margin: const EdgeInsets.symmetric(
@@ -313,6 +337,81 @@ class DetailPadiViewState extends State<DetailPadiView> {
       ),
     );
   }
+
+  void _filter(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final formKeyUP = GlobalKey<FormState>();
+        return Form(
+          key: formKeyUP,
+          child: AlertDialog(
+            surfaceTintColor: ColorTheme().whiteColor,
+            title: const Column(
+              children: [
+                Text('Filter Desa'),
+                Divider(),
+              ],
+            ),
+            content: DropdownButtonComponent(
+              icon: Icons.dataset,
+              label: 'Status',
+              selectedItem: selectedStatus.isEmpty ? null : selectedStatus,
+              items: status.map(
+                (value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(UserController().toCamelCase(value)),
+                  );
+                },
+              ).toList(),
+              hint: 'Pilih Status',
+              validator: (value) =>
+                  value == null ? 'Pilih status terlebih dahulu' : null,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedStatus = newValue!;
+                });
+              },
+              onSaved: (newValue) {
+                setState(() {
+                  selectedStatus = newValue!;
+                });
+              },
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(false); // Kembali dengan nilai false
+                },
+                child: Text(
+                  "Tutup",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(color: Colors.red, fontSize: 16),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (formKeyUP.currentState!.validate()) {
+                    setState(() {
+                      selectedStatus = "";
+                    });
+                  }
+                },
+                child: Text(
+                  "Reset",
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   Future<bool> _showVerifyDialog(BuildContext context) async {
     return await showDialog(

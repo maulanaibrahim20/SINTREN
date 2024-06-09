@@ -54,7 +54,7 @@ class AdminPadiService {
           );
         }
         await batch.commit(noResult: true);
-        log("Get detail padi sukses");
+        log("Get detail palawija sukses");
       }
 
       return true;

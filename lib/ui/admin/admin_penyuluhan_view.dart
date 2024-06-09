@@ -18,10 +18,10 @@ class AdminPenyuluhanView extends StatefulWidget {
   const AdminPenyuluhanView({super.key});
 
   @override
-  State<AdminPenyuluhanView> createState() => _AdminPenyuluhanViewState();
+  State<AdminPenyuluhanView> createState() => AdminPenyuluhanViewState();
 }
 
-class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
+class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
   final userC = UserController();
   final adminC = AdminController();
   late List<DesaModel> desaList;
@@ -38,6 +38,10 @@ class _AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
   void initState() {
     _initializeData();
     super.initState();
+  }
+
+  void refresh() {
+    setState(() {});
   }
 
   Future<void> _initializeData() async {

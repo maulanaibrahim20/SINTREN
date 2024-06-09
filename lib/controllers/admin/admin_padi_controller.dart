@@ -12,7 +12,9 @@ class AdminPadiController {
         'detailPadi',
         where: 'date LIKE ? AND desa_id = ?',
         whereArgs: ['%$date%', desaId],
-        orderBy: 'date DESC',
+        orderBy: '''
+          COALESCE(updated_at, created_at) DESC
+        ''',
       );
 
       return List<DetailPadiModel>.from(

@@ -72,7 +72,9 @@ class DatabaseHelper {
         date TEXT,
         nilai REAL,
         status TEXT,
-        catatan TEXT
+        catatan TEXT,
+        created_at TEXT,
+        updated_at TEXT
       )
     ''');
     await db.execute('''
@@ -90,7 +92,9 @@ class DatabaseHelper {
         date TEXT,
         nilai REAL,
         status TEXT,
-        catatan TEXT
+        catatan TEXT,
+        created_at TEXT,
+        updated_at TEXT
       )
     ''');
   }

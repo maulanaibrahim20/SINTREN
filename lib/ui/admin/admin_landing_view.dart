@@ -16,6 +16,13 @@ class AdminLandingView extends StatefulWidget {
 class _AdminLandingViewState extends State<AdminLandingView> {
   int _tabIndex = 1;
 
+  // Generate keys to ensure widget rebuilding
+  final List<UniqueKey> _pageKeys = [
+    UniqueKey(),
+    UniqueKey(),
+    UniqueKey(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +49,13 @@ class _AdminLandingViewState extends State<AdminLandingView> {
         color: ColorTheme().whiteColor,
         colorSelected: ColorTheme().primaryColor,
         indexSelected: _tabIndex,
-        onTap: (int index) => setState(() {
-          _tabIndex = index;
-        }),
+        onTap: (int index) {
+          setState(() {
+            _tabIndex = index;
+            // Generate a new key for the selected page
+            _pageKeys[index] = UniqueKey();
+          });
+        },
         chipStyle:
             ChipStyle(convexBridge: true, background: ColorTheme().whiteColor),
         itemStyle: ItemStyle.circle,
@@ -52,10 +63,10 @@ class _AdminLandingViewState extends State<AdminLandingView> {
       ),
       body: IndexedStack(
         index: _tabIndex,
-        children: const [
-          AdminDesaView(),
-          AdminHomeView(),
-          AdminPenyuluhanView(),
+        children: [
+          AdminDesaView(key: _pageKeys[0]),
+          AdminHomeView(key: _pageKeys[1]),
+          AdminPenyuluhanView(key: _pageKeys[2]),
         ],
       ),
     );

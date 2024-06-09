@@ -198,9 +198,9 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                     );
                   }
 
-                  double total = totalValues['panen']! +
-                      totalValues['tanam']! -
-                      totalValues['puso/rusak']!;
+                  double total =
+                      (totalValues['panen']! + totalValues['tanam']!) -
+                          totalValues['puso/rusak']!;
 
                   return Column(
                     children: [

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
@@ -96,9 +94,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         heroTag: 'sinkronisasi',
-        onPressed: () {
-          setState(() {});
-        },
+        onPressed: () => setState(() {}),
         backgroundColor: ColorTheme().primaryColor,
         foregroundColor: ColorTheme().whiteColor,
         child: const Icon(
@@ -144,7 +140,6 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                     .firstWhere((element) => element.desaId == desaId)
                     .nilai;
               } catch (e) {
-                log('Desa with id $desaId not found');
                 return 0;
               }
             }

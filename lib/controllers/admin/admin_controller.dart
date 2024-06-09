@@ -193,12 +193,13 @@ class AdminController {
     try {
       final db = await DatabaseHelper().database;
 
-      // Query for detailPadi with status = 'tunggu'
       final List<Map<String, dynamic>> padiMaps = await db.query(
         'detailPadi',
         where: 'status = ?',
         whereArgs: ['tunggu'],
-        orderBy: 'date DESC',
+        orderBy: '''
+        COALESCE(updated_at, created_at) DESC
+      ''',
       );
 
       List<DetailCombinedModel> detailPadiList = padiMaps.map((map) {
@@ -207,12 +208,13 @@ class AdminController {
             date: padiModel.date, type: 'padi', data: padiModel);
       }).toList();
 
-      // Query for detailPalawija with status = 'tunggu'
       final List<Map<String, dynamic>> palawijaMaps = await db.query(
         'detailPalawija',
         where: 'status = ?',
         whereArgs: ['tunggu'],
-        orderBy: 'date DESC',
+        orderBy: '''
+        COALESCE(updated_at, created_at) DESC
+      ''',
       );
 
       List<DetailCombinedModel> detailPalawijaList = palawijaMaps.map((map) {
@@ -221,14 +223,16 @@ class AdminController {
             date: palawijaModel.date, type: 'palawija', data: palawijaModel);
       }).toList();
 
-      // Combine results
       List<DetailCombinedModel> combinedList = [
         ...detailPadiList,
         ...detailPalawijaList
       ];
 
-      // Sort combined list by date in descending order
-      combinedList.sort((a, b) => b.date.compareTo(a.date));
+      combinedList.sort((a, b) {
+        final dateA = a.data.updatedAt ?? a.data.createdAt;
+        final dateB = b.data.updatedAt ?? b.data.createdAt;
+        return dateB.compareTo(dateA);
+      });
 
       return combinedList;
     } catch (e) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
 import 'package:sintren_mobile/ui/admin/detail_penyuluhan/components/ringkasan_palawija_widget.dart';
@@ -22,7 +22,7 @@ class RincianPalawijaView extends StatefulWidget {
 }
 
 class _RincianPalawijaViewState extends State<RincianPalawijaView> {
-  final palawijaC = PalawijaController();
+  final palawijaC = AdminPalawijaController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

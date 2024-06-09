@@ -14,7 +14,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    bool isError = false;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -55,32 +54,30 @@ class _SplashScreenState extends State<SplashScreen> {
                     ValueListenableBuilder<String>(
                       valueListenable: widget.statusNotifier,
                       builder: (context, status, child) {
-                        if (status.startsWith('Error:')) {
-                          setState(() {
-                            isError = true;
-                          });
-                        }
-                        return Text(
-                          status.startsWith('Error:')
-                              ? status
-                              : 'Loading: $status',
-                          style: StyleTheme().styleWhite.copyWith(
-                                color: status.startsWith('Error:')
-                                    ? Colors.red
-                                    : Colors.white,
-                              ),
-                          textAlign: TextAlign.center,
+                        bool isError = status.startsWith('Error:');
+                        return Column(
+                          children: [
+                            Text(
+                              isError ? status : 'Loading: $status',
+                              style: StyleTheme().styleWhite.copyWith(
+                                    color: isError ? Colors.red : Colors.white,
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            isError
+                                ? const SizedBox.shrink()
+                                : LinearProgressIndicator(
+                                    backgroundColor:
+                                        Colors.white.withOpacity(0.5),
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                            Colors.white),
+                                  ),
+                          ],
                         );
                       },
                     ),
-                    const SizedBox(height: 10),
-                    isError
-                        ? const SizedBox.shrink()
-                        : LinearProgressIndicator(
-                            backgroundColor: Colors.white.withOpacity(0.5),
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.white),
-                          ),
                   ],
                 ),
               ),

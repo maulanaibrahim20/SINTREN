@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
@@ -14,6 +15,11 @@ class PadiController {
   final List<String> jenisLahan = ["sawah", "non sawah"];
   final List<String> bantuan = ["bantuan pemerintah", "non bantuan pemerintah"];
   final List<String> tipeData = ["panen", "tanam", "puso/rusak"];
+
+  String getDateTimeNow() {
+    DateTime now = DateTime.now();
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+  }
 
   Future<bool> store(Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
@@ -49,7 +55,9 @@ class PadiController {
         ..['pengairan_name'] = map['pengairan_name'] ?? ''
         ..['padi_name'] = map["padi_name"]
         ..['status'] = 'tunggu'
-        ..['catatan'] = '';
+        ..['catatan'] = ''
+        ..['created_at'] = getDateTimeNow()
+        ..['updated_at'] = getDateTimeNow();
 
       final db = await DatabaseHelper().database;
       await db.insert(
@@ -100,7 +108,8 @@ class PadiController {
       final localData = Map<String, dynamic>.from(data)
         ..remove("user_id")
         ..['status'] = 'tunggu'
-        ..['catatan'] = '';
+        ..['catatan'] = 'update'
+        ..['updated_at'] = getDateTimeNow();
 
       await db.update(
         'detailPadi',
@@ -179,8 +188,11 @@ class PadiController {
         'detailPadi',
         where: 'date LIKE ? AND desa_id = ?',
         whereArgs: ['%$date%', desaId],
-        orderBy: 'date DESC',
+        orderBy: '''
+          COALESCE(updated_at, created_at) DESC
+        ''',
       );
+      log(maps.toString());
       return List<DetailPadiModel>.from(
           maps.map((map) => DetailPadiModel.fromMap(map)));
     } catch (e) {

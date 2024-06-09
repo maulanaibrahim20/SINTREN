@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
@@ -20,6 +21,11 @@ class PalawijaController {
     "panen muda",
     "panen hijauan pakan ternak"
   ];
+
+  String getDateTimeNow() {
+    DateTime now = DateTime.now();
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
+  }
 
   Future<bool> store(Map<String, dynamic> map) async {
     EasyLoading.show(status: "Loading...");
@@ -49,7 +55,9 @@ class PalawijaController {
         ..['desa_name'] = map['desa_name']
         ..['palawija_name'] = map["palawija_name"]
         ..['status'] = 'tunggu'
-        ..['catatan'] = '';
+        ..['catatan'] = ''
+        ..['created_at'] = getDateTimeNow()
+        ..['updated_at'] = getDateTimeNow();
 
       final db = await DatabaseHelper().database;
       await db.insert(
@@ -97,7 +105,8 @@ class PalawijaController {
       final localData = Map<String, dynamic>.from(data)
         ..remove("user_id")
         ..['status'] = 'tunggu'
-        ..['catatan'] = '';
+        ..['catatan'] = ''
+        ..['updated_at'] = getDateTimeNow();
 
       await db.update(
         'detailPalawija',
@@ -174,7 +183,9 @@ class PalawijaController {
         'detailPalawija',
         where: 'date LIKE ? AND desa_id = ?',
         whereArgs: ['%$date%', desaId],
-        orderBy: 'date DESC',
+        orderBy: '''
+          COALESCE(updated_at, created_at) DESC
+        ''',
       );
 
       return List<DetailPalawijaModel>.from(
