@@ -29,10 +29,33 @@ class AdminPadiController extends Controller
                 ], 201);
             }
 
+            $result = $laporanPadi->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'user_id' => $item->user_id,
+                    'desa_id' => $item->desa_id,
+                    'desa_name' => $item->desa->name,
+                    'kecamatan_id' => $item->kecamatan_id,
+                    'jenis_lahan' => $item->jenis_lahan,
+                    'id_jenis_padi' => $item->id_jenis_padi,
+                    'padi_name' => $item->padi->name,
+                    'jenis_bantuan' => $item->jenis_bantuan,
+                    'id_jenis_pengairan' => $item->id_jenis_pengairan,
+                    'pengairan_name' => $item->pengairan->name,
+                    'tipe_data' => $item->tipe_data,
+                    'nilai' => $item->nilai,
+                    'date' => $item->date,
+                    'status' => $item->verify->status,
+                    'catatan' => $item->verify->catatan,
+                    'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
+                ];
+            });
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil mendapatkan data',
-                'data' => $laporanPadi
+                'data' => $result
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -145,15 +168,13 @@ class AdminPadiController extends Controller
     //     return $result->pluck('total_nilai', 'year')->all();
     // }
 
-    public function menghitungRegresiSP(Request $request)
+    public function menghitungRegresiSP()
     {
-        $request->validate([
-            'dariTahun' => 'required|integer|min:2010|max:2023',
-            'sampaiTahun' => 'required|integer|min:2010|max:2023|gte:dariTahun',
-        ]);
+        $earliestYear = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
+        $latestYear = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
 
-        $dariTahun = $request->input('dariTahun');
-        $sampaiTahun = $request->input('sampaiTahun');
+        $dariTahun = $earliestYear;
+        $sampaiTahun = $latestYear;
 
         $laporanPadi = DB::table('laporan_padis')
             ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
@@ -193,7 +214,7 @@ class AdminPadiController extends Controller
 
         $hasilPrediksi = [];
         $prevValue = null;
-        for ($tahun = $dariTahun; $tahun <= 2030; $tahun++) {
+        for ($tahun = $dariTahun; $tahun <= $sampaiTahun; $tahun++) {
             // for ($tahun = max(array_keys($hasilPerTahun)) + 1; $tahun <= 2030; $tahun++) {
             $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
 
@@ -229,24 +250,13 @@ class AdminPadiController extends Controller
         }
         $mape = round(($totalError / $n) * 100, 2);
 
-
-        foreach ($predictions as $prediction) {
-            PrediksiSp::create([
-                'tahun' => $prediction['year'],
-                'nilai_prediksi' => $prediction['predicted_value'],
-                'perubahan_dari_tahun_sebelumnya' => $prediction['change_from_previous_year'],
-                'nilai_aktual' => isset($actualData[$prediction['year']]) ? $actualData[$prediction['year']] : null,
-                'error' => abs($prediction['predicted_value'] - ($actualData[$prediction['year']] ?? 0)), // Perubahan ini
-                'mape' => $mape
-            ]);
-        }
-
         $data = [
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
             'mape' => $mape
         ];
+
         return response()->json([
             'status' => 'success',
             'message' => 'Berhasil mendapatkan data',
