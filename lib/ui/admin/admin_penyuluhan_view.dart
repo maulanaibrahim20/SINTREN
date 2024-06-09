@@ -313,69 +313,62 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final formKeyUP = GlobalKey<FormState>();
-        return Form(
-          key: formKeyUP,
-          child: AlertDialog(
-            surfaceTintColor: ColorTheme().whiteColor,
-            title: const Column(
-              children: [
-                Text('Filter Desa'),
-                Divider(),
-              ],
-            ),
-            content: DropdownButtonComponent(
-              icon: Icons.villa,
-              label: 'Desa',
-              selectedItem: selectedDesaValue,
-              items: desaList.map((desa) {
-                return DropdownMenuItem<DesaModel>(
-                  value: desa,
-                  child: Text(UserController().toCamelCase(desa.name)),
-                );
-              }).toList(),
-              hint: 'Pilih Desa',
-              validator: (value) =>
-                  value == null ? 'Pilih desa terlebih dahulu' : null,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedDesaValue = newValue;
-                });
-              },
-              onSaved: (newValue) {
-                setState(() {
-                  selectedDesaValue = newValue!;
-                });
-              },
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(false); // Kembali dengan nilai false
-                },
-                child: Text(
-                  "Tutup",
-                  style: StyleTheme()
-                      .stylePrimary
-                      .copyWith(color: Colors.red, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  if (formKeyUP.currentState!.validate()) {
-                    setState(() {
-                      selectedDesaValue = null;
-                    });
-                  }
-                },
-                child: Text(
-                  "Reset",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
-                ),
-              ),
+        return AlertDialog(
+          surfaceTintColor: ColorTheme().whiteColor,
+          title: const Column(
+            children: [
+              Text('Filter Desa'),
+              Divider(),
             ],
           ),
+          content: DropdownButtonComponent(
+            icon: Icons.villa,
+            label: 'Desa',
+            selectedItem: selectedDesaValue,
+            items: desaList.map((desa) {
+              return DropdownMenuItem<DesaModel>(
+                value: desa,
+                child: Text(UserController().toCamelCase(desa.name)),
+              );
+            }).toList(),
+            hint: 'Pilih Desa',
+            validator: (value) =>
+                value == null ? 'Pilih desa terlebih dahulu' : null,
+            onChanged: (newValue) {
+              setState(() {
+                selectedDesaValue = newValue;
+              });
+            },
+            onSaved: (newValue) {
+              setState(() {
+                selectedDesaValue = newValue!;
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Kembali dengan nilai false
+              },
+              child: Text(
+                "Tutup",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(color: Colors.red, fontSize: 16),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedDesaValue = null;
+                });
+              },
+              child: Text(
+                "Reset",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+              ),
+            ),
+          ],
         );
       },
     );

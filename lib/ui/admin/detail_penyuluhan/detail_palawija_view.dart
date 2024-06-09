@@ -315,71 +315,64 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final formKeyUP = GlobalKey<FormState>();
-        return Form(
-          key: formKeyUP,
-          child: AlertDialog(
-            surfaceTintColor: ColorTheme().whiteColor,
-            title: const Column(
-              children: [
-                Text('Filter Desa'),
-                Divider(),
-              ],
-            ),
-            content: DropdownButtonComponent(
-              icon: Icons.dataset,
-              label: 'Status',
-              selectedItem: selectedStatus.isEmpty ? null : selectedStatus,
-              items: status.map(
-                (value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(UserController().toCamelCase(value)),
-                  );
-                },
-              ).toList(),
-              hint: 'Pilih Status',
-              validator: (value) =>
-                  value == null ? 'Pilih status terlebih dahulu' : null,
-              onChanged: (newValue) {
-                setState(() {
-                  selectedStatus = newValue!;
-                });
-              },
-              onSaved: (newValue) {
-                setState(() {
-                  selectedStatus = newValue!;
-                });
-              },
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(false); // Kembali dengan nilai false
-                },
-                child: Text(
-                  "Tutup",
-                  style: StyleTheme()
-                      .stylePrimary
-                      .copyWith(color: Colors.red, fontSize: 16),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  if (formKeyUP.currentState!.validate()) {
-                    setState(() {
-                      selectedStatus = "";
-                    });
-                  }
-                },
-                child: Text(
-                  "Reset",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
-                ),
-              ),
+        return AlertDialog(
+          surfaceTintColor: ColorTheme().whiteColor,
+          title: const Column(
+            children: [
+              Text('Filter Desa'),
+              Divider(),
             ],
           ),
+          content: DropdownButtonComponent(
+            icon: Icons.dataset,
+            label: 'Status',
+            selectedItem: selectedStatus.isEmpty ? null : selectedStatus,
+            items: status.map(
+              (value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(UserController().toCamelCase(value)),
+                );
+              },
+            ).toList(),
+            hint: 'Pilih Status',
+            validator: (value) =>
+                value == null ? 'Pilih status terlebih dahulu' : null,
+            onChanged: (newValue) {
+              setState(() {
+                selectedStatus = newValue!;
+              });
+            },
+            onSaved: (newValue) {
+              setState(() {
+                selectedStatus = newValue!;
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Kembali dengan nilai false
+              },
+              child: Text(
+                "Tutup",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(color: Colors.red, fontSize: 16),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedStatus = "";
+                });
+              },
+              child: Text(
+                "Reset",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+              ),
+            ),
+          ],
         );
       },
     );

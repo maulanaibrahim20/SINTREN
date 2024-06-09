@@ -686,115 +686,109 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final formKeyUP = GlobalKey<FormState>();
-        return Form(
-          key: formKeyUP,
-          child: AlertDialog(
-            surfaceTintColor: ColorTheme().whiteColor,
-            title: const Column(
-              children: [
-                Text('Filter Trend'),
-                Divider(),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                DropdownButtonComponent(
-                  icon: Icons.dataset,
-                  label: 'Dari Tahun',
-                  selectedItem: selectedDariTahun,
-                  items: tahun.map(
-                    (value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(value.toString()),
-                      );
-                    },
-                  ).toList(),
-                  hint: 'Pilih Dari Tahun',
-                  validator: (value) =>
-                      value == null ? 'Pilih tahun terlebih dahulu' : null,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedDariTahun = newValue!;
-                    });
+        return AlertDialog(
+          surfaceTintColor: ColorTheme().whiteColor,
+          title: const Column(
+            children: [
+              Text('Filter Trend'),
+              Divider(),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButtonComponent(
+                icon: Icons.dataset,
+                label: 'Dari Tahun',
+                selectedItem: selectedDariTahun,
+                items: tahun.map(
+                  (value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(value.toString()),
+                    );
                   },
-                  onSaved: (newValue) {
-                    setState(() {
-                      selectedDariTahun = newValue!;
-                    });
-                  },
-                ),
-                DropdownButtonComponent(
-                  icon: Icons.dataset,
-                  label: 'Sampai Tahun',
-                  selectedItem: selectedSampaiTahun,
-                  items: tahun.map(
-                    (value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(
-                            UserController().toCamelCase(value.toString())),
-                      );
-                    },
-                  ).toList(),
-                  hint: 'Pilih Sampai Tahun',
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Pilih tahun terlebih dahulu';
-                    }
-                    if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
-                      final int dari = selectedDariTahun;
-                      final int sampai = selectedSampaiTahun;
-                      if (dari > sampai) {
-                        return 'Dari Tahun tidak boleh lebih besar daripada Sampai Tahun';
-                      }
-                    }
-                    return null;
-                  },
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedSampaiTahun = newValue!;
-                    });
-                  },
-                  onSaved: (newValue) {
-                    setState(() {
-                      selectedSampaiTahun = newValue!;
-                    });
-                  },
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context)
-                      .pop(false); // Kembali dengan nilai false
+                ).toList(),
+                hint: 'Pilih Dari Tahun',
+                validator: (value) =>
+                    value == null ? 'Pilih tahun terlebih dahulu' : null,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedDariTahun = newValue!;
+                  });
                 },
-                child: Text(
-                  "Tutup",
-                  style: StyleTheme()
-                      .stylePrimary
-                      .copyWith(color: Colors.red, fontSize: 16),
-                ),
+                onSaved: (newValue) {
+                  setState(() {
+                    selectedDariTahun = newValue!;
+                  });
+                },
               ),
-              TextButton(
-                onPressed: () {
-                  if (formKeyUP.currentState!.validate()) {
-                    setState(() {
-                      selectedDariTahun = DateTime.now().year - 5;
-                      selectedSampaiTahun = DateTime.now().year;
-                    });
+              const SizedBox(height: 10),
+              DropdownButtonComponent(
+                icon: Icons.dataset,
+                label: 'Sampai Tahun',
+                selectedItem: selectedSampaiTahun,
+                items: tahun.map(
+                  (value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child:
+                          Text(UserController().toCamelCase(value.toString())),
+                    );
+                  },
+                ).toList(),
+                hint: 'Pilih Sampai Tahun',
+                validator: (value) {
+                  if (value == null) {
+                    return 'Pilih tahun terlebih dahulu';
                   }
+                  if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
+                    final int dari = selectedDariTahun;
+                    final int sampai = selectedSampaiTahun;
+                    if (dari > sampai) {
+                      return 'Dari Tahun tidak boleh lebih besar daripada Sampai Tahun';
+                    }
+                  }
+                  return null;
                 },
-                child: Text(
-                  "Reset",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
-                ),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedSampaiTahun = newValue!;
+                  });
+                },
+                onSaved: (newValue) {
+                  setState(() {
+                    selectedSampaiTahun = newValue!;
+                  });
+                },
               ),
             ],
           ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Tutup",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(color: Colors.red, fontSize: 16),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedDariTahun = DateTime.now().year - 5;
+                  selectedSampaiTahun = DateTime.now().year;
+                });
+              },
+              child: Text(
+                "Reset",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+              ),
+            ),
+          ],
         );
       },
     );
