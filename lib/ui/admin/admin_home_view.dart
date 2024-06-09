@@ -15,6 +15,7 @@ import 'package:sintren_mobile/ui/admin/components/home_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/users/change_password_view.dart';
 import 'package:sintren_mobile/ui/users/change_profile_view.dart';
 
@@ -35,6 +36,8 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   double? penyuluhanBulanIni;
   double? totalLuasLahanKecamatan;
   final statusNotifier = ValueNotifier<String>('Memulai sinkronisasi data...');
+  int selectedDariTahun = DateTime.now().year - 5;
+  int selectedSampaiTahun = DateTime.now().year - 1;
 
   Future<void> _initializedData() async {
     kecamatan = await UserLoginModel().getKecamatanName();
@@ -42,6 +45,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     totalLuasLahanKecamatan = await adminC.getTotalLuasLahanKecamatan();
     presentasePenyuluhan =
         (penyuluhanBulanIni! / totalLuasLahanKecamatan!) * 100;
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -540,82 +548,255 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+        child: FutureBuilder<PrediksiModel>(
+          future: AdminService().getPrediksiPadi(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.stacked_line_chart,
-                      color: ColorTheme().primaryColor,
-                      size: 30,
+                    const Icon(
+                      Icons.error,
+                      color: Colors.grey,
+                      size: 50,
                     ),
-                    const SizedBox(width: 10),
                     Text(
-                      "Trend Pertanian",
-                      style: StyleTheme().stylePrimary.copyWith(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      "Internal Server Error : ${snapshot.error}",
+                      style: StyleTheme().styleBlack.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // MainPopup().filterTrend(context);
-                  },
-                  child: Icon(
-                    Icons.filter_list,
-                    color: ColorTheme().primaryColor,
+              );
+            } else {
+              final prediksi = snapshot.data;
+              List<DataItem> result =
+                  selectedDariTahun == 0 || selectedSampaiTahun == 0
+                      ? prediksi!.result
+                      : prediksi!.result
+                          .where((item) =>
+                              item.label >= selectedDariTahun &&
+                              item.label <= selectedSampaiTahun)
+                          .toList();
+              List<int> labels =
+                  prediksi.result.map((item) => item.label).toList();
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.stacked_line_chart,
+                            color: ColorTheme().primaryColor,
+                            size: 30,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Trend Pertanian",
+                            style: StyleTheme().stylePrimary.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _showDialogFilterTrend(context, labels);
+                        },
+                        child: Icon(
+                          Icons.filter_list,
+                          color: ColorTheme().primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 207,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 180,
+                          child: LineChart(
+                            HomeChart(data: result).mainData(),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    color: ColorTheme().secondaryColor,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "Data Aktual",
+                                    style: TextStyle(
+                                      color: ColorTheme().primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 10),
+                              Row(
+                                children: [
+                                  Container(
+                                      width: 10,
+                                      height: 10,
+                                      color: Colors.amber[900]),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "Data Prediksi",
+                                    style: TextStyle(
+                                        color: ColorTheme().primaryColor),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  void _showDialogFilterTrend(BuildContext context, List<int> tahun) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final formKeyUP = GlobalKey<FormState>();
+        return Form(
+          key: formKeyUP,
+          child: AlertDialog(
+            surfaceTintColor: ColorTheme().whiteColor,
+            title: const Column(
+              children: [
+                Text('Filter Trend'),
+                Divider(),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButtonComponent(
+                  icon: Icons.dataset,
+                  label: 'Dari Tahun',
+                  selectedItem: selectedDariTahun,
+                  items: tahun.map(
+                    (value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString()),
+                      );
+                    },
+                  ).toList(),
+                  hint: 'Pilih Dari Tahun',
+                  validator: (value) =>
+                      value == null ? 'Pilih tahun terlebih dahulu' : null,
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedDariTahun = newValue!;
+                    });
+                  },
+                  onSaved: (newValue) {
+                    setState(() {
+                      selectedDariTahun = newValue!;
+                    });
+                  },
+                ),
+                DropdownButtonComponent(
+                  icon: Icons.dataset,
+                  label: 'Sampai Tahun',
+                  selectedItem: selectedSampaiTahun,
+                  items: tahun.map(
+                    (value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(
+                            UserController().toCamelCase(value.toString())),
+                      );
+                    },
+                  ).toList(),
+                  hint: 'Pilih Sampai Tahun',
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Pilih tahun terlebih dahulu';
+                    }
+                    if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
+                      final int dari = selectedDariTahun;
+                      final int sampai = selectedSampaiTahun;
+                      if (dari > sampai) {
+                        return 'Dari Tahun tidak boleh lebih besar daripada Sampai Tahun';
+                      }
+                    }
+                    return null;
+                  },
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedSampaiTahun = newValue!;
+                    });
+                  },
+                  onSaved: (newValue) {
+                    setState(() {
+                      selectedSampaiTahun = newValue!;
+                    });
+                  },
                 ),
               ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              child: FutureBuilder<PrediksiModel>(
-                  future: AdminService().getPrediksiPadi(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.error,
-                              color: Colors.grey,
-                              size: 50,
-                            ),
-                            Text(
-                              "Internal Server Error",
-                              style: StyleTheme().styleBlack.copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      final prediksiList = snapshot.data;
-                      return LineChart(
-                        HomeChart(
-                                labels: prediksiList!.labels,
-                                targets: prediksiList.targets)
-                            .mainData(),
-                      );
-                    }
-                  }),
-            ),
-          ],
-        ),
-      ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(false); // Kembali dengan nilai false
+                },
+                child: Text(
+                  "Tutup",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(color: Colors.red, fontSize: 16),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (formKeyUP.currentState!.validate()) {
+                    setState(() {
+                      selectedDariTahun = DateTime.now().year - 5;
+                      selectedSampaiTahun = DateTime.now().year;
+                    });
+                  }
+                },
+                child: Text(
+                  "Reset",
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

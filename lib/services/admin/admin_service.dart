@@ -64,18 +64,41 @@ class AdminService {
   }
 
   Future<PrediksiModel> getPrediksiPadi() async {
-    final response =
-        await get(Uri.parse('${ConfigApp().baseUrl}padi/prediksiSp'));
+    final String url = '${ConfigApp().baseUrl}padi/prediksiSp';
+    try {
+      final Response response = await get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['status'] == 'success') {
-        return PrediksiModel.fromJson(data['data']);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResult = jsonDecode(response.body);
+        if (jsonResult['status'] == 'success') {
+          final List<int> labels = List<int>.from(jsonResult['data']['labels']);
+          final List<int> actualData =
+              List<int>.from(jsonResult['data']['actualData']);
+          final List<double> predictedData =
+              List<double>.from(jsonResult['data']['predictedData']);
+          final double mape = jsonResult['data']['mape'];
+
+          List<DataItem> result = [];
+          for (int i = 0; i < labels.length; i++) {
+            result.add(DataItem(
+              label: labels[i],
+              actualData: actualData[i],
+              predictedData: predictedData[i],
+            ));
+          }
+
+          return PrediksiModel(result: result, mape: mape);
+        } else {
+          log("Request failed with status: ${jsonResult['status']}");
+          throw Exception('Failed to load data');
+        }
       } else {
+        log("HTTP request failed with status code: ${response.statusCode}");
         throw Exception('Failed to load data');
       }
-    } else {
-      throw Exception('Failed to load data');
+    } catch (e) {
+      log("Error occurred while fetching prediction data: $e");
+      throw Exception('Internal Server Error');
     }
   }
 }

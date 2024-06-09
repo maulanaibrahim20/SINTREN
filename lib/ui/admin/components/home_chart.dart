@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class HomeChart {
-  final List<int> labels;
-  final List<double> targets;
-  HomeChart({required this.labels, required this.targets});
+  final List<DataItem> data;
 
-  final List<Color> gradientColors = [
+  HomeChart({required this.data});
+
+  final List<Color> actualDataGradientColors = [
     ColorTheme().secondaryColor,
-    ColorTheme().thirdColor
+    ColorTheme().thirdColor,
   ];
+
+  final List<Color> predictedDataGradientColors = [
+    Colors.amber[900]!, // You can choose any other color to differentiate
+    Colors.amberAccent,
+  ];
+
+  List<int> get actualData => data.map((item) => item.actualData).toList();
+  List<double> get predictedData =>
+      data.map((item) => item.predictedData).toList();
+  List<int> get labels => data.map((item) => item.label).toList();
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     TextStyle style = TextStyle(fontSize: 12, color: ColorTheme().primaryColor);
@@ -31,9 +42,10 @@ class HomeChart {
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     TextStyle style = TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 15,
-        color: ColorTheme().primaryColor);
+      fontWeight: FontWeight.bold,
+      fontSize: 15,
+      color: ColorTheme().primaryColor,
+    );
     String text;
     if (value % 5000 == 0) {
       text = '${value ~/ 1000}K';
@@ -45,30 +57,31 @@ class HomeChart {
   }
 
   LineChartData mainData() {
-    double maxValue = targets.reduce((a, b) => a > b ? a : b);
-    double maxY = ((maxValue / 5000).ceil() * 5000) * 1;
+    double maxValue = actualData.reduce((a, b) => a > b ? a : b).toDouble();
+    double maxY = ((maxValue / 5000).ceil() * 5000).toDouble();
 
     return LineChartData(
       backgroundColor: Colors.white,
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
-          getTooltipColor: (LineBarSpot getToolTipColor) {
-            return ColorTheme().primaryColor;
-          },
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots.map((spot) {
+              final isActualData = spot.barIndex == 0;
+              final dataType = isActualData ? 'Actual Data' : 'Predicted Data';
+              final textStyle = isActualData
+                  ? StyleTheme()
+                      .styleWhite
+                      .copyWith(fontWeight: FontWeight.w500)
+                  : StyleTheme()
+                      .styleWhite
+                      .copyWith(fontWeight: FontWeight.bold);
               return LineTooltipItem(
-                '${spot.y}',
-                StyleTheme().styleWhite.copyWith(fontWeight: FontWeight.w500),
+                '$dataType: ${spot.y}',
+                textStyle,
               );
             }).toList();
           },
         ),
-        touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-          if (touchResponse == null || touchResponse.lineBarSpots == null) {
-            return;
-          }
-        },
       ),
       gridData: FlGridData(
         show: true,
@@ -118,17 +131,19 @@ class HomeChart {
         border: Border.all(color: Colors.white),
       ),
       minX: 0,
-      maxX: labels.length - 1.toDouble(),
-      minY: (targets.reduce((a, b) => a < b ? a : b) / 10000).floor() *
+      maxX: (labels.length - 1).toDouble(),
+      minY: (actualData.reduce((a, b) => a < b ? a : b) / 10000).floor() *
           10000.toDouble(),
       maxY: maxY,
       lineBarsData: [
         LineChartBarData(
-          spots: List.generate(targets.length,
-              (index) => FlSpot(index.toDouble(), targets[index])),
+          spots: List.generate(
+              actualData.length,
+              (index) =>
+                  FlSpot(index.toDouble(), actualData[index].toDouble())),
           isCurved: true,
           gradient: LinearGradient(
-            colors: gradientColors,
+            colors: actualDataGradientColors,
           ),
           barWidth: 5,
           isStrokeCapRound: true,
@@ -136,12 +151,23 @@ class HomeChart {
             show: false,
           ),
           belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
+            show: false,
+          ),
+        ),
+        LineChartBarData(
+          spots: List.generate(predictedData.length,
+              (index) => FlSpot(index.toDouble(), predictedData[index])),
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: predictedDataGradientColors,
+          ),
+          barWidth: 5,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: false,
           ),
         ),
       ],
