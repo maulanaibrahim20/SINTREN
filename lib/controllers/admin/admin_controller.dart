@@ -36,37 +36,46 @@ class AdminController {
     }
   }
 
-  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan() async {
+  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan({
+    required bool isMonthNow,
+  }) async {
     try {
       final db = await DatabaseHelper().database;
-      const String query = '''
-        SELECT
-            strftime('%Y-%m', date) AS month_year,
-            desa_id,
-            desa_name,
-            SUM(nilai) AS total_nilai,
-            (SELECT COUNT(*) FROM (
-                SELECT date, desa_id, desa_name, status FROM detailPadi
-                UNION ALL
-                SELECT date, desa_id, desa_name, status FROM detailPalawija
-            ) AS status_data
-            WHERE status = 'tunggu' AND
-                  strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
-                  status_data.desa_id = combined_data.desa_id
-            ) AS total_tunggu
-        FROM (
-            SELECT date, desa_id, desa_name, nilai FROM detailPadi
-            UNION ALL
-            SELECT date, desa_id, desa_name, nilai FROM detailPalawija
-        ) AS combined_data
-        GROUP BY
-            month_year,
-            desa_id
-        ORDER BY
-            month_year DESC, desa_id;
-      ''';
+      final DateTime now = DateTime.now();
+      final String currentMonthYear =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}';
 
-      final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+      const String query = '''
+      SELECT
+          strftime('%Y-%m', date) AS month_year,
+          desa_id,
+          desa_name,
+          SUM(nilai) AS total_nilai,
+          (SELECT COUNT(*) FROM (
+              SELECT date, desa_id, desa_name, status FROM detailPadi
+              UNION ALL
+              SELECT date, desa_id, desa_name, status FROM detailPalawija
+          ) AS status_data
+          WHERE status = 'tunggu' AND
+                strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+                status_data.desa_id = combined_data.desa_id
+          ) AS total_tunggu
+      FROM (
+          SELECT date, desa_id, desa_name, nilai FROM detailPadi
+          UNION ALL
+          SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+      ) AS combined_data
+      WHERE strftime('%Y-%m', date) LIKE ?
+      GROUP BY
+          month_year,
+          desa_id
+      ORDER BY
+          month_year DESC, desa_id;
+    ''';
+
+      final List<String> args = isMonthNow ? [currentMonthYear] : ['%'];
+
+      final List<Map<String, dynamic>> maps = await db.rawQuery(query, args);
 
       return maps.map((map) => HistoriPenyuluhanModel.fromJson(map)).toList();
     } catch (e) {
@@ -107,17 +116,11 @@ class AdminController {
 
   Future<double> getTotalNilaiPenyuluhanBulanIni() async {
     try {
-      List<HistoriPenyuluhanModel> historiList = await getHistoriPenyuluhan();
-
-      final now = DateTime.now();
-      final currentMonthYear =
-          '${now.year}-${now.month.toString().padLeft(2, '0')}';
-
-      List<HistoriPenyuluhanModel> currentMonthHistori =
-          historiList.where((item) => item.date == currentMonthYear).toList();
+      List<HistoriPenyuluhanModel> historiList =
+          await getHistoriPenyuluhan(isMonthNow: true);
 
       double sumTotalNilai =
-          currentMonthHistori.fold(0, (sum, item) => sum + item.nilai);
+          historiList.fold(0, (sum, item) => sum + item.nilai);
 
       return sumTotalNilai;
     } catch (e) {

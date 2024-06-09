@@ -103,7 +103,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          adminC.getHistoriPenyuluhan(),
+          adminC.getHistoriPenyuluhan(isMonthNow: true),
           adminC.getLuasLahanDesa(),
         ]),
         builder: (context, snapshot) {
@@ -267,7 +267,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                                 : getNilaiByDesaId(desa.id) /
                                     desa.totalLuasLahan,
                             center: Text(
-                              "${((getNilaiByDesaId(desa.id) / desa.totalLuasLahan) * 100).toStringAsFixed(1)}% (${getNilaiByDesaId(desa.id)}/${desa.totalLuasLahan})",
+                              "${((getNilaiByDesaId(desa.id) / desa.totalLuasLahan) * 100).toStringAsFixed(1)}% (${getNilaiByDesaId(desa.id).toStringAsFixed(1)}/${desa.totalLuasLahan.toStringAsFixed(1)})",
                               style: StyleTheme().styleWhite.copyWith(
                                   fontWeight: FontWeight.w500, fontSize: 14),
                             ),

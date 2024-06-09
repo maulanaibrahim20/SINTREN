@@ -51,7 +51,7 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          adminC.getHistoriPenyuluhan(),
+          adminC.getHistoriPenyuluhan(isMonthNow: false),
           adminC.getLuasLahanDesa(),
         ]),
         builder: (context, snapshot) {

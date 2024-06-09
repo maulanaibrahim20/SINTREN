@@ -92,7 +92,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          adminC.getHistoriPenyuluhan(),
+          adminC.getHistoriPenyuluhan(isMonthNow: true),
           adminC.getLuasLahanDesa(),
         ]),
         builder: (context, snapshot) {
@@ -143,7 +143,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                       size: 50,
                     ),
                     Text(
-                      "Tugas Belum Diberikan",
+                      "Penyuluhan Belum Dilakukan",
                       style: StyleTheme().styleBlack.copyWith(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -288,7 +288,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                 ? 1
                                 : desa.nilai / getLuasDesa(desa.desaId),
                             center: Text(
-                              "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
+                              "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai.toStringAsFixed(1)}/${getLuasDesa(desa.desaId).toStringAsFixed(1)})",
                               style: StyleTheme().styleWhite.copyWith(
                                   fontWeight: FontWeight.w500, fontSize: 14),
                             ),

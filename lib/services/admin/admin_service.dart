@@ -65,7 +65,7 @@ class AdminService {
 
   Future<PrediksiModel> getPrediksiPadi() async {
     final response =
-        await get(Uri.parse('${ConfigApp().baseUrl}padi/prediksi'));
+        await get(Uri.parse('${ConfigApp().baseUrl}padi/prediksiSp'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
