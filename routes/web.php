@@ -135,6 +135,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('laporan_padi', LaporanPadiController::class);
                 Route::get('laporan_padi/show/{desa_id}', [LaporanPadiController::class, 'showDesa']);
                 Route::resource('laporan_palawija', LaporanPalawijaController::class);
+                Route::get('laporan_palawija/show/{desa_id}', [LaporanPalawijaController::class, 'showDesa']);
                 Route::post('/laporan_palawija/kirim', [LaporanPalawijaController::class, 'kirimkan']);
             });
             // Route::prefix('master')->group(function () {

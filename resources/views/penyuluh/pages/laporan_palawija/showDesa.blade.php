@@ -69,13 +69,13 @@
                                         </td>
                                         <td class="text-center">
                                             @if ($data->verify->status == 'tunggu')
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
+                                                <a href="{{ url('/penyuluh/create/laporan_palawija/' . $data->id . '/edit') }}"
                                                     class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                <a href="{{ url('/penyuluh/create/laporan_palawija/' . $data->id) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti ti-eye"></i></a>
                                                 <form id="deleteForm{{ $data->id }}"
-                                                    action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                    action="{{ url('/penyuluh/create/laporan_palawija/' . $data->id) }}"
                                                     style="display: inline;" method="POST">
                                                     @method('DELETE')
                                                     @csrf
@@ -83,13 +83,13 @@
                                                         data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
                                                 </form>
                                             @elseif($data->verify->status == 'tolak')
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
+                                                <a href="{{ url('/penyuluh/create/laporan_palawija/' . $data->id . '/edit') }}"
                                                     class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                                <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                <a href="{{ url('/penyuluh/create/laporan_palawija/' . $data->id) }}"
                                                     class="btn btn-primary">
                                                     <i class="ti ti-eye"></i></a>
                                                 <form id="deleteForm{{ $data->id }}"
-                                                    action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                                    action="{{ url('/penyuluh/create/laporan_palawija/' . $data->id) }}"
                                                     style="display: inline;" method="POST">
                                                     @method('DELETE')
                                                     @csrf
@@ -97,9 +97,8 @@
                                                         data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
                                                 </form>
                                             @elseif($data->verify->status == 'terima')
-                                                <p>Laporan anda sudah diterima!</p>
+                                                <p>Laporan Anda Sudah Diterima</p>
                                             @endif
-
                                         </td>
                                     </tr>
                                 @endforeach
