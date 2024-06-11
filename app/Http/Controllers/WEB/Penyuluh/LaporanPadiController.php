@@ -13,6 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Uptd\PenugasanPenyuluh;
+use App\Models\Uptd\VerifyPadi;
 
 class LaporanPadiController extends Controller
 {
@@ -22,7 +23,7 @@ class LaporanPadiController extends Controller
     protected $desa;
     protected $pengairan;
     protected $laporanpadi;
-
+    protected $verifyPadi;
     protected $penugasanDesa;
 
 
@@ -33,6 +34,7 @@ class LaporanPadiController extends Controller
         Pengairan $pengairan,
         LaporanPadi $laporanpadi,
         PenugasanPenyuluh $penugasanDesa,
+        VerifyPadi $verifyPadi,
     ) {
         $this->jenis_padi = $jenis_padi;
         $this->kecamatan = $kecamatan;
@@ -40,15 +42,31 @@ class LaporanPadiController extends Controller
         $this->pengairan = $pengairan;
         $this->laporanpadi = $laporanpadi;
         $this->penugasanDesa = $penugasanDesa;
+        $this->verifyPadi = $verifyPadi;
     }
+
     public function index()
     {
+        $results = DB::table('laporan_padis')
+            ->select(
+                DB::raw("DATE_FORMAT(laporan_padis.date, '%Y-%m') AS month_year"),
+                'laporan_padis.desa_id',
+                'desas.name',
+                DB::raw("SUM(laporan_padis.nilai) AS total_nilai")
+            )
+            ->join('desas', 'desas.id', '=', 'laporan_padis.desa_id')
+            ->groupBy('month_year', 'laporan_padis.desa_id', 'desas.name')
+            ->orderBy('month_year', 'asc')
+            ->orderBy('laporan_padis.desa_id')
+            ->get();
+
+        $desaId = $this->penugasanDesa::pluck('desa_id')->toArray();
         $data = [
-            'padi' => $this->laporanpadi::where('kecamatan_id', Auth::user()->penyuluh->kecamatan->id)
-                ->orderBy('created_at', 'asc')->get(),
+            'padi' => $results->whereIn('desa_id', $desaId)->sortBy('created_at'),
         ];
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
+
 
     public function create()
     {
@@ -64,8 +82,9 @@ class LaporanPadiController extends Controller
 
     public function store(Request $request)
     {
+        DB::beginTransaction();
         try {
-            $this->laporanpadi->create([
+            $laporanPadi = $this->laporanpadi->create([
                 'user_id' => Auth::user()->id,
                 'desa_id' => $request['desa'],
                 'kecamatan_id' => Auth::user()->penyuluh->kecamatan->id,
@@ -77,6 +96,12 @@ class LaporanPadiController extends Controller
                 'tipe_data' => $request['jenis_data'],
                 'nilai' => $request['nilai'],
             ]);
+            $this->verifyPadi->create([
+                'laporan_padi' => $laporanPadi['id'],
+                'user_id' => Auth::user()->id,
+                'status' => 'tunggu',
+                'catatan' => null
+            ]);
 
             DB::commit();
             return redirect('/penyuluh/create/laporan_padi')->with('success', 'Data Laporan Padi Berhasil Dibuat!');
@@ -84,6 +109,14 @@ class LaporanPadiController extends Controller
             DB::rollback();
             return back()->with('error', 'Data Laporan Padi Gagal Dibuat!' . $e->getMessage());
         }
+    }
+
+    public function showDesa($desa_id)
+    {
+        $data['desa'] = $this->laporanpadi::where('desa_id', $desa_id)->first();
+        $data['verify'] = $this->verifyPadi::where('laporan_id', $data['desa']->id)->get();
+        $data['showDesa'] = $this->laporanpadi::with('verify')->where('desa_id', $desa_id)->get();
+        return view('penyuluh.pages.laporan_padi.showDesa', $data)->with('success', 'Data Desa Berhasil Ditampilkan!');
     }
 
     public function show($id)

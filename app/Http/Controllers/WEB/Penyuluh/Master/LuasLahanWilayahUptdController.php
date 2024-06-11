@@ -27,29 +27,20 @@ class LuasLahanWilayahUptdController extends Controller
             'title' => 'Luas Lahan Wilayah',
             'button_create' => 'Tambah Luas Lahan Wilayah',
         ];
-        $luas_wilayah = $this->luas_wilayah::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get();
 
-        $kecamatanId = Auth::user()->uptd->kecamatan->id;
-        $getTanamanAkhirBulanLaporan = $this->detail_laporan
-            ->leftJoin('laporan_padis', 'detail_laporan_padi.id_laporan_padi', '=', 'laporan_padis.id')
-            ->where('laporan_padis.kecamatan_id', $kecamatanId)
-            ->select(DB::raw('SUM(panen + tanam + puso_rusak) as total'))
-            ->pluck('total')
-            ->sum();
+        // Mendapatkan data luas wilayah berdasarkan kecamatan pengguna
+        $luasWilayah = $this->luas_wilayah::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get();
 
-        $wilayah_total = $this->luas_wilayah::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->first();
+        // Menghitung total luas lahan sawah dan non-sawah
+        $totalLuasSawah = $luasWilayah->where('jenis_lahan', 'sawah')->sum('luas_lahan_wilayah');
+        $totalLuasNonSawah = $luasWilayah->where('jenis_lahan', 'non_sawah')->sum('luas_lahan_wilayah');
+        $totalLuasWilayah = $totalLuasSawah + $totalLuasNonSawah;
 
-        if ($wilayah_total !== null) {
-            $luas_lahan_wilayah = $wilayah_total->luas_lahan_wilayah;
-            $selisih = $luas_lahan_wilayah - $getTanamanAkhirBulanLaporan;
-        } else {
-            $selisih = "Hasil selisih dari data luas wilayah belum tersedia";
-        }
-        $data  = [
-            'selisih' => $selisih,
-            'luas_wilayah' => $luas_wilayah,
-            'getTanamanAkhirBulanLaporan' => $getTanamanAkhirBulanLaporan,
-        ];
+        // Menyiapkan data untuk view
+        $data['luas_wilayah'] = $luasWilayah;
+        $data['total_luas_sawah'] = $totalLuasSawah;
+        $data['total_luas_non_sawah'] = $totalLuasNonSawah;
+        $data['total_luas_wilayah'] = $totalLuasWilayah;
 
         return view('uptd.pages.master.luas_lahan_wilayah.index', $content, $data);
     }

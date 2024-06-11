@@ -28,6 +28,7 @@ use App\Http\Controllers\PANGAN\GrafikPanganController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
+use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,8 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::prefix('prediksi')->group(function () {
                 Route::get('/padi', [PrediksiPadiController::class, 'index']);
                 Route::post('/padi', [PrediksiPadiController::class, 'menghitungRegresi']);
+                Route::get('/padiSp', [PrediksiSpPadiController::class, 'indexSP']);
+                Route::post('/padiSp', [PrediksiSpPadiController::class, 'menghitungRegresiSP']);
             });
             Route::get('data_padi', [DataLaporanPadiController::class, 'index']);
             Route::get('data_padi/show/{id}', [DataLaporanPadiController::class, 'show']);
@@ -117,7 +120,12 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
+                Route::get('padi/showDetailLaporan/{desa_id}', [LaporanUptdPadiController::class, 'showDetailLaporanKecamatan']);
+                Route::post('padi/changeStatus/{id}', [LaporanUptdPadiController::class, 'changeStatus']);
+
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
+                Route::get('palawija/showDetailLaporan/{desa_id}', [LaporanUptdPalawijaController::class, 'showDetailLaporanKecamatan']);
+                Route::post('palawija/changeStatus/{id}', [LaporanUptdPalawijaController::class, 'changeStatus']);
             });
             Route::prefix('master')->group(function () {
                 Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);
@@ -131,7 +139,9 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/getDesa', [LaporanPadiController::class, 'getDesa']);
             Route::prefix('create')->group(function () {
                 Route::resource('laporan_padi', LaporanPadiController::class);
+                Route::get('laporan_padi/show/{desa_id}', [LaporanPadiController::class, 'showDesa']);
                 Route::resource('laporan_palawija', LaporanPalawijaController::class);
+                Route::get('laporan_palawija/show/{desa_id}', [LaporanPalawijaController::class, 'showDesa']);
                 Route::post('/laporan_palawija/kirim', [LaporanPalawijaController::class, 'kirimkan']);
             });
             // Route::prefix('master')->group(function () {

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('laporan_id');
             $table->string('user_id', 50)->nullable();
-            $table->enum('status', ['terima', 'tolak', 'tunggu']);
+            $table->enum('status', ['terima', 'tolak', 'tunggu'])->default('tunggu');
             $table->text('catatan')->nullable();
             $table->timestamps();
         });

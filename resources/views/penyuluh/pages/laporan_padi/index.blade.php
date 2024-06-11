@@ -40,8 +40,7 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
-                                    <th class="wd-15p border-bottom-0">Alamat</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
+                                    <th class="wd-15p border-bottom-0">Desa</th>
                                     <th class="wd-20p border-bottom-0">Tanggal Input</th>
                                     <th class="wd-20p border-bottom-0 text-center">Action</th>
                                 </tr>
@@ -51,32 +50,13 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>
-                                            <div class="d-flex contact-image">
-                                                <div class="d-flex mt-1 flex-column ms-2">
-                                                    <h6 class="mb-0 fs-14 fw-semibold text-dark">Kecamatan : <span
-                                                            class="badge bg-primary me-1 my-1">{{ $data->kecamatan->name }}</span>
-                                                    </h6>
-                                                    <span class="fs-12 text-muted">Desa : <span
-                                                            class="badge bg-info me-1 my-1">{{ $data->desa->name }}</span></span>
-                                                </div>
-                                            </div>
+                                            {{ $data->name }}
                                         </td>
-                                        <td>{{ $data->jenis_lahan }}</td>
-                                        <td>{{ $data->date }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->month_year)->translatedFormat('F-Y') }}</td>
                                         <td class="text-center">
-                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id . '/edit') }}"
-                                                class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
+                                            <a href="{{ url('/penyuluh/create/laporan_padi/show/' . $data->desa_id) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-eye"></i></a>
-                                            <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/penyuluh/create/laporan_padi/' . $data->id) }}"
-                                                style="display: inline;" method="POST">
-                                                @method('DELETE')
-                                                @csrf
-                                                <button type="button" class="btn btn-danger deleteBtn"
-                                                    data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

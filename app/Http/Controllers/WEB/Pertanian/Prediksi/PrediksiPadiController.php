@@ -5,9 +5,11 @@ namespace App\Http\Controllers\WEB\Pertanian\Prediksi;
 use App\Http\Controllers\Controller;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\LuasLahanWilayah;
+use App\Models\Prediksi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Phpml\Dataset\ArrayDataset;
 use Phpml\Regression\LeastSquares;
 
 class PrediksiPadiController extends Controller
@@ -29,210 +31,6 @@ class PrediksiPadiController extends Controller
         return view('pertanian.pages.prediksi.padi.index', $content);
     }
 
-    // public function predict(Request $request)
-    // {
-    //     $tipeData = $request->input('tipeData');
-    //     $dariBulan = $request->input('dariBulan');
-    //     $dariTahun = $request->input('dariTahun');
-    //     $sampaiBulan = $request->input('sampaiBulan');
-    //     $sampaiTahun = $request->input('sampaiTahun');
-
-    //     $bulanKeAngka = [
-    //         'januari' => '01', 'februari' => '02', 'maret' => '03', 'april' => '04',
-    //         'mei' => '05', 'juni' => '06', 'juli' => '07', 'agustus' => '08',
-    //         'september' => '09', 'oktober' => '10', 'november' => '11', 'desember' => '12'
-    //     ];
-
-    //     $dariBulan = $bulanKeAngka[strtolower($dariBulan)];
-    //     $sampaiBulan = $bulanKeAngka[strtolower($sampaiBulan)];
-
-    //     $dariTanggal = Carbon::create($dariTahun, $dariBulan, 1)->startOfMonth()->toDateString();
-    //     $sampaiTanggal = Carbon::create($sampaiTahun, $sampaiBulan, 1)->endOfMonth()->toDateString();
-
-    //     $dataTanam = LaporanPadi::where('tipe_data', $tipeData)
-    //         ->where('date', '>=', $dariTanggal)
-    //         ->where('date', '<=', $sampaiTanggal)
-    //         ->get();
-
-    //     if ($dataTanam->isEmpty()) {
-    //         return response()->json([
-    //             'error' => 'Data tanam tidak ditemukan untuk rentang waktu yang diberikan'
-    //         ], 404);
-    //     }
-
-    //     $desaId = $dataTanam->pluck('desa_id');
-
-    //     $luasLahan = $this->luasLahanWilayah::whereIn('desa_id', $desaId)->get();
-
-    //     if (!$luasLahan) {
-    //         return response()->json([
-    //             'error' => 'Data luas lahan tidak ditemukan untuk desa_id yang diberikan'
-    //         ], 404);
-    //     }
-
-    //     $samples = [];
-    //     $targets = [];
-    //     $labels = [];
-
-    //     foreach ($dataTanam as $entry) {
-    //         $bulan = date('n', strtotime($entry->date));
-    //         $tahun = date('Y', strtotime($entry->date));
-    //         $bulanNama = date('F', strtotime($entry->date)); // Nama bulan
-
-    //         if ($entry->jenis_lahan == 'sawah') {
-    //             $samples[] = [$bulan, $tahun];
-    //             $targets[] = $entry->nilai;
-    //             $labels[] = $bulanNama . ' ' . $tahun; // Menyimpan label bulan dan tahun
-    //         }
-    //     }
-
-    //     if (empty($samples) || empty($targets)) {
-    //         return response()->json([
-    //             'error' => 'Data tanam tidak cukup untuk melakukan prediksi'
-    //         ], 400);
-    //     }
-
-    //     $regression = new LeastSquares();
-
-    //     try {
-    //         $regression->train($samples, $targets);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'error' => 'Terjadi kesalahan saat melatih model: ' . $e->getMessage()
-    //         ], 500);
-    //     }
-
-    //     $predictedValues = [];
-    //     $predictedLabels = [];
-    //     $currentDate = Carbon::create($dariTahun, $dariBulan, 1);
-
-    //     while ($currentDate->lessThanOrEqualTo(Carbon::create($sampaiTahun, $sampaiBulan, 1))) {
-    //         $bulanPrediksi = $currentDate->month;
-    //         $tahunPrediksi = $currentDate->year;
-    //         $predictedValues[] = $regression->predict([$bulanPrediksi, $tahunPrediksi]);
-    //         $predictedLabels[] = $currentDate->format('F Y'); // Menyimpan label yang benar
-    //         $currentDate->addMonth();
-    //     }
-
-    //     return view('pertanian.pages.prediksi.padi.show', compact('predictedLabels', 'predictedValues'));
-    // }
-
-    // public function predict(Request $request)
-    // {
-    //     $tipeData = $request->input('tipeData');
-    //     $dariBulan = $request->input('dariBulan');
-    //     $dariTahun = $request->input('dariTahun');
-    //     $sampaiBulan = $request->input('sampaiBulan');
-    //     $sampaiTahun = $request->input('sampaiTahun');
-
-    //     $bulanKeAngka = [
-    //         'januari' => '01', 'februari' => '02', 'maret' => '03', 'april' => '04',
-    //         'mei' => '05', 'juni' => '06', 'juli' => '07', 'agustus' => '08',
-    //         'september' => '09', 'oktober' => '10', 'november' => '11', 'desember' => '12'
-    //     ];
-
-    //     $dariBulan = $bulanKeAngka[strtolower($dariBulan)];
-    //     $sampaiBulan = $bulanKeAngka[strtolower($sampaiBulan)];
-
-    //     $dariTanggal = Carbon::create($dariTahun, $dariBulan, 1)->startOfMonth()->toDateString();
-    //     $sampaiTanggal = Carbon::create($sampaiTahun, $sampaiBulan, 1)->endOfMonth()->toDateString();
-
-    //     $dataTanam = LaporanPadi::where('tipe_data', $tipeData)
-    //         ->where('date', '>=', $dariTanggal)
-    //         ->where('date', '<=', $sampaiTanggal)
-    //         ->get();
-
-    //     if ($dataTanam->isEmpty()) {
-    //         return response()->json([
-    //             'error' => 'Data tanam tidak ditemukan untuk rentang waktu yang diberikan'
-    //         ], 404);
-    //     }
-
-    //     $groupedData = $dataTanam->groupBy(function ($date) {
-    //         return Carbon::parse($date->date)->format('Y-m');
-    //     });
-
-    //     $samples = [];
-    //     $targets = [];
-    //     $labels = [];
-
-    //     foreach ($groupedData as $month => $data) {
-    //         $averageValue = $data->avg('nilai');
-    //         $bulan = Carbon::parse($month)->month;
-    //         $tahun = Carbon::parse($month)->year;
-
-    //         $samples[] = [$bulan, $tahun];
-    //         $targets[] = $averageValue;
-    //         $labels[] = Carbon::parse($month)->format('F Y');
-    //     }
-
-    //     if (empty($samples) || empty($targets)) {
-    //         return response()->json([
-    //             'error' => 'Data tanam tidak cukup untuk melakukan prediksi'
-    //         ], 400);
-    //     }
-
-    //     $regression = new LeastSquares();
-
-    //     try {
-    //         $regression->train($samples, $targets);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'error' => 'Terjadi kesalahan saat melatih model: ' . $e->getMessage()
-    //         ], 500);
-    //     }
-
-    //     $bulanPrediksi = Carbon::create($sampaiTahun, $sampaiBulan, 1)->addMonth()->month;
-    //     $tahunPrediksi = Carbon::create($sampaiTahun, $sampaiBulan, 1)->addMonth()->year;
-
-    //     $predictedValue = $regression->predict([$bulanPrediksi, $tahunPrediksi]);
-
-    //     $labels[] = Carbon::create($tahunPrediksi, $bulanPrediksi, 1)->format('F Y');
-    //     $targets[] = $predictedValue;
-
-    //     return view('pertanian.pages.prediksi.padi.show', compact(
-    //         'labels',
-    //         'targets',
-    //         'tipeData',
-    //         'dariBulan',
-    //         'dariTahun',
-    //         'sampaiBulan',
-    //         'sampaiTahun',
-    //         'bulanKeAngka',
-    //         'dariTanggal',
-    //         'sampaiTanggal',
-    //         'groupedData',
-    //         'samples',
-    //         'bulanPrediksi',
-    //         'tahunPrediksi',
-    //         'predictedValue'
-    //     ));
-    // }
-
-    // public function menghitungRegresi(Request $request)
-    // {
-    //     $penjualanY = ['15', '17', '20', '24', '29', '35', '40', '45', '52', '55', '60', '67', '73', '80'];
-    //     $tahunX = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'];
-
-    //     $jumlahElemen = count($penjualanY);
-    //     $sigmaXY = 0;
-
-    //     for ($i = 0; $i < $jumlahElemen; $i++) {
-    //         $sigmaXY += $penjualanY[$i] * $tahunX[$i];
-    //     }
-
-    //     echo "sigmaXY = $sigmaXY";
-    //     $simgaXxY = $sigmaXY;
-
-
-
-    //     $sigmaY = '612';
-    //     $sigmaX = '21';
-
-    //     // $sigmaXY = $y * $x;
-    //     // $sigmaXpangkat2 =
-    // }
-
     public function menghitungRegresi(Request $request)
     {
         $request->validate([
@@ -253,7 +51,7 @@ class PrediksiPadiController extends Controller
         $tipeDataDescription = $tipeDataDescriptions[$tipeData] ?? 'Jenis Data Tidak Diketahui';
 
         $data = $this->getTotalPerYear($tipeData, $dariTahun, $sampaiTahun);
-        $actualData = $data; // Store actual data for comparison
+        $actualData = $data;
 
         $samples = [];
         $targets = [];
@@ -316,12 +114,29 @@ class PrediksiPadiController extends Controller
                 $nilaiPrediksi = $prediction['predicted_value'];
                 $error = abs(($targets[$key] - $nilaiPrediksi) / $targets[$key]) * 100;
                 $totalError += $error;
+
+                // Simpan nilai aktual ke prediksi
+                $predictions[$key]['nilai_aktual'] = $targets[$key];
+                $predictions[$key]['error'] = $error;
             }
         }
 
         $hasilMape = $totalError / $totalData;
         $tanpaRound = $hasilMape;
         $mape = round($hasilMape);
+
+        // Simpan ke database
+        foreach ($predictions as $prediction) {
+            Prediksi::create([
+                'tipe_data' => $tipeData,
+                'tahun' => $prediction['year'],
+                'nilai_prediksi' => $prediction['predicted_value'],
+                'perubahan_dari_tahun_sebelumnya' => $prediction['change_from_previous_year'],
+                'nilai_aktual' => $prediction['nilai_aktual'] ?? null,
+                'error' => $prediction['error'] ?? null,
+                'mape' => $mape
+            ]);
+        }
 
         return view('pertanian.pages.prediksi.padi.view', [
             'tipeData' => $tipeDataDescription,
@@ -333,6 +148,7 @@ class PrediksiPadiController extends Controller
             'mape' => $mape
         ]);
     }
+
 
 
     private function getTotalPerYear($tipeData, $dariTahun, $sampaiTahun)

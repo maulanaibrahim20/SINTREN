@@ -8,6 +8,7 @@ use App\Models\Penyuluh\DetailLaporanPalawija;
 use App\Models\Penyuluh\JenisPalawija;
 use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Uptd\PenugasanPenyuluh;
+use App\Models\Uptd\VerifyPalawija;
 use App\Models\Wilayah\Desa;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,7 @@ class LaporanPalawijaController extends Controller
     protected $tanamanPalawija;
     protected $jenisPalawija;
     protected $penugasan;
+    protected $verifyPalawija;
 
     public function __construct(
         LaporanPalawija $laporanPalawija,
@@ -28,34 +30,36 @@ class LaporanPalawijaController extends Controller
         TanamanPalawija $tanamanPalawija,
         TanamanPalawija $jenisPalawija,
         PenugasanPenyuluh $penugasanPenyuluh,
+        VerifyPalawija $verifyPalawija,
     ) {
         $this->laporanPalawija = $laporanPalawija;
         $this->desa = $desa;
         $this->tanamanPalawija = $tanamanPalawija;
         $this->jenisPalawija = $jenisPalawija;
         $this->penugasan = $penugasanPenyuluh;
-    }
-
-    public function kirimkan(Request $request)
-    {
-        try {
-            $this->laporanPalawija::where('id', $request->id)->update([
-                'status' => 'terkirim',
-            ]);
-            Alert::success('success', 'Success Data Berhasil Dikirimkan!');
-            return back()->with('success', 'Data Berhasil DiKirimkan!');
-        } catch (\Exception $e) {
-            Alert::error('error', 'Error' . $e->getMessage());
-            return back()->with('error' . $e->getMessage());
-        }
+        $this->verifyPalawija = $verifyPalawija;
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $results = DB::table('laporan_palawijas')
+            ->select(
+                DB::raw("DATE_FORMAT(laporan_palawijas.date, '%Y-%m') AS month_year"),
+                'laporan_palawijas.desa_id',
+                'desas.name',
+                DB::raw("SUM(laporan_palawijas.nilai) AS total_nilai")
+            )
+            ->join('desas', 'desas.id', '=', 'laporan_palawijas.desa_id')
+            ->groupBy('month_year', 'laporan_palawijas.desa_id', 'desas.name')
+            ->orderBy('month_year', 'asc')
+            ->orderBy('laporan_palawijas.desa_id')
+            ->get();
+
+        $desaId = $this->penugasan::pluck('desa_id')->toArray();
         $data = [
-            'palawija' => $this->laporanPalawija::where('user_id', Auth::user()->id)->get(),
+            'palawija' => $results->whereIn('desa_id', $desaId)->sortBy('created_at'),
         ];
         return view('penyuluh.pages.laporan_palawija.index', $data);
     }
@@ -103,6 +107,15 @@ class LaporanPalawijaController extends Controller
     /**
      * Display the specified resource.
      */
+
+    public function showDesa($desa_id)
+    {
+        $data['desa'] = $this->laporanPalawija::where('desa_id', $desa_id)->first();
+        $data['verify'] = $this->verifyPalawija::where('laporan_id', $data['desa']->id)->get();
+        $data['showDesa'] = $this->laporanPalawija::with('verify')->where('desa_id', $desa_id)->get();
+        return view('penyuluh.pages.laporan_palawija.showDesa', $data)->with('success', 'Data Desa Berhasil Ditampilkan!');
+    }
+
     public function show(string $id)
     {
         $laporanPalawija = $this->laporanPalawija::findOrFail($id);

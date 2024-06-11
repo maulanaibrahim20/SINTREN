@@ -36,7 +36,7 @@
                                 <td class="text-right">Nama Penyuluh</td>
                                 <td>:</td>
                                 <td>
-                                    {{ $laporanPalawija->user->name }}
+                                    {{ $laporanPalawija->user_id }}
                                 </td>
                             </tr>
                             <tr>

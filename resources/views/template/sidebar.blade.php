@@ -211,6 +211,11 @@
                             href="{{ url('/pertanian/prediksi/padi') }}"><i class="side-menu__icon fa fa-leaf"></i><span
                                 class="side-menu__label">Prediksi Padi</span>
                         </a>
+                        <a class="side-menu__item {{ Request::segment(3) == 'padiSp' ? 'active' : '' }}"
+                            href="{{ url('/pertanian/prediksi/padiSp') }}"><i
+                                class="side-menu__icon fa fa-leaf"></i><span class="side-menu__label">Prediksi Padi
+                                SP</span>
+                        </a>
                         <a class="side-menu__item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}"
                             href="{{ url('/pertanian/prediksi/palawija') }}"><i
                                 class="side-menu__icon fa fa-pagelines"></i><span class="side-menu__label">Prediksi

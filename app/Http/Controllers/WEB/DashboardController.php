@@ -7,6 +7,8 @@ use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\LaporanPalawija;
 use App\Models\Penyuluh\LuasLahanWilayah;
 use App\Models\Penyuluh\Penyuluh;
+use App\Models\Prediksi;
+use App\Models\PrediksiSp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
