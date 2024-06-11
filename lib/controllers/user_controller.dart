@@ -1,10 +1,7 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
-import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
-import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/user_service.dart';
 
@@ -54,17 +51,6 @@ class UserController {
       }
 
       final String? role = await UserLoginModel().getRole();
-      final ValueNotifier<String> statusNotifier =
-          ValueNotifier<String>('Memulai aplikasi...');
-      if (role == "PENYULUH") {
-        await PenyuluhController()
-            .synchronizeData(statusNotifier)
-            .timeout(const Duration(minutes: 1));
-      } else if (role == "PERTANIAN" || role == "UPTD") {
-        await AdminController()
-            .synchronizeData(statusNotifier)
-            .timeout(const Duration(minutes: 1));
-      }
       EasyLoading.dismiss();
       return role ?? "";
     } catch (e) {

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
-import 'package:sintren_mobile/ui/admin/admin_landing_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
+import 'package:sintren_mobile/ui/initialization.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -187,28 +186,18 @@ class _LoginViewState extends State<LoginView> {
                                               username: username.text,
                                               password: password.text)
                                           .then((value) {
-                                        if (value == "PENYULUH") {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    const PenyuluhHomeView()),
-                                            (route) => false,
-                                          );
-                                          EasyLoading.showSuccess(
-                                              "Berhasil Login");
-                                        } else if (value == "UPTD" ||
-                                            value == "PERTANIAN") {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    const AdminLandingView()),
-                                            (route) => false,
-                                          );
-                                          EasyLoading.showSuccess(
-                                              "Berhasil Login");
-                                        }
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  InitializationWrapper(
+                                                    isLogin: true,
+                                                    role: value,
+                                                  )),
+                                          (route) => false,
+                                        );
+                                        EasyLoading.showSuccess(
+                                            "Berhasil Login");
                                       });
                                     }
                                   },
