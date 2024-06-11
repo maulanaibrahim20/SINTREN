@@ -55,7 +55,7 @@
                             <tr>
                                 <td class="text-right">Jenis Pangan</td>
                                 <td>:</td>
-                                <td>{{ $laporanpangan->kategori_pangan->name }}</td>
+                                <td>{{ $laporanpangan->jenis_pangan->name }}</td>
                             </tr>
                             <tr>
                                 <td class="text-right">Nama Pangan</td>

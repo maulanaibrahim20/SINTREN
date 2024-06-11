@@ -2,24 +2,24 @@
 
 namespace Database\Seeders;
 
-use App\Models\Pangan\KategoriPangan;
+use App\Models\Pangan\JenisPangan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class KategoriPanganSeeder extends Seeder
+class JenisPanganSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        KategoriPangan::create([
+        JenisPangan::create([
             'name' => 'Sayuran',
         ]);
-        KategoriPangan::create([
+        JenisPangan::create([
             'name' => 'Buah',
         ]);
-        KategoriPangan::create([
+        JenisPangan::create([
             'name' => 'Daging',
         ]);
     }

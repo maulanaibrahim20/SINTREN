@@ -362,8 +362,8 @@
                 <li class="sub-category">
                     <h3>Pangan</h3>
                 </li>
-                <li class="slide {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'kategori_pangan' ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'kategori_pangan' ? 'active open' : '' }}"
+                <li class="slide {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'jenis_pangan' ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'jenis_pangan' ? 'active open' : '' }}"
                         data-bs-toggle="slide" href="javascript:void(0)">
                         <i class="side-menu__icon fa fa-files-o"></i>
                         <span class="side-menu__label">Pangan</span>
@@ -383,9 +383,9 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{{ url('/pangan/create/kategori_pangan') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'kategori_pangan' ? 'active' : '' }}">
-                                                    Kategori Pangan
+                                                <a href="{{ url('/pangan/create/jenis_pangan') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'jenis_pangan' ? 'active' : '' }}">
+                                                    Jenis Pangan
                                                 </a>
                                             </li>
                                         </ul>

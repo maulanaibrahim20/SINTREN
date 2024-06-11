@@ -3,7 +3,7 @@
 namespace App\Models\Pangan;
 use App\Models\User;
 use App\Models\Pasar\Pasar;
-use App\Models\Pangan\KategoriPangan;
+use App\Models\Pangan\JenisPangan;
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,8 +23,8 @@ class LaporanPangan extends Model
     {
         return $this->belongsTo(Pasar::class, 'pasar_id');
     }
-    public function kategori_pangan()
+    public function jenis_pangan()
     {
-        return $this->belongsTo(KategoriPangan::class, 'kategori_pangan_id');
+        return $this->belongsTo(JenisPangan::class, 'jenis_pangan_id');
     }
 }

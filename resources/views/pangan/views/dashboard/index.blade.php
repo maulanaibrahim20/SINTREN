@@ -3,26 +3,22 @@
 @section('content')
 <div class="page-header d-sm-flex d-block">
     <ol class="breadcrumb mb-sm-0 mb-3">
-        <!-- breadcrumb -->
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ url('/pangan/dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-    </ol><!-- End breadcrumb -->
+    </ol>
     <div class="ms-auto">
         <div>
-            <a href="#" class="btn bg-secondary-transparent text-secondary btn-sm" data-bs-toggle="tooltip"
-                title="" data-bs-placement="bottom" data-bs-original-title="Rating">
+            <a href="#" class="btn bg-secondary-transparent text-secondary btn-sm" data-bs-toggle="tooltip" title="Rating">
                 <span>
                     <i class="fa fa-star"></i>
                 </span>
             </a>
-            <a href="lockscreen.html" class="btn bg-primary-transparent text-primary mx-2 btn-sm"
-                data-bs-toggle="tooltip" title="" data-bs-placement="bottom" data-bs-original-title="lock">
+            <a href="{{ url('/lockscreen') }}" class="btn bg-primary-transparent text-primary mx-2 btn-sm" data-bs-toggle="tooltip" title="lock">
                 <span>
                     <i class="fa fa-lock"></i>
                 </span>
             </a>
-            <a href="#" class="btn bg-warning-transparent text-warning btn-sm" data-bs-toggle="tooltip"
-                title="" data-bs-placement="bottom" data-bs-original-title="Add New">
+            <a href="#" class="btn bg-warning-transparent text-warning btn-sm" data-bs-toggle="tooltip" title="Add New">
                 <span>
                     <i class="fa fa-plus"></i>
                 </span>
@@ -39,15 +35,12 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="mb-0 fw-semibold text-dark lh-1">Data Pengguna Pasar</p>
-                                <div class="fs-12 text-muted mb-5"></div>
+                                <div class="fs-12 text-muted mb-5">Total Pengguna</div>
                                 <div class="fs-30 fw-semibold mb-0 lh-1">
+                                    {{ $jumlahPetugasPasar }}
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
-                                {{-- <label class="custom-switch mb-5">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label> --}}
                                 <span class="text-secondary lh-1 mt-3 fs-26"><i class="fe fe-users"></i></span>
                             </div>
                         </div>
@@ -64,16 +57,13 @@
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <p class="mb-0 fw-semibold text-dark lh-1">Data Pangan</p>
-                                <div class="fs-12 text-muted mb-5"></div>
+                                <p class="mb-0 fw-semibold text-dark lh-1">Data Pangan Belum Terkirim</p>
+                                <div class="fs-12 text-muted mb-5">Jumlah Data</div>
                                 <div class="fs-30 fw-semibold mb-0 lh-1">
+                                    {{-- {{ $jumlahDataPangan }} --}}
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
-                                {{-- <label class="custom-switch mb-5">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label> --}}
                                 <span class="text-warning lh-1 mt-3 fs-26"><i class="fe fe-file-text"></i></span>
                             </div>
                         </div>
@@ -92,15 +82,11 @@
                             <div>
                                 <p class="mb-0 fw-semibold text-dark lh-1">Laporan Pangan</p>
                                 <div class="fs-12 text-muted mb-5"></div>
-                                <div class="fs-30 fw-semibold mb-0 lh-1"><i
-                                        class=""></i>
+                                <div class="fs-30 fw-semibold mb-0 lh-1">
+                                    <!-- Jumlah laporan pangan -->
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
-                                {{-- <label class="custom-switch mb-5">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label> --}}
                                 <span class="text-primary lh-1 mt-3 fs-26"><i class="fa fa-folder-o"></i></span>
                             </div>
                         </div>
@@ -118,15 +104,11 @@
                             <div>
                                 <p class="mb-0 fw-semibold text-dark lh-1">Grafik Pangan</p>
                                 <div class="fs-12 text-muted mb-5"></div>
-                                <div class="fs-30 fw-semibold mb-0 lh-1"><i
-                                        class=""></i>
+                                <div class="fs-30 fw-semibold mb-0 lh-1">
+                                    <!-- Grafik pangan -->
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
-                                {{-- <label class="custom-switch mb-5">
-                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                </label> --}}
                                 <span class="text-danger lh-1 mt-3 fs-26"><i class="ti ti-bar-chart-alt"></i></span>
                             </div>
                         </div>

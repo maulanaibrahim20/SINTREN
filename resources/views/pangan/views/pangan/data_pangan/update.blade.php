@@ -49,13 +49,13 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="kategoriPangan" class="form-label">Kategori Pangan</label>
-                                    <select id="kategoriPangan" class="form-control form-select select2"
-                                        aria-label="Default select example" name="kategori_pangan_id">
+                                    <label for="jenispangan" class="form-label">Jenis Pangan</label>
+                                    <select id="jenispangan" class="form-control form-select select2"
+                                        aria-label="Default select example" name="jenis_pangan_id">
                                         <option value="">-- Pilih --</option>
-                                        @foreach ($kategoripangan as $item)
+                                        @foreach ($jenispangan as $item)
                                             <option value="{{ $item->id }}"
-                                                {{ $editPangan->kategori_pangan_id == $item->id ? 'selected' : '' }}>
+                                                {{ $editPangan->jenis_pangan_id == $item->id ? 'selected' : '' }}>
                                                 {{ $item->name }}
                                             </option>
                                         @endforeach

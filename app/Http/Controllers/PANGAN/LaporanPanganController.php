@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exports\ExportLaporanPangan;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\Pangan\KategoriPangan;
+use App\Models\Pangan\JenisPangan;
 use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
 use App\Models\User;
@@ -18,18 +18,18 @@ class LaporanPanganController extends Controller
 {
     protected $laporanpangan;
     protected $pasar;
-    protected $kategoripangan;
+    protected $jenispangan;
     protected $user;
 
     public function __construct(
         LaporanPangan $laporanpangan,
         Pasar $pasar,
-        KategoriPangan $kategoripangan,
+        JenisPangan $jenispangan,
         User $user
     ) {
         $this->laporanpangan = $laporanpangan;
         $this->pasar = $pasar;
-        $this->kategoripangan = $kategoripangan;
+        $this->jenispangan = $jenispangan;
         $this->user = $user;
     }
 

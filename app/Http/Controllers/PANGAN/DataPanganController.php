@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\Pangan\KategoriPangan;
+use App\Models\Pangan\JenisPangan;
 use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
 use App\Models\User;
@@ -16,18 +16,18 @@ class DataPanganController extends Controller
 {
     protected $laporanpangan;
     protected $pasar;
-    protected $kategoripangan;
+    protected $jenispangan;
     protected $user;
 
     public function __construct(
         LaporanPangan $laporanpangan,
         Pasar $pasar,
-        KategoriPangan $kategoripangan,
+        JenisPangan $jenispangan,
         User $user,
         ) {
             $this->laporanpangan = $laporanpangan;
             $this->pasar = $pasar;
-            $this->kategoripangan = $kategoripangan;
+            $this->jenispangan = $jenispangan;
             $this->user = $user;
         }
 
@@ -84,7 +84,7 @@ class DataPanganController extends Controller
                         'breadcrumb' => 'Dashboard',
                         'breadcrumb_1' => 'Data Stok Pangan',
                         'breadcrumb_active' => 'Tambah Data Stok Pangan',
-                        'kategoripangan' => $this->kategoripangan::all(),
+                        'jenispangan' => $this->jenispangan::all(),
                         'pasar' => $this->pasar::all(),
                         'datapangan' => $this->laporanpangan::where('user_id', Auth::user()->id)->get(),
                     ];
@@ -107,7 +107,7 @@ class DataPanganController extends Controller
                         $this->laporanpangan->create($request->all() +[
                             'user_id' => Auth::user()->id,
                             'pasar_id' => $request->pasar_id,
-                            'kategori_pangan_id' => $request->kategori_pangan_id,
+                            'jenis_pangan_id' => $request->jenis_pangan_id,
                             'name' => $request->name,
                             'kebutuhan' => $request->kebutuhan,
                             'ketersediaan' => $request->ketersediaan,
@@ -170,7 +170,7 @@ class DataPanganController extends Controller
                         'breadcrumb_1' => 'Data Stok Pangan',
                         'breadcrumb_active' => 'Edit Data Stok Pangan',
                         'editPangan' => $editPangan,
-                        'kategoripangan' => $this->kategoripangan::all(),
+                        'jenispangan' => $this->jenispangan::all(),
                         'pasar' => $this->pasar::all(),
                         'datapangan' => $this->laporanpangan::where('user_id', Auth::user()->id)->get(),
                     ];
@@ -189,7 +189,7 @@ class DataPanganController extends Controller
                         $laporanpangan->update([
                             'user_id' => Auth::user()->id,
                             'pasar_id' => $request->pasar_id,
-                            'kategori_pangan_id' => $request->kategori_pangan_id,
+                            'jenis_pangan_id' => $request->jenis_pangan_id,
                             'name' => $request->name,
                             'kebutuhan' => $request->kebutuhan,
                             'ketersediaan' => $request->ketersediaan,

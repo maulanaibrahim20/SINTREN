@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pangan\Pangan;
 use App\Models\Pasar\Pasar;
+use App\Models\Pasar\PetugasPasar;
 use App\Models\Pertanian\Pertanian;
 use App\Models\Uptd\Uptd;
 use App\Models\Wilayah\Desa;
@@ -91,6 +92,6 @@ class User extends Authenticatable
 
     public function pasar()
     {
-        return $this->hasOne(Pasar::class);
+        return $this->hasOne(PetugasPasar::class);
     }
 }

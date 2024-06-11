@@ -62,11 +62,11 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="select2Basic" class="form-label">Kategori Pangan</label>
-                                        <select id="kategoripangan" class="form-control form-select select2"
-                                            aria-label="Default select example" name="kategori_pangan_id">
+                                        <label for="select2Basic" class="form-label">Jenis Pangan</label>
+                                        <select id="jenispangan" class="form-control form-select select2"
+                                            aria-label="Default select example" name="jenis_pangan_id">
                                             <option value="">-- Pilih --</option>
-                                            @foreach ($kategoripangan as $item)
+                                            @foreach ($jenispangan as $item)
                                                 <option value="{{ $item->id }}">
                                                     {{ $item->name }}
                                                 </option>

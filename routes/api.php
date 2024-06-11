@@ -5,7 +5,8 @@ use App\Http\Controllers\Api\Admin\AdminPadiController;
 use App\Http\Controllers\Api\Admin\AdminPalawijaController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WilayahController;
-use App\Http\Controllers\Api\PasarController;
+use App\Http\Controllers\Api\Pangan\PasarController;
+use App\Http\Controllers\Api\Pangan\DataPanganController;
 use App\Http\Controllers\Api\Penyuluh\PadiController;
 use App\Http\Controllers\Api\Penyuluh\PalawijaController;
 use App\Http\Controllers\Api\Penyuluh\PenyuluhController;
@@ -63,5 +64,6 @@ Route::get('/desa',[WilayahController::class,'getDesa']);
 Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);
 
 Route::get('/pasar',[PasarController::class,'getPasar']);
+Route::get('/data/pangan',[DataPanganController::class,'getDataPangan']);
 
 

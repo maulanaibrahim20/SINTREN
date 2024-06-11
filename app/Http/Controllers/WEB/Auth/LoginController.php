@@ -47,6 +47,8 @@ class LoginController extends Controller
                 return redirect("/penyuluh/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::PANGAN) {
                 return redirect("/pangan/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
+            } else if ($user->role_id == Role::PASAR) {
+                return redirect("/pasar/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             }
         }
         return back()->with('error', 'Gagal melakukan autentikasi');

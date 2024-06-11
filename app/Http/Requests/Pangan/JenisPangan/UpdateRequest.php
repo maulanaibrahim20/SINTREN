@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Pangan\KategoriPangan;
+namespace App\Http\Requests\Pangan\JenisPangan;
 
 use Illuminate\Foundation\Http\FormRequest;
 
