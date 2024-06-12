@@ -60,7 +60,7 @@ class LaporanPadiController extends Controller
             ->orderBy('laporan_padis.desa_id')
             ->get();
 
-        $desaId = $this->penugasanDesa::pluck('desa_id')->toArray();
+        $desaId = $this->penugasanDesa::where('user_id', Auth::user()->id)->pluck('desa_id');
         $data = [
             'padi' => $results->whereIn('desa_id', $desaId)->sortBy('created_at'),
         ];
@@ -97,7 +97,7 @@ class LaporanPadiController extends Controller
                 'nilai' => $request['nilai'],
             ]);
             $this->verifyPadi->create([
-                'laporan_padi' => $laporanPadi['id'],
+                'laporan_id' => $laporanPadi['id'],
                 'user_id' => Auth::user()->id,
                 'status' => 'tunggu',
                 'catatan' => null
@@ -166,12 +166,10 @@ class LaporanPadiController extends Controller
             $penyuluh = $this->laporanpadi->findOrfail($id);
             $penyuluh->delete();
             DB::commit();
-            Alert::success('success', 'Data Berhasil Dihapus!');
-            return back()->with('success', 'Data Berhasil Dihapus!');
+            return redirect('/penyuluh/create/laporan_padi')->with('success', 'Data Berhasil Dihapus!');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('Error', 'Terjadi Kesalahan Saat Menghapus Data!' . $e->getMessage());
-            return back()->with('error', 'Terjadi Kesalahan Saat Menghapus Data!' . $e->getMessage());
+            return redirect('/penyuluh/create/laporan_padi')->with('error', 'Terjadi Kesalahan Saat Menghapus Data!' . $e->getMessage());
         }
     }
 
