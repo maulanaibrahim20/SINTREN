@@ -139,14 +139,16 @@ class PadiController {
         return;
       }
 
-      final db = await DatabaseHelper().database;
-      await db.delete(
-        'detailPadi',
-        where: "id = ?",
-        whereArgs: [id],
-      );
+      if (result) {
+        final db = await DatabaseHelper().database;
+        await db.delete(
+          'detailPadi',
+          where: "id = ?",
+          whereArgs: [id],
+        );
 
-      EasyLoading.showToast("Berhasil menghapus data");
+        EasyLoading.showToast("Berhasil menghapus data");
+      }
     } catch (e) {
       EasyLoading.showToast("Gagal menghapus data");
       log("Delete error: $e");

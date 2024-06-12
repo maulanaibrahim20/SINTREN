@@ -76,7 +76,7 @@ class HomeChart {
                       .styleWhite
                       .copyWith(fontWeight: FontWeight.bold);
               return LineTooltipItem(
-                '$dataType: ${spot.y}',
+                '$dataType: ${spot.y.toStringAsFixed(2)}',
                 textStyle,
               );
             }).toList();

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -83,7 +85,6 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                       children: [
                         const SizedBox(height: 20),
                         _customAppBar(context),
-                        const SizedBox(height: 10),
                         _trendLineChart(context),
                         const SizedBox(height: 15),
                         _progresPenyuluhan(context),
@@ -541,12 +542,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   }
 
   Card _trendLineChart(BuildContext context) {
+    log(((MediaQuery.of(context).size.height * 0.3) + 10).toString());
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       elevation: 3,
       surfaceTintColor: ColorTheme().whiteColor,
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.3,
+        height: (MediaQuery.of(context).size.height * 0.3) + 10,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: FutureBuilder<PrediksiModel>(
           future: AdminService().getPrediksiPadi(),
@@ -593,7 +595,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                       Row(
                         children: [
                           Icon(
-                            Icons.stacked_line_chart,
+                            Icons.multiline_chart_rounded,
                             color: ColorTheme().primaryColor,
                             size: 30,
                           ),
@@ -619,7 +621,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                     ],
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 10),
+                    margin: const EdgeInsets.only(top: 20),
                     width: MediaQuery.of(context).size.width,
                     height: 207,
                     child: Column(
@@ -630,45 +632,55 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                             HomeChart(data: result).mainData(),
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
+                        const SizedBox(height: 3),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                                child: GestureDetector(
+                              onTap: () {
+                                _showMapeDialog(context);
+                              },
+                              child: Row(
                                 children: [
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    color: ColorTheme().secondaryColor,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    "Data Aktual",
-                                    style: TextStyle(
-                                      color: ColorTheme().primaryColor,
-                                    ),
-                                  ),
+                                  Icon(Icons.error_outline),
+                                  SizedBox(width: 5),
+                                  Text("Mape: ${prediksi.mape}")
                                 ],
                               ),
-                              const SizedBox(width: 10),
-                              Row(
-                                children: [
-                                  Container(
-                                      width: 10,
-                                      height: 10,
-                                      color: Colors.amber[900]),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    "Data Prediksi",
-                                    style: TextStyle(
-                                        color: ColorTheme().primaryColor),
+                            )),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 10,
+                                  height: 10,
+                                  color: ColorTheme().secondaryColor,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  "Data Aktual",
+                                  style: TextStyle(
+                                    color: ColorTheme().primaryColor,
                                   ),
-                                ],
-                              )
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 10),
+                            Row(
+                              children: [
+                                Container(
+                                    width: 10,
+                                    height: 10,
+                                    color: Colors.amber[900]),
+                                const SizedBox(width: 5),
+                                Text(
+                                  "Data Prediksi",
+                                  style: TextStyle(
+                                      color: ColorTheme().primaryColor),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
                       ],
                     ),
@@ -994,6 +1006,59 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           ),
         );
       },
+    );
+  }
+
+  _showMapeDialog(BuildContext context) {
+    final List<Map<String, String>> mapeData = [
+      {'mape': '< 10%', 'akurasi': 'Sangat Baik'},
+      {'mape': '10-20%', 'akurasi': 'Baik'},
+      {'mape': '20-50%', 'akurasi': 'Layak/Memadai'},
+      {'mape': '> 50%', 'akurasi': 'Sangat Buruk'},
+    ];
+    showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          content: DataTable(
+            columns: const <DataColumn>[
+              DataColumn(
+                label: Text(
+                  'MAPE (%)',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Akurasi',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ],
+            rows: mapeData.map((data) {
+              return DataRow(
+                cells: <DataCell>[
+                  DataCell(Text(data['mape']!)),
+                  DataCell(Text(data['akurasi']!)),
+                ],
+              );
+            }).toList(),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Tutup",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(color: Colors.red, fontSize: 16),
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }
