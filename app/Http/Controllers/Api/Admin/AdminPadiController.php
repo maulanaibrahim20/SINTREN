@@ -34,23 +34,24 @@ class AdminPadiController extends Controller
                     'id' => $item->id,
                     'user_id' => $item->user_id,
                     'desa_id' => $item->desa_id,
-                    'desa_name' => $item->desa->name,
+                    'desa_name' => $item->desa ? $item->desa->name : "",
                     'kecamatan_id' => $item->kecamatan_id,
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_padi' => $item->id_jenis_padi,
-                    'padi_name' => $item->padi->name,
+                    'padi_name' => $item->padi ? $item->padi->name : "",
                     'jenis_bantuan' => $item->jenis_bantuan,
                     'id_jenis_pengairan' => $item->id_jenis_pengairan,
-                    'pengairan_name' => $item->pengairan->name,
+                    'pengairan_name' => $item->pengairan ? $item->pengairan->name : "",
                     'tipe_data' => $item->tipe_data,
                     'nilai' => $item->nilai,
                     'date' => $item->date,
-                    'status' => $item->verify->status,
-                    'catatan' => $item->verify->catatan,
+                    'status' => $item->verify ? $item->verify->status : "",
+                    'catatan' => $item->verify ? $item->verify->catatan : "",
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
                 ];
             });
+
 
             return response()->json([
                 'status' => 'success',
