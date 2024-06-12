@@ -160,6 +160,7 @@ class PadiService {
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(result.body);
+      log(result.body);
       if (jsonResult['data'] == null) {
         log("Failed to get detail padi: data is null");
         return false;

@@ -10,6 +10,7 @@ import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/penyuluh_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
@@ -27,9 +28,10 @@ class AdminController {
 
       statusNotifier.value = 'Mendapatkan data penyuluhan...';
       await AdminPadiService().getDetailPadiByKecamatan();
+      await AdminPalawijaService().getDetailPalawijaByKecamatan();
 
       statusNotifier.value = 'Sinkronisasi selesai...';
-      await AdminPalawijaService().getDetailPalawijaByKecamatan();
+      await AdminService().getPenyuluh();
     } catch (error) {
       statusNotifier.value = 'Error: ${error.toString()}';
       throw Exception("Internal Server Error");
@@ -242,5 +244,37 @@ class AdminController {
       log("Get detail combined by status tunggu error: $e");
       return [];
     }
+  }
+
+  Future<List<Penyuluh>> getPenyuluh() async {
+    final db = await DatabaseHelper().database;
+    final List<Map<String, dynamic>> penyuluhMaps = await db.query('penyuluh');
+
+    List<Penyuluh> penyuluhList = [];
+    for (var penyuluhMap in penyuluhMaps) {
+      final List<Map<String, dynamic>> penugasanMaps = await db.query(
+          'penugasan',
+          where: 'user_id = ?',
+          whereArgs: [penyuluhMap['id']]);
+
+      List<Penugasan> penugasanList = penugasanMaps
+          .map((penugasanMap) => Penugasan(
+                id: penugasanMap['id'],
+                desaId: penugasanMap['desa_id'],
+                desaName: penugasanMap['desa_name'],
+              ))
+          .toList();
+
+      penyuluhList.add(Penyuluh(
+        id: penyuluhMap['id'],
+        name: penyuluhMap['name'],
+        email: penyuluhMap['email'],
+        alamat: penyuluhMap['alamat'],
+        noTelp: penyuluhMap['no_telp'],
+        penugasan: penugasanList,
+      ));
+    }
+
+    return penyuluhList;
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -542,13 +540,12 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   }
 
   Card _trendLineChart(BuildContext context) {
-    log(((MediaQuery.of(context).size.height * 0.3) + 10).toString());
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       elevation: 3,
       surfaceTintColor: ColorTheme().whiteColor,
       child: Container(
-        height: (MediaQuery.of(context).size.height * 0.3) + 10,
+        height: 280,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: FutureBuilder<PrediksiModel>(
           future: AdminService().getPrediksiPadi(),

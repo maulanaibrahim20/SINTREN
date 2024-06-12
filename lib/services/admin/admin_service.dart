@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/models/penyuluh_model.dart';
 import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -99,6 +100,47 @@ class AdminService {
     } catch (e) {
       log("Error occurred while fetching prediction data: $e");
       throw Exception('Internal Server Error');
+    }
+  }
+
+  Future<void> getPenyuluh() async {
+    try {
+      final db = await DatabaseHelper().database;
+      await db.delete('penugasan');
+      await db.delete('penyuluh');
+      final String? id = await UserLoginModel().getKecamatanId();
+      final String url = '${ConfigApp().baseUrl}admin/getPenyuluh/$id';
+      final response = await get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body)['data'] as List;
+        List<Penyuluh> penyuluh =
+            data.map((penyuluh) => Penyuluh.fromJson(penyuluh)).toList();
+
+        for (var penyuluh in penyuluh) {
+          await db.insert('penyuluh', penyuluh.toMap(),
+              conflictAlgorithm: ConflictAlgorithm.replace);
+
+          for (var penugasan in penyuluh.penugasan) {
+            await db.insert(
+                'penugasan',
+                {
+                  'id': penugasan.id,
+                  'user_id': penyuluh.id,
+                  'desa_id': penugasan.desaId,
+                  'desa_name': penugasan.desaName,
+                },
+                conflictAlgorithm: ConflictAlgorithm.replace);
+          }
+        }
+        log('Data penyuluh berhasil diambil dan disimpan.');
+      } else {
+        log("HTTP request failed with status code: ${response.statusCode}");
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      log('Terjadi kesalahan saat mengambil data penyuluh: $e');
+      throw Exception('Failed to load data');
     }
   }
 }

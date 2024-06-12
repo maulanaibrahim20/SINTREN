@@ -3,6 +3,7 @@ import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/ui/admin/admin_desa_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_home_view.dart';
+import 'package:sintren_mobile/ui/admin/admin_penugasan_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 
@@ -14,10 +15,11 @@ class AdminLandingView extends StatefulWidget {
 }
 
 class _AdminLandingViewState extends State<AdminLandingView> {
-  int _tabIndex = 1;
+  int _tabIndex = 0;
 
   // Generate keys to ensure widget rebuilding
   final List<UniqueKey> _pageKeys = [
+    UniqueKey(),
     UniqueKey(),
     UniqueKey(),
     UniqueKey(),
@@ -30,16 +32,20 @@ class _AdminLandingViewState extends State<AdminLandingView> {
       bottomNavigationBar: BottomBarInspiredInside(
         items: const [
           TabItem(
-            icon: Icons.villa_rounded,
-            title: 'Desa',
-          ),
-          TabItem(
             icon: Icons.home_rounded,
             title: 'Beranda',
           ),
           TabItem(
+            icon: Icons.villa_rounded,
+            title: 'Desa',
+          ),
+          TabItem(
             icon: Icons.task_rounded,
             title: 'Penyuluhan',
+          ),
+          TabItem(
+            icon: Icons.work_outlined,
+            title: 'Penugasan',
           ),
         ],
         radius: 10,
@@ -64,9 +70,10 @@ class _AdminLandingViewState extends State<AdminLandingView> {
       body: IndexedStack(
         index: _tabIndex,
         children: [
-          AdminDesaView(key: _pageKeys[0]),
-          AdminHomeView(key: _pageKeys[1]),
+          AdminHomeView(key: _pageKeys[0]),
+          AdminDesaView(key: _pageKeys[1]),
           AdminPenyuluhanView(key: _pageKeys[2]),
+          AdminPenugasanView(key: _pageKeys[3])
         ],
       ),
     );

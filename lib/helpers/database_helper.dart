@@ -97,5 +97,23 @@ class DatabaseHelper {
         updated_at TEXT
       )
     ''');
+     db.execute('''
+          CREATE TABLE penyuluh (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            email TEXT,
+            alamat TEXT,
+            no_telp TEXT
+          )
+        ''');
+        db.execute('''
+          CREATE TABLE penugasan (
+            id INTEGER PRIMARY KEY,
+            user_id TEXT,
+            desa_id TEXT,
+            desa_name TEXT,
+            FOREIGN KEY(user_id) REFERENCES penyuluh(id)
+          )
+        ''');
   }
 }

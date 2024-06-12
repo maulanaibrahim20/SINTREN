@@ -198,8 +198,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                 padding: const EdgeInsets.all(10),
                 child: Form(
                   key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: ListView(
                     children: [
                       TextFormFieldComponent(
                         style: StyleTheme().styleBlack.copyWith(

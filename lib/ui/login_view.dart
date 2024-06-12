@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -53,9 +52,7 @@ class _LoginViewState extends State<LoginView> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: isKeyboardVisible
-                  ? 100
-                  : MediaQuery.of(context).size.height * 0.4,
+              height: isKeyboardVisible ? 100 : 320,
               decoration: BoxDecoration(
                 gradient: ColorTheme().linearColor,
                 borderRadius: const BorderRadius.vertical(
@@ -196,8 +193,6 @@ class _LoginViewState extends State<LoginView> {
                                                   )),
                                           (route) => false,
                                         );
-                                        EasyLoading.showSuccess(
-                                            "Berhasil Login");
                                       });
                                     }
                                   },
