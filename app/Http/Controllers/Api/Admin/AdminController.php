@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Penyuluh\LuasLahanWilayah;
 use App\Models\Uptd\VerifyPadi;
 use App\Models\Uptd\VerifyPalawija;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +62,7 @@ class AdminController extends Controller
         DB::beginTransaction();
         try {
             $verification = VerifyPadi::where('laporan_id', $id)->firstOrFail();
-            if($request->tipe == 'palawija'){
+            if ($request->tipe == 'palawija') {
                 $verification = VerifyPalawija::where('laporan_id', $id)->firstOrFail();
             }
             $verification->fill($validated);
@@ -94,6 +95,48 @@ class AdminController extends Controller
                 'status' => 'error',
                 'message' => 'Gagal mengupdate data. ' . $e->getMessage(),
                 'data' => null,
+            ], 500);
+        }
+    }
+
+    public function getPenyuluh($id)
+    {
+        try {
+            $users = User::with(['penyuluh' => function ($query) use ($id) {
+                $query->where('kecamatan_id', $id);
+            }, 'penugasan.desa'])
+                ->whereHas('penyuluh', function ($query) use ($id) {
+                    $query->where('kecamatan_id', $id);
+                })->get();
+
+            // Menyiapkan array untuk response data
+            $responseData = $users->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'alamat' => $user->penyuluh->alamat ?? null,
+                    'no_telp' => $user->penyuluh->no_telp ?? null,
+                    'penugasan' => $user->penugasan->map(function ($penugasan) {
+                        return [
+                            'id' => $penugasan->id,
+                            'desa_id' => $penugasan->desa_id,
+                            'desa_name' => $penugasan->desa->name ?? null
+                        ];
+                    })
+                ];
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil didapatkan',
+                'data' => $responseData
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
+                'data' => null
             ], 500);
         }
     }
