@@ -122,6 +122,7 @@ class PadiController extends Controller
             ], 500);
         }
     }
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
