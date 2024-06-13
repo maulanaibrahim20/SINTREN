@@ -14,6 +14,7 @@ import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
   const HistoriPenyuluhanView({super.key});
@@ -74,7 +75,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         title: Text(
           'Histori Penyuluhan',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -125,7 +126,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                   Text(
                     "Internal Server Error",
                     style: StyleTheme().styleBlack.copyWith(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey),
                   ),
@@ -159,7 +160,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                     Text(
                       "Tugas Belum Diberikan",
                       style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                     ),
@@ -168,7 +169,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
               );
             }
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               child: ListView.builder(
                 padding: EdgeInsets.zero,
                 itemCount: (selectedDesaValue == null)
@@ -199,8 +200,8 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                       setState(() {});
                     },
                     child: Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 10.h),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
@@ -211,10 +212,10 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                             Align(
                               alignment: Alignment.topRight,
                               child: Container(
-                                height: 30,
-                                width: 150,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
+                                height: 30.h,
+                                width: 150.w,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5.h, horizontal: 20.w),
                                 decoration: const BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.only(
@@ -225,20 +226,20 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                 child: Text(
                                   "${desa.totalTunggu} Data Ditolak",
                                   style: StyleTheme().styleWhite.copyWith(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 50.h,
+                                  width: 50.w,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: ColorTheme().linearColor,
@@ -247,11 +248,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                     child: Icon(
                                       Icons.home_rounded,
                                       color: ColorTheme().whiteColor,
-                                      size: 30,
+                                      size: 30.sp,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 15),
+                                SizedBox(width: 15.w),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -262,7 +263,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                         style: StyleTheme()
                                             .stylePrimary
                                             .copyWith(
-                                                fontSize: 20,
+                                                fontSize: 20.sp,
                                                 fontWeight: FontWeight.bold),
                                       ),
                                       Text(
@@ -270,7 +271,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                         style: StyleTheme().styleBlack.copyWith(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.grey[700],
-                                            fontSize: 14),
+                                            fontSize: 14.sp),
                                       ),
                                     ],
                                   ),
@@ -278,15 +279,14 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Stack(
                             children: [
                               const Divider(thickness: 2, color: Colors.grey),
                               Container(
                                 color: ColorTheme().whiteColor,
-                                margin: const EdgeInsets.only(left: 20),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                margin: EdgeInsets.only(left: 20.w),
+                                padding: EdgeInsets.symmetric(horizontal: 8.w),
                                 child: Text(
                                   "Progres bulan ini",
                                   style: StyleTheme()
@@ -296,11 +296,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 40,
+                            width: MediaQuery.of(context).size.width - 40.w,
                             animation: true,
-                            lineHeight: 30,
+                            lineHeight: 30.h,
                             animationDuration: 2000,
                             percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
                                 ? 1
@@ -308,12 +308,12 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                             center: Text(
                               "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
                               style: StyleTheme().styleWhite.copyWith(
-                                  fontWeight: FontWeight.w500, fontSize: 14),
+                                  fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
                             barRadius: const Radius.circular(10),
                             linearGradient: ColorTheme().linearColor,
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                         ],
                       ),
                     ),
@@ -366,13 +366,13 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Kembali dengan nilai false
+                Navigator.pop(context);
               },
               child: Text(
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
               ),
             ),
             TextButton(
@@ -383,7 +383,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16.sp),
               ),
             ),
           ],

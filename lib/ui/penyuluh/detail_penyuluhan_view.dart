@@ -4,14 +4,16 @@ import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_padi_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/detail_palawija_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/histori_penyuluhan_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DetailPenyuluhanView extends StatefulWidget {
-  const DetailPenyuluhanView(
-      {super.key,
-      required this.index,
-      required this.date,
-      required this.desaId,
-      this.desaName = "",});
+  const DetailPenyuluhanView({
+    super.key,
+    required this.index,
+    required this.date,
+    required this.desaId,
+    this.desaName = "",
+  });
 
   final int index;
   final String date;
@@ -52,6 +54,7 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
           icon: Icon(
             Icons.arrow_back,
             color: ColorTheme().whiteColor,
+            size: 24.sp, 
           ),
           onPressed: () {
             Navigator.pushAndRemoveUntil(
@@ -70,7 +73,7 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
         title: Text(
           'Histori Penyuluhan',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp, 
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -79,6 +82,7 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
             icon: Icon(
               Icons.refresh_rounded,
               color: ColorTheme().whiteColor,
+              size: 24.sp, 
             ),
             onPressed: () {
               setState(
@@ -99,12 +103,12 @@ class _DetailPenyuluhanViewState extends State<DetailPenyuluhanView>
                 controller: _tabController,
                 tabs: tabs,
                 labelColor: ColorTheme().whiteColor,
-                labelStyle: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+                labelStyle: StyleTheme().stylePrimary.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold), 
                 unselectedLabelColor: Colors.grey,
                 indicatorColor: ColorTheme().whiteColor,
-                indicatorWeight: 2.0,
+                indicatorWeight: 2.0.w, 
                 indicatorSize: TabBarIndicatorSize.tab,
               ),
             ),

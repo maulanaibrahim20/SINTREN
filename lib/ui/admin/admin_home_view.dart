@@ -640,8 +640,8 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                               },
                               child: Row(
                                 children: [
-                                  Icon(Icons.error_outline),
-                                  SizedBox(width: 5),
+                                  const Icon(Icons.error_outline),
+                                  const SizedBox(width: 5),
                                   Text("Mape: ${prediksi.mape}")
                                 ],
                               ),

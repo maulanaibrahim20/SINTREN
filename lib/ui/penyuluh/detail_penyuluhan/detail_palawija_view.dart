@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
@@ -116,15 +117,20 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                             .toList();
                     DetailPalawijaModel data = displayList[index];
                     return Card(
+                      color: ColorTheme().whiteColor,
                       surfaceTintColor: ColorTheme().whiteColor,
-                      margin: const EdgeInsets.only(
-                          right: 10, left: 10, bottom: 15),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setWidth(10),
+                        vertical: ScreenUtil().setHeight(5),
+                      ),
                       elevation: 3,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(20),
+                            vertical: ScreenUtil().setHeight(10),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -137,20 +143,22 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                         .toCamelCase(data.palawijaName),
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16),
+                                        fontSize: ScreenUtil().setSp(16)),
                                   ),
                                   Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: ScreenUtil().setHeight(3)),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: ScreenUtil().setWidth(8),
+                                        vertical: ScreenUtil().setHeight(3)),
                                     decoration: BoxDecoration(
                                       color: data.status == "terima"
                                           ? Colors.green
                                           : data.status == "tolak"
                                               ? Colors.red
                                               : Colors.grey,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(
+                                          ScreenUtil().setWidth(5)),
                                     ),
                                     child: Text(
                                       data.status == "terima"
@@ -198,13 +206,13 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   Text(
                                     UserController().toCamelCase(data.tipeData),
                                     style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 14,
+                                        fontSize: ScreenUtil().setSp(14),
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     data.nilai.toString(),
                                     style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 14,
+                                          fontSize: ScreenUtil().setSp(14),
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -244,22 +252,22 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   icon: Icon(Icons.remove_red_eye,
                                       color: ColorTheme().primaryColor),
                                   label: Text('Lihat Ulasan',
-                                      style: StyleTheme()
-                                          .stylePrimary
-                                          .copyWith(fontSize: 14)),
+                                      style: StyleTheme().stylePrimary.copyWith(
+                                          fontSize: ScreenUtil().setSp(14))),
                                   style: ElevatedButton.styleFrom(
                                     fixedSize: Size.fromWidth(
-                                        MediaQuery.of(context).size.width),
+                                        ScreenUtil().screenWidth),
                                     surfaceTintColor: ColorTheme().whiteColor,
                                     side: BorderSide(
                                         color: ColorTheme().primaryColor,
-                                        width: 2),
+                                        width: ScreenUtil().setWidth(2)),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
+                                      borderRadius: BorderRadius.circular(
+                                          ScreenUtil().setWidth(30)),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: ScreenUtil().setHeight(10)),
                               ],
                               data.status == "terima" || data.status == "tolak"
                                   ? const SizedBox.shrink()
@@ -270,14 +278,16 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                           child: ElevatedButton.icon(
                                             onPressed: () async {
                                               await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          FormPalawijaView(
-                                                            detail: data,
-                                                            onCreate: false,
-                                                          )));
-                                              setState(() {});
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      FormPalawijaView(
+                                                    detail: data,
+                                                    onCreate: false,
+                                                  ),
+                                                ),
+                                              ).then(
+                                                  (value) => setState(() {}));
                                             },
                                             icon: Icon(Icons.edit,
                                                 color:
@@ -285,22 +295,28 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                             label: Text('Edit',
                                                 style: StyleTheme()
                                                     .stylePrimary
-                                                    .copyWith(fontSize: 14)),
+                                                    .copyWith(
+                                                        fontSize: ScreenUtil()
+                                                            .setSp(14))),
                                             style: ElevatedButton.styleFrom(
                                               surfaceTintColor:
                                                   ColorTheme().whiteColor,
                                               side: BorderSide(
                                                   color:
                                                       ColorTheme().primaryColor,
-                                                  width: 2),
+                                                  width:
+                                                      ScreenUtil().setWidth(2)),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(30),
+                                                    BorderRadius.circular(
+                                                        ScreenUtil()
+                                                            .setWidth(30)),
                                               ),
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
+                                        SizedBox(
+                                            width: ScreenUtil().setWidth(10)),
                                         Expanded(
                                           flex: 1,
                                           child: ElevatedButton.icon(
@@ -320,16 +336,21 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                 style: StyleTheme()
                                                     .stylePrimary
                                                     .copyWith(
-                                                        fontSize: 14,
+                                                        fontSize: ScreenUtil()
+                                                            .setSp(14),
                                                         color: Colors.red)),
                                             style: ElevatedButton.styleFrom(
                                               surfaceTintColor:
                                                   ColorTheme().whiteColor,
-                                              side: const BorderSide(
-                                                  color: Colors.red, width: 2),
+                                              side: BorderSide(
+                                                  color: Colors.red,
+                                                  width:
+                                                      ScreenUtil().setWidth(2)),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(30),
+                                                    BorderRadius.circular(
+                                                        ScreenUtil()
+                                                            .setWidth(30)),
                                               ),
                                             ),
                                           ),
@@ -396,9 +417,8 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Tutup",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(
+                    color: Colors.red, fontSize: ScreenUtil().setSp(16)),
               ),
             ),
             TextButton(
@@ -409,7 +429,9 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: ScreenUtil().setSp(16)),
               ),
             ),
           ],
@@ -432,9 +454,8 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Cancel",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.grey),
+                style: StyleTheme().stylePrimary.copyWith(
+                    fontSize: ScreenUtil().setSp(14), color: Colors.grey),
               ),
             ),
             TextButton(
@@ -443,9 +464,8 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Delete",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                style: StyleTheme().stylePrimary.copyWith(
+                    fontSize: ScreenUtil().setSp(14), color: Colors.red),
               ),
             ),
           ],
@@ -468,7 +488,9 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
           ),
           content: Text(
             data.catatan,
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+            style: StyleTheme()
+                .styleBlack
+                .copyWith(fontSize: ScreenUtil().setSp(14)),
           ),
           actions: <Widget>[
             TextButton(
@@ -477,9 +499,8 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Tutup",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.grey),
+                style: StyleTheme().stylePrimary.copyWith(
+                    fontSize: ScreenUtil().setSp(14), color: Colors.grey),
               ),
             ),
             TextButton(
@@ -488,7 +509,9 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Edit",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: ScreenUtil().setSp(14)),
               ),
             ),
             TextButton(
@@ -497,9 +520,8 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Delete",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                style: StyleTheme().stylePrimary.copyWith(
+                    fontSize: ScreenUtil().setSp(14), color: Colors.red),
               ),
             ),
           ],

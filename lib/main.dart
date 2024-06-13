@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/ui/initialization.dart';
 
@@ -24,11 +24,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Application",
-      builder: EasyLoading.init(),
-      home: InitializationWrapper(isLogin: widget.isLogin, role: widget.role),
+    return ScreenUtilInit(
+      designSize: const Size(
+          412, 915), // Ukuran desain sesuai dengan mockup yang digunakan
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Application",
+          builder: EasyLoading.init(),
+          home:
+              InitializationWrapper(isLogin: widget.isLogin, role: widget.role),
+        );
+      },
     );
   }
 }

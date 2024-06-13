@@ -24,13 +24,13 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
   Future<void> _initializeData() async {
     desaList = await adminC.getDesa();
     selectedDesaValue = null;
+    setState(() {});
   }
 
   @override
   void initState() {
     _initializeData();
     super.initState();
-    setState(() {});
   }
 
   @override
@@ -101,7 +101,7 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                   color: ColorTheme().whiteColor,
                   child: Column(
                     children: [
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
@@ -179,9 +179,7 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                           'desa_id': selectedDesaValue!.id,
                           'desa_name': selectedDesaValue!.name,
                         };
-                        await adminC
-                            .addPenugasan(data)
-                            .then((value) => setState(() {}));
+                        await adminC.addPenugasan(data);
                         setState(() {});
                       }
                     },
@@ -217,8 +215,19 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                                   horizontal: 20, vertical: 5),
                               surfaceTintColor: ColorTheme().whiteColor,
                               child: ListTile(
-                                title: Text(penugasan.desaName),
-                                subtitle: Text('Desa ID: ${penugasan.desaId}'),
+                                leading: Icon(
+                                  Icons.villa,
+                                  color: ColorTheme().primaryColor,
+                                  size: 30,
+                                ),
+                                title: Text(penugasan.desaName,
+                                    style: StyleTheme().stylePrimary.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                                subtitle: Text(
+                                  penugasan.desaId,
+                                  style: StyleTheme().styleBlack,
+                                ),
                                 trailing: IconButton(
                                     onPressed: () async {
                                       bool? shouldDelete =
@@ -230,7 +239,7 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                                         setState(() {});
                                       }
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.remove_circle,
                                       color: Colors.red,
                                     )),
@@ -271,13 +280,7 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          surfaceTintColor: ColorTheme().whiteColor,
-          title: const Column(
-            children: [
-              Text('Tambah Penugasan'),
-              Divider(),
-            ],
-          ),
+          title: const Text("Tambah Penugasan"),
           content: DropdownButtonComponent(
             icon: Icons.villa,
             label: 'Desa',
@@ -307,20 +310,20 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
               onPressed: () {
                 Navigator.of(context).pop(false); // Kembali dengan nilai false
               },
-              child: Text(
-                "Tutup",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
-              ),
+              child: Text("Batal",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(fontSize: 14, color: Colors.grey)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true);
+                Navigator.of(context).pop(true); // Kembali dengan nilai true
               },
               child: Text(
                 "Tambah",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: 14, color: ColorTheme().primaryColor),
               ),
             ),
           ],

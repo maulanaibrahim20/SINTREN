@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
@@ -75,477 +76,466 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.35,
+            height: 320.h,
             decoration: BoxDecoration(
               gradient: ColorTheme().linearColor,
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.elliptical(200, 30),
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.elliptical(200.w, 30.h),
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 300,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        child: PopupMenuButton<String>(
-                          padding: EdgeInsets.zero,
-                          surfaceTintColor: ColorTheme().whiteColor,
-                          icon: Icon(
-                            Icons.account_circle,
-                            size: 30,
-                            color: ColorTheme().whiteColor,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _customAppBar(context),
+                SizedBox(height: 30.h),
+                _buttonAddData(context),
+                SizedBox(height: 10.h),
+                _buttonHistory(context),
+                SizedBox(height: 15.h),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.w),
+                  child: Text("List Desa",
+                      style: StyleTheme().stylePrimary.copyWith(
+                          fontWeight: FontWeight.bold, fontSize: 18.sp)),
+                ),
+                SizedBox(height: 10.h),
+                Expanded(child: _buildListPenyuluhan()),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListPenyuluhan() {
+    return FutureBuilder<List<dynamic>>(
+      future: Future.wait([
+        penyuluhC.getHistoriPenyuluhanBulanIni(),
+        penyuluhC.getLuasLahanDesa(),
+      ]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error,
+                  color: Colors.grey,
+                  size: 50,
+                ),
+                Text(
+                  "Internal Server Error: ${snapshot.error}",
+                  style: StyleTheme().styleBlack.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final historiList = snapshot.data?[0] as List<HistoriPenyuluhanModel>;
+          final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
+
+          double getLuasDesa(String id) {
+            for (LuasWilayahModel wilayah in luasDesaList) {
+              if (wilayah.id == id) {
+                return wilayah.totalLuasLahan;
+              }
+            }
+            return 0;
+          }
+
+          if (historiList.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.assignment,
+                    color: Colors.grey,
+                    size: 50,
+                  ),
+                  Text(
+                    "Tugas Belum Diberikan",
+                    style: StyleTheme().styleBlack.copyWith(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: historiList.length,
+            itemBuilder: (BuildContext context, int index) {
+              HistoriPenyuluhanModel desa = historiList[index];
+              return GestureDetector(
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => DetailPenyuluhanView(
+                        index: 0,
+                        date: desa.date,
+                        desaId: desa.desaId,
+                        desaName: desa.desaName,
+                      ),
+                    ),
+                  ).then((value) => setState(() {}));
+                },
+                child: Card(
+                  margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+                  elevation: 3,
+                  surfaceTintColor: ColorTheme().whiteColor,
+                  color: ColorTheme().whiteColor,
+                  child: Column(
+                    children: [
+                      if (desa.totalTunggu > 0)
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            height: 30.h,
+                            width: 150.w,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5.h, horizontal: 20.w),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10.r),
+                                bottomLeft: Radius.circular(10.r),
+                              ),
+                            ),
+                            child: Text(
+                              "${desa.totalTunggu} Data Ditolak",
+                              style: StyleTheme().styleWhite.copyWith(
+                                  fontSize: 14.sp, fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          onSelected: (String value) {
-                            if (value == "1") {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const ChangeProfileView()));
-                            } else if (value == "2") {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => const ChangePasswordView()));
-                            } else {
-                              userC.logout().then((value) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const LoginView()),
-                                    (route) => false);
-                                EasyLoading.showToast("Berhasil Logout");
-                              });
-                            }
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
-                              value: '1',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.person),
-                                  SizedBox(width: 5),
-                                  Text('Edit Profil'),
-                                ],
+                        ),
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 50.h,
+                              width: 50.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: ColorTheme().linearColor,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.home_rounded,
+                                  color: ColorTheme().whiteColor,
+                                  size: 30.sp,
+                                ),
                               ),
                             ),
-                            const PopupMenuItem<String>(
-                              value: '2',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.lock),
-                                  SizedBox(width: 5),
-                                  Text('Ubah Password'),
-                                ],
-                              ),
-                            ),
-                            const PopupMenuItem<String>(
-                              value: '3',
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.logout,
-                                    color: Colors.red,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'Logout',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            SizedBox(width: 15.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Desa ${UserController().toCamelCase(desa.desaName)}",
+                                  style: StyleTheme().stylePrimary.copyWith(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  userC.convertDate(desa.date),
+                                  style: StyleTheme().styleBlack.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[700],
+                                      fontSize: 14.sp),
+                                ),
+                              ],
+                            )
                           ],
                         ),
                       ),
-                    ),
-                    ClipRect(
-                      child: Align(
-                        alignment: Alignment.center,
-                        heightFactor: 0.5,
-                        child: Image.asset(
-                          'assets/images/pertanian.png',
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "SINTREN",
-                      style: StyleTheme()
-                          .styleWhite
-                          .copyWith(fontSize: 32, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: ColorTheme().linearColor,
-                        ),
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            desa.then((value) {
-                              if (value.isEmpty) {
-                                EasyLoading.showToast(
-                                    "Belum Dilakukan Penyuluhan");
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => const FormPadiView(
-                                              onCreate: true,
-                                            )));
-                              }
-                            });
-                          },
-                          icon: Icon(Icons.add, color: ColorTheme().whiteColor),
-                          label: Text(
-                            'Padi',
-                            style: StyleTheme().styleWhite.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            side: BorderSide(
-                                color: ColorTheme().primaryColor, width: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                      SizedBox(height: 10.h),
+                      Stack(
+                        children: [
+                          Divider(thickness: 2.h, color: Colors.grey),
+                          Container(
+                            color: ColorTheme().whiteColor,
+                            margin: EdgeInsets.only(left: 20.w),
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            child: Text(
+                              "Progres bulan ini",
+                              style: StyleTheme()
+                                  .styleBlack
+                                  .copyWith(color: Colors.black87),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: ColorTheme().linearColor,
+                      SizedBox(height: 10.h),
+                      LinearPercentIndicator(
+                        width: MediaQuery.of(context).size.width - 30.w,
+                        animation: true,
+                        lineHeight: 30.h,
+                        animationDuration: 2000,
+                        percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
+                            ? 1
+                            : desa.nilai / getLuasDesa(desa.desaId),
+                        center: Text(
+                          "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
+                          style: StyleTheme().styleWhite.copyWith(
+                              fontWeight: FontWeight.w500, fontSize: 14.sp),
                         ),
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const FormPalawijaView(
-                                          onCreate: true,
-                                        )));
-                          },
-                          icon: Icon(Icons.add, color: ColorTheme().whiteColor),
-                          label: Text(
-                            'Palawija',
-                            style: StyleTheme().styleWhite.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            side: BorderSide(
-                                color: ColorTheme().primaryColor, width: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
+                        barRadius: Radius.circular(10.r),
+                        linearGradient: ColorTheme().linearColor,
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 10.h),
+                    ],
+                  ),
                 ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Container _buttonHistory(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5.w),
+      width: MediaQuery.of(context).size.width,
+      height: 50.h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        gradient: ColorTheme().linearColor,
+      ),
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const HistoriPenyuluhanView()),
+          );
+        },
+        icon: Icon(Icons.history, color: ColorTheme().whiteColor),
+        label: Text(
+          'Histori Penyuluhan',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14.sp,
+            color: ColorTheme().whiteColor,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          side: BorderSide(color: ColorTheme().primaryColor, width: 2.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buttonAddData(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              height: 50.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                gradient: ColorTheme().linearColor,
               ),
-              const SizedBox(height: 10),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: ColorTheme().linearColor,
-                ),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  desa.then((value) {
+                    if (value.isEmpty) {
+                      EasyLoading.showToast("Belum Dilakukan Penyuluhan");
+                    } else {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const HistoriPenyuluhanView()));
-                  },
-                  icon: Icon(Icons.history, color: ColorTheme().whiteColor),
-                  label: Text(
-                    'Histori Penyuluhan',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: ColorTheme().whiteColor,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    side:
-                        BorderSide(color: ColorTheme().primaryColor, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text("List Desa",
-                    style: StyleTheme()
-                        .stylePrimary
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 18)),
-              ),
-              Expanded(
-                child: FutureBuilder<List<dynamic>>(
-                  future: Future.wait([
-                    penyuluhC.getHistoriPenyuluhanBulanIni(),
-                    penyuluhC.getLuasLahanDesa(),
-                  ]),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.error,
-                              color: Colors.grey,
-                              size: 50,
-                            ),
-                            Text(
-                              "Internal Server Error: ${snapshot.error}",
-                              style: StyleTheme().styleBlack.copyWith(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      final historiList =
-                          snapshot.data?[0] as List<HistoriPenyuluhanModel>;
-                      final luasDesaList =
-                          snapshot.data?[1] as List<LuasWilayahModel>;
-
-                      double getLuasDesa(String id) {
-                        for (LuasWilayahModel wilayah in luasDesaList) {
-                          if (wilayah.id == id) {
-                            return wilayah.totalLuasLahan;
-                          }
-                        }
-                        return 0;
-                      }
-
-                      if (historiList.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.assignment,
-                                color: Colors.grey,
-                                size: 50,
-                              ),
-                              Text(
-                                "Tugas Belum Diberikan",
-                                style: StyleTheme().styleBlack.copyWith(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey),
-                              ),
-                            ],
+                          builder: (_) => const FormPadiView(
+                            onCreate: true,
                           ),
-                        );
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemCount: historiList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            HistoriPenyuluhanModel desa = historiList[index];
-                            return GestureDetector(
-                              onTap: () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => DetailPenyuluhanView(
-                                      index: 0,
-                                      date: desa.date,
-                                      desaId: desa.desaId,
-                                      desaName: desa.desaName,
-                                    ),
-                                  ),
-                                ).then((value) => setState(() {}));
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                elevation: 3,
-                                surfaceTintColor: ColorTheme().whiteColor,
-                                color: ColorTheme().whiteColor,
-                                child: Column(
-                                  children: [
-                                    if (desa.totalTunggu > 0)
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: Container(
-                                          height: 30,
-                                          width: 150,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5, horizontal: 20),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            "${desa.totalTunggu} Data Ditolak",
-                                            style: StyleTheme()
-                                                .styleWhite
-                                                .copyWith(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    const SizedBox(height: 10),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            height: 50,
-                                            width: 50,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              gradient:
-                                                  ColorTheme().linearColor,
-                                            ),
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.home_rounded,
-                                                color: ColorTheme().whiteColor,
-                                                size: 30,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 15),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Desa ${UserController().toCamelCase(desa.desaName)}",
-                                                style: StyleTheme()
-                                                    .stylePrimary
-                                                    .copyWith(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                              ),
-                                              Text(
-                                                userC.convertDate(desa.date),
-                                                style: StyleTheme()
-                                                    .styleBlack
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.grey[700],
-                                                        fontSize: 14),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Stack(
-                                      children: [
-                                        const Divider(
-                                            thickness: 2, color: Colors.grey),
-                                        Container(
-                                          color: ColorTheme().whiteColor,
-                                          margin:
-                                              const EdgeInsets.only(left: 20),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "Progres bulan ini",
-                                            style: StyleTheme()
-                                                .styleBlack
-                                                .copyWith(
-                                                    color: Colors.black87),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    LinearPercentIndicator(
-                                      width: MediaQuery.of(context).size.width -
-                                          30,
-                                      animation: true,
-                                      lineHeight: 30,
-                                      animationDuration: 2000,
-                                      percent: (desa.nilai /
-                                                  getLuasDesa(desa.desaId)) >
-                                              1
-                                          ? 1
-                                          : desa.nilai /
-                                              getLuasDesa(desa.desaId),
-                                      center: Text(
-                                        "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
-                                        style: StyleTheme().styleWhite.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14),
-                                      ),
-                                      barRadius: const Radius.circular(10),
-                                      linearGradient: ColorTheme().linearColor,
-                                    ),
-                                    const SizedBox(height: 10),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
                         ),
                       );
                     }
-                  },
+                  });
+                },
+                icon: Icon(Icons.add, color: ColorTheme().whiteColor),
+                label: Text(
+                  'Padi',
+                  style: StyleTheme().styleWhite.copyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  side:
+                      BorderSide(color: ColorTheme().primaryColor, width: 2.w),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
                 ),
               ),
-            ],
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Container(
+              height: 50.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                gradient: ColorTheme().linearColor,
+              ),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FormPalawijaView(
+                        onCreate: true,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.add, color: ColorTheme().whiteColor),
+                label: Text(
+                  'Palawija',
+                  style: StyleTheme().styleWhite.copyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  side:
+                      BorderSide(color: ColorTheme().primaryColor, width: 2.w),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _customAppBar(BuildContext context) {
+    return SizedBox(
+      height: 300.h,
+      child: Column(
+        children: [
+          SizedBox(height: 30.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 10.h),
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: PopupMenuButton<String>(
+                padding: EdgeInsets.zero,
+                surfaceTintColor: ColorTheme().whiteColor,
+                icon: Icon(
+                  Icons.account_circle,
+                  size: 30.sp,
+                  color: ColorTheme().whiteColor,
+                ),
+                onSelected: (String value) {
+                  if (value == "1") {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const ChangeProfileView()));
+                  } else if (value == "2") {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const ChangePasswordView()));
+                  } else {
+                    userC.logout().then((value) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginView()),
+                          (route) => false);
+                      EasyLoading.showToast("Berhasil Logout");
+                    });
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: '1',
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person),
+                        SizedBox(width: 5.w),
+                        const Text('Edit Profil'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: '2',
+                    child: Row(
+                      children: [
+                        const Icon(Icons.lock),
+                        SizedBox(width: 5.w),
+                        const Text('Ubah Password'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: '3',
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.logout,
+                          color: Colors.red,
+                        ),
+                        SizedBox(width: 5.w),
+                        const Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          ClipRect(
+            child: Align(
+              alignment: Alignment.center,
+              heightFactor: 0.5,
+              child: Image.asset(
+                'assets/images/pertanian.png',
+                width: 200.w,
+                height: 200.h,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Text(
+            "SINTREN",
+            style: StyleTheme()
+                .styleWhite
+                .copyWith(fontSize: 32.sp, fontWeight: FontWeight.bold),
           ),
         ],
       ),

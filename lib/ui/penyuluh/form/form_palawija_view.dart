@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
@@ -119,14 +120,14 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
           widget.onCreate ? "Tambah Palawija" : "Edit Palawija",
           style: StyleTheme()
               .styleWhite
-              .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+              .copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
         ),
       ),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(10),
-        height: 50,
+        margin: EdgeInsets.all(10.w),
+        height: 50.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           gradient: ColorTheme().linearColor,
         ),
         child: ElevatedButton.icon(
@@ -176,15 +177,15 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
           label: Text(
             'SIMPAN',
             style: StyleTheme().styleWhite.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                 ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            side: BorderSide(color: ColorTheme().primaryColor, width: 2),
+            side: BorderSide(color: ColorTheme().primaryColor, width: 2.w),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
             ),
           ),
         ),
@@ -193,16 +194,18 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
           ? const Center(child: CircularProgressIndicator())
           : Card(
               surfaceTintColor: ColorTheme().whiteColor,
-              margin: const EdgeInsets.all(10),
+              color: ColorTheme().whiteColor,
+              margin: EdgeInsets.all(10.w),
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10.w),
                 child: Form(
                   key: formKey,
                   child: ListView(
+                    shrinkWrap: true,
                     children: [
                       TextFormFieldComponent(
                         style: StyleTheme().styleBlack.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 15),
+                            fontWeight: FontWeight.w500, fontSize: 15.sp),
                         readOnly: true,
                         icon: Icons.date_range_rounded,
                         hint: "Pilih Tanggal",
@@ -219,7 +222,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           _selectDate(context);
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Desa',
@@ -246,7 +249,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",
@@ -276,7 +279,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Jenis Palawija',
@@ -303,7 +306,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Bantuan",
@@ -333,7 +336,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.type_specimen,
                         label: "Jenis Data",
@@ -363,7 +366,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       TextFormFieldComponent(
                         controller: value,
                         icon: Icons.numbers,
@@ -376,12 +379,12 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                         obsecure: false,
                         onSaved: (value) {
                           setState(() {
-                            value.text = value!;
+                            this.value.text = value!;
                           });
                         },
                         style: StyleTheme().styleBlack.copyWith(
                               fontWeight: FontWeight.w500,
-                              fontSize: 15,
+                              fontSize: 15.sp,
                             ),
                       ),
                     ],

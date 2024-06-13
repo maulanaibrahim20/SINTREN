@@ -194,7 +194,6 @@ class PadiController {
           COALESCE(updated_at, created_at) DESC
         ''',
       );
-      log(maps.toString());
       return List<DetailPadiModel>.from(
           maps.map((map) => DetailPadiModel.fromMap(map)));
     } catch (e) {

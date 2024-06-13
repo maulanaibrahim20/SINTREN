@@ -45,7 +45,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
         future: adminC.getPenyuluh(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -71,7 +71,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
           } else {
             List<Penyuluh> penyuluhList = snapshot.data!;
             return ListView.builder(
-              padding: EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.only(top: 10),
               itemCount: penyuluhList.length,
               itemBuilder: (context, index) {
                 Penyuluh penyuluh = penyuluhList[index];
@@ -95,7 +95,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
                     color: ColorTheme().whiteColor,
                     child: Column(
                       children: [
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Row(

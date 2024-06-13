@@ -7,6 +7,7 @@ import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/components/ringkasan_padi_widget.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DetailPadiView extends StatefulWidget {
   const DetailPadiView({
@@ -77,14 +78,14 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                       Text(
                         "Internal Server Error",
                         style: StyleTheme().styleBlack.copyWith(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey),
                       ),
                       Text(
                         snapshot.error.toString(),
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           color: Colors.red,
                         ),
                         textAlign: TextAlign.center,
@@ -114,15 +115,16 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                             .toList();
                     DetailPadiModel data = displayList[index];
                     return Card(
+                      color: ColorTheme().whiteColor,
                       surfaceTintColor: ColorTheme().whiteColor,
-                      margin: const EdgeInsets.only(
-                          right: 10, left: 10, bottom: 15),
+                      margin: EdgeInsets.only(
+                          right: 10.w, left: 10.w, bottom: 15.h),
                       elevation: 3,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 10.h),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -134,20 +136,19 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                     data.padiName,
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16),
+                                        fontSize: 16.sp),
                                   ),
                                   Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
+                                    margin: EdgeInsets.symmetric(vertical: 3.h),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w, vertical: 3.h),
                                     decoration: BoxDecoration(
                                       color: data.status == "terima"
                                           ? Colors.green
                                           : data.status == "tolak"
                                               ? Colors.red
                                               : Colors.grey,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(5.r),
                                     ),
                                     child: Text(
                                       data.status == "terima"
@@ -157,6 +158,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                               : "Menunggu Verifikasi",
                                       style: StyleTheme().styleWhite.copyWith(
                                             fontWeight: FontWeight.w500,
+                                            fontSize: 14.sp,
                                           ),
                                     ),
                                   )
@@ -169,11 +171,15 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                   Text(
                                     UserController()
                                         .toCamelCase(data.jenisBantuan),
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme().styleBlack.copyWith(
+                                          fontSize: 14.sp,
+                                        ),
                                   ),
                                   Text(
                                     data.date,
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme().styleBlack.copyWith(
+                                          fontSize: 14.sp,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -183,12 +189,16 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                 children: [
                                   Text(
                                     'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme().styleBlack.copyWith(
+                                          fontSize: 14.sp,
+                                        ),
                                   ),
                                   Text(
                                     UserController()
                                         .toCamelCase(data.pengairanName),
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme().styleBlack.copyWith(
+                                          fontSize: 14.sp,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -200,13 +210,13 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                   Text(
                                     UserController().toCamelCase(data.tipeData),
                                     style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     data.nilai.toString(),
                                     style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -247,20 +257,20 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                   label: Text('Lihat Ulasan',
                                       style: StyleTheme()
                                           .stylePrimary
-                                          .copyWith(fontSize: 14)),
+                                          .copyWith(fontSize: 14.sp)),
                                   style: ElevatedButton.styleFrom(
                                     fixedSize: Size.fromWidth(
                                         MediaQuery.of(context).size.width),
                                     surfaceTintColor: ColorTheme().whiteColor,
                                     side: BorderSide(
                                         color: ColorTheme().primaryColor,
-                                        width: 2),
+                                        width: 2.w),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
+                                      borderRadius: BorderRadius.circular(30.r),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10.h),
                               ],
                               data.status == "terima" || data.status == "tolak"
                                   ? const SizedBox.shrink()
@@ -287,22 +297,22 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                             label: Text('Edit',
                                                 style: StyleTheme()
                                                     .stylePrimary
-                                                    .copyWith(fontSize: 14)),
+                                                    .copyWith(fontSize: 14.sp)),
                                             style: ElevatedButton.styleFrom(
                                               surfaceTintColor:
                                                   ColorTheme().whiteColor,
                                               side: BorderSide(
                                                   color:
                                                       ColorTheme().primaryColor,
-                                                  width: 2),
+                                                  width: 2.w),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(30),
+                                                    BorderRadius.circular(30.r),
                                               ),
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(width: 10),
+                                        SizedBox(width: 10.w),
                                         Expanded(
                                           flex: 1,
                                           child: ElevatedButton.icon(
@@ -322,7 +332,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                                 style: StyleTheme()
                                                     .stylePrimary
                                                     .copyWith(
-                                                        fontSize: 14,
+                                                        fontSize: 14.sp,
                                                         color: Colors.red)),
                                             style: ElevatedButton.styleFrom(
                                               surfaceTintColor:
@@ -331,7 +341,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                                   color: Colors.red, width: 2),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(30),
+                                                    BorderRadius.circular(30.r),
                                               ),
                                             ),
                                           ),
@@ -359,10 +369,10 @@ class _DetailPadiViewState extends State<DetailPadiView> {
       builder: (BuildContext context) {
         return AlertDialog(
           surfaceTintColor: ColorTheme().whiteColor,
-          title: const Column(
+          title: Column(
             children: [
-              Text('Filter Desa'),
-              Divider(),
+              Text('Filter Desa', style: TextStyle(fontSize: 16.sp)),
+              const Divider(),
             ],
           ),
           content: DropdownButtonComponent(
@@ -373,7 +383,8 @@ class _DetailPadiViewState extends State<DetailPadiView> {
               (value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(UserController().toCamelCase(value)),
+                  child: Text(UserController().toCamelCase(value),
+                      style: TextStyle(fontSize: 14.sp)),
                 );
               },
             ).toList(),
@@ -394,13 +405,13 @@ class _DetailPadiViewState extends State<DetailPadiView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
+                Navigator.of(context).pop(false);
               },
               child: Text(
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
               ),
             ),
             TextButton(
@@ -411,7 +422,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16.sp),
               ),
             ),
           ],
@@ -425,27 +436,28 @@ class _DetailPadiViewState extends State<DetailPadiView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Konfirmasi Aksi"),
-          content: const Text("Anda yakin ingin menghapus data ini?"),
+          title: Text("Konfirmasi Aksi", style: TextStyle(fontSize: 16.sp)),
+          content: Text("Anda yakin ingin menghapus data ini?",
+              style: TextStyle(fontSize: 14.sp)),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
+                Navigator.of(context).pop(false);
               },
               child: Text("Cancel",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.grey)),
+                      .copyWith(fontSize: 14.sp, color: Colors.grey)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // Kembali dengan nilai true
+                Navigator.of(context).pop(true);
               },
               child: Text(
                 "Delete",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
           ],
@@ -460,15 +472,15 @@ class _DetailPadiViewState extends State<DetailPadiView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Column(
+          title: Column(
             children: [
-              Text('Ulasan'),
-              Divider(),
+              Text('Ulasan', style: TextStyle(fontSize: 16.sp)),
+              const Divider(),
             ],
           ),
           content: Text(
             data.catatan,
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
           ),
           actions: <Widget>[
             TextButton(
@@ -479,7 +491,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.grey),
+                    .copyWith(fontSize: 14.sp, color: Colors.grey),
               ),
             ),
             TextButton(
@@ -488,7 +500,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
               },
               child: Text(
                 "Edit",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
               ),
             ),
             TextButton(
@@ -499,7 +511,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                 "Delete",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 
 class TextFormFieldComponent extends StatelessWidget {
@@ -33,31 +34,38 @@ class TextFormFieldComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      style: style,
-      maxLines: maxLine,
-      obscureText: obsecure,
-      controller: controller,
-      keyboardType: inputType,
-      decoration: InputDecoration(
-        isDense: true,
-        filled: true,
-        fillColor: ColorTheme().whiteColor,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      height: 60.h, 
+      child: TextFormField(
+        style: style ?? TextStyle(fontSize: 14.sp),
+        maxLines: maxLine ?? 1,
+        obscureText: obsecure,
+        controller: controller,
+        keyboardType: inputType,
+        decoration: InputDecoration(
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
+          isDense: false,
+          filled: true,
+          fillColor: ColorTheme().whiteColor,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          prefixIcon: Icon(
+            icon,
+            color: ColorTheme().primaryColor,
+            size: 25.sp,
+          ),
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 14.sp),
+          labelText: label,
+          labelStyle: TextStyle(fontSize: 14.sp),
         ),
-        prefixIcon: Icon(
-          icon,
-          color: ColorTheme().primaryColor,
-          size: 25,
-        ),
-        hintText: hint,
-        labelText: label,
+        validator: validator,
+        onSaved: onSaved,
+        readOnly: readOnly,
+        onTap: onTap,
       ),
-      validator: validator,
-      onSaved: onSaved,
-      readOnly: readOnly,
-      onTap: onTap,
     );
-  }
+   }
 }

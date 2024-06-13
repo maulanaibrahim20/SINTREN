@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 
 class DropdownButtonComponent<T> extends StatelessWidget {
@@ -20,50 +21,54 @@ class DropdownButtonComponent<T> extends StatelessWidget {
     this.selectedItem,
     required this.hint,
     required this.validator,
-    required this.onChanged, required this.onSaved,
+    required this.onChanged,
+    required this.onSaved,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField2<T>(
-      value: selectedItem,
-      isExpanded: true,
-      isDense: true,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: ColorTheme().whiteColor,
-        isDense: true,
-        labelText: label,
-        hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      height: 60.h,
+      child: DropdownButtonFormField2<T>(
+        value: selectedItem,
+        isExpanded: true,
+        decoration: InputDecoration(
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
+          filled: true,
+          fillColor: ColorTheme().whiteColor,
+          labelText: label,
+          labelStyle: TextStyle(fontSize: 14.sp),
+          hintText: hint,
+          hintStyle: TextStyle(fontSize: 14.sp),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          prefixIcon: Icon(
+            icon,
+            color: ColorTheme().primaryColor,
+            size: 20.sp,
+          ),
         ),
-        prefixIcon: Icon(
-          icon,
-          color: ColorTheme().primaryColor,
+        items: items,
+        validator: validator,
+        onChanged: onChanged,
+        onSaved: onSaved,
+        iconStyleData: IconStyleData(
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black45,
+            size: 24.sp,
+          ),
         ),
-      ),
-      items: items,
-      validator: validator,
-      onChanged: onChanged,
-      buttonStyleData: const ButtonStyleData(
-        padding: EdgeInsets.only(right: 8),
-      ),
-      onSaved: onSaved,
-      iconStyleData: const IconStyleData(
-        icon: Icon(
-          Icons.arrow_drop_down,
-          color: Colors.black45,
+        dropdownStyleData: DropdownStyleData(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.r),
+          ),
         ),
-        iconSize: 24,
-      ),
-      dropdownStyleData: DropdownStyleData(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+        menuItemStyleData: MenuItemStyleData(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         ),
-      ),
-      menuItemStyleData: const MenuItemStyleData(
-        padding: EdgeInsets.symmetric(horizontal: 16),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -52,7 +53,7 @@ class _LoginViewState extends State<LoginView> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
-              height: isKeyboardVisible ? 100 : 320,
+              height: isKeyboardVisible ? 100.h : 320.h,
               decoration: BoxDecoration(
                 gradient: ColorTheme().linearColor,
                 borderRadius: const BorderRadius.vertical(
@@ -70,109 +71,117 @@ class _LoginViewState extends State<LoginView> {
                         heightFactor: 0.5,
                         child: Image.asset(
                           'assets/images/pertanian.png',
-                          width: 200,
-                          height: 200,
+                          width: 200.w,
+                          height: 200.h,
                           fit: BoxFit.fill,
                         ),
                       ),
                     ),
                     Text(
                       "SINTREN",
-                      style: StyleTheme()
-                          .styleWhite
-                          .copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+                      style: StyleTheme().styleWhite.copyWith(
+                          fontSize: 32.sp, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40.h),
             Card(
               surfaceTintColor: ColorTheme().whiteColor,
-              margin: const EdgeInsets.symmetric(horizontal: 20),
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
               elevation: isKeyboardVisible ? 5 : 0,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                height: 400,
+                padding: EdgeInsets.symmetric(vertical: 20.h),
                 child: Column(
                   children: [
                     Text(
                       "LOGIN",
-                      style: StyleTheme()
-                          .stylePrimary
-                          .copyWith(fontSize: 30, fontWeight: FontWeight.bold),
+                      style: StyleTheme().stylePrimary.copyWith(
+                          fontSize: 30.sp, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20.h),
                     Text(
                       "Silahkan Login Terlebih Dahulu",
-                      style: StyleTheme()
-                          .styleBlack
-                          .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: StyleTheme().styleBlack.copyWith(
+                          fontSize: 16.sp, fontWeight: FontWeight.w500),
                     ),
                     Form(
                         key: formKey,
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(20.w),
                           child: Column(
                             children: [
-                              TextFormField(
-                                focusNode: _fnUsername,
-                                controller: username,
-                                keyboardType: TextInputType.name,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                              SizedBox(
+                                height: 60.h,
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 14.sp),
+                                  focusNode: _fnUsername,
+                                  controller: username,
+                                  keyboardType: TextInputType.name,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.h, horizontal: 10.w),
+                                    isDense: false,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    prefixIcon: Icon(
+                                      Icons.person,
+                                      color: ColorTheme().primaryColor,
+                                      size: 25.sp,
+                                    ),
+                                    hintText: "Username/Email",
+                                    labelText: "Username/Email",
                                   ),
-                                  prefixIcon: Icon(
-                                    Icons.person,
-                                    color: ColorTheme().primaryColor,
-                                    size: 25,
-                                  ),
-                                  hintText: "Username/Email",
-                                  labelText: "Username/Email",
+                                  validator: (value) {
+                                    return value == null || value.isEmpty
+                                        ? "username/email tidak boleh kosong"
+                                        : null;
+                                  },
                                 ),
-                                validator: (value) {
-                                  return value == null || value.isEmpty
-                                      ? "username/email tidak boleh kosong"
-                                      : null;
-                                },
                               ),
-                              const SizedBox(
-                                height: 20,
+                              SizedBox(
+                                height: 10.h,
                               ),
-                              TextFormField(
-                                focusNode: _fnPassword,
-                                controller: password,
-                                keyboardType: TextInputType.name,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                              SizedBox(
+                                height: 60.h,
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 14.sp),
+                                  focusNode: _fnPassword,
+                                  controller: password,
+                                  keyboardType: TextInputType.name,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.h, horizontal: 10.w),
+                                    isDense: false,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                    prefixIcon: Icon(
+                                      Icons.lock,
+                                      color: ColorTheme().primaryColor,
+                                      size: 25.sp,
+                                    ),
+                                    hintText: "Password",
+                                    labelText: "Password",
                                   ),
-                                  prefixIcon: Icon(
-                                    Icons.lock,
-                                    color: ColorTheme().primaryColor,
-                                    size: 25,
-                                  ),
-                                  hintText: "Password",
-                                  labelText: "Password",
+                                  validator: (value) {
+                                    return value == null || value.isEmpty
+                                        ? "password tidak boleh kosong"
+                                        : null;
+                                  },
                                 ),
-                                validator: (value) {
-                                  return value == null || value.isEmpty
-                                      ? "password tidak boleh kosong"
-                                      : null;
-                                },
                               ),
-                              const SizedBox(
-                                height: 20,
+                              SizedBox(
+                                height: 10.h,
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                height: 60,
+                                height: 60.h,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(30.r),
                                   gradient: ColorTheme().linearColor,
                                 ),
                                 child: ElevatedButton.icon(
@@ -197,11 +206,12 @@ class _LoginViewState extends State<LoginView> {
                                     }
                                   },
                                   icon: Icon(Icons.login_rounded,
-                                      color: ColorTheme().whiteColor),
+                                      color: ColorTheme().whiteColor,
+                                      size: 14.sp),
                                   label: Text(
                                     'LOGIN',
                                     style: StyleTheme().styleWhite.copyWith(
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -209,9 +219,9 @@ class _LoginViewState extends State<LoginView> {
                                     backgroundColor: Colors.transparent,
                                     side: BorderSide(
                                         color: ColorTheme().primaryColor,
-                                        width: 2),
+                                        width: 2.w),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
+                                      borderRadius: BorderRadius.circular(30.r),
                                     ),
                                   ),
                                 ),
@@ -222,7 +232,8 @@ class _LoginViewState extends State<LoginView> {
                   ],
                 ),
               ),
-            )
+            ),
+            SizedBox(height: 10.sp),
           ],
         ),
       ),

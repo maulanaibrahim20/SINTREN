@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
@@ -13,6 +11,7 @@ import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FormPadiView extends StatefulWidget {
   const FormPadiView(
@@ -130,14 +129,14 @@ class _FormPadiViewState extends State<FormPadiView> {
           widget.onCreate ? "Tambah Padi" : "Edit Padi",
           style: StyleTheme()
               .styleWhite
-              .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+              .copyWith(fontSize: 20.sp, fontWeight: FontWeight.bold),
         ),
       ),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(10),
-        height: 50,
+        margin: EdgeInsets.all(10.w),
+        height: 50.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           gradient: ColorTheme().linearColor,
         ),
         child: ElevatedButton.icon(
@@ -187,15 +186,15 @@ class _FormPadiViewState extends State<FormPadiView> {
           label: Text(
             'SIMPAN',
             style: StyleTheme().styleWhite.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                 ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            side: BorderSide(color: ColorTheme().primaryColor, width: 2),
+            side: BorderSide(color: ColorTheme().primaryColor, width: 2.w),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
             ),
           ),
         ),
@@ -204,16 +203,18 @@ class _FormPadiViewState extends State<FormPadiView> {
           ? const Center(child: CircularProgressIndicator())
           : Card(
               surfaceTintColor: ColorTheme().whiteColor,
-              margin: const EdgeInsets.all(10),
+              margin: EdgeInsets.all(10.w),
+              color: ColorTheme().whiteColor,
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10.w),
                 child: Form(
                   key: formKey,
                   child: ListView(
+                    shrinkWrap: true,
                     children: [
                       TextFormFieldComponent(
                         style: StyleTheme().styleBlack.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 15),
+                            fontWeight: FontWeight.w500, fontSize: 15.sp),
                         readOnly: true,
                         icon: Icons.date_range_rounded,
                         hint: "Pilih Tanggal",
@@ -230,7 +231,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           _selectDate(context);
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.villa,
                         label: 'Desa',
@@ -246,18 +247,21 @@ class _FormPadiViewState extends State<FormPadiView> {
                         validator: (value) =>
                             value == null ? 'Pilih desa terlebih dahulu' : null,
                         onChanged: (newValue) {
-                          log(newValue!.id.toString());
-                          setState(() {
-                            selectedDesaValue = newValue;
-                          });
+                          if (widget.onCreate) {
+                            setState(() {
+                              selectedDesaValue = newValue;
+                            });
+                          }
                         },
                         onSaved: (newValue) {
-                          setState(() {
-                            selectedDesaValue = newValue!;
-                          });
+                          if (widget.onCreate) {
+                            setState(() {
+                              selectedDesaValue = newValue!;
+                            });
+                          }
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Lahan",
@@ -287,7 +291,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       if (selectedJenisLahanValue == 'non sawah') ...[
                         const SizedBox.shrink()
                       ] else ...[
@@ -317,7 +321,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                             });
                           },
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                       ],
                       DropdownButtonComponent(
                         icon: Icons.date_range,
@@ -345,7 +349,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.date_range,
                         label: "Jenis Bantuan",
@@ -375,7 +379,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       DropdownButtonComponent(
                         icon: Icons.type_specimen,
                         label: "Jenis Data",
@@ -405,7 +409,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                           });
                         },
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       TextFormFieldComponent(
                         controller: value,
                         icon: Icons.numbers,
@@ -423,7 +427,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                         },
                         style: StyleTheme().styleBlack.copyWith(
                               fontWeight: FontWeight.w500,
-                              fontSize: 15,
+                              fontSize: 15.sp,
                             ),
                       ),
                     ],

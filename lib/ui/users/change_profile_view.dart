@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -52,14 +53,14 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
           "Ubah Profile",
           style: StyleTheme()
               .styleWhite
-              .copyWith(fontSize: 20, fontWeight: FontWeight.w500),
+              .copyWith(fontSize: 20.sp, fontWeight: FontWeight.w500),
         ),
       ),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(10),
-        height: 50,
+        margin: EdgeInsets.all(10.w),
+        height: 50.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           gradient: ColorTheme().linearColor,
         ),
         child: ElevatedButton.icon(
@@ -75,31 +76,35 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
               userC.updateProfil(data).then((value) => Navigator.pop(context));
             }
           },
-          icon: Icon(Icons.save_rounded, color: ColorTheme().whiteColor),
+          icon: Icon(Icons.save_rounded,
+              color: ColorTheme().whiteColor, size: 20.sp),
           label: Text(
             'SIMPAN',
             style: StyleTheme().styleWhite.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                 ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
-            side: BorderSide(color: ColorTheme().primaryColor, width: 2),
+            side: BorderSide(color: ColorTheme().primaryColor, width: 2.w),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
             ),
           ),
         ),
       ),
       body: Card(
-        margin: const EdgeInsets.all(10),
+        elevation: 3,
+        margin: EdgeInsets.all(10.w),
         surfaceTintColor: ColorTheme().whiteColor,
+        color: ColorTheme().whiteColor,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
           child: Form(
             key: formKey,
             child: ListView(
+              shrinkWrap: true,
               children: [
                 TextFormFieldComponent(
                   controller: name,
@@ -114,8 +119,8 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   inputType: TextInputType.name,
                   obsecure: false,
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: 10.h,
                 ),
                 TextFormFieldComponent(
                   controller: username,
@@ -130,8 +135,8 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   inputType: TextInputType.name,
                   obsecure: false,
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: 10.h,
                 ),
                 TextFormFieldComponent(
                   controller: email,
@@ -146,8 +151,8 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   inputType: TextInputType.emailAddress,
                   obsecure: false,
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: 10.h,
                 ),
                 TextFormFieldComponent(
                   controller: phone,
@@ -162,8 +167,8 @@ class _ChangeProfileViewState extends State<ChangeProfileView> {
                   inputType: TextInputType.number,
                   obsecure: false,
                 ),
-                const SizedBox(
-                  height: 10,
+                SizedBox(
+                  height: 10.h,
                 ),
                 TextFormFieldComponent(
                   controller: address,

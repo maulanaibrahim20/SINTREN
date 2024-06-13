@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
@@ -30,8 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     heightFactor: 0.5,
                     child: Image.asset(
                       'assets/images/pertanian.png',
-                      width: 200,
-                      height: 200,
+                      width: 200.w,
+                      height: 200.h,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -40,14 +41,14 @@ class _SplashScreenState extends State<SplashScreen> {
                   "SINTREN",
                   style: StyleTheme()
                       .styleWhite
-                      .copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+                      .copyWith(fontSize: 32.sp, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(20.0.r),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -61,19 +62,19 @@ class _SplashScreenState extends State<SplashScreen> {
                               isError ? status : 'Loading: $status',
                               style: StyleTheme().styleWhite.copyWith(
                                     color: isError ? Colors.red : Colors.white,
+                                    fontSize: 14.sp,
                                   ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(height: 10),
-                            isError
-                                ? const SizedBox.shrink()
-                                : LinearProgressIndicator(
-                                    backgroundColor:
-                                        Colors.white.withOpacity(0.5),
-                                    valueColor:
-                                        const AlwaysStoppedAnimation<Color>(
-                                            Colors.white),
-                                  ),
+                            SizedBox(height: 10.h),
+                            if (isError)
+                              const SizedBox.shrink()
+                            else
+                              LinearProgressIndicator(
+                                backgroundColor: Colors.white.withOpacity(0.5),
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              ),
                           ],
                         );
                       },
