@@ -98,7 +98,7 @@ class PadiService {
     }
   }
 
-  Future<bool> store(Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>?> store(Map<String, dynamic> data) async {
     try {
       final Response result = await post(
         Uri.parse('${baseUrl}padi/store'),
@@ -110,14 +110,15 @@ class PadiService {
 
       if (result.statusCode != 201) {
         log("Gagal menyimpan data: ${result.statusCode} - ${result.body}");
-        return false;
+        return null;
       }
 
-      return true;
+      final Map<String, dynamic> responseBody = jsonDecode(result.body);
+      return responseBody;
     } catch (e) {
       EasyLoading.showToast("Internal Server Error");
       log("Gagal menyimpan data: $e");
-      return false;
+      return null;
     }
   }
 

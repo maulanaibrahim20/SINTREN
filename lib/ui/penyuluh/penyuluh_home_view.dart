@@ -220,7 +220,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                           },
                           icon: Icon(Icons.add, color: ColorTheme().whiteColor),
                           label: Text(
-                            'Laporan Padi',
+                            'Padi',
                             style: StyleTheme().styleWhite.copyWith(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -256,7 +256,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                           },
                           icon: Icon(Icons.add, color: ColorTheme().whiteColor),
                           label: Text(
-                            'Laporan Palawija',
+                            'Palawija',
                             style: StyleTheme().styleWhite.copyWith(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,

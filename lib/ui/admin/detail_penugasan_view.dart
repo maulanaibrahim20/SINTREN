@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/penyuluh_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
 
 class DetailPenugasanView extends StatefulWidget {
   const DetailPenugasanView({super.key, required this.id});
@@ -17,12 +18,19 @@ class DetailPenugasanView extends StatefulWidget {
 
 class _AdminPenugasanViewState extends State<DetailPenugasanView> {
   final adminC = AdminController();
-  late Future<List<Penyuluh>> _futurePenyuluh;
+  late List<DesaModel> desaList;
+  late DesaModel? selectedDesaValue;
+
+  Future<void> _initializeData() async {
+    desaList = await adminC.getDesa();
+    selectedDesaValue = null;
+  }
 
   @override
   void initState() {
+    _initializeData();
     super.initState();
-    _futurePenyuluh = adminC.getPenyuluh();
+    setState(() {});
   }
 
   @override
@@ -43,34 +51,13 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                 fontWeight: FontWeight.w500,
               ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.filter_list,
-              color: ColorTheme().whiteColor,
-            ),
-            onPressed: () {
-              // _filter(context);
-            },
-          ),
-          IconButton(
-              onPressed: () async {
-                EasyLoading.show(status: "Sinkronisasi Data");
-                // await _synchronizeData();
-                EasyLoading.dismiss();
-              },
-              icon: Icon(
-                Icons.refresh_rounded,
-                color: ColorTheme().whiteColor,
-              ))
-        ],
         backgroundColor: ColorTheme().primaryColor,
       ),
       body: FutureBuilder<List<Penyuluh>>(
-        future: _futurePenyuluh,
+        future: adminC.getPenyuluh(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: const CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -175,24 +162,204 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(top: 10),
-                    itemCount: penyuluh.penugasan.length,
-                    itemBuilder: (context, index) {
-                      Penugasan penugasan = penyuluh!.penugasan[index];
-                      return ListTile(
-                        title: Text(penugasan.desaName),
-                        subtitle: Text('Desa ID: ${penugasan.desaId}'),
-                      );
-                    },
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: ColorTheme().linearColor,
                   ),
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      bool? shouldAdd = await _showAddPenugasanDialog(context);
+                      if (shouldAdd == true) {
+                        final data = {
+                          'user_id': penyuluh!.id,
+                          'desa_id': selectedDesaValue!.id,
+                          'desa_name': selectedDesaValue!.name,
+                        };
+                        await adminC
+                            .addPenugasan(data)
+                            .then((value) => setState(() {}));
+                        setState(() {});
+                      }
+                    },
+                    icon: Icon(Icons.add_box, color: ColorTheme().whiteColor),
+                    label: Text(
+                      'Tambah Penugasan',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: ColorTheme().whiteColor,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      side: BorderSide(
+                          color: ColorTheme().primaryColor, width: 2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: penyuluh.penugasan.isNotEmpty
+                      ? ListView.builder(
+                          padding: const EdgeInsets.only(top: 10),
+                          itemCount: penyuluh.penugasan.length,
+                          itemBuilder: (context, index) {
+                            Penugasan penugasan = penyuluh!.penugasan[index];
+                            return Card(
+                              elevation: 3,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 5),
+                              surfaceTintColor: ColorTheme().whiteColor,
+                              child: ListTile(
+                                title: Text(penugasan.desaName),
+                                subtitle: Text('Desa ID: ${penugasan.desaId}'),
+                                trailing: IconButton(
+                                    onPressed: () async {
+                                      bool? shouldDelete =
+                                          await _showDeleteConfirmationDialog(
+                                              context);
+                                      if (shouldDelete == true) {
+                                        await adminC
+                                            .deletePenugasan(penugasan.id);
+                                        setState(() {});
+                                      }
+                                    },
+                                    icon: Icon(
+                                      Icons.remove_circle,
+                                      color: Colors.red,
+                                    )),
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.assignment,
+                                color: Colors.grey,
+                                size: 50,
+                              ),
+                              Text(
+                                "Belum Ada Penugasan",
+                                style: StyleTheme().styleBlack.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
               ],
             );
           }
         },
       ),
+    );
+  }
+
+  Future<bool> _showAddPenugasanDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: ColorTheme().whiteColor,
+          title: const Column(
+            children: [
+              Text('Tambah Penugasan'),
+              Divider(),
+            ],
+          ),
+          content: DropdownButtonComponent(
+            icon: Icons.villa,
+            label: 'Desa',
+            selectedItem: selectedDesaValue,
+            items: desaList.map((desa) {
+              return DropdownMenuItem<DesaModel>(
+                value: desa,
+                child: Text(UserController().toCamelCase(desa.name)),
+              );
+            }).toList(),
+            hint: 'Pilih Desa',
+            validator: (value) =>
+                value == null ? 'Pilih desa terlebih dahulu' : null,
+            onChanged: (newValue) {
+              setState(() {
+                selectedDesaValue = newValue;
+              });
+            },
+            onSaved: (newValue) {
+              setState(() {
+                selectedDesaValue = newValue!;
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Kembali dengan nilai false
+              },
+              child: Text(
+                "Tutup",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(color: Colors.red, fontSize: 16),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(
+                "Tambah",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _showDeleteConfirmationDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Konfirmasi Aksi"),
+          content: const Text("Anda yakin ingin menghapus data ini?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Kembali dengan nilai false
+              },
+              child: Text("Cancel",
+                  style: StyleTheme()
+                      .stylePrimary
+                      .copyWith(fontSize: 14, color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Kembali dengan nilai true
+              },
+              child: Text(
+                "Delete",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: 14, color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

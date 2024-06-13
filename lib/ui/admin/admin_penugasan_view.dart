@@ -15,12 +15,10 @@ class AdminPenugasanView extends StatefulWidget {
 
 class _AdminPenugasanViewState extends State<AdminPenugasanView> {
   final adminC = AdminController();
-  late Future<List<Penyuluh>> _futurePenyuluh;
 
   @override
   void initState() {
     super.initState();
-    _futurePenyuluh = adminC.getPenyuluh();
   }
 
   @override
@@ -44,7 +42,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
         backgroundColor: ColorTheme().primaryColor,
       ),
       body: FutureBuilder<List<Penyuluh>>(
-        future: _futurePenyuluh,
+        future: adminC.getPenyuluh(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: const CircularProgressIndicator());
@@ -89,8 +87,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
                     );
                     setState(() {});
                   },
-                  child: 
-                  Card(
+                  child: Card(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
                     elevation: 3,

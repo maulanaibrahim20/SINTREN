@@ -143,4 +143,47 @@ class AdminService {
       throw Exception('Failed to load data');
     }
   }
+
+  Future<Map<String, dynamic>?> addPenugasan(Map<String, dynamic> data) async {
+    try {
+      final Response result = await post(
+        Uri.parse('${ConfigApp().baseUrl}admin/addPenugasan'),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(data),
+      );
+
+      if (result.statusCode != 201) {
+        log("Gagal menyimpan data: ${result.statusCode} - ${result.body}");
+        return null;
+      }
+
+      final Map<String, dynamic> responseBody = jsonDecode(result.body);
+      return responseBody;
+    } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
+      log("Gagal menyimpan data: $e");
+      return null;
+    }
+  }
+
+  Future<bool> deletePenugasan(int id) async {
+    try {
+      final Response result = await delete(
+        Uri.parse('${ConfigApp().baseUrl}admin/deletePenugasan/$id'),
+      );
+
+      if (result.statusCode != 200) {
+        log("Gagal menghapus data: ${result.statusCode} - ${result.body}");
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
+      log("Gagal menghapus data: $e");
+      return false;
+    }
+  }
 }

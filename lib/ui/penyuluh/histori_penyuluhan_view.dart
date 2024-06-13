@@ -366,7 +366,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
+                Navigator.pop(context); // Kembali dengan nilai false
               },
               child: Text(
                 "Tutup",

@@ -16,6 +16,7 @@ import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
+import 'package:sqflite/sqflite.dart';
 
 class AdminController {
   Future<void> synchronizeData(ValueNotifier<String> statusNotifier) async {
@@ -276,5 +277,73 @@ class AdminController {
     }
 
     return penyuluhList;
+  }
+
+  Future<bool> addPenugasan(Map<String, dynamic> map) async {
+    EasyLoading.show(status: "Loading...");
+    try {
+      final data = {
+        "user_id": map['user_id'],
+        "desa_id": map['desa_id'],
+      };
+
+      final response = await AdminService().addPenugasan(data);
+
+      if (response == null || response['status'] != 'success') {
+        EasyLoading.showToast("Gagal menyimpan data");
+        return false;
+      }
+
+      final responseData = response['data'];
+
+      final penugasan = Penugasan.fromJson({
+        ...responseData,
+        'desa_name': map['desa_name'],
+      });
+
+      final db = await DatabaseHelper().database;
+      await db.insert(
+        'penugasan',
+        penugasan.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      EasyLoading.showToast("Berhasil menyimpan data");
+      return true;
+    } catch (e) {
+      EasyLoading.showToast("Gagal menyimpan data");
+      log("Store error: $e");
+      return false;
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> deletePenugasan(int id) async {
+    EasyLoading.show(status: "Loading...");
+    try {
+      final result = await AdminService().deletePenugasan(id);
+
+      if (!result) {
+        EasyLoading.showToast("Gagal menghapus data");
+        return;
+      }
+
+      if (result) {
+        final db = await DatabaseHelper().database;
+        await db.delete(
+          'penugasan',
+          where: "id = ?",
+          whereArgs: [id],
+        );
+
+        EasyLoading.showToast("Berhasil menghapus data");
+      }
+    } catch (e) {
+      EasyLoading.showToast("Gagal menghapus data");
+      log("Delete error: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 }

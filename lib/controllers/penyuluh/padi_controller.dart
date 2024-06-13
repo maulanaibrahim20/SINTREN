@@ -42,36 +42,33 @@ class PadiController {
         "nilai": map['nilai'],
       };
 
-      final result = await PadiService().store(data);
+      final response = await PadiService().store(data);
 
-      if (!result) {
+      if (response == null || response['status'] != 'success') {
         EasyLoading.showToast("Gagal menyimpan data");
         return false;
       }
 
-      if (result) {
-        final dataForDatabase = Map<String, dynamic>.from(data)
-          ..['id_jenis_pengairan'] ??= ''
-          ..['desa_name'] = map['desa_name']
-          ..['pengairan_name'] = map['pengairan_name'] ?? ''
-          ..['padi_name'] = map["padi_name"]
-          ..['status'] = 'tunggu'
-          ..['catatan'] = ''
-          ..['created_at'] = getDateTimeNow()
-          ..['updated_at'] = getDateTimeNow();
+      final responseData = response['data'];
 
-        final db = await DatabaseHelper().database;
-        await db.insert(
-          'detailPadi',
-          dataForDatabase,
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
+      final detailPadi = DetailPadiModel.fromJson({
+        ...responseData,
+        'desa_name': map['desa_name'],
+        'pengairan_name': map['pengairan_name'] ?? '',
+        'padi_name': map["padi_name"],
+        'status': 'tunggu',
+        'catatan': '',
+      });
 
-        EasyLoading.showToast("Berhasil menyimpan data");
-        return true;
-      }
+      final db = await DatabaseHelper().database;
+      await db.insert(
+        'detailPadi',
+        detailPadi.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
 
-      return false;
+      EasyLoading.showToast("Berhasil menyimpan data");
+      return true;
     } catch (e) {
       EasyLoading.showToast("Gagal menyimpan data");
       log("Store error: $e");
@@ -106,25 +103,23 @@ class PadiController {
       if (!result) {
         EasyLoading.showToast("Gagal mengupdate data");
         return false;
-      } else if (result) {
-        final db = await DatabaseHelper().database;
-        final localData = Map<String, dynamic>.from(data)
-          ..remove("user_id")
-          ..['status'] = 'tunggu'
-          ..['catatan'] = 'update'
-          ..['updated_at'] = getDateTimeNow();
-
-        await db.update(
-          'detailPadi',
-          localData,
-          where: 'id = ?',
-          whereArgs: [dataId],
-        );
-
-        EasyLoading.showToast("Berhasil mengupdate data");
-        return true;
       }
-      return false;
+      final db = await DatabaseHelper().database;
+      final localData = Map<String, dynamic>.from(data)
+        ..remove("user_id")
+        ..['status'] = 'tunggu'
+        ..['catatan'] = 'update'
+        ..['updated_at'] = getDateTimeNow();
+
+      await db.update(
+        'detailPadi',
+        localData,
+        where: 'id = ?',
+        whereArgs: [dataId],
+      );
+
+      EasyLoading.showToast("Berhasil mengupdate data");
+      return true;
     } catch (e) {
       EasyLoading.showToast("Gagal mengupdate data");
       log("Update error: $e");

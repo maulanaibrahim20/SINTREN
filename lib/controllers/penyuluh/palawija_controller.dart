@@ -44,33 +44,32 @@ class PalawijaController {
         "nilai": map['nilai']
       };
 
-      final result = await PalawijaService().store(data);
+      final response = await PalawijaService().store(data);
 
-      if (!result) {
+      if (response == null || response['status'] != 'success') {
         EasyLoading.showToast("Gagal menyimpan data");
         return false;
       }
 
-      if (result) {
-        final dataForDatabase = Map<String, dynamic>.from(data)
-          ..['desa_name'] = map['desa_name']
-          ..['palawija_name'] = map["palawija_name"]
-          ..['status'] = 'tunggu'
-          ..['catatan'] = ''
-          ..['created_at'] = getDateTimeNow()
-          ..['updated_at'] = getDateTimeNow();
+      final responseData = response['data'];
 
-        final db = await DatabaseHelper().database;
-        await db.insert(
-          'detailPalawija',
-          dataForDatabase,
-          conflictAlgorithm: ConflictAlgorithm.replace,
-        );
+      final detailPadi = DetailPalawijaModel.fromJson({
+        ...responseData,
+        'desa_name': map['desa_name'],
+        'palawija_name': map["palawija_name"],
+        'status': 'tunggu',
+        'catatan': '',
+      });
 
-        EasyLoading.showToast("Berhasil menyimpan data");
-        return true;
-      }
-      return false;
+      final db = await DatabaseHelper().database;
+      await db.insert(
+        'detailPalawija',
+        detailPadi.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      EasyLoading.showToast("Berhasil menyimpan data");
+      return true;
     } catch (e) {
       EasyLoading.showToast("Gagal menyimpan data");
       log("Store error: $e");
@@ -104,25 +103,22 @@ class PalawijaController {
         return false;
       }
 
-      if (result) {
-        final db = await DatabaseHelper().database;
-        final localData = Map<String, dynamic>.from(data)
-          ..remove("user_id")
-          ..['status'] = 'tunggu'
-          ..['catatan'] = ''
-          ..['updated_at'] = getDateTimeNow();
+      final db = await DatabaseHelper().database;
+      final localData = Map<String, dynamic>.from(data)
+        ..remove("user_id")
+        ..['status'] = 'tunggu'
+        ..['catatan'] = ''
+        ..['updated_at'] = getDateTimeNow();
 
-        await db.update(
-          'detailPalawija',
-          localData,
-          where: 'id = ?',
-          whereArgs: [dataId],
-        );
+      await db.update(
+        'detailPalawija',
+        localData,
+        where: 'id = ?',
+        whereArgs: [dataId],
+      );
 
-        EasyLoading.showToast("Berhasil mengupdate data");
-        return true;
-      }
-      return false;
+      EasyLoading.showToast("Berhasil mengupdate data");
+      return true;
     } catch (e) {
       EasyLoading.showToast("Gagal mengupdate data");
       log("Update error: $e");

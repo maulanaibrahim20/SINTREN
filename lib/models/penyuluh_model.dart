@@ -63,8 +63,8 @@ class Penugasan {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'desaId': desaId,
-      'desaName': desaName,
+      'desa_id': desaId,
+      'desa_name': desaName,
     };
   }
 }
