@@ -27,7 +27,7 @@ class PalawijaController extends Controller
     public function showAllByUser($id)
     {
         try {
-            $laporanPalawija = LaporanPalawija::where('user_id', $id)->with(['desa', 'palawija','verify'])->get();
+            $laporanPalawija = LaporanPalawija::where('user_id', $id)->with(['desa', 'palawija', 'verify'])->get();
 
             if ($laporanPalawija->isEmpty()) {
                 return response()->json([
@@ -37,10 +37,31 @@ class PalawijaController extends Controller
                 ], 201);
             }
 
+            $result = $laporanPalawija->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'user_id' => $item->user_id,
+                    'desa_id' => $item->desa_id,
+                    'desa_name' => $item->desa->name,
+                    'kecamatan_id' => $item->kecamatan_id,
+                    'jenis_lahan' => $item->jenis_lahan,
+                    'id_jenis_palawija' => $item->id_jenis_palawija,
+                    'palawija_name' => $item->palawija->name,
+                    'jenis_bantuan' => $item->jenis_bantuan,
+                    'tipe_data' => $item->tipe_data,
+                    'nilai' => $item->nilai,
+                    'date' => $item->date,
+                    'status' => $item->verify->status,
+                    'catatan' => $item->verify->catatan,
+                    'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
+                ];
+            });
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil mendapatkan data',
-                'data' => $laporanPalawija
+                'data' => $result
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -71,7 +92,6 @@ class PalawijaController extends Controller
                 'message' => 'Berhasil menghapus data',
                 'data' => null
             ], 200);
-
         } catch (QueryException $e) {
             DB::rollBack();
             return response()->json([
@@ -79,7 +99,6 @@ class PalawijaController extends Controller
                 'message' => 'Gagal menghapus data. Database error: ' . $e->getMessage(),
                 'data' => null
             ], 500);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

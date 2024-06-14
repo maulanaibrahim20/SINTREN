@@ -10,6 +10,7 @@ use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pangan\Pangan;
 use App\Models\Pasar\Pasar;
 use App\Models\Pertanian\Pertanian;
+use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Uptd\Uptd;
 use App\Models\Wilayah\Desa;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -91,5 +92,9 @@ class User extends Authenticatable
     public function pasar()
     {
         return $this->hasOne(Pasar::class);
+    }
+
+    public function penugasan(){
+        return $this->hasMany(PenugasanPenyuluh::class);
     }
 }

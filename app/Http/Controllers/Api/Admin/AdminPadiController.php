@@ -34,23 +34,24 @@ class AdminPadiController extends Controller
                     'id' => $item->id,
                     'user_id' => $item->user_id,
                     'desa_id' => $item->desa_id,
-                    'desa_name' => $item->desa->name,
+                    'desa_name' => $item->desa ? $item->desa->name : "",
                     'kecamatan_id' => $item->kecamatan_id,
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_padi' => $item->id_jenis_padi,
-                    'padi_name' => $item->padi->name,
+                    'padi_name' => $item->padi ? $item->padi->name : "",
                     'jenis_bantuan' => $item->jenis_bantuan,
                     'id_jenis_pengairan' => $item->id_jenis_pengairan,
-                    'pengairan_name' => $item->pengairan->name,
+                    'pengairan_name' => $item->pengairan ? $item->pengairan->name : "",
                     'tipe_data' => $item->tipe_data,
                     'nilai' => $item->nilai,
                     'date' => $item->date,
-                    'status' => $item->verify->status,
-                    'catatan' => $item->verify->catatan,
+                    'status' => $item->verify ? $item->verify->status : "",
+                    'catatan' => $item->verify ? $item->verify->catatan : "",
                     'created_at' => $item->created_at,
                     'updated_at' => $item->updated_at,
                 ];
             });
+
 
             return response()->json([
                 'status' => 'success',
@@ -66,110 +67,8 @@ class AdminPadiController extends Controller
         }
     }
 
-    // public function menghitungRegresi(Request $request)
-    // {
-    //     // Validasi input
-    //     $request->validate([
-    //         'tipeData' => 'required|in:tanam,panen,puso/rusak',
-    //         'dariTahun' => 'required|integer|min:2010|max:2023',
-    //         'sampaiTahun' => 'required|integer|min:2010|max:2023|gte:dariTahun',
-    //     ]);
-
-    //     $tipeData = $request->input('tipeData');
-    //     $dariTahun = $request->input('dariTahun');
-    //     $sampaiTahun = $request->input('sampaiTahun');
-
-    //     $tipeDataDescriptions = [
-    //         'tanam' => 'Data Tanam',
-    //         'panen' => 'Data Panen',
-    //         'puso/rusak' => 'Data Puso/Rusak'
-    //     ];
-    //     $tipeDataDescription = $tipeDataDescriptions[$tipeData] ?? 'Jenis Data Tidak Diketahui';
-
-    //     $data = $this->getTotalPerYear($tipeData, $dariTahun, $sampaiTahun);
-
-    //     $samples = [];
-    //     $targets = [];
-    //     $labels = [];
-
-    //     foreach ($data as $year => $total_nilai) {
-    //         $samples[] = [(int)$year];
-    //         $targets[] = $total_nilai;
-    //         $labels[] = $year;
-    //     }
-
-    //     $regression = new LeastSquares();
-    //     $regression->train($samples, $targets);
-
-    //     $predictions = [];
-    //     $prevValue = null;
-
-    //     for ($year = $dariTahun; $year <= $sampaiTahun + 1; $year++) {
-    //         $predictedValue = $regression->predict([$year]);
-
-    //         if ($year > $sampaiTahun) {
-    //             $samples[] = [$year];
-    //             $targets[] = $predictedValue;
-    //             $labels[] = $year;
-    //             $regression->train($samples, $targets);
-    //         }
-
-    //         if ($prevValue !== null) {
-    //             $change = $predictedValue - $prevValue;
-    //             $predictions[] = [
-    //                 'year' => $year,
-    //                 'predicted_value' => $predictedValue,
-    //                 'change_from_previous_year' => $change
-    //             ];
-    //         } else {
-    //             $predictions[] = [
-    //                 'year' => $year,
-    //                 'predicted_value' => $predictedValue,
-    //                 'change_from_previous_year' => null
-    //             ];
-    //         }
-    //         $prevValue = $predictedValue;
-    //     }
-
-    //     $detailedPredictions = [];
-    //     foreach ($predictions as $prediction) {
-    //         if ($prediction['change_from_previous_year'] === null) {
-    //             $description = "Pada tahun {$prediction['year']} diprediksi mendapatkan nilai " . number_format($prediction['predicted_value'], 2) . ".";
-    //         } else {
-    //             $description = "Pada tahun {$prediction['year']} diprediksi mendapatkan nilai "
-    //                 . number_format($prediction['predicted_value'], 2) . " dengan perubahan sebesar " . number_format($prediction['change_from_previous_year'], 2) . " dari tahun sebelumnya.";
-    //         }
-    //         $detailedPredictions[] = $description;
-    //     }
-
-    //     $dataPrediksi = [
-    //         'tipeData' => $tipeDataDescription,
-    //         'labels' => $labels,
-    //         'targets' => $targets,
-    //         'detailedPredictions' => $detailedPredictions
-    //     ];
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'message' => 'Berhasil mendapatkan data',
-    //         'data' => $dataPrediksi
-    //     ], 200);
-    // }
-
-    // private function getTotalPerYear($tipeData, $dariTahun, $sampaiTahun)
-    // {
-    //     $result = DB::table('laporan_padis')
-    //         ->select(DB::raw('YEAR(date) as year, SUM(nilai) as total_nilai'))
-    //         ->where('tipe_data', $tipeData)
-    //         ->whereBetween(DB::raw('YEAR(date)'), [$dariTahun, $sampaiTahun])
-    //         ->groupBy(DB::raw('YEAR(date)'))
-    //         ->get();
-
-    //     return $result->pluck('total_nilai', 'year')->all();
-    // }
-
     public function menghitungRegresiSP()
-    {
+    {   
         $earliestYear = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
         $latestYear = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
 
