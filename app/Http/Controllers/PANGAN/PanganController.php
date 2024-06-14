@@ -36,12 +36,12 @@ class PanganController extends Controller
         }
     }
 
-    public function index()
-    {
-        $data = [
-            'pangan'
-        ]
-    }
+    // public function index()
+    // {
+    //     $data = [
+    //         'pangan'
+    //     ]
+    // }
 
     /**
      * Show the form for creating a new resource.

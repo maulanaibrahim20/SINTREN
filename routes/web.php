@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
@@ -104,6 +105,12 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('data_palawija/show/{id}', [DataLaporanPalawijaController::class, 'show']);
             Route::post('data_palawija/filter', [DataLaporanPalawijaController::class, 'filter']);
             Route::get('data_palawija/exportPdf', [DataLaporanPalawijaController::class, 'exportPdf']);
+
+            Route::controller(ImportExportController::class)->group(function () {
+                Route::get('import_export', 'importExport');
+                Route::post('import', 'import');
+                Route::get('export', 'export');
+            });
         });
     });
 
