@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import screen_util
 
 class HomeChart {
   final List<DataItem> data;
@@ -25,7 +26,10 @@ class HomeChart {
   List<int> get labels => data.map((item) => item.label).toList();
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    TextStyle style = TextStyle(fontSize: 12, color: ColorTheme().primaryColor);
+    TextStyle style = TextStyle(
+      fontSize: 12.sp, // Add .sp for font size
+      color: ColorTheme().primaryColor,
+    );
     Widget text;
     int yearIndex = value.toInt();
     if (yearIndex >= 0 && yearIndex < labels.length) {
@@ -42,8 +46,8 @@ class HomeChart {
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     TextStyle style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
+      fontWeight: FontWeight.w500,
+      fontSize: 12.sp,
       color: ColorTheme().primaryColor,
     );
     String text;
@@ -57,8 +61,22 @@ class HomeChart {
   }
 
   LineChartData mainData() {
-    double maxValue = actualData.reduce((a, b) => a > b ? a : b).toDouble();
-    double maxY = ((maxValue / 5000).ceil() * 5000).toDouble();
+    double maxActualData =
+        actualData.reduce((a, b) => a > b ? a : b).toDouble();
+    double minActualData =
+        actualData.reduce((a, b) => a < b ? a : b).toDouble();
+
+    double maxPredictedData = predictedData.reduce((a, b) => a > b ? a : b);
+    double minPredictedData = predictedData.reduce((a, b) => a < b ? a : b);
+
+    double maxY =
+        [maxActualData, maxPredictedData].reduce((a, b) => a > b ? a : b);
+    double minY =
+        [minActualData, minPredictedData].reduce((a, b) => a < b ? a : b);
+
+    // Adjusting maxY and minY to be a multiple of 5000 for better display
+    maxY = ((maxY / 5000).ceil() * 5000).toDouble();
+    minY = ((minY / 5000).floor() * 5000).toDouble();
 
     return LineChartData(
       backgroundColor: Colors.white,
@@ -91,13 +109,13 @@ class HomeChart {
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: Colors.grey[200],
-            strokeWidth: 1,
+            strokeWidth: 1.w, // Add .w for stroke width
           );
         },
         getDrawingVerticalLine: (value) {
           return FlLine(
             color: Colors.grey[200],
-            strokeWidth: 1,
+            strokeWidth: 1.w, // Add .w for stroke width
           );
         },
       ),
@@ -112,7 +130,7 @@ class HomeChart {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: 30.h, // Add .h for reserved size
             interval: 1,
             getTitlesWidget: bottomTitleWidgets,
           ),
@@ -122,7 +140,7 @@ class HomeChart {
             showTitles: true,
             interval: 5000,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 42.w, // Add .w for reserved size
           ),
         ),
       ),
@@ -132,8 +150,7 @@ class HomeChart {
       ),
       minX: 0,
       maxX: (labels.length - 1).toDouble(),
-      minY: (actualData.reduce((a, b) => a < b ? a : b) / 10000).floor() *
-          10000.toDouble(),
+      minY: minY,
       maxY: maxY,
       lineBarsData: [
         LineChartBarData(
@@ -145,7 +162,7 @@ class HomeChart {
           gradient: LinearGradient(
             colors: actualDataGradientColors,
           ),
-          barWidth: 5,
+          barWidth: 5.w, // Add .w for bar width
           isStrokeCapRound: true,
           dotData: const FlDotData(
             show: false,
@@ -161,7 +178,7 @@ class HomeChart {
           gradient: LinearGradient(
             colors: predictedDataGradientColors,
           ),
-          barWidth: 5,
+          barWidth: 5.w, // Add .w for bar width
           isStrokeCapRound: true,
           dotData: const FlDotData(
             show: false,

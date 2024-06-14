@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
@@ -72,22 +73,22 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error,
                         color: Colors.grey,
-                        size: 50,
+                        size: 50.w,
                       ),
                       Text(
                         "Internal Server Error",
                         style: StyleTheme().styleBlack.copyWith(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey),
                       ),
                       Text(
                         snapshot.error.toString(),
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           color: Colors.red,
                         ),
                         textAlign: TextAlign.center,
@@ -118,14 +119,15 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                     DetailPalawijaModel data = displayList[index];
                     return Card(
                       surfaceTintColor: ColorTheme().whiteColor,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
+                      color: ColorTheme().whiteColor,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                       elevation: 3,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 10.h),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -137,20 +139,19 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                     data.palawijaName,
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16),
+                                        fontSize: 16.sp),
                                   ),
                                   Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
+                                    margin: EdgeInsets.symmetric(vertical: 3.h),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w, vertical: 3.h),
                                     decoration: BoxDecoration(
                                       color: data.status == "terima"
                                           ? Colors.green
                                           : data.status == "tolak"
                                               ? Colors.red
                                               : Colors.amber,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(5.r),
                                     ),
                                     child: Text(
                                       data.status == "terima"
@@ -192,13 +193,13 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   Text(
                                     UserController().toCamelCase(data.tipeData),
                                     style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     "${data.nilai} hektar",
                                     style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -206,7 +207,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                               ),
                               const Divider(),
                               if (data.status == "tunggu") ...[
-                                const SizedBox(height: 5),
+                                SizedBox(height: 5.h),
                                 Row(
                                   children: [
                                     Expanded(
@@ -234,21 +235,21 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                             style: StyleTheme()
                                                 .stylePrimary
                                                 .copyWith(
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     color: Colors.green)),
                                         style: ElevatedButton.styleFrom(
                                           surfaceTintColor:
                                               ColorTheme().whiteColor,
-                                          side: const BorderSide(
-                                              color: Colors.green, width: 2),
+                                          side: BorderSide(
+                                              color: Colors.green, width: 2.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                                BorderRadius.circular(30.r),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 10),
+                                    SizedBox(width: 10.w),
                                     Expanded(
                                       flex: 1,
                                       child: ElevatedButton.icon(
@@ -277,16 +278,16 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                             style: StyleTheme()
                                                 .stylePrimary
                                                 .copyWith(
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     color: Colors.red)),
                                         style: ElevatedButton.styleFrom(
                                           surfaceTintColor:
                                               ColorTheme().whiteColor,
-                                          side: const BorderSide(
-                                              color: Colors.red, width: 2),
+                                          side: BorderSide(
+                                              color: Colors.red, width: 2.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                                BorderRadius.circular(30.r),
                                           ),
                                         ),
                                       ),
@@ -294,7 +295,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   ],
                                 )
                               ],
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5.h),
                             ],
                           ),
                         ),
@@ -305,7 +306,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
               }
             },
           ),
-          const SizedBox(height: 10)
+          SizedBox(height: 10.h),
         ],
       ),
     );
@@ -352,13 +353,13 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Kembali dengan nilai false
+                Navigator.pop(context);
               },
               child: Text(
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
               ),
             ),
             TextButton(
@@ -369,7 +370,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16.sp),
               ),
             ),
           ],
@@ -391,7 +392,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
           ),
           content: Text(
             "Apakah anda yakin ingin memverifikasi data ini?",
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
           ),
           actions: <Widget>[
             TextButton(
@@ -402,7 +403,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                 "Tidak",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
             TextButton(
@@ -411,7 +412,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
               },
               child: Text(
                 "Ya",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
               ),
             ),
           ],
@@ -439,9 +440,9 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
               children: [
                 Text(
                   "Apakah anda yakin ingin menolak data ini?",
-                  style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+                  style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 const Text("Berikan Ulasan:"),
                 TextFormField(
                   controller: ulasan,
@@ -450,7 +451,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                     filled: true,
                     fillColor: ColorTheme().whiteColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   maxLines: 5,
@@ -474,7 +475,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                   "Tidak",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.red),
+                      .copyWith(fontSize: 14.sp, color: Colors.red),
                 ),
               ),
               TextButton(
@@ -485,7 +486,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                 },
                 child: Text(
                   "Ya",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
                 ),
               ),
             ],

@@ -6,6 +6,7 @@ import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AdminVerifyView extends StatefulWidget {
   const AdminVerifyView({super.key});
@@ -27,7 +28,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
         title: Text(
           'List Verifikasi',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -46,7 +47,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(vertical: 10.h),
         child: _listVerify(),
       ),
     );
@@ -66,13 +67,13 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
           return Align(
             alignment: Alignment.topCenter,
             child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              width: MediaQuery.of(context).size.width.w,
+              height: 50.h,
+              margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
               decoration: BoxDecoration(
                 color: Colors.green,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10.r),
               ),
               child: Center(
                 child: Row(
@@ -81,12 +82,11 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                       Icons.verified_outlined,
                       color: ColorTheme().whiteColor,
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     Text(
                       'Semua Data Sudah Diverifikasi',
-                      style: StyleTheme()
-                          .styleWhite
-                          .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
+                      style: StyleTheme().styleWhite.copyWith(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -97,30 +97,30 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
           return Column(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: MediaQuery.of(context).size.width.w,
+                height: 50.h,
+                margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
                 decoration: BoxDecoration(
                   color: ColorTheme().primaryColor,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Center(
-                    child: Row(
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: ColorTheme().whiteColor,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      '${snapshot.data!.length} Data Menunggu Diverifikasi',
-                      style: StyleTheme()
-                          .styleWhite
-                          .copyWith(fontSize: 14, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                )),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        color: ColorTheme().whiteColor,
+                      ),
+                      SizedBox(width: 10.w),
+                      Text(
+                        '${snapshot.data!.length} Data Menunggu Diverifikasi',
+                        style: StyleTheme().styleWhite.copyWith(
+                            fontSize: 14.sp, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               Expanded(
                 child: ListView.builder(
@@ -139,14 +139,15 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                     }
                     return Card(
                       surfaceTintColor: ColorTheme().whiteColor,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 15),
+                      color: ColorTheme().whiteColor,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 15.w),
                       elevation: 3,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 10.h),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -160,16 +161,15 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                                         : dataPalawija?.palawijaName ?? "",
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16),
+                                        fontSize: 16.sp),
                                   ),
                                   Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
+                                    margin: EdgeInsets.symmetric(vertical: 3.h),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w, vertical: 3.h),
                                     decoration: BoxDecoration(
                                       color: Colors.amber,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(5.r),
                                     ),
                                     child: Text(
                                       "Membutuhkan Verifikasi",
@@ -227,20 +227,20 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                                             ? dataPadi?.tipeData ?? ""
                                             : dataPalawija?.tipeData ?? ""),
                                     style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     "${item.type == "padi" ? dataPadi?.nilai : dataPalawija?.nilai} hektar",
                                     style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                 ],
                               ),
                               const Divider(),
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5.h),
                               Row(
                                 children: [
                                   Expanded(
@@ -271,21 +271,21 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                                           style: StyleTheme()
                                               .stylePrimary
                                               .copyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 14.sp,
                                                   color: Colors.green)),
                                       style: ElevatedButton.styleFrom(
                                         surfaceTintColor:
                                             ColorTheme().whiteColor,
-                                        side: const BorderSide(
-                                            color: Colors.green, width: 2),
+                                        side: BorderSide(
+                                            color: Colors.green, width: 2.w),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(30),
+                                              BorderRadius.circular(30.r),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
+                                  SizedBox(width: 10.w),
                                   Expanded(
                                     flex: 1,
                                     child: ElevatedButton.icon(
@@ -314,23 +314,23 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                                           style: StyleTheme()
                                               .stylePrimary
                                               .copyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 14.sp,
                                                   color: Colors.red)),
                                       style: ElevatedButton.styleFrom(
                                         surfaceTintColor:
                                             ColorTheme().whiteColor,
-                                        side: const BorderSide(
-                                            color: Colors.red, width: 2),
+                                        side: BorderSide(
+                                            color: Colors.red, width: 2.w),
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(30),
+                                              BorderRadius.circular(30.r),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5.h),
                             ],
                           ),
                         ),
@@ -359,7 +359,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
           ),
           content: Text(
             "Apakah anda yakin ingin memverifikasi data ini?",
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
           ),
           actions: <Widget>[
             TextButton(
@@ -370,7 +370,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                 "Tidak",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
             TextButton(
@@ -379,7 +379,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
               },
               child: Text(
                 "Ya",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
               ),
             ),
           ],
@@ -407,9 +407,9 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
               children: [
                 Text(
                   "Apakah anda yakin ingin menolak data ini?",
-                  style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+                  style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 const Text("Berikan Ulasan:"),
                 TextFormField(
                   controller: ulasan,
@@ -418,7 +418,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                     filled: true,
                     fillColor: ColorTheme().whiteColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   maxLines: 5,
@@ -443,7 +443,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                   "Tidak",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.red),
+                      .copyWith(fontSize: 14.sp, color: Colors.red),
                 ),
               ),
               TextButton(
@@ -454,7 +454,7 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                 },
                 child: Text(
                   "Ya",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
                 ),
               ),
             ],

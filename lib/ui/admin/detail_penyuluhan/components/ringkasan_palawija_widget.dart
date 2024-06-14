@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/admin/detail_penyuluhan/components/rincian_palawija_view.dart';
@@ -26,24 +27,24 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       elevation: 3,
       surfaceTintColor: ColorTheme().whiteColor,
       color: ColorTheme().whiteColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
                     Container(
-                      height: 50,
-                      width: 50,
+                      height: 50.h,
+                      width: 50.w,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: ColorTheme().linearColor,
@@ -52,25 +53,25 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                         child: Icon(
                           Icons.home_rounded,
                           color: ColorTheme().whiteColor,
-                          size: 30,
+                          size: 30.sp,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 15),
+                    SizedBox(width: 15.w),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Desa ${UserController().toCamelCase(widget.desaName)}",
                           style: StyleTheme().stylePrimary.copyWith(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20.sp, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           UserController().convertDate(widget.date),
                           style: StyleTheme().styleBlack.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey[700],
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                       ],
                     ),
@@ -79,26 +80,26 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Stack(
             children: [
-              const Divider(thickness: 2),
+              Divider(thickness: 2.h),
               Container(
                 color: ColorTheme().whiteColor,
-                margin: const EdgeInsets.only(left: 20),
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                margin: EdgeInsets.only(left: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: Text(
                   "Ringkasan penyuluhan bulan ini",
                   style: StyleTheme()
                       .styleBlack
-                      .copyWith(color: Colors.black87, fontSize: 14),
+                      .copyWith(color: Colors.black87, fontSize: 14.sp),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          SizedBox(height: 5.h),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: FutureBuilder(
               future: AdminPalawijaController()
                   .getDetailPalawijaByDesa(widget.date, widget.desaId),
@@ -110,22 +111,22 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.error,
                           color: Colors.grey,
-                          size: 50,
+                          size: 50.sp,
                         ),
                         Text(
                           "Internal Server Error",
                           style: StyleTheme().styleBlack.copyWith(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey),
                         ),
                         Text(
                           snapshot.error.toString(),
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: 14.sp,
                             color: Colors.red,
                           ),
                           textAlign: TextAlign.center,
@@ -153,12 +154,12 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                   if (itemList.isEmpty) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.sp),
                         child: Text(
                           "Data Kosong",
                           style: StyleTheme().styleBlack.copyWith(
                               color: Colors.grey,
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -175,8 +176,8 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                         mainAxisSize: MainAxisSize.min,
                         children: totalValues.entries.map((entry) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.w, vertical: 5.h),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -184,12 +185,12 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                                   "${UserController().toCamelCase(entry.key)}:",
                                   style: StyleTheme()
                                       .styleBlack
-                                      .copyWith(fontSize: 14),
+                                      .copyWith(fontSize: 14.sp),
                                 ),
                                 Text(
                                   '${entry.value} hektar',
                                   style: StyleTheme().styleBlack.copyWith(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -197,10 +198,10 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                           );
                         }).toList(),
                       ),
-                      const Divider(),
+                      Divider(thickness: 2.h),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 5.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -208,12 +209,12 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                               'Total Tanaman Bulan Ini:',
                               style: StyleTheme()
                                   .styleBlack
-                                  .copyWith(fontSize: 14),
+                                  .copyWith(fontSize: 14.sp),
                             ),
                             Text(
                               '${total < 0 ? 0 : total} hektar',
                               style: StyleTheme().styleBlack.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.w500),
+                                  fontSize: 14.sp, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
@@ -224,7 +225,7 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
               }),
             ),
           ),
-          const Divider(thickness: 2),
+          Divider(thickness: 2.h),
           widget.isRincian
               ? const SizedBox.shrink()
               : GestureDetector(
@@ -246,16 +247,17 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                       Text(
                         "Lihat Selengkapnya",
                         style: StyleTheme().stylePrimary.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                            fontSize: 16.sp, fontWeight: FontWeight.w500),
                       ),
                       Icon(
                         Icons.arrow_right_outlined,
                         color: ColorTheme().primaryColor,
+                        size: 24.sp,
                       ),
                     ],
                   ),
                 ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
         ],
       ),
     );

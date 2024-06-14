@@ -181,7 +181,7 @@ class _LoginViewState extends State<LoginView> {
                                 width: MediaQuery.of(context).size.width,
                                 height: 60.h,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.r),
+                                  borderRadius: BorderRadius.circular(10.r),
                                   gradient: ColorTheme().linearColor,
                                 ),
                                 child: ElevatedButton.icon(
@@ -221,7 +221,7 @@ class _LoginViewState extends State<LoginView> {
                                         color: ColorTheme().primaryColor,
                                         width: 2.w),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.r),
+                                      borderRadius: BorderRadius.circular(10.r),
                                     ),
                                   ),
                                 ),

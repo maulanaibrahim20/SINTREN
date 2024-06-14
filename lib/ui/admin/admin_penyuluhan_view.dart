@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
@@ -63,7 +64,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
         title: Text(
           'Histori Penyuluhan Bulan Ini',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -103,15 +104,15 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error,
                     color: Colors.grey,
-                    size: 50,
+                    size: 50.sp,
                   ),
                   Text(
                     "Internal Server Error",
                     style: StyleTheme().styleBlack.copyWith(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey),
                   ),
@@ -137,15 +138,15 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.assignment,
                       color: Colors.grey,
-                      size: 50,
+                      size: 50.sp,
                     ),
                     Text(
                       "Penyuluhan Belum Dilakukan",
                       style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                     ),
@@ -154,7 +155,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
               );
             }
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               child: ListView.builder(
                 padding: EdgeInsets.zero,
                 itemCount: (selectedDesaValue == null)
@@ -186,8 +187,8 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                       setState(() {});
                     },
                     child: Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 10.h),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
@@ -197,33 +198,33 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                             Align(
                               alignment: Alignment.topRight,
                               child: Container(
-                                height: 30,
-                                width: 250,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 20),
-                                decoration: const BoxDecoration(
+                                height: 30.h,
+                                width: 250.w,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5.h, horizontal: 20.w),
+                                decoration: BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10.r),
+                                    bottomLeft: Radius.circular(10.r),
                                   ),
                                 ),
                                 child: Text(
                                   "${desa.totalTunggu} Data Belum Diverifikasi",
                                   style: StyleTheme().styleWhite.copyWith(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Row(
                               children: [
                                 Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 50.h,
+                                  width: 50.w,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: ColorTheme().linearColor,
@@ -232,11 +233,11 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                     child: Icon(
                                       Icons.home_rounded,
                                       color: ColorTheme().whiteColor,
-                                      size: 30,
+                                      size: 30.sp,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 15),
+                                SizedBox(width: 15.w),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
@@ -245,7 +246,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                     Text(
                                       "Desa ${UserController().toCamelCase(desa.desaName)}",
                                       style: StyleTheme().stylePrimary.copyWith(
-                                          fontSize: 20,
+                                          fontSize: 20.sp,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(
@@ -253,22 +254,21 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                                       style: StyleTheme().styleBlack.copyWith(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey[700],
-                                          fontSize: 14),
+                                          fontSize: 14.sp),
                                     ),
                                   ],
                                 )
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Stack(
                             children: [
-                              const Divider(thickness: 2, color: Colors.grey),
+                              Divider(thickness: 2.h, color: Colors.grey),
                               Container(
                                 color: ColorTheme().whiteColor,
-                                margin: const EdgeInsets.only(left: 20),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                margin: EdgeInsets.only(left: 20.w),
+                                padding: EdgeInsets.symmetric(horizontal: 8.w),
                                 child: Text(
                                   "Progres bulan ini",
                                   style: StyleTheme()
@@ -278,11 +278,11 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 40,
+                            width: MediaQuery.of(context).size.width - 40.w,
                             animation: true,
-                            lineHeight: 30,
+                            lineHeight: 30.h,
                             animationDuration: 2000,
                             percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
                                 ? 1
@@ -290,12 +290,12 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
                             center: Text(
                               "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai.toStringAsFixed(1)}/${getLuasDesa(desa.desaId).toStringAsFixed(1)})",
                               style: StyleTheme().styleWhite.copyWith(
-                                  fontWeight: FontWeight.w500, fontSize: 14),
+                                  fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
-                            barRadius: const Radius.circular(10),
+                            barRadius: Radius.circular(10.r),
                             linearGradient: ColorTheme().linearColor,
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                         ],
                       ),
                     ),
@@ -348,13 +348,13 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
+                Navigator.of(context).pop(false);
               },
               child: Text(
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
               ),
             ),
             TextButton(
@@ -365,7 +365,7 @@ class AdminPenyuluhanViewState extends State<AdminPenyuluhanView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16.sp),
               ),
             ),
           ],

@@ -1,11 +1,13 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/ui/admin/admin_desa_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_home_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_penugasan_view.dart';
 import 'package:sintren_mobile/ui/admin/admin_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
+import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class AdminLandingView extends StatefulWidget {
   const AdminLandingView({super.key});
@@ -48,9 +50,10 @@ class _AdminLandingViewState extends State<AdminLandingView> {
             title: 'Penugasan',
           ),
         ],
-        radius: 10,
-        height: 40,
-        iconSize: 24,
+        radius: 10.r,
+        height: 42.h,
+        iconSize: 22.h,
+        titleStyle: StyleTheme().styleWhite.copyWith(fontSize: 12.sp),
         backgroundColor: ColorTheme().primaryColor,
         color: ColorTheme().whiteColor,
         colorSelected: ColorTheme().primaryColor,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/penyuluh_model.dart';
@@ -26,7 +27,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       appBar: AppBar(
-        elevation: 0,
+        elevation: 0.w,
         centerTitle: false,
         foregroundColor: ColorTheme().whiteColor,
         flexibleSpace: Container(
@@ -35,7 +36,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
         title: Text(
           'Penugasan Penyuluh',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -51,15 +52,15 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error,
                     color: Colors.grey,
-                    size: 50,
+                    size: 50.sp,
                   ),
                   Text(
                     "Internal Server Error",
                     style: StyleTheme().styleBlack.copyWith(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey),
                   ),
@@ -71,7 +72,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
           } else {
             List<Penyuluh> penyuluhList = snapshot.data!;
             return ListView.builder(
-              padding: const EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 10.h),
               itemCount: penyuluhList.length,
               itemBuilder: (context, index) {
                 Penyuluh penyuluh = penyuluhList[index];
@@ -88,21 +89,22 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
                     setState(() {});
                   },
                   child: Card(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    elevation: 3,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    elevation: 3.r,
+                    shadowColor: ColorTheme().whiteColor,
                     surfaceTintColor: ColorTheme().whiteColor,
                     color: ColorTheme().whiteColor,
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
                           child: Row(
                             children: [
                               Container(
-                                height: 50,
-                                width: 50,
+                                height: 50.h,
+                                width: 50.w,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   gradient: ColorTheme().linearColor,
@@ -111,11 +113,11 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
                                   child: Icon(
                                     Icons.person,
                                     color: ColorTheme().whiteColor,
-                                    size: 30,
+                                    size: 30.w,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 15),
+                              SizedBox(width: 15.w),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
@@ -124,7 +126,7 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
                                   Text(
                                     UserController().toCamelCase(penyuluh.name),
                                     style: StyleTheme().stylePrimary.copyWith(
-                                        fontSize: 20,
+                                        fontSize: 20.sp,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
@@ -132,28 +134,28 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey[700],
-                                        fontSize: 14),
+                                        fontSize: 14.sp),
                                   ),
                                   Text(
                                     "No. Telp: ${penyuluh.noTelp}",
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey[700],
-                                        fontSize: 14),
+                                        fontSize: 14.sp),
                                   ),
                                   Text(
                                     "Alamat: ${penyuluh.alamat}",
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey[700],
-                                        fontSize: 14),
+                                        fontSize: 14.sp),
                                   ),
                                 ],
                               )
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),

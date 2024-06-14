@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
@@ -61,17 +62,21 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 250,
+            height: 250.h,
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)),
+              borderRadius: BorderRadius.only(
+                bottomLeft: const Radius.circular(10).r,
+                bottomRight: const Radius.circular(10).r,
+              ),
               gradient: ColorTheme().linearColor,
             ),
           ),
-          Column(
-            children: [
-              FutureBuilder(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              double appBarHeight = 30.h + 10.h;
+              double trendChartHeight = 280.h + 10.h;
+              double progressHeight = 20.h + 50.h + 10.h + 10.h + 10.h;
+              return FutureBuilder(
                 future: _initializedData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -81,27 +86,33 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                   } else {
                     return Column(
                       children: [
-                        const SizedBox(height: 20),
+                        SizedBox(height: 30.h),
                         _customAppBar(context),
                         _trendLineChart(context),
-                        const SizedBox(height: 15),
+                        SizedBox(height: 15.h),
                         _progresPenyuluhan(context),
+                        SizedBox(height: 10.h),
+                        _listVerify(
+                            isHide: constraints.maxHeight -
+                                    (appBarHeight +
+                                        trendChartHeight +
+                                        progressHeight +
+                                        10.h) <
+                                200.h),
+                        SizedBox(height: 20.h),
                       ],
                     );
                   }
                 },
-              ),
-              const SizedBox(height: 10),
-              _listVerify(),
-              const SizedBox(height: 20),
-            ],
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Expanded _listVerify() {
+  Expanded _listVerify({required bool isHide}) {
     return Expanded(
       child: FutureBuilder<List<DetailCombinedModel>>(
         future: AdminController().getDetailCombinedByStatus(),
@@ -116,13 +127,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
             return Align(
               alignment: Alignment.topCenter,
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: MediaQuery.of(context).size.width.w,
+                height: 50.h,
+                margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
                 decoration: BoxDecoration(
                   color: Colors.green,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Center(
                   child: Row(
@@ -131,11 +142,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                         Icons.verified_outlined,
                         color: ColorTheme().whiteColor,
                       ),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10.w),
                       Text(
                         'Semua Data Sudah Diverifikasi',
                         style: StyleTheme().styleWhite.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                            fontSize: 14.sp, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -153,14 +164,14 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                             builder: (_) => const AdminVerifyView()));
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
+                    width: MediaQuery.of(context).size.width.w,
+                    height: 50.h,
                     margin:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
                     decoration: BoxDecoration(
                       color: ColorTheme().primaryColor,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                     child: Center(
                         child: Row(
@@ -169,7 +180,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                           Icons.error_outline,
                           color: ColorTheme().whiteColor,
                         ),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 10.w),
                         Expanded(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,11 +188,12 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                               Text(
                                 '${snapshot.data!.length} Data Menunggu Diverifikasi',
                                 style: StyleTheme().styleWhite.copyWith(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold),
                               ),
                               Icon(
                                 Icons.arrow_right_rounded,
-                                size: 35,
+                                size: 35.sp,
                                 color: ColorTheme().whiteColor,
                               )
                             ],
@@ -191,226 +203,235 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                     )),
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      var item = snapshot.data![index];
-                      DetailPadiModel? dataPadi;
-                      DetailPalawijaModel? dataPalawija;
-                      if (item.type == "padi") {
-                        dataPadi = item.data;
-                      }
-                      if (item.type == "palawija") {
-                        dataPalawija = item.data;
-                      }
-                      return Card(
-                        surfaceTintColor: ColorTheme().whiteColor,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 15),
-                        elevation: 3,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      item.type == "padi"
-                                          ? dataPadi?.padiName ?? ""
-                                          : dataPalawija?.palawijaName ?? "",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 3),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: Colors.amber,
-                                        borderRadius: BorderRadius.circular(5),
+                if (isHide)
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        var item = snapshot.data![index];
+                        DetailPadiModel? dataPadi;
+                        DetailPalawijaModel? dataPalawija;
+                        if (item.type == "padi") {
+                          dataPadi = item.data;
+                        }
+                        if (item.type == "palawija") {
+                          dataPalawija = item.data;
+                        }
+                        return Card(
+                          surfaceTintColor: ColorTheme().whiteColor,
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5.h, horizontal: 15.w),
+                          elevation: 3,
+                          color: ColorTheme().whiteColor,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w, vertical: 10.h),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        item.type == "padi"
+                                            ? dataPadi?.padiName ?? ""
+                                            : dataPalawija?.palawijaName ?? "",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16.sp),
                                       ),
-                                      child: Text(
-                                        "Membutuhkan Verifikasi",
-                                        style: StyleTheme().styleWhite.copyWith(
-                                              fontWeight: FontWeight.w500,
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 3.h),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w, vertical: 3.h),
+                                        decoration: BoxDecoration(
+                                          color: Colors.amber,
+                                          borderRadius:
+                                              BorderRadius.circular(5.r),
+                                        ),
+                                        child: Text(
+                                          "Membutuhkan Verifikasi",
+                                          style:
+                                              StyleTheme().styleWhite.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        UserController().toCamelCase(
+                                            item.type == "padi"
+                                                ? dataPadi?.jenisBantuan ?? ""
+                                                : dataPalawija?.jenisBantuan ??
+                                                    ""),
+                                        style: StyleTheme().styleBlack,
+                                      ),
+                                      Text(
+                                        item.type == "padi"
+                                            ? dataPadi?.date ?? ""
+                                            : dataPalawija?.date ?? "",
+                                        style: StyleTheme().styleBlack,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Lahan ${UserController().toCamelCase(item.type == "padi" ? dataPadi?.jenisLahan ?? "" : dataPalawija?.jenisLahan ?? "")}',
+                                        style: StyleTheme().styleBlack,
+                                      ),
+                                      Text(
+                                        item.type == "padi"
+                                            ? UserController().toCamelCase(
+                                                dataPadi?.pengairanName ?? "")
+                                            : "",
+                                        style: StyleTheme().styleBlack,
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        UserController().toCamelCase(
+                                            item.type == "padi"
+                                                ? dataPadi?.tipeData ?? ""
+                                                : dataPalawija?.tipeData ?? ""),
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        "${item.type == "padi" ? dataPadi?.nilai : dataPalawija?.nilai} hektar",
+                                        style: StyleTheme().styleBlack.copyWith(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      UserController().toCamelCase(item.type ==
-                                              "padi"
-                                          ? dataPadi?.jenisBantuan ?? ""
-                                          : dataPalawija?.jenisBantuan ?? ""),
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      item.type == "padi"
-                                          ? dataPadi?.date ?? ""
-                                          : dataPalawija?.date ?? "",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Lahan ${UserController().toCamelCase(item.type == "padi" ? dataPadi?.jenisLahan ?? "" : dataPalawija?.jenisLahan ?? "")}',
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      item.type == "padi"
-                                          ? UserController().toCamelCase(
-                                              dataPadi?.pengairanName ?? "")
-                                          : "",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                  ],
-                                ),
-                                const Divider(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      UserController().toCamelCase(
-                                          item.type == "padi"
-                                              ? dataPadi?.tipeData ?? ""
-                                              : dataPalawija?.tipeData ?? ""),
-                                      style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      "${item.type == "padi" ? dataPadi?.nilai : dataPalawija?.nilai} hektar",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                const Divider(),
-                                const SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: ElevatedButton.icon(
-                                        onPressed: () async {
-                                          bool? shouldVerify =
-                                              await _showVerifyDialog(context);
-                                          if (shouldVerify == true) {
-                                            await AdminController().verify(
-                                              dataId: item.type == "padi"
-                                                  ? dataPadi!.id.toString()
-                                                  : dataPalawija!.id.toString(),
-                                              map: {
-                                                "status": "terima",
-                                                "catatan": "oke"
-                                              },
-                                              isPalawija: item.type == "padi"
-                                                  ? false
-                                                  : true,
-                                            );
-                                            setState(() {});
-                                          }
-                                        },
-                                        icon: const Icon(
-                                            Icons.verified_outlined,
-                                            color: Colors.green),
-                                        label: Text('Verifikasi',
-                                            style: StyleTheme()
-                                                .stylePrimary
-                                                .copyWith(
-                                                    fontSize: 14,
-                                                    color: Colors.green)),
-                                        style: ElevatedButton.styleFrom(
-                                          surfaceTintColor:
-                                              ColorTheme().whiteColor,
-                                          side: const BorderSide(
-                                              color: Colors.green, width: 2),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
+                                    ],
+                                  ),
+                                  const Divider(),
+                                  SizedBox(height: 5.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                            bool? shouldVerify =
+                                                await _showVerifyDialog(
+                                                    context);
+                                            if (shouldVerify == true) {
+                                              await AdminController().verify(
+                                                dataId: item.type == "padi"
+                                                    ? dataPadi!.id.toString()
+                                                    : dataPalawija!.id
+                                                        .toString(),
+                                                map: {
+                                                  "status": "terima",
+                                                  "catatan": "oke"
+                                                },
+                                                isPalawija: item.type == "padi"
+                                                    ? false
+                                                    : true,
+                                              );
+                                              setState(() {});
+                                            }
+                                          },
+                                          icon: const Icon(
+                                              Icons.verified_outlined,
+                                              color: Colors.green),
+                                          label: Text('Verifikasi',
+                                              style: StyleTheme()
+                                                  .stylePrimary
+                                                  .copyWith(
+                                                      fontSize: 14.sp,
+                                                      color: Colors.green)),
+                                          style: ElevatedButton.styleFrom(
+                                            surfaceTintColor:
+                                                ColorTheme().whiteColor,
+                                            side: BorderSide(
+                                                color: Colors.green,
+                                                width: 2.w),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.r),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      flex: 1,
-                                      child: ElevatedButton.icon(
-                                        onPressed: () async {
-                                          bool? shouldReject =
-                                              await _showRejectedDialog(
-                                                  context);
-                                          if (shouldReject == true) {
-                                            await AdminController().verify(
-                                              dataId: item.type == "padi"
-                                                  ? dataPadi!.id.toString()
-                                                  : dataPalawija!.id.toString(),
-                                              map: {
-                                                "status": "tolak",
-                                                "catatan": ulasan.text
-                                              },
-                                              isPalawija: item.type == "padi"
-                                                  ? false
-                                                  : true,
-                                            );
-                                            setState(() {});
-                                          }
-                                        },
-                                        icon: const Icon(
-                                            Icons.dangerous_outlined,
-                                            color: Colors.red),
-                                        label: Text('Tolak',
-                                            style: StyleTheme()
-                                                .stylePrimary
-                                                .copyWith(
-                                                    fontSize: 14,
-                                                    color: Colors.red)),
-                                        style: ElevatedButton.styleFrom(
-                                          surfaceTintColor:
-                                              ColorTheme().whiteColor,
-                                          side: const BorderSide(
-                                              color: Colors.red, width: 2),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
+                                      SizedBox(width: 10.w),
+                                      Expanded(
+                                        flex: 1,
+                                        child: ElevatedButton.icon(
+                                          onPressed: () async {
+                                            bool? shouldReject =
+                                                await _showRejectedDialog(
+                                                    context);
+                                            if (shouldReject == true) {
+                                              await AdminController().verify(
+                                                dataId: item.type == "padi"
+                                                    ? dataPadi!.id.toString()
+                                                    : dataPalawija!.id
+                                                        .toString(),
+                                                map: {
+                                                  "status": "tolak",
+                                                  "catatan": ulasan.text
+                                                },
+                                                isPalawija: item.type == "padi"
+                                                    ? false
+                                                    : true,
+                                              );
+                                              setState(() {});
+                                            }
+                                          },
+                                          icon: const Icon(
+                                              Icons.dangerous_outlined,
+                                              color: Colors.red),
+                                          label: Text('Tolak',
+                                              style: StyleTheme()
+                                                  .stylePrimary
+                                                  .copyWith(
+                                                      fontSize: 14.sp,
+                                                      color: Colors.red)),
+                                          style: ElevatedButton.styleFrom(
+                                            surfaceTintColor:
+                                                ColorTheme().whiteColor,
+                                            side: BorderSide(
+                                                color: Colors.red, width: 2.w),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.r),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                              ],
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.h),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
               ],
             );
           }
@@ -421,20 +442,20 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   Card _progresPenyuluhan(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      elevation: 5,
+      margin: EdgeInsets.symmetric(horizontal: 15.w),
+      elevation: 5.r,
       surfaceTintColor: ColorTheme().whiteColor,
       color: ColorTheme().whiteColor,
       child: Column(
         children: [
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
               children: [
                 Container(
-                  height: 50,
-                  width: 50,
+                  height: 50.h,
+                  width: 50.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: ColorTheme().linearColor,
@@ -443,11 +464,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                     child: Icon(
                       Icons.home_rounded,
                       color: ColorTheme().whiteColor,
-                      size: 30,
+                      size: 30.sp,
                     ),
                   ),
                 ),
-                const SizedBox(width: 15),
+                SizedBox(width: 15.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -455,16 +476,15 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                       kecamatan == ""
                           ? "Kabupaten Indramayu"
                           : "Kecamatan ${UserController().toCamelCase(kecamatan ?? "")}",
-                      style: StyleTheme()
-                          .stylePrimary
-                          .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: StyleTheme().stylePrimary.copyWith(
+                          fontSize: 20.sp, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       userC.dateNow(),
                       style: StyleTheme().styleBlack.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[700],
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     ),
                   ],
                 ),
@@ -472,12 +492,14 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Container(
+                      height: 50.h,
+                      width: 50.w,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: ColorTheme().linearColor),
                       child: IconButton(
-                        icon: const Icon(Icons.refresh),
-                        color: ColorTheme().whiteColor, // Icon color
+                        icon: Icon(Icons.refresh, size: 24.sp),
+                        color: ColorTheme().whiteColor,
                         onPressed: () async {
                           EasyLoading.show(status: statusNotifier.value);
 
@@ -495,18 +517,18 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           Stack(
             children: [
-              const Divider(thickness: 2, color: Colors.grey),
+              Divider(thickness: 2.h, color: Colors.grey),
               Container(
                 color: ColorTheme().whiteColor,
-                margin: const EdgeInsets.only(left: 20),
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                margin: EdgeInsets.only(left: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: Text(
                   "Progres bulan ini",
                   style:
@@ -515,11 +537,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
           LinearPercentIndicator(
-            width: MediaQuery.of(context).size.width - 30,
+            width: MediaQuery.of(context).size.width - 30.w,
             animation: true,
-            lineHeight: 30,
+            lineHeight: 30.h,
             animationDuration: 2000,
             percent: (presentasePenyuluhan! / 100) > 1
                 ? 1
@@ -528,12 +550,12 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               "${presentasePenyuluhan!.toStringAsFixed(1)}% (${penyuluhanBulanIni!.toStringAsFixed(1)}/${totalLuasLahanKecamatan!.toStringAsFixed(1)})",
               style: StyleTheme()
                   .styleWhite
-                  .copyWith(fontWeight: FontWeight.w500, fontSize: 14),
+                  .copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp),
             ),
-            barRadius: const Radius.circular(10),
+            barRadius: Radius.circular(10.r),
             linearGradient: ColorTheme().linearColor,
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
         ],
       ),
     );
@@ -541,12 +563,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   Card _trendLineChart(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
+      margin: EdgeInsets.symmetric(horizontal: 15.w),
       elevation: 3,
+      color: ColorTheme().whiteColor,
       surfaceTintColor: ColorTheme().whiteColor,
       child: Container(
-        height: 280,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        height: 280.h,
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         child: FutureBuilder<PrediksiModel>(
           future: AdminService().getPrediksiPadi(),
           builder: (context, snapshot) {
@@ -557,15 +580,15 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.error,
                       color: Colors.grey,
-                      size: 50,
+                      size: 50.r,
                     ),
                     Text(
                       "Internal Server Error : ${snapshot.error}",
                       style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                     ),
@@ -594,13 +617,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                           Icon(
                             Icons.multiline_chart_rounded,
                             color: ColorTheme().primaryColor,
-                            size: 30,
+                            size: 30.r,
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10.w),
                           Text(
                             "Trend Pertanian",
                             style: StyleTheme().stylePrimary.copyWith(
-                                  fontSize: 20,
+                                  fontSize: 20.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                           ),
@@ -618,18 +641,18 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                     ],
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 20.h),
                     width: MediaQuery.of(context).size.width,
-                    height: 207,
+                    height: 207.h,
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 180,
+                          height: 180.h,
                           child: LineChart(
                             HomeChart(data: result).mainData(),
                           ),
                         ),
-                        const SizedBox(height: 3),
+                        SizedBox(height: 3.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -640,40 +663,45 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                               },
                               child: Row(
                                 children: [
-                                  const Icon(Icons.error_outline),
-                                  const SizedBox(width: 5),
-                                  Text("Mape: ${prediksi.mape}")
+                                  Icon(Icons.error_outline, size: 20.r),
+                                  SizedBox(width: 5.w),
+                                  Text(
+                                    "Mape: ${prediksi.mape}",
+                                    style: TextStyle(fontSize: 12.sp),
+                                  ),
                                 ],
                               ),
                             )),
                             Row(
                               children: [
                                 Container(
-                                  width: 10,
-                                  height: 10,
+                                  width: 10.w,
+                                  height: 10.h,
                                   color: ColorTheme().secondaryColor,
                                 ),
-                                const SizedBox(width: 5),
+                                SizedBox(width: 5.w),
                                 Text(
                                   "Data Aktual",
                                   style: TextStyle(
                                     color: ColorTheme().primaryColor,
+                                    fontSize: 12.sp,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10.w),
                             Row(
                               children: [
                                 Container(
-                                    width: 10,
-                                    height: 10,
+                                    width: 10.w,
+                                    height: 10.h,
                                     color: Colors.amber[900]),
-                                const SizedBox(width: 5),
+                                SizedBox(width: 5.w),
                                 Text(
                                   "Data Prediksi",
                                   style: TextStyle(
-                                      color: ColorTheme().primaryColor),
+                                      color: ColorTheme().primaryColor,
+                                      fontSize: 12.sp),
                                 ),
                               ],
                             )
@@ -732,7 +760,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10.h), // Using screen_util for height
               DropdownButtonComponent(
                 icon: Icons.dataset,
                 label: 'Sampai Tahun',
@@ -780,9 +808,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               },
               child: Text(
                 "Tutup",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(
+                    color: Colors.red,
+                    fontSize: 16.sp), // Using screen_util for fontSize
               ),
             ),
             TextButton(
@@ -794,7 +822,8 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(
+                    fontSize: 16.sp), // Using screen_util for fontSize
               ),
             ),
           ],
@@ -805,7 +834,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   Padding _customAppBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -814,7 +843,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                 ? "Dinas Pertanian Indramayu"
                 : "Kecamatan ${UserController().toCamelCase(kecamatan ?? "")}",
             style: StyleTheme().styleWhite.copyWith(
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -822,7 +851,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
             surfaceTintColor: ColorTheme().whiteColor,
             icon: Icon(
               Icons.account_circle,
-              size: 30,
+              size: 30.r,
               color: ColorTheme().whiteColor,
             ),
             onSelected: (String value) {
@@ -843,39 +872,45 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: '1',
                 child: Row(
                   children: [
-                    Icon(Icons.person),
-                    SizedBox(width: 5),
-                    Text('Edit Profil'),
+                    Icon(Icons.person, size: 24.r), // Example size adjustment
+                    SizedBox(width: 5.w),
+                    Text('Edit Profil',
+                        style: TextStyle(
+                            fontSize: 16.sp)), // Example text size adjustment
                   ],
                 ),
               ),
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: '2',
                 child: Row(
                   children: [
-                    Icon(Icons.lock),
-                    SizedBox(width: 5),
-                    Text('Ubah Password'),
+                    Icon(Icons.lock, size: 24.r), // Example size adjustment
+                    SizedBox(width: 5.w),
+                    Text('Ubah Password',
+                        style: TextStyle(
+                            fontSize: 16.sp)), // Example text size adjustment
                   ],
                 ),
               ),
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: '3',
                 child: Row(
                   children: [
                     Icon(
                       Icons.logout,
+                      size: 24.r, // Example size adjustment
                       color: Colors.red,
                     ),
-                    SizedBox(width: 5),
+                    SizedBox(width: 5.w),
                     Text(
                       'Logout',
                       style: TextStyle(
                         color: Colors.red,
+                        fontSize: 16.sp, // Example text size adjustment
                       ),
                     ),
                   ],
@@ -901,7 +936,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           ),
           content: Text(
             "Apakah anda yakin ingin memverifikasi data ini?",
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
           ),
           actions: <Widget>[
             TextButton(
@@ -912,7 +947,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                 "Tidak",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
             TextButton(
@@ -921,7 +956,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               },
               child: Text(
                 "Ya",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
               ),
             ),
           ],
@@ -949,9 +984,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               children: [
                 Text(
                   "Apakah anda yakin ingin menolak data ini?",
-                  style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+                  style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 const Text("Berikan Ulasan:"),
                 TextFormField(
                   controller: ulasan,
@@ -960,7 +995,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                     filled: true,
                     fillColor: ColorTheme().whiteColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   maxLines: 5,
@@ -985,7 +1020,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                   "Tidak",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.red),
+                      .copyWith(fontSize: 14.sp, color: Colors.red),
                 ),
               ),
               TextButton(
@@ -996,7 +1031,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                 },
                 child: Text(
                   "Ya",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
                 ),
               ),
             ],
@@ -1050,7 +1085,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
               ),
             ),
           ],

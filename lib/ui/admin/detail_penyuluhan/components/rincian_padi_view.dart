@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
@@ -23,6 +24,7 @@ class RincianPadiView extends StatefulWidget {
 
 class _RincianPadiViewState extends State<RincianPadiView> {
   final padiC = PadiController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +34,14 @@ class _RincianPadiViewState extends State<RincianPadiView> {
         centerTitle: false,
         foregroundColor: ColorTheme().whiteColor,
         flexibleSpace: Container(
-          decoration: BoxDecoration(gradient: ColorTheme().linearColor),
+          decoration: BoxDecoration(
+            gradient: ColorTheme().linearColor,
+          ),
         ),
         title: Text(
           'Rincian Data Padi',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -53,7 +57,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
               isRincian: widget.isRincian,
             ),
             Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               elevation: 3,
               surfaceTintColor: ColorTheme().whiteColor,
               color: ColorTheme().whiteColor,
@@ -63,7 +67,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                   future: Future.wait([
                     padiC.getKesimpulanDataPengairan(
                         widget.date, widget.desaId),
-                    padiC.getKesimpulanDataPadi(widget.date, widget.desaId)
+                    padiC.getKesimpulanDataPadi(widget.date, widget.desaId),
                   ]),
                   builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -86,18 +90,22 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                             children: [
                               const Divider(),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 5),
-                                child: Text("Rincian Data Padi",
-                                    style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500)),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w, vertical: 5.h),
+                                child: Text(
+                                  "Rincian Data Padi",
+                                  style: StyleTheme().styleBlack.copyWith(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
                               ),
                               const Divider(),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxHeight:
-                                      MediaQuery.of(context).size.height - 150,
+                                      MediaQuery.of(context).size.height -
+                                          150.h,
                                 ),
                                 child: ListView.builder(
                                   shrinkWrap: true,
@@ -117,16 +125,16 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                             'Jenis $jenisPadi',
                                             style: StyleTheme()
                                                 .styleBlack
-                                                .copyWith(fontSize: 14),
+                                                .copyWith(fontSize: 14.sp),
                                           ),
                                           Text(
                                             "${padiDataItem.total} hektar",
                                             style: StyleTheme()
                                                 .styleBlack
                                                 .copyWith(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -143,16 +151,17 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                 'Lahan ${UserController().toCamelCase(jenisLahan)}',
                                                 style: StyleTheme()
                                                     .styleBlack
-                                                    .copyWith(fontSize: 14),
+                                                    .copyWith(fontSize: 14.sp),
                                               ),
                                               Text(
                                                 "${lahanData.total} hektar",
                                                 style: StyleTheme()
                                                     .styleBlack
                                                     .copyWith(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -175,17 +184,18 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                             jenisBantuan),
                                                     style: StyleTheme()
                                                         .styleBlack
-                                                        .copyWith(fontSize: 14),
+                                                        .copyWith(
+                                                            fontSize: 14.sp),
                                                   ),
                                                   Text(
                                                     "${bantuanData.total} hektar",
                                                     style: StyleTheme()
                                                         .styleBlack
                                                         .copyWith(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                          fontSize: 14.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                   ),
                                                 ],
                                               ),
@@ -207,18 +217,20 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                         style: StyleTheme()
                                                             .styleBlack
                                                             .copyWith(
-                                                                fontSize: 14),
+                                                                fontSize:
+                                                                    14.sp),
                                                       ),
                                                       Text(
                                                         "$nilai hektar",
                                                         style: StyleTheme()
                                                             .styleBlack
                                                             .copyWith(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                      )
+                                                              fontSize: 14.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                      ),
                                                     ],
                                                   ),
                                                 );
@@ -234,19 +246,22 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                               const Divider(),
                               if (pengairanData.isNotEmpty) ...[
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  child: Text("Rincian Data Pengairan",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500)),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.w, vertical: 5.h),
+                                  child: Text(
+                                    "Rincian Data Pengairan",
+                                    style: StyleTheme().styleBlack.copyWith(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
                                 ),
                                 const Divider(),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxHeight:
                                         MediaQuery.of(context).size.height -
-                                            150,
+                                            150.h,
                                   ),
                                   child: ListView.builder(
                                     shrinkWrap: true,
@@ -268,16 +283,16 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                   .toCamelCase(jenisPengairan),
                                               style: StyleTheme()
                                                   .styleBlack
-                                                  .copyWith(fontSize: 14),
+                                                  .copyWith(fontSize: 14.sp),
                                             ),
                                             Text(
                                               "${pengairanDataItem.total} hektar",
                                               style: StyleTheme()
                                                   .styleBlack
                                                   .copyWith(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                             ),
                                           ],
                                         ),
@@ -294,17 +309,18 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                     'Data ${UserController().toCamelCase(entry.key)}',
                                                     style: StyleTheme()
                                                         .styleBlack
-                                                        .copyWith(fontSize: 14),
+                                                        .copyWith(
+                                                            fontSize: 14.sp),
                                                   ),
                                                   Text(
                                                     "${entry.value.total} hektar",
                                                     style: StyleTheme()
                                                         .styleBlack
                                                         .copyWith(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                          fontSize: 14.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                   ),
                                                 ],
                                               ),
@@ -323,7 +339,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                   },
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

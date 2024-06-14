@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
@@ -23,6 +24,7 @@ class RincianPalawijaView extends StatefulWidget {
 
 class _RincianPalawijaViewState extends State<RincianPalawijaView> {
   final palawijaC = AdminPalawijaController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +39,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
         title: Text(
           'Rincian Data Palawija',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -53,7 +55,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
               isRincian: widget.isRincian,
             ),
             Card(
-              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
               elevation: 3,
               surfaceTintColor: ColorTheme().whiteColor,
               color: ColorTheme().whiteColor,
@@ -75,24 +77,28 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                         return const SizedBox.shrink();
                       } else {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.sp),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Divider(),
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 5),
-                                child: Text("Rincian Data Palawija",
-                                    style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500)),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.w, vertical: 5.h),
+                                child: Text(
+                                  "Rincian Data Palawija",
+                                  style: StyleTheme().styleBlack.copyWith(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
                               ),
                               const Divider(),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxHeight:
-                                      MediaQuery.of(context).size.height - 150,
+                                      MediaQuery.of(context).size.height -
+                                          150.h,
                                 ),
                                 child: ListView.builder(
                                   shrinkWrap: true,
@@ -112,16 +118,16 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                                             'Jenis $jenisPadi',
                                             style: StyleTheme()
                                                 .styleBlack
-                                                .copyWith(fontSize: 14),
+                                                .copyWith(fontSize: 14.sp),
                                           ),
                                           Text(
                                             "${palawijaDataItem.total} hektar",
                                             style: StyleTheme()
                                                 .styleBlack
                                                 .copyWith(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                           ),
                                         ],
                                       ),
@@ -139,16 +145,17 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                                                 'Lahan ${UserController().toCamelCase(jenisLahan)}',
                                                 style: StyleTheme()
                                                     .styleBlack
-                                                    .copyWith(fontSize: 14),
+                                                    .copyWith(fontSize: 14.sp),
                                               ),
                                               Text(
                                                 "${lahanData.total} hektar",
                                                 style: StyleTheme()
                                                     .styleBlack
                                                     .copyWith(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                               ),
                                             ],
                                           ),
@@ -171,17 +178,18 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                                                             jenisBantuan),
                                                     style: StyleTheme()
                                                         .styleBlack
-                                                        .copyWith(fontSize: 14),
+                                                        .copyWith(
+                                                            fontSize: 14.sp),
                                                   ),
                                                   Text(
                                                     "${bantuanData.total} hektar",
                                                     style: StyleTheme()
                                                         .styleBlack
                                                         .copyWith(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                          fontSize: 14.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
                                                   ),
                                                 ],
                                               ),
@@ -203,17 +211,19 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                                                         style: StyleTheme()
                                                             .styleBlack
                                                             .copyWith(
-                                                                fontSize: 14),
+                                                                fontSize:
+                                                                    14.sp),
                                                       ),
                                                       Text(
                                                         "$nilai hektar",
                                                         style: StyleTheme()
                                                             .styleBlack
                                                             .copyWith(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                                              fontSize: 14.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                       )
                                                     ],
                                                   ),
@@ -235,7 +245,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
                   },
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

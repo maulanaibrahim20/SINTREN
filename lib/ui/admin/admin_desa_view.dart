@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
@@ -33,7 +34,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
         foregroundColor: ColorTheme().whiteColor,
         title: isSearchOpen
             ? PreferredSize(
-                preferredSize: const Size.fromHeight(60.0),
+                preferredSize: Size.fromHeight(60.h),
                 child: TextField(
                   controller: search,
                   decoration: InputDecoration(
@@ -53,10 +54,9 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                     filled: true,
                     fillColor: ColorTheme().whiteColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(30.r),
                     ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16.0),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -68,7 +68,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
             : Text(
                 'List Desa',
                 style: StyleTheme().styleWhite.copyWith(
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -114,15 +114,15 @@ class _AdminDesaViewState extends State<AdminDesaView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error,
                     color: Colors.grey,
-                    size: 50,
+                    size: 50.sp,
                   ),
                   Text(
                     "Internal Server Error",
                     style: StyleTheme().styleBlack.copyWith(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey),
                   ),
@@ -149,15 +149,15 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.assignment,
                       color: Colors.grey,
-                      size: 50,
+                      size: 50.sp,
                     ),
                     Text(
                       "Data Kosong",
                       style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey),
                     ),
@@ -166,7 +166,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
               );
             }
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 10.h),
               child: ListView.builder(
                 padding: EdgeInsets.zero,
                 itemCount: (search.text.isEmpty)
@@ -199,21 +199,21 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                       setState(() {});
                     },
                     child: Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 10.h),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
                       child: Column(
                         children: [
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20.h),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Row(
                               children: [
                                 Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 50.h,
+                                  width: 50.w,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: ColorTheme().linearColor,
@@ -222,29 +222,29 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                                     child: Icon(
                                       Icons.home_rounded,
                                       color: ColorTheme().whiteColor,
-                                      size: 30,
+                                      size: 30.sp,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 15),
+                                SizedBox(width: 15.w),
                                 Text(
                                   "Desa ${UserController().toCamelCase(desa.name)}",
                                   style: StyleTheme().stylePrimary.copyWith(
-                                      fontSize: 20,
+                                      fontSize: 20.sp,
                                       fontWeight: FontWeight.bold),
                                 )
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           Stack(
                             children: [
-                              const Divider(thickness: 2, color: Colors.grey),
+                              Divider(thickness: 2.h, color: Colors.grey),
                               Container(
                                 color: ColorTheme().whiteColor,
-                                margin: const EdgeInsets.only(left: 20),
+                                margin: EdgeInsets.only(left: 20.w),
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                    EdgeInsets.symmetric(horizontal: 8.0.w),
                                 child: Text(
                                   "Progres bulan ini",
                                   style: StyleTheme()
@@ -254,11 +254,11 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                           LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 40,
+                            width: MediaQuery.of(context).size.width - 40.w,
                             animation: true,
-                            lineHeight: 30,
+                            lineHeight: 30.h,
                             animationDuration: 2000,
                             percent: (getNilaiByDesaId(desa.id) /
                                         desa.totalLuasLahan) >
@@ -269,12 +269,12 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                             center: Text(
                               "${((getNilaiByDesaId(desa.id) / desa.totalLuasLahan) * 100).toStringAsFixed(1)}% (${getNilaiByDesaId(desa.id).toStringAsFixed(1)}/${desa.totalLuasLahan.toStringAsFixed(1)})",
                               style: StyleTheme().styleWhite.copyWith(
-                                  fontWeight: FontWeight.w500, fontSize: 14),
+                                  fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
-                            barRadius: const Radius.circular(10),
+                            barRadius: Radius.circular(10.r),
                             linearGradient: ColorTheme().linearColor,
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10.h),
                         ],
                       ),
                     ),

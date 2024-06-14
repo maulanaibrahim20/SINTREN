@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
@@ -47,7 +48,7 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
         title: Text(
           'Detail Penugasan',
           style: StyleTheme().styleWhite.copyWith(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
@@ -63,17 +64,18 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error,
                     color: Colors.grey,
-                    size: 50,
+                    size: 50.w,
                   ),
                   Text(
                     "Internal Server Error",
                     style: StyleTheme().styleBlack.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
                   ),
                 ],
               ),
@@ -95,20 +97,20 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
               children: [
                 Card(
                   margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   elevation: 3,
                   surfaceTintColor: ColorTheme().whiteColor,
                   color: ColorTheme().whiteColor,
                   child: Column(
                     children: [
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         child: Row(
                           children: [
                             Container(
-                              height: 50,
-                              width: 50,
+                              height: 50.h,
+                              width: 50.w,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 gradient: ColorTheme().linearColor,
@@ -117,11 +119,11 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                                 child: Icon(
                                   Icons.person,
                                   color: ColorTheme().whiteColor,
-                                  size: 30,
+                                  size: 30.sp,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 15),
+                            SizedBox(width: 15.w),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -129,45 +131,49 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                                 Text(
                                   UserController().toCamelCase(penyuluh.name),
                                   style: StyleTheme().stylePrimary.copyWith(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 Text(
                                   "Email: ${penyuluh.email}",
                                   style: StyleTheme().styleBlack.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[700],
-                                      fontSize: 14),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                        fontSize: 14.sp,
+                                      ),
                                 ),
                                 Text(
                                   "No. Telp: ${penyuluh.noTelp}",
                                   style: StyleTheme().styleBlack.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[700],
-                                      fontSize: 14),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                        fontSize: 14.sp,
+                                      ),
                                 ),
                                 Text(
                                   "Alamat: ${penyuluh.alamat}",
                                   style: StyleTheme().styleBlack.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey[700],
-                                      fontSize: 14),
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                        fontSize: 14.sp,
+                                      ),
                                 ),
                               ],
                             )
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                     ],
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
                   width: MediaQuery.of(context).size.width,
-                  height: 50,
+                  height: 50.h,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                     gradient: ColorTheme().linearColor,
                   ),
                   child: ElevatedButton.icon(
@@ -188,16 +194,18 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                       'Tambah Penugasan',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: ColorTheme().whiteColor,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       side: BorderSide(
-                          color: ColorTheme().primaryColor, width: 2),
+                        color: ColorTheme().primaryColor,
+                        width: 2.w,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                   ),
@@ -205,44 +213,49 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                 Expanded(
                   child: penyuluh.penugasan.isNotEmpty
                       ? ListView.builder(
-                          padding: const EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(top: 10.h),
                           itemCount: penyuluh.penugasan.length,
                           itemBuilder: (context, index) {
                             Penugasan penugasan = penyuluh!.penugasan[index];
                             return Card(
                               elevation: 3,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 5),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 20.w, vertical: 5.h),
                               surfaceTintColor: ColorTheme().whiteColor,
+                              color: ColorTheme().whiteColor,
                               child: ListTile(
                                 leading: Icon(
                                   Icons.villa,
                                   color: ColorTheme().primaryColor,
-                                  size: 30,
+                                  size: 30.sp,
                                 ),
                                 title: Text(penugasan.desaName,
                                     style: StyleTheme().stylePrimary.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.bold,
+                                        )),
                                 subtitle: Text(
                                   penugasan.desaId,
-                                  style: StyleTheme().styleBlack,
+                                  style: StyleTheme().styleBlack.copyWith(
+                                        fontSize: 14.sp,
+                                      ),
                                 ),
                                 trailing: IconButton(
-                                    onPressed: () async {
-                                      bool? shouldDelete =
-                                          await _showDeleteConfirmationDialog(
-                                              context);
-                                      if (shouldDelete == true) {
-                                        await adminC
-                                            .deletePenugasan(penugasan.id);
-                                        setState(() {});
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      Icons.remove_circle,
-                                      color: Colors.red,
-                                    )),
+                                  onPressed: () async {
+                                    bool? shouldDelete =
+                                        await _showDeleteConfirmationDialog(
+                                            context);
+                                    if (shouldDelete == true) {
+                                      await adminC
+                                          .deletePenugasan(penugasan.id);
+                                      setState(() {});
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    Icons.remove_circle,
+                                    color: Colors.red,
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -251,17 +264,18 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.assignment,
                                 color: Colors.grey,
-                                size: 50,
+                                size: 50.w,
                               ),
                               Text(
                                 "Belum Ada Penugasan",
                                 style: StyleTheme().styleBlack.copyWith(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey),
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
                               ),
                             ],
                           ),
@@ -308,22 +322,21 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
+                Navigator.of(context).pop(false);
               },
               child: Text("Batal",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.grey)),
+                      .copyWith(fontSize: 14.sp, color: Colors.grey)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // Kembali dengan nilai true
+                Navigator.of(context).pop(true);
               },
               child: Text(
                 "Tambah",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 14, color: ColorTheme().primaryColor),
+                style: StyleTheme().stylePrimary.copyWith(
+                    fontSize: 14.sp, color: ColorTheme().primaryColor),
               ),
             ),
           ],
@@ -342,22 +355,22 @@ class _AdminPenugasanViewState extends State<DetailPenugasanView> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Kembali dengan nilai false
+                Navigator.of(context).pop(false);
               },
               child: Text("Cancel",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.grey)),
+                      .copyWith(fontSize: 14.sp, color: Colors.grey)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // Kembali dengan nilai true
+                Navigator.of(context).pop(true);
               },
               child: Text(
                 "Delete",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
           ],

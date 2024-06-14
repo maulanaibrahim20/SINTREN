@@ -25,6 +25,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
+      minTextAdapt: true,
+      splitScreenMode: true,
       designSize: const Size(
           412, 915), // Ukuran desain sesuai dengan mockup yang digunakan
       builder: (context, child) {

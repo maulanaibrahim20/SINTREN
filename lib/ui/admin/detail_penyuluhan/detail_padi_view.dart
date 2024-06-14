@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
@@ -70,22 +71,22 @@ class DetailPadiViewState extends State<DetailPadiView> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error,
                         color: Colors.grey,
-                        size: 50,
+                        size: 50.w,
                       ),
                       Text(
                         "Internal Server Error",
                         style: StyleTheme().styleBlack.copyWith(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey),
                       ),
                       Text(
                         snapshot.error.toString(),
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           color: Colors.red,
                         ),
                         textAlign: TextAlign.center,
@@ -116,14 +117,15 @@ class DetailPadiViewState extends State<DetailPadiView> {
                     DetailPadiModel data = displayList[index];
                     return Card(
                       surfaceTintColor: ColorTheme().whiteColor,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
+                      color: ColorTheme().whiteColor,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                       elevation: 3,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 10.h),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -135,20 +137,19 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                     data.padiName,
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 16),
+                                        fontSize: 16.sp),
                                   ),
                                   Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 3),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
+                                    margin: EdgeInsets.symmetric(vertical: 3.h),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w, vertical: 3.h),
                                     decoration: BoxDecoration(
                                       color: data.status == "terima"
                                           ? Colors.green
                                           : data.status == "tolak"
                                               ? Colors.red
                                               : Colors.amber,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(5.r),
                                     ),
                                     child: Text(
                                       data.status == "terima"
@@ -201,13 +202,13 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                   Text(
                                     UserController().toCamelCase(data.tipeData),
                                     style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     "${data.nilai} hektar",
                                     style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
@@ -215,7 +216,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                               ),
                               const Divider(),
                               if (data.status == "tunggu") ...[
-                                const SizedBox(height: 5),
+                                SizedBox(height: 5.h),
                                 Row(
                                   children: [
                                     Expanded(
@@ -243,21 +244,21 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                             style: StyleTheme()
                                                 .stylePrimary
                                                 .copyWith(
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     color: Colors.green)),
                                         style: ElevatedButton.styleFrom(
                                           surfaceTintColor:
                                               ColorTheme().whiteColor,
-                                          side: const BorderSide(
-                                              color: Colors.green, width: 2),
+                                          side: BorderSide(
+                                              color: Colors.green, width: 2.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                                BorderRadius.circular(30.r),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 10),
+                                    SizedBox(width: 10.w),
                                     Expanded(
                                       flex: 1,
                                       child: ElevatedButton.icon(
@@ -286,16 +287,16 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                             style: StyleTheme()
                                                 .stylePrimary
                                                 .copyWith(
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     color: Colors.red)),
                                         style: ElevatedButton.styleFrom(
                                           surfaceTintColor:
                                               ColorTheme().whiteColor,
-                                          side: const BorderSide(
-                                              color: Colors.red, width: 2),
+                                          side: BorderSide(
+                                              color: Colors.red, width: 2.w),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(30),
+                                                BorderRadius.circular(30.r),
                                           ),
                                         ),
                                       ),
@@ -303,7 +304,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                                   ],
                                 )
                               ],
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5.h),
                             ],
                           ),
                         ),
@@ -314,7 +315,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
               }
             },
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10.h),
         ],
       ),
     );
@@ -367,7 +368,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                 "Tutup",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16),
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
               ),
             ),
             TextButton(
@@ -378,7 +379,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
               },
               child: Text(
                 "Reset",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 16),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16.sp),
               ),
             ),
           ],
@@ -400,7 +401,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
           ),
           content: Text(
             "Apakah anda yakin ingin memverifikasi data ini?",
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
           ),
           actions: <Widget>[
             TextButton(
@@ -411,7 +412,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                 "Tidak",
                 style: StyleTheme()
                     .stylePrimary
-                    .copyWith(fontSize: 14, color: Colors.red),
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
               ),
             ),
             TextButton(
@@ -420,7 +421,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
               },
               child: Text(
                 "Ya",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
               ),
             ),
           ],
@@ -448,9 +449,9 @@ class DetailPadiViewState extends State<DetailPadiView> {
               children: [
                 Text(
                   "Apakah anda yakin ingin menolak data ini?",
-                  style: StyleTheme().styleBlack.copyWith(fontSize: 14),
+                  style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 const Text("Berikan Ulasan:"),
                 TextFormField(
                   controller: ulasan,
@@ -459,7 +460,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                     filled: true,
                     fillColor: ColorTheme().whiteColor,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   maxLines: 5,
@@ -483,7 +484,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                   "Tidak",
                   style: StyleTheme()
                       .stylePrimary
-                      .copyWith(fontSize: 14, color: Colors.red),
+                      .copyWith(fontSize: 14.sp, color: Colors.red),
                 ),
               ),
               TextButton(
@@ -494,7 +495,7 @@ class DetailPadiViewState extends State<DetailPadiView> {
                 },
                 child: Text(
                   "Ya",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14),
+                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
                 ),
               ),
             ],
