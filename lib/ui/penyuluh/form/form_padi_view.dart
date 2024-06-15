@@ -415,7 +415,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                         icon: Icons.numbers,
                         hint: "Masukkan Nilai",
                         label: "Nilai",
-                        validator: (value) => value == null
+                        validator: (value) => value == null || value.isEmpty
                             ? "Masukkan nilai terlebih dahulu"
                             : null,
                         inputType: TextInputType.number,

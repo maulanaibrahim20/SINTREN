@@ -93,12 +93,12 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                         _progresPenyuluhan(context),
                         SizedBox(height: 10.h),
                         _listVerify(
-                            isHide: constraints.maxHeight -
+                            isShow: constraints.maxHeight -
                                     (appBarHeight +
                                         trendChartHeight +
                                         progressHeight +
-                                        10.h) <
-                                200.h),
+                                        10.h) >=
+                                390.h),
                         SizedBox(height: 20.h),
                       ],
                     );
@@ -112,7 +112,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     );
   }
 
-  Expanded _listVerify({required bool isHide}) {
+  Expanded _listVerify({required bool isShow}) {
     return Expanded(
       child: FutureBuilder<List<DetailCombinedModel>>(
         future: AdminController().getDetailCombinedByStatus(),
@@ -165,7 +165,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width.w,
-                    height: 50.h,
+                    height: isShow ? 50.h : 100.h,
                     margin:
                         EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -203,7 +203,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                     )),
                   ),
                 ),
-                if (isHide)
+                if (isShow)
                   Expanded(
                     child: ListView.builder(
                       padding: EdgeInsets.zero,

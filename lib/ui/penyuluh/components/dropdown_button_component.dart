@@ -27,48 +27,44 @@ class DropdownButtonComponent<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60.h,
-      child: DropdownButtonFormField2<T>(
-        value: selectedItem,
-        isExpanded: true,
-        decoration: InputDecoration(
-          contentPadding:
-              EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
-          filled: true,
-          fillColor: ColorTheme().whiteColor,
-          labelText: label,
-          labelStyle: TextStyle(fontSize: 14.sp),
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 14.sp),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          prefixIcon: Icon(
-            icon,
-            color: ColorTheme().primaryColor,
-            size: 20.sp,
-          ),
+    return DropdownButtonFormField2<T>(
+      value: selectedItem,
+      isExpanded: true,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
+        filled: true,
+        fillColor: ColorTheme().whiteColor,
+        labelText: label,
+        labelStyle: TextStyle(fontSize: 14.sp),
+        hintText: hint,
+        hintStyle: TextStyle(fontSize: 14.sp),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        items: items,
-        validator: validator,
-        onChanged: onChanged,
-        onSaved: onSaved,
-        iconStyleData: IconStyleData(
-          icon: Icon(
-            Icons.arrow_drop_down,
-            color: Colors.black45,
-            size: 24.sp,
-          ),
+        prefixIcon: Icon(
+          icon,
+          color: ColorTheme().primaryColor,
+          size: 20.sp,
         ),
-        dropdownStyleData: DropdownStyleData(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.r),
-          ),
+      ),
+      items: items,
+      validator: validator,
+      onChanged: onChanged,
+      onSaved: onSaved,
+      iconStyleData: IconStyleData(
+        icon: Icon(
+          Icons.arrow_drop_down,
+          color: Colors.black45,
+          size: 24.sp,
         ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      ),
+      dropdownStyleData: DropdownStyleData(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.r),
         ),
+      ),
+      menuItemStyleData: MenuItemStyleData(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       ),
     );
   }

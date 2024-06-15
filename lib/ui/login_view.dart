@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
@@ -112,67 +114,61 @@ class _LoginViewState extends State<LoginView> {
                           padding: EdgeInsets.all(20.w),
                           child: Column(
                             children: [
-                              SizedBox(
-                                height: 60.h,
-                                child: TextFormField(
-                                  style: TextStyle(fontSize: 14.sp),
-                                  focusNode: _fnUsername,
-                                  controller: username,
-                                  keyboardType: TextInputType.name,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 15.h, horizontal: 10.w),
-                                    isDense: false,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.person,
-                                      color: ColorTheme().primaryColor,
-                                      size: 25.sp,
-                                    ),
-                                    hintText: "Username/Email",
-                                    labelText: "Username/Email",
+                              TextFormField(
+                                style: TextStyle(fontSize: 14.sp),
+                                focusNode: _fnUsername,
+                                controller: username,
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 15.h, horizontal: 10.w),
+                                  isDense: false,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
-                                  validator: (value) {
-                                    return value == null || value.isEmpty
-                                        ? "username/email tidak boleh kosong"
-                                        : null;
-                                  },
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: ColorTheme().primaryColor,
+                                    size: 25.sp,
+                                  ),
+                                  hintText: "Username/Email",
+                                  labelText: "Username/Email",
                                 ),
+                                validator: (value) {
+                                  return value == null || value.isEmpty
+                                      ? "username/email tidak boleh kosong"
+                                      : null;
+                                },
                               ),
                               SizedBox(
                                 height: 10.h,
                               ),
-                              SizedBox(
-                                height: 60.h,
-                                child: TextFormField(
-                                  style: TextStyle(fontSize: 14.sp),
-                                  focusNode: _fnPassword,
-                                  controller: password,
-                                  keyboardType: TextInputType.name,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 15.h, horizontal: 10.w),
-                                    isDense: false,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                      color: ColorTheme().primaryColor,
-                                      size: 25.sp,
-                                    ),
-                                    hintText: "Password",
-                                    labelText: "Password",
+                              TextFormField(
+                                style: TextStyle(fontSize: 14.sp),
+                                focusNode: _fnPassword,
+                                controller: password,
+                                keyboardType: TextInputType.name,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 15.h, horizontal: 10.w),
+                                  isDense: false,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
                                   ),
-                                  validator: (value) {
-                                    return value == null || value.isEmpty
-                                        ? "password tidak boleh kosong"
-                                        : null;
-                                  },
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                    color: ColorTheme().primaryColor,
+                                    size: 25.sp,
+                                  ),
+                                  hintText: "Password",
+                                  labelText: "Password",
                                 ),
+                                validator: (value) {
+                                  return value == null || value.isEmpty
+                                      ? "password tidak boleh kosong"
+                                      : null;
+                                },
                               ),
                               SizedBox(
                                 height: 10.h,

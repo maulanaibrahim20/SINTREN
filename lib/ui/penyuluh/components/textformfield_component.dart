@@ -34,38 +34,35 @@ class TextFormFieldComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60.h, 
-      child: TextFormField(
-        style: style ?? TextStyle(fontSize: 14.sp),
-        maxLines: maxLine ?? 1,
-        obscureText: obsecure,
-        controller: controller,
-        keyboardType: inputType,
-        decoration: InputDecoration(
-          contentPadding:
-              EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
-          isDense: false,
-          filled: true,
-          fillColor: ColorTheme().whiteColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          prefixIcon: Icon(
-            icon,
-            color: ColorTheme().primaryColor,
-            size: 25.sp,
-          ),
-          hintText: hint,
-          hintStyle: TextStyle(fontSize: 14.sp),
-          labelText: label,
-          labelStyle: TextStyle(fontSize: 14.sp),
+    return TextFormField(
+      style: style ?? TextStyle(fontSize: 14.sp),
+      maxLines: maxLine ?? 1,
+      obscureText: obsecure,
+      controller: controller,
+      keyboardType: inputType,
+      decoration: InputDecoration(
+        contentPadding:
+            EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
+        isDense: false,
+        filled: true,
+        fillColor: ColorTheme().whiteColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        validator: validator,
-        onSaved: onSaved,
-        readOnly: readOnly,
-        onTap: onTap,
+        prefixIcon: Icon(
+          icon,
+          color: ColorTheme().primaryColor,
+          size: 25.sp,
+        ),
+        hintText: hint,
+        hintStyle: TextStyle(fontSize: 14.sp),
+        labelText: label,
+        labelStyle: TextStyle(fontSize: 14.sp),
       ),
+      validator: validator,
+      onSaved: onSaved,
+      readOnly: readOnly,
+      onTap: onTap,
     );
    }
 }
