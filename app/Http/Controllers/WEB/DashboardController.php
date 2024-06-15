@@ -13,6 +13,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Phpml\Regression\LeastSquares;
 
 class DashboardController extends Controller
 {
@@ -51,18 +53,95 @@ class DashboardController extends Controller
             'CountLaporanPadi' => $this->laporanPadi::count(),
             'CountLaporanPalawija' => $this->laporanPalawija::count(),
         ];
+        $dariTahun = 2010;
+        $sampaiTahun = 2021;
 
-        foreach ($data as $key => $value) {
-            if ($value === null) {
-                $data[$key] = 0;
+        $laporanPadi = DB::table('laporan_padis')
+            ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
+            ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
+            ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
+            ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+            ->whereYear('date', '>=', $dariTahun)
+            ->whereYear('date', '<=', $sampaiTahun)
+            ->groupBy('bulan')
+            ->orderBy('bulan', 'ASC')
+            ->get();
+
+        $hasilPerTahun = [];
+
+        foreach ($laporanPadi as $laporan) {
+            $tahun = substr($laporan->bulan, 0, 4);
+
+            if (!isset($hasilPerTahun[$tahun])) {
+                $hasilPerTahun[$tahun] = 0;
             }
+            $hasilPerTahun[$tahun] += ($laporan->total_panen + $laporan->total_tanam - $laporan->total_puso_rusak);
+        }
+        $actualData = $hasilPerTahun;
+
+        $fitur = [];
+        $target = [];
+        $labels = [];
+        foreach ($hasilPerTahun as $tahun => $hasil) {
+            $fitur[] = [(int) $tahun];
+            $target[] = $hasil;
+            $labels[] = $tahun;
         }
 
-        $prediksi = Prediksi::select('tahun', 'nilai_prediksi', 'nilai_aktual', 'tipe_data')->get();
-        $prediksiSP = PrediksiSp::select('tahun', 'nilai_prediksi', 'nilai_aktual')->get();
+        $regression = new LeastSquares();
+        $regression->train($fitur, $target);
 
-        // Kirim data ke view
-        return view('pertanian.pages.dashboard.index', array_merge($data, ['prediksi' => $prediksi, 'prediksiSPData' => $prediksiSP]));
+        $hasilPrediksi = [];
+        $prevValue = null;
+        for ($tahun = $dariTahun; $tahun <= 2030; $tahun++) {
+            // for ($tahun = max(array_keys($hasilPerTahun)) + 1; $tahun <= 2030; $tahun++) {
+            $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
+
+            if ($tahun > $sampaiTahun) {
+                $samples[] = [$tahun];
+                $targets[] = $hasilPrediksi[$tahun];
+                $labels[] = $tahun;
+                $regression->train($samples, $targets);
+            }
+
+            $change = null;
+            if ($prevValue !== null) {
+                $change = $hasilPrediksi[$tahun] - $prevValue;
+            }
+
+            $predictions[] = [
+                'year' => $tahun,
+                'predicted_value' => $hasilPrediksi[$tahun],
+                'change_from_previous_year' => $change
+            ];
+
+            $prevValue = $hasilPrediksi[$tahun];
+        }
+
+        $totalError = 0;
+        $n = 0;
+        foreach ($actualData as $tahun => $aktual) {
+            if (isset($hasilPrediksi[$tahun])) {
+                $prediksi = $hasilPrediksi[$tahun];
+                $totalError += abs(($aktual - $prediksi) / $aktual);
+                $n++;
+            }
+        }
+        $mape = round(($totalError / $n) * 100, 2);
+
+
+        // return view('pertanian.pages.prediksi.padiSp.regresiSp', [
+        //     'labels' => $labels,
+        //     'actualData' => array_values($actualData),
+        //     'predictedData' => array_column($predictions, 'predicted_value'),
+        //     'mape' => $mape
+        // ]);
+        return view('pertanian.pages.dashboard.index', $data, [
+            'labels' => $labels,
+            'actualData' => array_values($actualData),
+            'predictedData' => array_column($predictions, 'predicted_value'),
+            'mape' => $mape
+        ]);
     }
 
 
