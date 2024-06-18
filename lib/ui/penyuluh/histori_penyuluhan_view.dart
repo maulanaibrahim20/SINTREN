@@ -11,7 +11,7 @@ import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

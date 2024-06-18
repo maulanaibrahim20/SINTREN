@@ -148,4 +148,9 @@ class UserController {
     final DateTime parsedDate = DateTime.parse('$date-01');
     return DateFormat('MMMM yyyy', 'id_ID').format(parsedDate);
   }
+
+  String normalizeDate(String date) {
+    final DateTime parsedDate = DateTime.parse(date);
+    return DateFormat('dd MMMM yyyy', 'id_ID').format(parsedDate);
+  }
 }

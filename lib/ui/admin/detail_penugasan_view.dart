@@ -6,7 +6,7 @@ import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/penyuluh_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 
 class DetailPenugasanView extends StatefulWidget {
   const DetailPenugasanView({super.key, required this.id});

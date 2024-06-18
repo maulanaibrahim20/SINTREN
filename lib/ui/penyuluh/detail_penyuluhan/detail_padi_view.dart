@@ -4,7 +4,7 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/components/ringkasan_padi_widget.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -176,7 +176,7 @@ class _DetailPadiViewState extends State<DetailPadiView> {
                                         ),
                                   ),
                                   Text(
-                                    data.date,
+                                    UserController().normalizeDate(data.date),
                                     style: StyleTheme().styleBlack.copyWith(
                                           fontSize: 14.sp,
                                         ),

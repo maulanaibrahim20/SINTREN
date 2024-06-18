@@ -59,6 +59,7 @@ class DropdownButtonComponent<T> extends StatelessWidget {
         ),
       ),
       dropdownStyleData: DropdownStyleData(
+        maxHeight: 300.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
         ),

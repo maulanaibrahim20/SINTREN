@@ -42,7 +42,8 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
         ),
         backgroundColor: ColorTheme().primaryColor,
       ),
-      body: FutureBuilder<List<Penyuluh>>(
+      body: 
+      FutureBuilder<List<Penyuluh>>(
         future: adminC.getPenyuluh(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -68,7 +69,25 @@ class _AdminPenugasanViewState extends State<AdminPenugasanView> {
               ),
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Data Penyuluh Kosong'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: Colors.grey,
+                    size: 50.sp,
+                  ),
+                  Text(
+                    "Data Penugasan Kosong",
+                    style: StyleTheme().styleBlack.copyWith(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
           } else {
             List<Penyuluh> penyuluhList = snapshot.data!;
             return ListView.builder(

@@ -9,8 +9,8 @@ import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/components/textformfield_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 
 class FormPalawijaView extends StatefulWidget {

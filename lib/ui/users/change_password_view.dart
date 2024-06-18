@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/textformfield_component.dart';
+import 'package:sintren_mobile/ui/components/textformfield_component.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});

@@ -5,7 +5,7 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/components/ringkasan_palawija_widget.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
 
@@ -183,7 +183,7 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                     style: StyleTheme().styleBlack,
                                   ),
                                   Text(
-                                    data.date,
+                                    UserController().normalizeDate(data.date),
                                     style: StyleTheme().styleBlack,
                                   ),
                                 ],

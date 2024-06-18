@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_combined_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
@@ -16,7 +17,7 @@ import 'package:sintren_mobile/ui/admin/components/home_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
-import 'package:sintren_mobile/ui/penyuluh/components/dropdown_button_component.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/users/change_password_view.dart';
 import 'package:sintren_mobile/ui/users/change_profile_view.dart';
 
@@ -37,9 +38,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   double? penyuluhanBulanIni;
   double? totalLuasLahanKecamatan;
   final statusNotifier = ValueNotifier<String>('Memulai sinkronisasi data...');
-  int selectedDariTahun = DateTime.now().year - 5;
-  int selectedSampaiTahun = DateTime.now().year - 1;
-
+  late int selectedSampaiTahun;
+  late int selectedDariTahun;
+  
   Future<void> _initializedData() async {
     kecamatan = await UserLoginModel().getKecamatanName();
     penyuluhanBulanIni = await adminC.getTotalNilaiPenyuluhanBulanIni();
@@ -50,6 +51,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   @override
   void initState() {
+    AdminPadiController().getAllPenyuluhanPadi();
+    selectedSampaiTahun = DateTime.now().year - 3;
+    selectedDariTahun = selectedSampaiTahun - 5;
     super.initState();
   }
 
@@ -279,8 +283,10 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                                       ),
                                       Text(
                                         item.type == "padi"
-                                            ? dataPadi?.date ?? ""
-                                            : dataPalawija?.date ?? "",
+                                            ? UserController().normalizeDate(
+                                                dataPadi?.date ?? "")
+                                            : UserController().normalizeDate(
+                                                dataPalawija?.date ?? ""),
                                         style: StyleTheme().styleBlack,
                                       ),
                                     ],
@@ -789,14 +795,24 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                   return null;
                 },
                 onChanged: (newValue) {
-                  setState(() {
-                    selectedSampaiTahun = newValue!;
-                  });
+                  if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
+                    final int dari = selectedDariTahun;
+                    if (dari < newValue!) {
+                      setState(() {
+                        selectedSampaiTahun = newValue;
+                      });
+                    }
+                  }
                 },
                 onSaved: (newValue) {
-                  setState(() {
-                    selectedSampaiTahun = newValue!;
-                  });
+                  if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
+                    final int dari = selectedDariTahun;
+                    if (dari < newValue!) {
+                      setState(() {
+                        selectedSampaiTahun = newValue;
+                      });
+                    }
+                  }
                 },
               ),
             ],
