@@ -136,7 +136,7 @@ class LuasLahanWilayahSeeder extends Seeder
 
         DB::table('penugasan_penyuluh')->truncate();
 
-        $desaIdPenyuluh = ['3212170001', '3212170002', '3212170003', '3212170004', '3212170005', '3212170006', '3212170007'];
+        $desaIdPenyuluh = ['3212010007'];
 
         foreach ($desaIdPenyuluh as $desaId) {
             PenugasanPenyuluh::create([

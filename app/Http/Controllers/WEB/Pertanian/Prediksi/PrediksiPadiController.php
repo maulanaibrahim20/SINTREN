@@ -126,17 +126,17 @@ class PrediksiPadiController extends Controller
         $mape = round($hasilMape);
 
         // Simpan ke database
-        foreach ($predictions as $prediction) {
-            Prediksi::create([
-                'tipe_data' => $tipeData,
-                'tahun' => $prediction['year'],
-                'nilai_prediksi' => $prediction['predicted_value'],
-                'perubahan_dari_tahun_sebelumnya' => $prediction['change_from_previous_year'],
-                'nilai_aktual' => $prediction['nilai_aktual'] ?? null,
-                'error' => $prediction['error'] ?? null,
-                'mape' => $mape
-            ]);
-        }
+        // foreach ($predictions as $prediction) {
+        //     Prediksi::create([
+        //         'tipe_data' => $tipeData,
+        //         'tahun' => $prediction['year'],
+        //         'nilai_prediksi' => $prediction['predicted_value'],
+        //         'perubahan_dari_tahun_sebelumnya' => $prediction['change_from_previous_year'],
+        //         'nilai_aktual' => $prediction['nilai_aktual'] ?? null,
+        //         'error' => $prediction['error'] ?? null,
+        //         'mape' => $mape
+        //     ]);
+        // }
 
         return view('pertanian.pages.prediksi.padi.view', [
             'tipeData' => $tipeDataDescription,
