@@ -56,26 +56,36 @@ class DashboardController extends Controller
         $dariTahun = 2010;
         $sampaiTahun = 2021;
 
+        // $laporanPadi = DB::table('laporan_padis')
+        //     ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
+        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
+        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
+        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+        //     ->whereYear('date', '>=', $dariTahun)
+        //     ->whereYear('date', '<=', $sampaiTahun)
+        //     ->groupBy('bulan')
+        //     ->orderBy('bulan', 'ASC')
+        //     ->get();
+
+
         $laporanPadi = DB::table('laporan_padis')
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
-            ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
-            ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
-            ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+            ->selectRaw('YEAR(date) AS tahun')
+            ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
             ->whereYear('date', '>=', $dariTahun)
             ->whereYear('date', '<=', $sampaiTahun)
-            ->groupBy('bulan')
-            ->orderBy('bulan', 'ASC')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'ASC')
             ->get();
 
         $hasilPerTahun = [];
 
         foreach ($laporanPadi as $laporan) {
-            $tahun = substr($laporan->bulan, 0, 4);
+            $tahun = $laporan->tahun;
 
             if (!isset($hasilPerTahun[$tahun])) {
                 $hasilPerTahun[$tahun] = 0;
             }
-            $hasilPerTahun[$tahun] += ($laporan->total_panen + $laporan->total_tanam - $laporan->total_puso_rusak);
+            $hasilPerTahun[$tahun] += $laporan->total_panen;
         }
         $actualData = $hasilPerTahun;
 
