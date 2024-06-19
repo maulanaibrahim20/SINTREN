@@ -15,9 +15,9 @@ class AdminPadiController extends Controller
     {
         try {
             if ($id == "dinas") {
-                $laporanPadi = LaporanPadi::with(['desa', 'pengairan', 'padi', 'verify'])->get();
+                $laporanPadi = LaporanPadi::with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
             } else {
-                $laporanPadi = LaporanPadi::where('kecamatan_id', $id)->with(['desa', 'pengairan', 'padi', 'verify'])->get();
+                $laporanPadi = LaporanPadi::where('kecamatan_id', $id)->with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
             }
 
 
@@ -36,6 +36,7 @@ class AdminPadiController extends Controller
                     'desa_id' => $item->desa_id,
                     'desa_name' => $item->desa ? $item->desa->name : "",
                     'kecamatan_id' => $item->kecamatan_id,
+                    'kecamatan_name' => $item->kecamatan ? $item->kecamatan->name : "",
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_padi' => $item->id_jenis_padi,
                     'padi_name' => $item->padi ? $item->padi->name : "",
@@ -67,13 +68,107 @@ class AdminPadiController extends Controller
         }
     }
 
-    public function menghitungRegresiSP()
-    {   
-        $earliestYear = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
-        $latestYear = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
+    // public function menghitungRegresiSP()
+    // {
+    //     $earliestYear = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
+    //     $latestYear = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
 
-        $dariTahun = $earliestYear;
-        $sampaiTahun = $latestYear;
+    //     $dariTahun = $earliestYear;
+    //     $sampaiTahun = $latestYear;
+
+    //     $laporanPadi = DB::table('laporan_padis')
+    //         ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
+    //         ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
+    //         ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
+    //         ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+    //         ->whereYear('date', '>=', $dariTahun)
+    //         ->whereYear('date', '<=', $sampaiTahun)
+    //         ->groupBy('bulan')
+    //         ->orderBy('bulan', 'ASC')
+    //         ->get();
+
+    //     $hasilPerTahun = [];
+
+    //     // Mengelompokkan hasil per tahun
+    //     foreach ($laporanPadi as $laporan) {
+    //         $tahun = substr($laporan->bulan, 0, 4);
+
+    //         if (!isset($hasilPerTahun[$tahun])) {
+    //             $hasilPerTahun[$tahun] = 0;
+    //         }
+    //         $hasilPerTahun[$tahun] += ($laporan->total_panen + $laporan->total_tanam - $laporan->total_puso_rusak);
+    //     }
+    //     $actualData = $hasilPerTahun;
+
+    //     $fitur = [];
+    //     $target = [];
+    //     $labels = [];
+    //     foreach ($hasilPerTahun as $tahun => $hasil) {
+    //         $fitur[] = [(int) $tahun];
+    //         $target[] = $hasil;
+    //         $labels[] = $tahun;
+    //     }
+
+    //     $regression = new LeastSquares();
+    //     $regression->train($fitur, $target);
+
+    //     $hasilPrediksi = [];
+    //     $prevValue = null;
+    //     for ($tahun = $dariTahun; $tahun <= $sampaiTahun; $tahun++) {
+    //         // for ($tahun = max(array_keys($hasilPerTahun)) + 1; $tahun <= 2030; $tahun++) {
+    //         $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
+
+    //         if ($tahun > $sampaiTahun) {
+    //             $samples[] = [$tahun];
+    //             $targets[] = $hasilPrediksi[$tahun];
+    //             $labels[] = $tahun;
+    //             $regression->train($samples, $targets);
+    //         }
+
+    //         $change = null;
+    //         if ($prevValue !== null) {
+    //             $change = $hasilPrediksi[$tahun] - $prevValue;
+    //         }
+
+    //         $predictions[] = [
+    //             'year' => $tahun,
+    //             'predicted_value' => $hasilPrediksi[$tahun],
+    //             'change_from_previous_year' => $change
+    //         ];
+
+    //         $prevValue = $hasilPrediksi[$tahun];
+    //     }
+
+    //     $totalError = 0;
+    //     $n = 0;
+    //     foreach ($actualData as $tahun => $aktual) {
+    //         if (isset($hasilPrediksi[$tahun])) {
+    //             $prediksi = $hasilPrediksi[$tahun];
+    //             $totalError += abs(($aktual - $prediksi) / $aktual);
+    //             $n++;
+    //         }
+    //     }
+    //     $mape = round(($totalError / $n) * 100, 2);
+
+    //     $data = [
+    //         'labels' => $labels,
+    //         'actualData' => array_values($actualData),
+    //         'predictedData' => array_column($predictions, 'predicted_value'),
+    //         'mape' => $mape
+    //     ];
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Berhasil mendapatkan data',
+    //         'data' => $data
+    //     ], 200);
+    // }
+
+    public function menghitungRegresiSP()
+    {
+
+        $dariTahun = 2013;
+        $sampaiTahun = 2023;
 
         $laporanPadi = DB::table('laporan_padis')
             ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
@@ -88,7 +183,6 @@ class AdminPadiController extends Controller
 
         $hasilPerTahun = [];
 
-        // Mengelompokkan hasil per tahun
         foreach ($laporanPadi as $laporan) {
             $tahun = substr($laporan->bulan, 0, 4);
 
@@ -148,6 +242,14 @@ class AdminPadiController extends Controller
             }
         }
         $mape = round(($totalError / $n) * 100, 2);
+
+
+        // return view('pertanian.pages.prediksi.padiSp.regresiSp', [
+        //     'labels' => $labels,
+        //     'actualData' => array_values($actualData),
+        //     'predictedData' => array_column($predictions, 'predicted_value'),
+        //     'mape' => $mape
+        // ]);
 
         $data = [
             'labels' => $labels,
