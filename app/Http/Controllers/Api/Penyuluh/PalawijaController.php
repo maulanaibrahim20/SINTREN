@@ -27,7 +27,7 @@ class PalawijaController extends Controller
     public function showAllByUser($id)
     {
         try {
-            $laporanPalawija = LaporanPalawija::where('user_id', $id)->with(['desa', 'palawija', 'verify'])->get();
+            $laporanPalawija = LaporanPalawija::where('user_id', $id)->with(['desa', 'palawija', 'verify', 'kecamatan'])->get();
 
             if ($laporanPalawija->isEmpty()) {
                 return response()->json([
@@ -44,6 +44,7 @@ class PalawijaController extends Controller
                     'desa_id' => $item->desa_id,
                     'desa_name' => $item->desa->name,
                     'kecamatan_id' => $item->kecamatan_id,
+                    'kecamatan_name' => $item->kecamatan ? $item->kecamatan->name : "",
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_palawija' => $item->id_jenis_palawija,
                     'palawija_name' => $item->palawija->name,

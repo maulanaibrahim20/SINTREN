@@ -15,9 +15,9 @@ class AdminPadiController extends Controller
     {
         try {
             if ($id == "dinas") {
-                $laporanPadi = LaporanPadi::with(['desa', 'pengairan', 'padi', 'verify'])->get();
+                $laporanPadi = LaporanPadi::with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
             } else {
-                $laporanPadi = LaporanPadi::where('kecamatan_id', $id)->with(['desa', 'pengairan', 'padi', 'verify'])->get();
+                $laporanPadi = LaporanPadi::where('kecamatan_id', $id)->with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
             }
 
 
@@ -36,6 +36,7 @@ class AdminPadiController extends Controller
                     'desa_id' => $item->desa_id,
                     'desa_name' => $item->desa ? $item->desa->name : "",
                     'kecamatan_id' => $item->kecamatan_id,
+                    'kecamatan_name' => $item->kecamatan ? $item->kecamatan->name : "",
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_padi' => $item->id_jenis_padi,
                     'padi_name' => $item->padi ? $item->padi->name : "",
@@ -67,35 +68,30 @@ class AdminPadiController extends Controller
         }
     }
 
-    public function menghitungRegresiSP()
-    {   
-        $earliestYear = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
-        $latestYear = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
+    public function prediksi()
+    {
+        $dariTahun = 2010;
+        $sampaiTahun = 2021;
 
-        $dariTahun = $earliestYear;
-        $sampaiTahun = $latestYear;
 
         $laporanPadi = DB::table('laporan_padis')
-            ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
-            ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
-            ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
-            ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+            ->selectRaw('YEAR(date) AS tahun')
+            ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
             ->whereYear('date', '>=', $dariTahun)
             ->whereYear('date', '<=', $sampaiTahun)
-            ->groupBy('bulan')
-            ->orderBy('bulan', 'ASC')
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'ASC')
             ->get();
 
         $hasilPerTahun = [];
 
-        // Mengelompokkan hasil per tahun
         foreach ($laporanPadi as $laporan) {
-            $tahun = substr($laporan->bulan, 0, 4);
+            $tahun = $laporan->tahun;
 
             if (!isset($hasilPerTahun[$tahun])) {
                 $hasilPerTahun[$tahun] = 0;
             }
-            $hasilPerTahun[$tahun] += ($laporan->total_panen + $laporan->total_tanam - $laporan->total_puso_rusak);
+            $hasilPerTahun[$tahun] += $laporan->total_panen;
         }
         $actualData = $hasilPerTahun;
 
@@ -114,7 +110,6 @@ class AdminPadiController extends Controller
         $hasilPrediksi = [];
         $prevValue = null;
         for ($tahun = $dariTahun; $tahun <= $sampaiTahun; $tahun++) {
-            // for ($tahun = max(array_keys($hasilPerTahun)) + 1; $tahun <= 2030; $tahun++) {
             $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
 
             if ($tahun > $sampaiTahun) {

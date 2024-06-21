@@ -12,9 +12,9 @@ class AdminPalawijaController extends Controller
     {
         try {
             if ($id == "dinas") {
-                $laporanPalawija = LaporanPalawija::with(['desa', 'palawija', 'verify'])->get();
+                $laporanPalawija = LaporanPalawija::with(['desa', 'palawija', 'verify', 'kecamatan'])->get();
             } else {
-                $laporanPalawija = LaporanPalawija::where('kecamatan_id', $id)->with(['desa', 'palawija', 'verify'])->get();
+                $laporanPalawija = LaporanPalawija::where('kecamatan_id', $id)->with(['desa', 'palawija', 'verify', 'kecamatan'])->get();
             }
 
 
@@ -33,6 +33,7 @@ class AdminPalawijaController extends Controller
                     'desa_id' => $item->desa_id,
                     'desa_name' => $item->desa->name,
                     'kecamatan_id' => $item->kecamatan_id,
+                    'kecamatan_name' => $item->kecamatan ? $item->kecamatan->name : "",
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_palawija' => $item->id_jenis_palawija,
                     'palawija_name' => $item->palawija->name,

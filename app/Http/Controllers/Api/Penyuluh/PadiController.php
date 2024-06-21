@@ -39,7 +39,7 @@ class PadiController extends Controller
     public function showAllByUser($id)
     {
         try {
-            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan', 'padi', 'verify'])->get();
+            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
 
             if ($laporanPadi->isEmpty()) {
                 return response()->json([
@@ -56,6 +56,7 @@ class PadiController extends Controller
                     'desa_id' => $item->desa_id,
                     'desa_name' => $item->desa ? $item->desa->name : "",
                     'kecamatan_id' => $item->kecamatan_id,
+                    'kecamatan_name' => $item->kecamatan ? $item->kecamatan->name : "",
                     'jenis_lahan' => $item->jenis_lahan,
                     'id_jenis_padi' => $item->id_jenis_padi,
                     'padi_name' => $item->padi ? $item->padi->name : "",
@@ -122,7 +123,7 @@ class PadiController extends Controller
             ], 500);
         }
     }
-    
+
     public function store(Request $request)
     {
         $validated = $request->validate([
