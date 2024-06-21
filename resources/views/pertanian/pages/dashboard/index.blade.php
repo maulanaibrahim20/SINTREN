@@ -182,7 +182,6 @@
 @section('script')
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-            // Data prediksi dari controller
             const labels = @json($labels);
             const actualData = @json($actualData);
             const predictedData = @json($predictedData);
@@ -206,8 +205,6 @@
                     }
                 ]
             };
-
-            // Konfigurasi grafik
             const config = {
                 type: 'line',
                 data: data,

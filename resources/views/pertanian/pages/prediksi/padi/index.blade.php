@@ -47,7 +47,7 @@
                                     <select class="form-control select2 form-select" name="dariTahun"
                                         data-placeholder="Dari Tahun" required>
                                         <option label="Dari Tahun"></option>
-                                        @for ($year = 2013; $year <= 2023; $year++)
+                                        @for ($year = $tahunTerkecil; $year <= $tahunTerbesar; $year++)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
@@ -59,12 +59,13 @@
                                     <select class="form-control select2 form-select" name="sampaiTahun"
                                         data-placeholder="Sampai Tahun" required>
                                         <option label="Sampai Tahun"></option>
-                                        @for ($year = 2013; $year <= 2023; $year++)
+                                        @for ($year = $tahunTerkecil; $year <= $tahunTerbesar; $year++)
                                             <option value="{{ $year }}">{{ $year }}</option>
                                         @endfor
                                     </select>
                                 </div>
                             </div>
+
                             <button class="btn btn-primary mt-3" type="submit"><i class="fa fa-sign-in"></i>Trend
                                 Projection</button>
                         </div>

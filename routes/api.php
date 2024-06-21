@@ -37,33 +37,32 @@ Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
 Route::get('/penyuluh/getDesa/{id}', [PenyuluhController::class, 'getDesa']);
 
 // PADI END POINT
-Route::get('/pengairan',[PadiController::class,'getPengairan']);
-Route::get('/padi',[PadiController::class,'getPadi']);
-Route::post('/padi/store',[PadiController::class,'store']);
-Route::patch('/padi/update/{id}',[PadiController::class,'update']);
-Route::get('/padi/showByUser/{id}',[PadiController::class,'showAllByUser']);
+Route::get('/pengairan', [PadiController::class, 'getPengairan']);
+Route::get('/padi', [PadiController::class, 'getPadi']);
+Route::post('/padi/store', [PadiController::class, 'store']);
+Route::patch('/padi/update/{id}', [PadiController::class, 'update']);
+Route::get('/padi/showByUser/{id}', [PadiController::class, 'showAllByUser']);
 Route::delete('/padi/deleteDetailById/{id}', [PadiController::class, 'deleteDetailById']);
-Route::get('/padi/summary',[PadiController::class,'getDataSummaryByMonth']);
+Route::get('/padi/summary', [PadiController::class, 'getDataSummaryByMonth']);
 
 // PALAWIJA END POINT
-Route::get('/palawija',[PalawijaController::class,'getJenisPalawija']);
-Route::post('/palawija/store',[PalawijaController::class,'store']);
-Route::patch('/palawija/update/{id}',[PalawijaController::class,'update']);
-Route::get('/palawija/showByUser/{id}',[PalawijaController::class,'showAllByUser']);
+Route::get('/palawija', [PalawijaController::class, 'getJenisPalawija']);
+Route::post('/palawija/store', [PalawijaController::class, 'store']);
+Route::patch('/palawija/update/{id}', [PalawijaController::class, 'update']);
+Route::get('/palawija/showByUser/{id}', [PalawijaController::class, 'showAllByUser']);
 Route::delete('/palawija/deleteDetailById/{id}', [PalawijaController::class, 'deleteDetailById']);
 
 // ADMIN END POINT
 Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
-Route::get('/padi/showByKecamatan/{id}',[AdminPadiController::class,'showAllByKecamatan']);
-Route::get('/palawija/showByKecamatan/{id}',[AdminPalawijaController::class,'showAllByKecamatan']);
-Route::get('/padi/prediksiSp',[AdminPadiController::class,'menghitungRegresiSP']);
-Route::patch('/verify/{id}',[AdminController::class,'verify']);
-Route::get('/admin/getPenyuluh/{id}',[AdminController::class,'getPenyuluh']);
-Route::post('/admin/addPenugasan/',[AdminController::class,'addPenugasan']);
-Route::delete('/admin/deletePenugasan/{id}',[AdminController::class,'deletePenugasan']);
+Route::get('/padi/showByKecamatan/{id}', [AdminPadiController::class, 'showAllByKecamatan']);
+Route::get('/palawija/showByKecamatan/{id}', [AdminPalawijaController::class, 'showAllByKecamatan']);
+Route::get('/padi/prediksiSp', [AdminPadiController::class, 'menghitungRegresiSP']);
+Route::patch('/verify/{id}', [AdminController::class, 'verify']);
+Route::get('/admin/getPenyuluh/{id}', [AdminController::class, 'getPenyuluh']);
+Route::post('/admin/addPenugasan/', [AdminController::class, 'addPenugasan']);
+Route::delete('/admin/deletePenugasan/{id}', [AdminController::class, 'deletePenugasan']);
 
-Route::get('/desa',[WilayahController::class,'getDesa']);
-Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);
+Route::get('/desa', [WilayahController::class, 'getDesa']);
+Route::get('/kecamatan', [WilayahController::class, 'getKecamatan']);
 
-Route::get('/pasar',[PasarController::class,'getPasar']);
-
+Route::get('/pasar', [PasarController::class, 'getPasar']);

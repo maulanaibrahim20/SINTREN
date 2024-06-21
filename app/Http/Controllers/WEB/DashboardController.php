@@ -42,6 +42,8 @@ class DashboardController extends Controller
         $data = [
             'user' => User::count(),
             'penugasan' => PenugasanPenyuluh::count(),
+            'LaporanPadi' => LaporanPadi::count(),
+            'luasLahanWilayah' => LuasLahanWilayah::count(),
         ];
         return view('operator.pages.dashboard.index', $data);
     }
@@ -104,7 +106,6 @@ class DashboardController extends Controller
         $hasilPrediksi = [];
         $prevValue = null;
         for ($tahun = $dariTahun; $tahun <= 2030; $tahun++) {
-            // for ($tahun = max(array_keys($hasilPerTahun)) + 1; $tahun <= 2030; $tahun++) {
             $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
 
             if ($tahun > $sampaiTahun) {
@@ -140,12 +141,7 @@ class DashboardController extends Controller
         $mape = round(($totalError / $n) * 100, 2);
 
 
-        // return view('pertanian.pages.prediksi.padiSp.regresiSp', [
-        //     'labels' => $labels,
-        //     'actualData' => array_values($actualData),
-        //     'predictedData' => array_column($predictions, 'predicted_value'),
-        //     'mape' => $mape
-        // ]);
+
         return view('pertanian.pages.dashboard.index', $data, [
             'labels' => $labels,
             'actualData' => array_values($actualData),

@@ -22,6 +22,7 @@ use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
@@ -138,6 +139,11 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('laporan_palawija', LaporanPalawijaController::class);
                 Route::get('laporan_palawija/show/{desa_id}', [LaporanPalawijaController::class, 'showDesa']);
                 Route::post('/laporan_palawija/kirim', [LaporanPalawijaController::class, 'kirimkan']);
+            });
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfileController::class, 'index']);
+                Route::put('editProfile/{id}', [EditProfileController::class, 'update']);
+                Route::put('editPassword/{id}', [EditProfileController::class, 'updatePassword']);
             });
             // Route::prefix('master')->group(function () {
             //     Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);
