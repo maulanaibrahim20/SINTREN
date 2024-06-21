@@ -28,6 +28,7 @@ use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
+use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -125,6 +126,11 @@ Route::middleware(['autentikasi'])->group(function () {
             });
             Route::prefix('master')->group(function () {
                 Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);
+            });
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfileUptdController::class, 'index']);
+                Route::put('editProfile/{id}', [EditProfileUptdController::class, 'update']);
+                Route::put('editPassword/{id}', [EditProfileUptdController::class, 'updatePassword']);
             });
             Route::get('/dashboard', [DashboardController::class, 'uptd']);
         });

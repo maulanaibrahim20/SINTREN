@@ -271,19 +271,15 @@
                                 class="side-menu__icon fa fa-map"></i><span class="side-menu__label">Luas Lahan
                                 Wilayah</span></a>
                     </li>
-                    {{-- <li class="sub-category">
+                    <li class="sub-category">
                         <h3>Pengaturan</h3>
                     </li>
                     <li>
-                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
-                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
-                                class="side-menu__label">Profil Saya</span></a>
+                        <a class="side-menu__item {{ Request::segment(3) == 'editProfile' ? 'active' : '' }}"
+                            href="{{ url('/uptd/pengaturan/editProfile') }}"><i
+                                class="side-menu__icon fa fa-cog"></i><span class="side-menu__label">Profil
+                                Saya</span></a>
                     </li>
-                    <li>
-                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
-                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
-                                class="side-menu__label">Change Password</span></a>
-                    </li> --}}
                 @endcan
                 @can('penyuluh')
                     <li class="sub-category">
