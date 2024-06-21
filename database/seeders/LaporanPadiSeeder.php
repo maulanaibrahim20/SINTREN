@@ -17,8 +17,6 @@ class LaporanPadiSeeder extends Seeder
     {
         DB::table("laporan_padis")->truncate();
         DB::table("verify_padis")->truncate();
-        DB::table("prediksis")->truncate();
-        DB::table("prediksi_sps")->truncate();
 
         Excel::import(new ImportLaporanPadi, public_path('/data_padi/data_padi.xlsx'));
     }
