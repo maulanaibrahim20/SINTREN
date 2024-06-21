@@ -239,9 +239,22 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <a class="dropdown-item text-dark fw-semibold border-top" href="profile.html">
-                                        <i class="dropdown-icon fe fe-user"></i> Profile
-                                    </a>
+                                    @if (Auth::user()->role_id == '2')
+                                        <a class="dropdown-item text-dark fw-semibold border-top"
+                                            href="{{ url('/pertanian/pengaturan/editProfile') }}">
+                                            <i class="dropdown-icon fe fe-user"></i> Profile Saya
+                                        </a>
+                                    @elseif(Auth::user()->role_id == '3')
+                                        <a class="dropdown-item text-dark fw-semibold border-top"
+                                            href="{{ url('/uptd/pengaturan/editProfile') }}">
+                                            <i class="dropdown-icon fe fe-user"></i> Profile Saya
+                                        </a>
+                                    @elseif(Auth::user()->role_id == '4')
+                                        <a class="dropdown-item text-dark fw-semibold border-top"
+                                            href="{{ url('/penyuluh/pengaturan/editProfile') }}">
+                                            <i class="dropdown-icon fe fe-user"></i> Profile Saya
+                                        </a>
+                                    @endif
                                     <a class="dropdown-item text-dark fw-semibold" href="email-inbox.html">
                                         <i class="dropdown-icon fe fe-mail"></i> Inbox
                                         <span class="badge bg-success float-end">3</span>

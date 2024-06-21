@@ -25,6 +25,7 @@ use App\Http\Controllers\PANGAN\PasarController;
 use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
+use App\Http\Controllers\WEB\Pertanian\EditProfilePertanianController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
@@ -107,6 +108,11 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('data_palawija/show/{id}', [DataLaporanPalawijaController::class, 'show']);
             Route::post('data_palawija/filter', [DataLaporanPalawijaController::class, 'filter']);
             Route::get('data_palawija/exportPdf', [DataLaporanPalawijaController::class, 'exportPdf']);
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfilePertanianController::class, 'index']);
+                Route::put('editProfile/{id}', [EditProfilePertanianController::class, 'update']);
+                Route::put('editPassword/{id}', [EditProfilePertanianController::class, 'updatePassword']);
+            });
         });
     });
 
