@@ -8,6 +8,7 @@ class DetailPadiModel {
   final String desaId;
   final String desaName;
   final String kecamatanId;
+  final String kecamatanName;
   final String jenisLahan;
   final String idJenisPadi;
   final String padiName;
@@ -29,6 +30,7 @@ class DetailPadiModel {
     required this.userId,
     required this.desaId,
     required this.kecamatanId,
+    required this.kecamatanName,
     required this.jenisLahan,
     required this.idJenisPadi,
     required this.padiName,
@@ -58,10 +60,13 @@ class DetailPadiModel {
         userId: json['user_id']?.toString() ?? '',
         desaId: json['desa_id']?.toString() ?? '',
         kecamatanId: json['kecamatan_id']?.toString() ?? '',
+        kecamatanName: json['kecamatan_name'] ?? '',
         jenisLahan: json['jenis_lahan'] ?? '',
         jenisBantuan: json['jenis_bantuan'] ?? '',
         tipeData: json['tipe_data'] ?? '',
-        nilai: json['nilai'] != null ? double.parse(json['nilai'].toString()) : 0.0,
+        nilai: json['nilai'] != null
+            ? double.parse(json['nilai'].toString())
+            : 0.0,
         desaName: json['desa_name'] ?? '',
         idJenisPengairan: json['id_jenis_pengairan']?.toString() ?? '',
         pengairanName: json['pengairan_name'] ?? '',
@@ -70,8 +75,10 @@ class DetailPadiModel {
         date: json['date'] ?? '',
         status: json['status'] ?? '',
         catatan: json['catatan'] ?? '',
-        createdAt: json['created_at'] != null ? dateConvert(json['created_at']) : '',
-        updatedAt: json['updated_at'] != null ? dateConvert(json['updated_at']) : '',
+        createdAt:
+            json['created_at'] != null ? dateConvert(json['created_at']) : '',
+        updatedAt:
+            json['updated_at'] != null ? dateConvert(json['updated_at']) : '',
       );
     } catch (e) {
       log('Error parsing JSON to DetailPadiModel: $e');
@@ -80,6 +87,7 @@ class DetailPadiModel {
         userId: '',
         desaId: '',
         kecamatanId: '',
+        kecamatanName: '',
         jenisLahan: '',
         jenisBantuan: '',
         tipeData: '',
@@ -104,6 +112,7 @@ class DetailPadiModel {
       userId: json['user_id'],
       desaId: json['desa_id'],
       kecamatanId: json['kecamatan_id'],
+      kecamatanName: json['kecamatan_name'],
       jenisLahan: json['jenis_lahan'],
       jenisBantuan: json['jenis_bantuan'],
       tipeData: json['tipe_data'],
@@ -128,6 +137,7 @@ class DetailPadiModel {
       'desa_id': desaId,
       'desa_name': desaName,
       'kecamatan_id': kecamatanId,
+      'kecamatan_name': kecamatanName,
       'jenis_lahan': jenisLahan,
       'id_jenis_padi': idJenisPadi,
       'padi_name': padiName,

@@ -28,10 +28,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 ClipRect(
                   child: Align(
                     alignment: Alignment.center,
-                    heightFactor: 0.5,
+                    heightFactor: 1,
                     child: Image.asset(
                       'assets/images/pertanian.png',
-                      width: 200.w,
+                      width: 170.w,
                       height: 200.h,
                       fit: BoxFit.fill,
                     ),

@@ -210,10 +210,6 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                     );
                   }
 
-                  double total = totalValues['panen']! +
-                      totalValues['tanam']! -
-                      totalValues['puso/rusak']!;
-
                   return Column(
                     children: [
                       Column(
@@ -244,28 +240,6 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                         }).toList(),
                       ),
                       Divider(thickness: 2.h),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 10.w, vertical: 5.h),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Total Tanaman Bulan Ini:',
-                              style: StyleTheme().styleBlack.copyWith(
-                                    fontSize: 14.sp,
-                                  ),
-                            ),
-                            Text(
-                              '${total < 0 ? 0 : total} hektar',
-                              style: StyleTheme().styleBlack.copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      )
                     ],
                   );
                 }

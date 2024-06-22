@@ -68,11 +68,11 @@ class _LoginViewState extends State<LoginView> {
                     ClipRect(
                       child: Align(
                         alignment: Alignment.center,
-                        heightFactor: 0.5,
+                        heightFactor: 1,
                         child: Image.asset(
                           'assets/images/pertanian.png',
-                          width: 200.w,
-                          height: 200.h,
+                          width: 100.w,
+                          height: 130.h,
                           fit: BoxFit.fill,
                         ),
                       ),

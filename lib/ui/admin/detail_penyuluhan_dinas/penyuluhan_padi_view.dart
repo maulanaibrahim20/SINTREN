@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
-import 'package:sintren_mobile/models/grouped_data_padi_model.dart';
+import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
@@ -18,7 +19,7 @@ class _PenyuluhanPadiViewState extends State<PenyuluhanPadiView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
-      body: FutureBuilder<List<GroupedDataPadiModel>>(
+      body: FutureBuilder<List<DetailPadiModel>>(
         future: padiC.getAllPenyuluhanPadi(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -64,174 +65,94 @@ class _PenyuluhanPadiViewState extends State<PenyuluhanPadiView> {
               ),
             );
           } else {
-            List<GroupedDataPadiModel> padiList = snapshot.data!;
+            List<DetailPadiModel> padiList = snapshot.data!;
             return ListView.builder(
               padding: EdgeInsets.only(top: 10.h),
               itemCount: padiList.length,
               itemBuilder: (context, index) {
-                GroupedDataPadiModel data = padiList[index];
+                DetailPadiModel data = padiList[index];
                 return Card(
                   surfaceTintColor: ColorTheme().whiteColor,
-                  margin:
-                      const EdgeInsets.only(right: 15, left: 15, bottom: 10),
+                  color: ColorTheme().whiteColor,
+                  margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                   elevation: 3,
-                  child: SizedBox(
-                    height: 210,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 10,
-                          decoration: BoxDecoration(
-                              color: ColorTheme().primaryColor,
-                              borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  topLeft: Radius.circular(10))),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Hibrida",
-                                  style: StyleTheme().styleBlack.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Lohbener",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "Tidak Terverifikasi",
-                                      style: StyleTheme()
-                                          .styleBlack
-                                          .copyWith(color: Colors.red),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Lahan Sawah",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "1/5/2024",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Irigasi Tersier",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "Bantuan Pemerintah",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                  ],
-                                ),
-                                const Divider(),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Tanaman Akhir Bulan Lalu:",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "1000",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Tanam:",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "100",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Panen:",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "100",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Puso/Rusak:",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "100",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Tanaman Akhir Bulan Ini:",
-                                      style: StyleTheme().styleBlack,
-                                    ),
-                                    Text(
-                                      "900",
-                                      style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 10.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            data.padiName,
+                            style: StyleTheme().styleBlack.copyWith(
+                                fontWeight: FontWeight.w500, fontSize: 16.sp),
                           ),
-                        ),
-                      ],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                UserController()
+                                    .toCamelCase(data.kecamatanName),
+                                style: StyleTheme().styleBlack,
+                              ),
+                              Text(
+                                UserController().toCamelCase(data.desaName),
+                                style: StyleTheme().styleBlack,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                UserController().toCamelCase(data.jenisBantuan),
+                                style: StyleTheme().styleBlack,
+                              ),
+                              Text(
+                                UserController().normalizeDate(data.date),
+                                style: StyleTheme().styleBlack,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
+                                style: StyleTheme().styleBlack,
+                              ),
+                              Text(
+                                UserController()
+                                    .toCamelCase(data.pengairanName),
+                                style: StyleTheme().styleBlack,
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                UserController().toCamelCase(data.tipeData),
+                                style: StyleTheme().styleBlack.copyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "${data.nilai} hektar",
+                                style: StyleTheme().styleBlack.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          SizedBox(height: 5.h),
+                        ],
+                      ),
                     ),
                   ),
                 );
