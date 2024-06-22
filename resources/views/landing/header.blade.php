@@ -1,38 +1,25 @@
-<header class="header-area">
+<header id="header" class="fixed-top ">
     <div class="container-fluid">
-        <div class="row d_flex">
-            <div class=" col-md-2 col-sm-3">
-                <div class="logo">
-                    <a href="index.html">Sin<span>Tren</span></a>
-                </div>
-            </div>
-            <div class="col-md-8 col-sm-9">
-                <div class="navbar-area">
-                    <nav class="site-navbar">
-                        <ul>
-                            <li><a class="active" href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="service.html">Service</a></li>
-                            <li><a href="Javascript:void(0)">Projects</a></li>
-                            <li><a href="testimonail.html">Testimonail</a></li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="contact.html">Contact</a></li>
-                        </ul>
-                        <button class="nav-toggler">
-                            <span></span>
-                        </button>
-                    </nav>
-                </div>
-            </div>
-            <div class="col-md-2 padd_0 d_none">
-                <ul class="email text_align_right">
-                    <li><a href="{{ route('login.index') }}" style="color: black;">Login</a>
-                    </li>
-                    <li><a href="Javascript:void(0)"><i class="fa fa-search" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                </ul>
+
+        <div class="row justify-content-center">
+            <div class="col-xl-9 d-flex align-items-center justify-content-lg-between">
+                <h1 class="logo me-auto me-lg-0"><a href="index.html">Sintren</a></h1>
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+                <nav id="navbar" class="navbar order-last order-lg-0">
+                    <ul>
+                        <li><a class="nav-link scrollto active" href="#hero">Dashboard</a></li>
+                        <li><a class="nav-link scrollto" href="#about">Tentang</a></li>
+                        <li><a class="nav-link scrollto" href="#features">Trend Pertanian</a></li>
+                        <li><a class="nav-link scrollto" href="#contact">Kontak Kami</a></li>
+                    </ul>
+                    <i class="bi bi-list mobile-nav-toggle"></i>
+                </nav><!-- .navbar -->
+
+                <a href="{{ url('/login') }}" class="get-started-btn scrollto"><i class="fa fa-sign-in"></i> Login</a>
             </div>
         </div>
+
     </div>
 </header>
