@@ -106,7 +106,8 @@ class DashboardController extends Controller
         $hasilPrediksi = [];
         $prevValue = null;
         for ($tahun = $dariTahun; $tahun <= 2030; $tahun++) {
-            $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
+            $prediksi = round($regression->predict([$tahun])); // Membulatkan hasil prediksi
+            $hasilPrediksi[$tahun] = $prediksi;
 
             if ($tahun > $sampaiTahun) {
                 $samples[] = [$tahun];
@@ -139,8 +140,6 @@ class DashboardController extends Controller
             }
         }
         $mape = round(($totalError / $n) * 100, 2);
-
-
 
         return view('pertanian.pages.dashboard.index', $data, [
             'labels' => $labels,

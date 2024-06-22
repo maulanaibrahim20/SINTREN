@@ -34,7 +34,7 @@
                                             <span class="input-group-addon bg-white"><i
                                                     class="fa fa-user text-dark"></i></span>
                                             <input type="text" class="form-control" placeholder="Username"
-                                                name="username" id="username">
+                                                name="username" value="{{ old('username') }}" id="username">
                                         </div>
                                         <div class="input-group mb-4">
                                             <span class="input-group-addon bg-white"><i

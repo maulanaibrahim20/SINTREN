@@ -7,88 +7,11 @@
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
         </ol><!-- End breadcrumb -->
-        <div class="ms-auto">
-            <div>
-                <a href="#" class="btn bg-secondary-transparent text-secondary btn-sm" data-bs-toggle="tooltip"
-                    title="" data-bs-placement="bottom" data-bs-original-title="Rating">
-                    <span>
-                        <i class="fa fa-star"></i>
-                    </span>
-                </a>
-                <a href="lockscreen.html" class="btn bg-primary-transparent text-primary mx-2 btn-sm"
-                    data-bs-toggle="tooltip" title="" data-bs-placement="bottom" data-bs-original-title="lock">
-                    <span>
-                        <i class="fa fa-lock"></i>
-                    </span>
-                </a>
-                <a href="#" class="btn bg-warning-transparent text-warning btn-sm" data-bs-toggle="tooltip"
-                    title="" data-bs-placement="bottom" data-bs-original-title="Add New">
-                    <span>
-                        <i class="fa fa-plus"></i>
-                    </span>
-                </a>
-            </div>
-        </div>
     </div>
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between allign-items-center">
-                    <h3 class="card-title mb-0">Trend Rata Rata Hasil
-                </div>
-                <div class="card-body py-0">
-                    <canvas id="myChart" width="200" height="100"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered text-nowrap border-bottom" id="responsive-datatable">
-                    <thead>
-                        <tr>
-                            <th>MAPE (%)</th>
-                            <th>Akurasi</th>
-                            <th>Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>&lt; 10 %</td>
-                            <td>Sangat Baik</td>
-                            <td>Sangat akurat, prediksi sangat baik</td>
-                        </tr>
-                        <tr>
-                            <td>10-20 %</td>
-                            <td>Baik</td>
-                            <td>Baik, prediksi cukup akurat</td>
-                        </tr>
-                        <tr>
-                            <td>20-50 %</td>
-                            <td>Layak / Memadai</td>
-                            <td>Cukup akurat, tapi ada ruang untuk perbaikan</td>
-                        </tr>
-                        <tr>
-                            <td>&gt; 50 %</td>
-                            <td>Sangat Buruk</td>
-                            <td>Tidak akurat, prediksi sangat buruk</td>
-                        </tr>
-                        <tr>
-                            <td>Hasil</td>
-                            {{-- <td>Mean Absolute Percent Error (MAPE): <strong>{{ $tanpaRound }}%</strong></td> --}}
-                            <td>Mean Absolute Percent Error (MAPE): <strong>{{ $mape }}%</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xl-5 col-lg-12 col-md-12 col-sm-12">
-            <div class="row row-sm">
-                <div class="col-sm-6 col-lg-6">
+            <div class="d-flex flex-wrap">
+                <div class="col-sm-6 col-lg-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -104,6 +27,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -119,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-6">
+                <div class="col-sm-6 col-lg-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -136,6 +61,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-sm-6 col-lg-3">
                     <div class="card overflow-hidden">
                         <div class="card-body">
                             <div class="d-flex">
@@ -155,25 +82,59 @@
                     </div>
                 </div>
             </div>
-            <div class="row row-sm">
-                <div class="col-12">
-                    <div class="card overflow-hidden">
-                        <div class="card-header pb-0 border-bottom-0">
-                            <h3 class="card-title">Deliverables</h3>
-                        </div>
-                        <div class="card-body pt-0">
-                            <div class="d-block d-sm-inline-flex align-items-center my-3">
-                                <p class="mb-0 me-5"> <span class="legend bg-blue"></span>Marketing Strategy</p>
-                                <p class="mb-0 me-5"> <span class="legend bg-teal"></span>Engaging Audience</p>
-                                <p class="mb-0 me-5"> <span class="legend bg-pink"></span>Others</p>
-                            </div>
-                            <div class="progress br-10 progress-md">
-                                <div class="progress-bar lh-1 bg-blue w-20">20%</div>
-                                <div class="progress-bar lh-1 bg-cyan w-30">30%</div>
-                                <div class="progress-bar lh-1 bg-pink w-50">50%</div>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between allign-items-center">
+                <h3 class="card-title mb-0">Trend Rata Rata Hasil
+            </div>
+            <div class="card-body py-0">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <canvas id="myChart" width="200" height="100"></canvas>
+                </div>
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mt-5">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tahun</th>
+                                <th>Aktual</th>
+                                <th>Prediksi</th>
+                                <th>Selisih</th>
+                                <th>Error</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($labels as $index => $tahun)
+                                <tr>
+                                    <td>{{ $tahun }}</td>
+                                    <td>{{ isset($actualData[$index]) ? number_format($actualData[$index], 0, ',', '.') : 'N/A' }}
+                                    </td>
+                                    <td>{{ isset($predictedData[$index]) ? number_format(round($predictedData[$index]), 0, ',', '.') : 'N/A' }}
+                                    </td>
+                                    <td>
+                                        @if (isset($actualData[$index]))
+                                            {{ number_format(round($predictedData[$index] - $actualData[$index]), 0, ',', '.') }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if (isset($actualData[$index]) && isset($predictedData[$index]))
+                                            {{ number_format(abs($actualData[$index] - $predictedData[$index]), 0, ',', '.') }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <th></th>
+                                <th colspan="3" style="text-align:right">MAPE:</th>
+                                <th>{{ $mape }}%</th>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
