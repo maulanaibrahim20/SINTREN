@@ -17,6 +17,6 @@ class LogoutController extends Controller
         $request->session()->regenerateToken();
 
         Alert::success("Logout", 'Berhasil Logout');
-        return redirect(route('login.index'));
+        return redirect(url('/'));
     }
 }
