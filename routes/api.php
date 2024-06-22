@@ -43,7 +43,6 @@ Route::post('/padi/store', [PadiController::class, 'store']);
 Route::patch('/padi/update/{id}', [PadiController::class, 'update']);
 Route::get('/padi/showByUser/{id}', [PadiController::class, 'showAllByUser']);
 Route::delete('/padi/deleteDetailById/{id}', [PadiController::class, 'deleteDetailById']);
-Route::get('/padi/summary', [PadiController::class, 'getDataSummaryByMonth']);
 
 // PALAWIJA END POINT
 Route::get('/palawija', [PalawijaController::class, 'getJenisPalawija']);
@@ -56,7 +55,7 @@ Route::delete('/palawija/deleteDetailById/{id}', [PalawijaController::class, 'de
 Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
 Route::get('/padi/showByKecamatan/{id}', [AdminPadiController::class, 'showAllByKecamatan']);
 Route::get('/palawija/showByKecamatan/{id}', [AdminPalawijaController::class, 'showAllByKecamatan']);
-Route::get('/padi/prediksiSp', [AdminPadiController::class, 'menghitungRegresiSP']);
+Route::get('/padi/prediksiSp', [AdminPadiController::class, 'prediksi']);
 Route::patch('/verify/{id}', [AdminController::class, 'verify']);
 Route::get('/admin/getPenyuluh/{id}', [AdminController::class, 'getPenyuluh']);
 Route::post('/admin/addPenugasan/', [AdminController::class, 'addPenugasan']);

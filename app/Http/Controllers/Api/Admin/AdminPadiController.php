@@ -70,9 +70,8 @@ class AdminPadiController extends Controller
 
     public function prediksi()
     {
-        $dariTahun = 2010;
-        $sampaiTahun = 2021;
-
+        $dariTahun = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
+        $sampaiTahun = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
 
         $laporanPadi = DB::table('laporan_padis')
             ->selectRaw('YEAR(date) AS tahun')
@@ -85,14 +84,15 @@ class AdminPadiController extends Controller
 
         $hasilPerTahun = [];
 
+        for ($tahun = $dariTahun; $tahun <= $sampaiTahun; $tahun++) {
+            $hasilPerTahun[$tahun] = 0;
+        }
+
         foreach ($laporanPadi as $laporan) {
             $tahun = $laporan->tahun;
-
-            if (!isset($hasilPerTahun[$tahun])) {
-                $hasilPerTahun[$tahun] = 0;
-            }
-            $hasilPerTahun[$tahun] += $laporan->total_panen;
+            $hasilPerTahun[$tahun] = $laporan->total_panen;
         }
+
         $actualData = $hasilPerTahun;
 
         $fitur = [];
