@@ -20,10 +20,12 @@
                                     @endif
                                     <div class="text-center mb-2">
                                         <a class="header-brand1" href="{{ url('/login') }}">
-                                            <img src="{{ url('/assets') }}/images/brand/logo.png"
-                                                class="header-brand-img main-logo" alt="Sparic logo">
-                                            <img src="{{ url('/assets') }}/images/brand/logo-light.png"
-                                                class="header-brand-img darklogo" alt="Sparic logo">
+                                            <img src="{{ url('/assets') }}/images/brand/logo-withname.png"
+                                                class="header-brand-img main-logo" alt="Sparic logo"
+                                                style="height: 200px; width: auto;">
+                                            <img src="{{ url('/assets') }}/images/brand/logo-withname-dark.png"
+                                                class="header-brand-img darklogo" alt="Sparic logo"
+                                                style="height: 200px; width: auto;">
                                         </a>
                                     </div>
                                     <h3>Login</h3>
