@@ -1,6 +1,6 @@
 <!-- Favicons -->
-<link href="{{ url('/landings/img/favicon_io/logo.png') }}" rel="icon">
-<link href="{{ url('/landings/img/favicon_io/apple-touch-icon.png') }}" rel="apple-touch-icon">
+<link href="{{ url('/landings/img/logo-withname-dark.png') }}" rel="icon">
+<link href="{{ url('/landings/img/logo-withname-dark.png') }}" rel="apple-touch-icon">
 
 <!-- Google Fonts -->
 <link
