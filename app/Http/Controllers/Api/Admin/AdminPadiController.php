@@ -70,9 +70,10 @@ class AdminPadiController extends Controller
 
     public function prediksi()
     {
+        // $dariTahun = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
+        // $sampaiTahun = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
         $dariTahun = 2010;
         $sampaiTahun = 2021;
-
 
         $laporanPadi = DB::table('laporan_padis')
             ->selectRaw('YEAR(date) AS tahun')
@@ -110,7 +111,8 @@ class AdminPadiController extends Controller
         $hasilPrediksi = [];
         $prevValue = null;
         for ($tahun = $dariTahun; $tahun <= $sampaiTahun; $tahun++) {
-            $hasilPrediksi[$tahun] = $regression->predict([$tahun]);
+            $prediksi = round($regression->predict([$tahun])); // Membulatkan hasil prediksi
+            $hasilPrediksi[$tahun] = $prediksi;
 
             if ($tahun > $sampaiTahun) {
                 $samples[] = [$tahun];
