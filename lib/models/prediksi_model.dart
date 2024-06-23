@@ -1,7 +1,7 @@
 class DataItem {
   final int label;
   final int actualData;
-  final double predictedData;
+  final int predictedData;
 
   DataItem({
     required this.label,
@@ -10,10 +10,17 @@ class DataItem {
   });
 
   factory DataItem.fromJson(Map<String, dynamic> json) {
+    // Check and convert label to int if it's a double
+    int label = json['label'] is double ? (json['label'] as double).toInt() : json['label'];
+    // Check and convert actualData to int if it's a double
+    int actualData = json['actualData'] is double ? (json['actualData'] as double).toInt() : json['actualData'];
+    // Check and convert predictedData to int if it's a double
+    int predictedData = json['predictedData'] is double ? (json['predictedData'] as double).toInt() : json['predictedData'];
+
     return DataItem(
-      label: json['label'],
-      actualData: json['actualData'],
-      predictedData: json['predictedData'],
+      label: label,
+      actualData: actualData,
+      predictedData: predictedData,
     );
   }
 
@@ -39,9 +46,12 @@ class PrediksiModel {
     var list = json['result'] as List;
     List<DataItem> resultList = list.map((i) => DataItem.fromJson(i)).toList();
 
+    // Check and convert mape to double if it's an int
+    double mape = json['mape'] is int ? (json['mape'] as int).toDouble() : json['mape'];
+
     return PrediksiModel(
       result: resultList,
-      mape: json['mape'],
+      mape: mape,
     );
   }
 

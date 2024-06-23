@@ -75,8 +75,8 @@ class AdminService {
           final List<int> labels = List<int>.from(jsonResult['data']['labels']);
           final List<int> actualData =
               List<int>.from(jsonResult['data']['actualData']);
-          final List<double> predictedData =
-              List<double>.from(jsonResult['data']['predictedData']);
+          final List<int> predictedData =
+              List<int>.from(jsonResult['data']['predictedData']);
           final double mape = jsonResult['data']['mape'];
 
           List<DataItem> result = [];

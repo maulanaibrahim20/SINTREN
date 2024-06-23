@@ -21,7 +21,7 @@ class HomeChart {
   ];
 
   List<int> get actualData => data.map((item) => item.actualData).toList();
-  List<double> get predictedData =>
+  List<int> get predictedData =>
       data.map((item) => item.predictedData).toList();
   List<int> get labels => data.map((item) => item.label).toList();
 
@@ -61,18 +61,18 @@ class HomeChart {
   }
 
   LineChartData mainData() {
-    double maxActualData =
-        actualData.reduce((a, b) => a > b ? a : b).toDouble();
-    double minActualData =
-        actualData.reduce((a, b) => a < b ? a : b).toDouble();
+    int maxActualData = actualData.reduce((a, b) => a > b ? a : b);
+    int minActualData = actualData.reduce((a, b) => a < b ? a : b);
 
-    double maxPredictedData = predictedData.reduce((a, b) => a > b ? a : b);
-    double minPredictedData = predictedData.reduce((a, b) => a < b ? a : b);
+    int maxPredictedData = predictedData.reduce((a, b) => a > b ? a : b);
+    int minPredictedData = predictedData.reduce((a, b) => a < b ? a : b);
 
-    double maxY =
-        [maxActualData, maxPredictedData].reduce((a, b) => a > b ? a : b);
-    double minY =
-        [minActualData, minPredictedData].reduce((a, b) => a < b ? a : b);
+    double maxY = [maxActualData, maxPredictedData]
+        .reduce((a, b) => a > b ? a : b)
+        .toDouble();
+    double minY = [minActualData, minPredictedData]
+        .reduce((a, b) => a < b ? a : b)
+        .toDouble();
 
     // Adjusting maxY and minY to be a multiple of 5000 for better display
     maxY = ((maxY / 5000).ceil() * 5000).toDouble();
@@ -172,8 +172,10 @@ class HomeChart {
           ),
         ),
         LineChartBarData(
-          spots: List.generate(predictedData.length,
-              (index) => FlSpot(index.toDouble(), predictedData[index])),
+          spots: List.generate(
+              predictedData.length,
+              (index) =>
+                  FlSpot(index.toDouble(), predictedData[index].toDouble())),
           isCurved: true,
           gradient: LinearGradient(
             colors: predictedDataGradientColors,
