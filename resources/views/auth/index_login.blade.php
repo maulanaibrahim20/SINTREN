@@ -15,7 +15,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ url('/landings') }}/img/favicon_io/logo.png">
 
     <!-- Title -->
-    <title>{{ config('app.name') }} | @yield('title')</title>
+    <title> Sintrenayu | @yield('title')</title>
 
     @include('auth.component.style_css')
 

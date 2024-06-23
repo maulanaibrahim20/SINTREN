@@ -15,7 +15,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ url('/landings') }}/img/favicon_io/logo.png">
 
     <!-- Title -->
-    <title>{{ config('app.name') }} | @yield('title')</title>
+    <title>Sintrenayu | @yield('title')</title>
 
     @include('template.component.style_css')
     {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
