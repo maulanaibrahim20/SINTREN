@@ -1,5 +1,5 @@
 @extends('auth.index_login')
-@section('title', 'Login Cover - Pages | Vuexy - Bootstrap Admin Template')
+@section('title', 'Login Page')
 @section('content')
     <div class="page-content">
         <div class="container text-center text-dark">
