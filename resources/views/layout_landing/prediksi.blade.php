@@ -11,7 +11,7 @@
                     <th>Aktual</th>
                     <th>Prediksi</th>
                     <th>Selisih</th>
-                    <th>Error</th>
+                    <th>Error MAPE</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,8 +30,8 @@
                             @endif
                         </td>
                         <td>
-                            @if (isset($actualData[$index]) && isset($predictedData[$index]))
-                                {{ number_format(abs($actualData[$index] - $predictedData[$index]), 0, ',', '.') }}
+                            @if (isset($errors[$index]))
+                                {{ number_format($errors[$index] * 100, 2, ',', '.') }}%
                             @else
                                 N/A
                             @endif
@@ -45,6 +45,7 @@
                 </tr>
             </tbody>
         </table>
+
     </div>
 
 </section>

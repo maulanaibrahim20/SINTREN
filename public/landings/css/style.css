@@ -717,9 +717,9 @@ section {
 --------------------------------------------------------------*/
 .cta {
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-        url("../img/cta-bg.jpg") fixed center center;
+        url("../img/fixxx.png") fixed center center;
     background-size: cover;
-    padding: 120px 0;
+    padding: 200px 0;
 }
 
 .cta h3 {
