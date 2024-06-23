@@ -35,6 +35,9 @@
         @include('layout_landing.aboutus')
         <!-- End About Us Section -->
         @include('layout_landing.prediksi')
+
+        @include('layout_landing.ctamobile')
+
         <!-- ======= Contact Section ======= -->
         @include('layout_landing.contactus')
         <!-- End Contact Section -->
