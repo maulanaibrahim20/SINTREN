@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
@@ -7,7 +9,21 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class PenyuluhanPadiView extends StatefulWidget {
-  const PenyuluhanPadiView({super.key});
+  const PenyuluhanPadiView(
+      {super.key,
+      this.jenisLahan,
+      this.jenisBantuan,
+      this.jenisPadi,
+      this.jenisPengairan,
+      this.jenisData,
+      this.search});
+
+  final String? jenisLahan;
+  final String? jenisBantuan;
+  final String? jenisPadi;
+  final String? jenisPengairan;
+  final String? jenisData;
+  final String? search;
 
   @override
   State<PenyuluhanPadiView> createState() => _PenyuluhanPadiViewState();
@@ -15,6 +31,41 @@ class PenyuluhanPadiView extends StatefulWidget {
 
 class _PenyuluhanPadiViewState extends State<PenyuluhanPadiView> {
   AdminPadiController padiC = AdminPadiController();
+
+  List<DetailPadiModel> filterPadiList({
+    required List<DetailPadiModel> padiList,
+    String? jenisLahan,
+    String? jenisPadi,
+    String? jenisPengairan,
+    String? jenisBantuan,
+    String? jenisData,
+    String? search,
+  }) {
+    log(search.toString());
+    return padiList.where((padi) {
+      final matchJenisLahan =
+          jenisLahan == null || padi.jenisLahan == jenisLahan;
+      final matchJenisPadi = jenisPadi == null || padi.padiName == jenisPadi;
+      final matchJenisPengairan =
+          jenisPengairan == null || padi.pengairanName == jenisPengairan;
+      final matchJenisBantuan =
+          jenisBantuan == null || padi.jenisBantuan == jenisBantuan;
+      final matchJenisData = jenisData == null || padi.tipeData == jenisData;
+      final matchDesa = search == null ||
+          padi.desaName.toLowerCase().contains(search.toLowerCase());
+      final matchKecamatan = search == null ||
+          padi.kecamatanName.toLowerCase().contains(search.toLowerCase());
+
+      return matchJenisLahan &&
+          matchJenisPadi &&
+          matchJenisPengairan &&
+          matchJenisBantuan &&
+          matchJenisData &&
+          matchDesa &&
+          matchKecamatan;
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +116,15 @@ class _PenyuluhanPadiViewState extends State<PenyuluhanPadiView> {
               ),
             );
           } else {
-            List<DetailPadiModel> padiList = snapshot.data!;
+            List<DetailPadiModel> padiList = filterPadiList(
+              padiList: snapshot.data!,
+              jenisLahan: widget.jenisLahan,
+              jenisPadi: widget.jenisPadi,
+              jenisPengairan: widget.jenisPengairan,
+              jenisBantuan: widget.jenisBantuan,
+              jenisData: widget.jenisData,
+              search: widget.search,
+            );
             return ListView.builder(
               padding: EdgeInsets.only(top: 10.h),
               itemCount: padiList.length,
