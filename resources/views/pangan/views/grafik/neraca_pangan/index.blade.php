@@ -24,7 +24,7 @@
 @endsection
 
 @section('scripts')
-<script>
+{{-- <script>
 	var ctx1 = document.getElementById('chartBar1').getContext('2d');
 	new Chart(ctx1, {
 		type: 'bar',
@@ -90,5 +90,5 @@
 			},
 		}
 	});
-</script>
+</script> --}}
 @endsection

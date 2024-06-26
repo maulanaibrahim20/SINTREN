@@ -11,10 +11,20 @@ class Pasar extends Model
 
     protected $table = 'pasars';
     protected $guarded = [''];
-    
+
     public function laporanPangans()
     {
         return $this->belongsTo(Pasar::class, 'pasar_id');
         // return $this->hasMany(LaporanPangan::class, 'pasar_id');
+    }
+
+    public function laporanPangan()
+    {
+        return $this->hasMany(LaporanPangan::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_pasar', 'pasar_id', 'user_id');
     }
 }

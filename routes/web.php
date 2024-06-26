@@ -159,7 +159,7 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::resource('/create/data_pasar', PasarController::class);
             Route::resource('/create/jenis_pangan', JenisPanganController::class);
 
-            Route::post('/create/data_pangan/kirim/{id}', [DataPanganController::class, 'kirimkan']);
+            // Route::post('/create/data_pangan/kirim/{id}', [DataPanganController::class, 'kirimkan']);
             Route::resource('/create/data_pangan', DataPanganController::class);
             Route::resource('/data/laporan_pangan', LaporanPanganController::class);
 

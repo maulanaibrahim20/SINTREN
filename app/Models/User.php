@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pangan\Pangan;
+use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
 use App\Models\Pasar\PetugasPasar;
 use App\Models\Pertanian\Pertanian;
@@ -90,8 +91,16 @@ class User extends Authenticatable
         return $this->hasOne(Pangan::class);
     }
 
+
     public function pasar()
     {
         return $this->hasOne(PetugasPasar::class);
     }
+
+    public function laporanPangan()
+    {
+        return $this->hasMany(LaporanPangan::class);
+    }
+
+
 }

@@ -47,21 +47,27 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                             <label for="validationCustom12">Email</label>
                             <input type="email" name="email" class="form-control" id="validationCustom12"
                                 value="{{ $user->user->email }}" value="Otto" required>
                             <div class="valid-feedback">Looks good!</div>
                         </div>
-                        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                            <label for="validationCustom15">Username</label>
+                            <input type="username" class="form-control" id="validationCustom15" name="username"
+                                value="{{ $user->user->username }}" required>
+                            <div class="invalid-feedback">Please provide a valid zip.</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                             <label for="validationCustom15">Nomor Telepon</label>
                             <input type="number" class="form-control" id="validationCustom15" name="no_telp"
                                 value="{{ $user->no_telp }}" required>
                             <div class="invalid-feedback">Please provide a valid zip.</div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                             <label for="validationCustom15">Pasar</label>
                             <select name="pasar" id="pasar" class="form-control form-select select2">
                                 <option value="">-- pilih --</option>
@@ -75,7 +81,9 @@
                             </select>
                         </div>
                     </div>
+                    <div class="d-flex" style="justify-content: end">
                     <button class="btn btn-primary" type="submit">Submit </button>
+                    </div>
                 </form>
                 </div>
             </div>

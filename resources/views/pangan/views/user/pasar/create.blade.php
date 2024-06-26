@@ -68,7 +68,9 @@
                                 </select>
                             </div>
                         </div>
-                        @include('template.component.button')
+                        <div class="d-flex" style="justify-content: end">
+                            @include('template.component.button')
+                        </div>
                     </form>
                 </div>
             </div>

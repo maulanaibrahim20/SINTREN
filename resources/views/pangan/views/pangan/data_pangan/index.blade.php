@@ -7,7 +7,7 @@
             <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
         </ol><!-- End breadcrumb -->
-        <div class="ms-auto">
+        {{-- <div class="ms-auto">
             <div>
                 <a href="{{ url('/pangan/create/data_pangan/create') }}" class="btn bg-primary-transparent">
                     <span>
@@ -16,7 +16,7 @@
                     {{ $button_create }}
                 </a>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <!-- Filter Tanggal Mulai dan Akhir -->
@@ -57,11 +57,9 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No</th>
                                     <th class="wd-15p border-bottom-0">Status</th>
-                                    {{--  <th class="wd-15p border-bottom-0">Nama Petugas</th> --}}
                                     <th class="wd-15p border-bottom-0">Pasar</th>
                                     <th class="wd-20p border-bottom-0">Nama Pangan</th>
                                     <th class="wd-20p border-bottom-0">Tanggal</th>
-                                    {{-- <th class="wd-20p border-bottom-0">Kategori Pangan</th> --}}
                                     <th class="wd-20p border-bottom-0">Kebutuhan(Ton)</th>
                                     <th class="wd-20p border-bottom-0">Ketersediaan(Ton)</th>
                                     <th class="wd-20p border-bottom-0">Neraca(Ton)</th>
@@ -94,14 +92,7 @@
                                         <td>{{ formatRibuan($data->neraca) }}</td>
                                         <td>{{ formatRibuan($data->harga) }}</td>
                                         <td class="text-center">
-                                            @if (!$data->status)
-                                                <form id="statusForm{{ $data->id }}" action="{{ url('/pangan/create/data_pangan/kirim/' . $data->id) }}" style="display: inline;" method="POST">
-                                                    @method('POST')
-                                                    @csrf
-                                                    <button type="button" class="btn btn-secondary kirimBtn" data-id="{{ $data->id }}"><i class="fa fa-paper-plane-o"></i></button>
-                                                </form>
-                                                <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            @endif
+                                            <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
                                             <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}" class="btn btn-primary"><i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}" action="{{ url('/pangan/create/data_pangan/' . $data->id) }}" style="display: inline;" method="POST">
                                                 @method('DELETE')

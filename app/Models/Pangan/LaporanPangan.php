@@ -27,4 +27,9 @@ class LaporanPangan extends Model
     {
         return $this->belongsTo(JenisPangan::class, 'jenis_pangan_id');
     }
+
+    public function laporanPangan()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

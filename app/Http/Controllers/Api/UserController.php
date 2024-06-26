@@ -56,7 +56,7 @@ class UserController extends Controller
                 $detail = $user->pangan;
                 break;
             case Role::PASAR:
-                $detail = $user->petugaspasar;
+                $detail = $user->pasar;
                 break;
         }
 
@@ -66,7 +66,8 @@ class UserController extends Controller
             'email' => $user->email,
             'username' => $user->username,
             'detail' => $detail,
-            'kecamatan' => $detail->kecamatan,
+            'pasar' => $detail->pasar->name ?? '',
+            'kecamatan' => $detail->kecamatan ?? '',
             'role_name' => $role ? $role->name : 'No Role'
         ];
 
@@ -193,7 +194,7 @@ class UserController extends Controller
                     $detail = $user->pangan;
                     break;
                 case Role::PASAR:
-                    $detail = $user->petugaspasar;
+                    $detail = $user->pasar;
                     break;
             }
 

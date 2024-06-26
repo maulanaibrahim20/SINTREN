@@ -12,11 +12,39 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Grafik Stok Pangan</h4>
+            <div class="card-header custom-header d-flex justify-content-between align-items-center border-bottom">
+                <h3 class="card-title">Grafik Stok Pangan</h3>
+                <div class="dropdown">
+                    <a href="javascript:void(0);"
+                        class="d-flex align-items-center bg-primary btn btn-sm mx-1 fw-semibold"
+                        data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Sort by:
+                        Weekly<i class="fe fe-chevron-down fw-semibold mx-1"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" role="menu" data-popper-placement="bottom-end">
+                        <li><a href="javascript:void(0);">Monthly</a></li>
+                        <li><a href="javascript:void(0);">Yearly</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="card-body">
-                <canvas id="chartBar1"></canvas>
+            <div class="card-body pb-0">
+                {{-- <div class="d-flex ms-5">
+                    <div>
+                        <p class="mb-0 fs-15 text-muted">
+                            This month
+                        </p>
+                        <span class="text-primary fs-20 fw-semibold"><i
+                                class="fe fe-dollar-sign fs-13"></i>815,320</span>
+                    </div>
+                    <div class="ms-5">
+                        <p class="mb-0 fs-15 text-muted">
+                            Last month
+                        </p>
+                        <span class="fs-20 text-secondary fw-semibold"><i
+                                class="fe fe-dollar-sign fs-13"></i>743,950</span>
+                    </div>
+                </div> --}}
+                <div id="revenue_chart">
+                </div>
             </div>
         </div>
     </div>
@@ -24,71 +52,5 @@
 @endsection
 
 @section('scripts')
-<script>
-	var ctx1 = document.getElementById('chartBar1').getContext('2d');
-	new Chart(ctx1, {
-		type: 'bar',
-		data: {
-			labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-			datasets: [{
-				label: '# of Votes',
-				data: [14, 12, 34, 25, 24, 20],
-				backgroundColor: '#467fcf'
-			}]
-		},
-		options: {
-			maintainAspectRatio: false,
-			responsive: true,
-			barPercentage: 0.5,
-			plugins: {
-				legend: {
-					display: false,
-					labels: {
-						display: false
-					}
-				},
-				tooltip: {
-					enabled: true
-				}
-			},
-			scales: {
-				x: {
-					ticks: {
-						beginAtZero: true,
-						fontSize: 10,
-						fontColor: "rgba(180, 183, 197, 0.4)",
-					},
-					title: {
-						display: false,
-						text: 'Months',
-					},
-					grid: {
-						display: true,
-						color: 'rgba(180, 183, 197, 0.4)																																					',
-						drawBorder: false,
-					},
-				},
-				y: {
-					ticks: {
-						beginAtZero: true,
-						fontSize: 10,
-						fontColor: "rgba(180, 183, 197, 0.4)",
-						stepSize: 10,
-						min: 0,
-						max: 80
-					},
-					title: {
-						display: false,
-						text: 'Revenue',
-					},
-					grid: {
-						display: true,
-						color: 'rgba(180, 183, 197, 0.4)',
-						drawBorder: false,
-					},
-				}
-			},
-		}
-	});
-</script>
+
 @endsection

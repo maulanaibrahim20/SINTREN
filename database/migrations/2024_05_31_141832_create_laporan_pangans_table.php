@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_id')->nullable();
             $table->string('pasar_id')->nullable();
-            $table->string('kategori_pangan_id')->nullable();
+            $table->string('jenis_pangan_id')->nullable();
             $table->string('name');
             $table->integer('kebutuhan');
             $table->integer('ketersediaan');
