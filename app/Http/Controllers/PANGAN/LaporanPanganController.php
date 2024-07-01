@@ -56,7 +56,7 @@ class LaporanPanganController extends Controller
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Laporan Pangan',
             // 'button_create' => 'Tambah Data Stok Pangan',
-            'datapangan' => $datapangan,
+            'datapangan' => $this->laporanpangan::where('status', true)->get(),
         ];
 
         return view('pangan.views.pangan.laporan_pangan.index', $data);

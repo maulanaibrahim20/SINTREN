@@ -55,8 +55,13 @@ class DataPanganController extends Controller
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Data Stok Pangan',
             'button_create' => 'Tambah Data Stok Pangan',
-            'datapangan' => $datapangan,
+            // 'datapangan' => $this->laporanpangan::with('pasar')
+            // ->where('user_id', Auth::user()->id)
+            // ->where('status', true)->get(),
+            'datapangan' => $this->laporanpangan::where('status', true)->get(),
         ];
+
+        // dd($data);
 
         return view('pangan.views.pangan.data_pangan.index', $data);
     }

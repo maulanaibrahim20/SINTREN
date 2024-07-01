@@ -62,7 +62,7 @@ Route::get('/admin/getPenyuluh/{id}', [AdminController::class, 'getPenyuluh']);
 Route::post('/admin/addPenugasan/', [AdminController::class, 'addPenugasan']);
 Route::delete('/admin/deletePenugasan/{id}', [AdminController::class, 'deletePenugasan']);
 
-<<<<<<< HEAD
+
 Route::get('/desa',[WilayahController::class,'getDesa']);
 Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);
 
@@ -73,9 +73,6 @@ Route::post('/pangan/store', [DataPanganController::class, 'store']);
 Route::patch('/pangan/update/{id}',[DataPanganController::class,'update']);
 Route::get('/pangan/showByUser/{id}',[DataPanganController::class,'showAllByUser']);
 Route::delete('/pangan/deletaDetailById/{id}', [DataPanganController::class, 'deletaDetailById']);
-=======
-Route::get('/desa', [WilayahController::class, 'getDesa']);
-Route::get('/kecamatan', [WilayahController::class, 'getKecamatan']);
->>>>>>> 98b8de9c52418ce4fd2ca3fc16cab9c3673605e1
+
 
 Route::get('/pasar', [PasarController::class, 'getPasar']);
