@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
             'alamat' => 'indramayu',
             'user_id' => $uptd['id'],
             'no_telp' => '085123123',
-            'kecamatan_id' => '3212170',
+            'kecamatan_id' => '3212010',
         ]);
         $penyuluh = User::factory()->create([
             'username' => 'penyuluh',
@@ -58,7 +58,7 @@ class UserSeeder extends Seeder
             'alamat' => 'indramayu',
             'user_id' => $penyuluh['id'],
             'no_telp' => '081272121',
-            'kecamatan_id' =>  '3212170',
+            'kecamatan_id' =>  '3212010',
             'createdBy' => $penyuluh['id'],
         ]);
         $pangan = User::factory()->create([

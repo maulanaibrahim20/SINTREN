@@ -30,18 +30,18 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No.</th>
-                                    <th class="wd-15p border-bottom-0">Kecamatan</th>
-                                    <th class="wd-15p border-bottom-0">Jenis Lahan</th>
-                                    <th class="wd-15p border-bottom-0">Luas Lahan</th>
+                                    <th class="wd-15p border-bottom-0">Desa</th>
+                                    <th class="wd-15p border-bottom-0">Total Lahan Sawah</th>
+                                    <th class="wd-15p border-bottom-0">Total Lahan Non Sawah</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($luas_wilayah as $data)
+                                @forelse ($data as $wilayah)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->desa->name }}</td>
-                                        <td>{{ $data->jenis_lahan }}</td>
-                                        <td>{{ number_format($data->luas_lahan_wilayah, 0, ',', '.') }} ha</td>
+                                        <td>{{ $wilayah->desa_name }}</td>
+                                        <td>{{ $wilayah->total_lahan_sawah }}</td>
+                                        <td>{{ $wilayah->total_lahan_non_sawah }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -50,20 +50,6 @@
                                         </td>
                                     </tr>
                                 @endforelse
-                                <tr>
-                                    <td colspan="3" style="text-align: right;"><strong>Lahan Yang Sudah Disuluh:</strong>
-                                    </td>
-                                    <td>{{ number_format($total_luas_sawah, 0, ',', '.') }} ha</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="text-align: right;"><strong>Lahan Yang Belum Disuluh:</strong>
-                                    </td>
-                                    <td>{{ number_format($total_luas_non_sawah, 0, ',', '.') }} ha</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3" style="text-align: right;"><strong>Total Luas Lahan:</strong></td>
-                                    <td>{{ number_format($total_luas_wilayah, 0, ',', '.') }} ha</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

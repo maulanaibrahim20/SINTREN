@@ -1,5 +1,5 @@
 @extends('auth.index_login')
-@section('title', 'Login Cover - Pages | Vuexy - Bootstrap Admin Template')
+@section('title', 'Login Page')
 @section('content')
     <div class="page-content">
         <div class="container text-center text-dark">
@@ -20,10 +20,12 @@
                                     @endif
                                     <div class="text-center mb-2">
                                         <a class="header-brand1" href="{{ url('/login') }}">
-                                            <img src="{{ url('/assets') }}/images/brand/logo.png"
-                                                class="header-brand-img main-logo" alt="Sparic logo">
-                                            <img src="{{ url('/assets') }}/images/brand/logo-light.png"
-                                                class="header-brand-img darklogo" alt="Sparic logo">
+                                            <img src="{{ url('/assets') }}/images/brand/logo-withname.png"
+                                                class="header-brand-img main-logo" alt="Sparic logo"
+                                                style="height: 200px; width: auto;">
+                                            <img src="{{ url('/assets') }}/images/brand/logo-withname-dark.png"
+                                                class="header-brand-img darklogo" alt="Sparic logo"
+                                                style="height: 200px; width: auto;">
                                         </a>
                                     </div>
                                     <h3>Login</h3>
@@ -34,7 +36,7 @@
                                             <span class="input-group-addon bg-white"><i
                                                     class="fa fa-user text-dark"></i></span>
                                             <input type="text" class="form-control" placeholder="Username"
-                                                name="username" id="username">
+                                                name="username" value="{{ old('username') }}" id="username">
                                         </div>
                                         <div class="input-group mb-4">
                                             <span class="input-group-addon bg-white"><i

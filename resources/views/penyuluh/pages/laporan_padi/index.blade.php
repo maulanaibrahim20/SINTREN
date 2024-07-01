@@ -68,26 +68,4 @@
         </div>
     </div>
 @endsection
-@section('script')
-    <script>
-        $('.deleteBtn').on('click', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            var deleteForm = $('#deleteForm' + id);
-            Swal.fire({
-                title: 'Anda yakin?',
-                text: "Data akan dihapus secara permanen!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    deleteForm.submit();
-                }
-            });
-        });
-    </script>
-@endsection
+

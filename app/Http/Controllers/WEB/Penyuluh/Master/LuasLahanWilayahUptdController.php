@@ -28,20 +28,23 @@ class LuasLahanWilayahUptdController extends Controller
             'button_create' => 'Tambah Luas Lahan Wilayah',
         ];
 
-        // Mendapatkan data luas wilayah berdasarkan kecamatan pengguna
-        $luasWilayah = $this->luas_wilayah::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->get();
+        $kecamatanId = Auth::user()->uptd->kecamatan->id;
 
-        // Menghitung total luas lahan sawah dan non-sawah
-        $totalLuasSawah = $luasWilayah->where('jenis_lahan', 'sawah')->sum('luas_lahan_wilayah');
-        $totalLuasNonSawah = $luasWilayah->where('jenis_lahan', 'non_sawah')->sum('luas_lahan_wilayah');
-        $totalLuasWilayah = $totalLuasSawah + $totalLuasNonSawah;
+        $data = DB::table('luas_lahan_wilayah')
+            ->join('desas', 'luas_lahan_wilayah.desa_id', '=', 'desas.id')
+            ->join('kecamatans', 'desas.district_id', '=', 'kecamatans.id')
+            ->select(
+                'kecamatans.name as kecamatan_name',
+                'desas.name as desa_name',
+                DB::raw('SUM(luas_lahan_wilayah.lahan_sawah) as total_lahan_sawah'),
+                DB::raw('SUM(luas_lahan_wilayah.lahan_non_sawah) as total_lahan_non_sawah')
+            )
+            ->where('kecamatans.id', $kecamatanId)
+            ->groupBy('kecamatans.name', 'desas.name')
+            ->orderBy('desas.name')
+            ->get()
+            ->toArray();
 
-        // Menyiapkan data untuk view
-        $data['luas_wilayah'] = $luasWilayah;
-        $data['total_luas_sawah'] = $totalLuasSawah;
-        $data['total_luas_non_sawah'] = $totalLuasNonSawah;
-        $data['total_luas_wilayah'] = $totalLuasWilayah;
-
-        return view('uptd.pages.master.luas_lahan_wilayah.index', $content, $data);
+        return view('uptd.pages.master.luas_lahan_wilayah.index', array_merge($content, ['data' => $data]));
     }
 }

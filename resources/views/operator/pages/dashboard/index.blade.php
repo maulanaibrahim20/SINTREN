@@ -12,38 +12,39 @@
         <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
             <div class="card">
                 <div class="card-body text-center list-icons">
-                    <i class="si si-briefcase fs-2 text-primary"></i>
-                    <p class="card-text mt-3 mb-3">Total Projects</p>
-                    <p class="h1 text-center  text-primary">459</p>
+                    <i class="si si-note fs-2 text-primary"></i>
+                    <p class="card-text mt-3 mb-3">Total Laporan Padi</p>
+                    <p class="h1 text-center text-primary">{{ $LaporanPadi }}</p>
                 </div>
             </div>
         </div><!-- col end -->
         <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
             <div class="card">
                 <div class="card-body text-center list-icons">
-                    <i class="si si-basket-loaded fs-2 text-secondary"></i>
-                    <p class="card-text mt-3 mb-3">Total Lahan Penyuluhan</p>
-                    <p class="h1 text-center  text-secondary">{{ $penugasan }}</p>
+                    <i class="si si-map fs-2 text-secondary"></i>
+                    <p class="card-text mt-3 mb-3">Total Lahan Penugasan</p>
+                    <p class="h1 text-center text-secondary">{{ $penugasan }}</p>
                 </div>
             </div>
         </div><!-- col end -->
         <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
             <div class="card">
                 <div class="card-body text-center list-icons">
-                    <i class="si si-people fs-2 text-warning"></i>
+                    <i class="si si-user fs-2 text-warning"></i>
                     <p class="card-text mt-3 mb-3">Total User</p>
-                    <p class="h1 text-center  text-warning">{{ $user }}</p>
+                    <p class="h1 text-center text-warning">{{ $user }}</p>
                 </div>
             </div>
         </div><!-- col end -->
         <div class="col-sm-6 col-md-6 col-lg-3 col-xl-3">
             <div class="card">
-                <div class="card-body text-center list-icons">
-                    <i class="si si-eye fs-2 text-success"></i>
-                    <p class="card-text mt-3 mb-3">Customer Visitis</p>
-                    <p class="h1 text-center text-success">2635</p>
-                </div>
+                <a href="{{ url('/operator/master/luas_lahan_wilayah') }}" class="card-body text-center list-icons">
+                    <i class="si si-globe fs-2 text-success"></i>
+                    <p class="card-text mt-3 mb-3">Luas Lahan Wilayah</p>
+                    <p class="h1 text-center text-success">{{ $luasLahanWilayah }}</p>
+                </a>
             </div>
         </div><!-- col end -->
     </div>
+
 @endsection

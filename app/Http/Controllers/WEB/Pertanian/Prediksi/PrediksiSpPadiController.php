@@ -49,7 +49,6 @@ class PrediksiSpPadiController extends Controller
 
         $hasilPerTahun = [];
 
-        // Mengelompokkan hasil per tahun
         foreach ($laporanPadi as $laporan) {
             $tahun = substr($laporan->bulan, 0, 4);
 
@@ -110,17 +109,6 @@ class PrediksiSpPadiController extends Controller
         }
         $mape = round(($totalError / $n) * 100, 2);
 
-
-        foreach ($predictions as $prediction) {
-            PrediksiSp::create([
-                'tahun' => $prediction['year'],
-                'nilai_prediksi' => $prediction['predicted_value'],
-                'perubahan_dari_tahun_sebelumnya' => $prediction['change_from_previous_year'],
-                'nilai_aktual' => isset($actualData[$prediction['year']]) ? $actualData[$prediction['year']] : null,
-                'error' => abs($prediction['predicted_value'] - ($actualData[$prediction['year']] ?? 0)), // Perubahan ini
-                'mape' => $mape
-            ]);
-        }
 
         return view('pertanian.pages.prediksi.padiSp.regresiSp', [
             'labels' => $labels,

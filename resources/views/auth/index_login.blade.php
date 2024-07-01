@@ -11,11 +11,11 @@
         content="html admin template, bootstrap admin template premium, premium responsive admin template, admin dashboard template bootstrap, bootstrap simple admin template premium, web admin template, bootstrap admin template, premium admin template html5, best bootstrap admin template, premium admin panel template, admin template">
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ url('/assets') }}/images/brand/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ url('/assets') }}/images/brand/favicon.ico">
+    <link rel="icon" href="{{ url('/landings') }}/img/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url('/landings') }}/img/favicon_io/logo.png">
 
     <!-- Title -->
-    <title>{{ config('app.name') }} | @yield('title')</title>
+    <title> Sintrenayu | @yield('title')</title>
 
     @include('auth.component.style_css')
 

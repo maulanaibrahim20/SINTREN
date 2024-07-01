@@ -36,7 +36,7 @@
                                 <td class="text-right">Nama Penyuluh</td>
                                 <td>:</td>
                                 <td>
-                                    {{-- {{ $show->user->name }} --}}
+                                    {{ $show->user->name }}
                                 </td>
                             </tr>
                             <tr>

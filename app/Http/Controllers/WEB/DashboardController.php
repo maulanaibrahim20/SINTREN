@@ -15,6 +15,8 @@ use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Pasar\PetugasPasar;
 use App\Models\Pangan\LaporanPangan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Phpml\Regression\LeastSquares;
 
 class DashboardController extends Controller
 {
@@ -30,37 +32,125 @@ class DashboardController extends Controller
         LaporanPadi $laporanPadi,
         PenugasanPenyuluh $penugasan,
         LuasLahanWilayah $luasLahanWilayah
-        ) {
-            $this->penyuluh = $penyuluh;
-            $this->laporanPadi = $laporanPadi;
-            $this->laporanPalawija = $laporanPalawija;
-            $this->penugasan = $penugasan;
-            $this->luasLahanWilayah = $luasLahanWilayah;
-        }
-        public function operator()
-        {
-            $data = [
-                'user' => User::count(),
-                'penugasan' => PenugasanPenyuluh::count(),
-            ];
-            return view('operator.pages.dashboard.index', $data);
-        }
+    ) {
+        $this->penyuluh = $penyuluh;
+        $this->laporanPadi = $laporanPadi;
+        $this->laporanPalawija = $laporanPalawija;
+        $this->penugasan = $penugasan;
+        $this->luasLahanWilayah = $luasLahanWilayah;
+    }
+    public function operator()
+    {
+        $data = [
+            'user' => User::count(),
+            'penugasan' => PenugasanPenyuluh::count(),
+            'LaporanPadi' => LaporanPadi::count(),
+            'luasLahanWilayah' => LuasLahanWilayah::count(),
+        ];
+        return view('operator.pages.dashboard.index', $data);
+    }
 
-        public function pertanian()
-        {
-            $data = [
-                'countPenyuluh' => $this->penyuluh::count(),
-                'CountLaporanPadi' => $this->laporanPadi::count(),
-                'CountLaporanPalawija' => $this->laporanPalawija::count(),
-            ];
+    public function pertanian()
+    {
+        $data = [
+            'countPenyuluh' => $this->penyuluh::count(),
+            'CountLaporanPadi' => $this->laporanPadi::count(),
+            'CountLaporanPalawija' => $this->laporanPalawija::count(),
+        ];
+        $dariTahun = 2010;
+        $sampaiTahun = 2021;
 
-            foreach ($data as $key => $value) {
-                if ($value === null) {
-                    $data[$key] = 0;
-                }
+        // $laporanPadi = DB::table('laporan_padis')
+        //     ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
+        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
+        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
+        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+        //     ->whereYear('date', '>=', $dariTahun)
+        //     ->whereYear('date', '<=', $sampaiTahun)
+        //     ->groupBy('bulan')
+        //     ->orderBy('bulan', 'ASC')
+        //     ->get();
+
+
+        $laporanPadi = DB::table('laporan_padis')
+            ->selectRaw('YEAR(date) AS tahun')
+            ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
+            ->whereYear('date', '>=', $dariTahun)
+            ->whereYear('date', '<=', $sampaiTahun)
+            ->groupBy('tahun')
+            ->orderBy('tahun', 'ASC')
+            ->get();
+
+        $hasilPerTahun = [];
+
+        foreach ($laporanPadi as $laporan) {
+            $tahun = $laporan->tahun;
+
+            if (!isset($hasilPerTahun[$tahun])) {
+                $hasilPerTahun[$tahun] = 0;
             }
-            return view('pertanian.pages.dashboard.index', $data);
+            $hasilPerTahun[$tahun] += $laporan->total_panen;
         }
+        $actualData = $hasilPerTahun;
+
+        $fitur = [];
+        $target = [];
+        $labels = [];
+        foreach ($hasilPerTahun as $tahun => $hasil) {
+            $fitur[] = [(int) $tahun];
+            $target[] = $hasil;
+            $labels[] = $tahun;
+        }
+
+        $regression = new LeastSquares();
+        $regression->train($fitur, $target);
+
+        $hasilPrediksi = [];
+        $prevValue = null;
+        for ($tahun = $dariTahun; $tahun <= 2030; $tahun++) {
+            $prediksi = round($regression->predict([$tahun])); // Membulatkan hasil prediksi
+            $hasilPrediksi[$tahun] = $prediksi;
+
+            if ($tahun > $sampaiTahun) {
+                $samples[] = [$tahun];
+                $targets[] = $hasilPrediksi[$tahun];
+                $labels[] = $tahun;
+                $regression->train($samples, $targets);
+            }
+
+            $change = null;
+            if ($prevValue !== null) {
+                $change = $hasilPrediksi[$tahun] - $prevValue;
+            }
+
+            $predictions[] = [
+                'year' => $tahun,
+                'predicted_value' => $hasilPrediksi[$tahun],
+                'change_from_previous_year' => $change
+            ];
+
+            $prevValue = $hasilPrediksi[$tahun];
+        }
+
+        $totalError = 0;
+        $n = 0;
+        foreach ($actualData as $tahun => $aktual) {
+            if (isset($hasilPrediksi[$tahun])) {
+                $prediksi = $hasilPrediksi[$tahun];
+                $totalError += abs(($aktual - $prediksi) / $aktual);
+                $n++;
+            }
+        }
+        $mape = round(($totalError / $n) * 100, 2);
+
+        return view('pertanian.pages.dashboard.index', $data, [
+            'labels' => $labels,
+            'actualData' => array_values($actualData),
+            'predictedData' => array_column($predictions, 'predicted_value'),
+            'mape' => $mape
+        ]);
+    }
+
 
         public function uptd()
         {

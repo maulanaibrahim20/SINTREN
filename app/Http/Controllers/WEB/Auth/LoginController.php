@@ -42,7 +42,7 @@ class LoginController extends Controller
             } else if ($user->role_id == Role::PERTANIAN) {
                 return redirect("/pertanian/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::UPTD) {
-                return redirect("/uptd/dashboard");
+                return redirect("/uptd/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::PENYULUH) {
                 return redirect("/penyuluh/dashboard")->with('success', 'Selamat anda berhasil login, selamat datang   ' . Auth::user()->name);
             } else if ($user->role_id == Role::PANGAN) {

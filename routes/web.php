@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AppController;
+use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
@@ -21,15 +23,22 @@ use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+
 use App\Http\Controllers\PANGAN\JenisPanganController;
 use App\Http\Controllers\PANGAN\LaporanPanganController;
 use App\Http\Controllers\PANGAN\DataPanganController;
 use App\Http\Controllers\PANGAN\GrafikPanganController;
+
+
+use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
+
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
+use App\Http\Controllers\WEB\Pertanian\EditProfilePertanianController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
+use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -46,9 +55,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', function () {
-        return view('landing');
-    });
+    Route::get('/', [AppController::class, 'index']);
     Route::prefix('login')->name('login.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])
             ->name('index');
@@ -110,6 +117,11 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('data_palawija/show/{id}', [DataLaporanPalawijaController::class, 'show']);
             Route::post('data_palawija/filter', [DataLaporanPalawijaController::class, 'filter']);
             Route::get('data_palawija/exportPdf', [DataLaporanPalawijaController::class, 'exportPdf']);
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfilePertanianController::class, 'index']);
+                Route::put('editProfile/{id}', [EditProfilePertanianController::class, 'update']);
+                Route::put('editPassword/{id}', [EditProfilePertanianController::class, 'updatePassword']);
+            });
         });
     });
 
@@ -130,6 +142,11 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::prefix('master')->group(function () {
                 Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);
             });
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfileUptdController::class, 'index']);
+                Route::put('editProfile/{id}', [EditProfileUptdController::class, 'update']);
+                Route::put('editPassword/{id}', [EditProfileUptdController::class, 'updatePassword']);
+            });
             Route::get('/dashboard', [DashboardController::class, 'uptd']);
         });
     });
@@ -143,6 +160,11 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('laporan_palawija', LaporanPalawijaController::class);
                 Route::get('laporan_palawija/show/{desa_id}', [LaporanPalawijaController::class, 'showDesa']);
                 Route::post('/laporan_palawija/kirim', [LaporanPalawijaController::class, 'kirimkan']);
+            });
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfileController::class, 'index']);
+                Route::put('editProfile/{id}', [EditProfileController::class, 'update']);
+                Route::put('editPassword/{id}', [EditProfileController::class, 'updatePassword']);
             });
             // Route::prefix('master')->group(function () {
             //     Route::get('luas_lahan_wilayah', [LuasLahanWilayahUptdController::class, 'index']);

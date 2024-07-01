@@ -15,9 +15,10 @@
                                     <a class="header-brand1" href="{{ url('/pangan/dashboard') }}">
                 @endif
             @endauth
-            <img src="{{ url('/assets') }}/images/brand/logo.png" class="header-brand-img main-logo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/logo-light.png" class="header-brand-img darklogo"
-                alt="Sparic logo">
+            <img src="{{ url('/assets') }}/images/brand/logo-sidebar-dark.png" style="width:200px; height: auto;"
+                class="header-brand-img main-logo" alt="Sparic logo">
+            <img src="{{ url('/assets') }}/images/brand/logo-sidebar-light.png" style="width:200px; height: auto;"
+                class="header-brand-img darklogo" alt="Sparic logo">
             <img src="{{ url('/assets') }}/images/brand/icon.png" class="header-brand-img icon-logo" alt="Sparic logo">
             <img src="{{ url('/assets') }}/images/brand/icon2.png" class="header-brand-img icon-logo2"
                 alt="Sparic logo">
@@ -211,16 +212,20 @@
                             href="{{ url('/pertanian/prediksi/padi') }}"><i class="side-menu__icon fa fa-leaf"></i><span
                                 class="side-menu__label">Prediksi Padi</span>
                         </a>
-                        <a class="side-menu__item {{ Request::segment(3) == 'padiSp' ? 'active' : '' }}"
-                            href="{{ url('/pertanian/prediksi/padiSp') }}"><i
-                                class="side-menu__icon fa fa-leaf"></i><span class="side-menu__label">Prediksi Padi
-                                SP</span>
-                        </a>
                         <a class="side-menu__item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}"
                             href="{{ url('/pertanian/prediksi/palawija') }}"><i
                                 class="side-menu__icon fa fa-pagelines"></i><span class="side-menu__label">Prediksi
                                 Palawija</span>
                         </a>
+                    </li>
+                    <li class="sub-category">
+                        <h3>Pengaturan</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'editProfile' ? 'active' : '' }}"
+                            href="{{ url('/pertanian/pengaturan/editProfile') }}"><i
+                                class="side-menu__icon fa fa-cog"></i><span class="side-menu__label">Profil
+                                Saya</span></a>
                     </li>
                 @endcan
                 @can('uptd')
@@ -276,19 +281,15 @@
                                 class="side-menu__icon fa fa-map"></i><span class="side-menu__label">Luas Lahan
                                 Wilayah</span></a>
                     </li>
-                    {{-- <li class="sub-category">
+                    <li class="sub-category">
                         <h3>Pengaturan</h3>
                     </li>
                     <li>
-                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
-                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
-                                class="side-menu__label">Profil Saya</span></a>
+                        <a class="side-menu__item {{ Request::segment(3) == 'editProfile' ? 'active' : '' }}"
+                            href="{{ url('/uptd/pengaturan/editProfile') }}"><i
+                                class="side-menu__icon fa fa-cog"></i><span class="side-menu__label">Profil
+                                Saya</span></a>
                     </li>
-                    <li>
-                        <a class="side-menu__item {{ Request::segment(3) == '' ? 'active' : '' }}"
-                            href="{{ url('/uptd/master/') }}"><i class="side-menu__icon fa fa-map"></i><span
-                                class="side-menu__label">Change Password</span></a>
-                    </li> --}}
                 @endcan
                 @can('penyuluh')
                     <li class="sub-category">
@@ -323,6 +324,14 @@
                                 </div>
                             </li>
                         </ul>
+                    <li class="sub-category">
+                        <h3>Pengaturan</h3>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'editProfile' ? 'active' : '' }}"
+                            href="{{ url('/penyuluh/pengaturan/editProfile') }}"><i
+                                class="side-menu__icon fa fa-cog "></i><span class="side-menu__label">Profil
+                                Saya</span></a>
                     </li>
                 @endcan
 

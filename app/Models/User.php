@@ -12,6 +12,7 @@ use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
 use App\Models\Pasar\PetugasPasar;
 use App\Models\Pertanian\Pertanian;
+use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Uptd\Uptd;
 use App\Models\Wilayah\Desa;
 
@@ -102,5 +103,10 @@ class User extends Authenticatable
         return $this->hasMany(LaporanPangan::class);
     }
 
+
+
+    public function penugasan(){
+        return $this->hasMany(PenugasanPenyuluh::class);
+    }
 
 }
