@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_combined_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
@@ -13,7 +14,8 @@ import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
 import 'package:sintren_mobile/ui/admin/admin_verify_view.dart';
-import 'package:sintren_mobile/ui/admin/components/home_chart.dart';
+import 'package:sintren_mobile/ui/admin/components/palawija_chart.dart';
+import 'package:sintren_mobile/ui/admin/components/trend_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
@@ -40,6 +42,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   final statusNotifier = ValueNotifier<String>('Memulai sinkronisasi data...');
   late int selectedSampaiTahun;
   late int selectedDariTahun;
+  late String? role;
 
   Future<void> _initializedData() async {
     kecamatan = await UserLoginModel().getKecamatanName();
@@ -47,6 +50,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     totalLuasLahanKecamatan = await adminC.getTotalLuasLahanKecamatan();
     presentasePenyuluhan =
         (penyuluhanBulanIni! / totalLuasLahanKecamatan!) * 100;
+    role = await UserLoginModel().getRole();
   }
 
   @override
@@ -95,14 +99,16 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                         _trendLineChart(context),
                         SizedBox(height: 15.h),
                         _progresPenyuluhan(context),
-                        SizedBox(height: 10.h),
-                        _listVerify(
-                            isShow: constraints.maxHeight -
-                                    (appBarHeight +
-                                        trendChartHeight +
-                                        progressHeight +
-                                        10.h) >=
-                                390.h),
+                        SizedBox(height: 15.h),
+                        role == "UPTD"
+                            ? _listVerify(
+                                isShow: constraints.maxHeight -
+                                        (appBarHeight +
+                                            trendChartHeight +
+                                            progressHeight +
+                                            10.h) >=
+                                    390.h)
+                            : _palawijaChart(),
                         SizedBox(height: 20.h),
                       ],
                     );
@@ -113,6 +119,92 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           ),
         ],
       ),
+    );
+  }
+
+  Expanded _palawijaChart() {
+    return Expanded(
+      child: FutureBuilder(
+          future: AdminPalawijaController().getDataPenyuluhanPalawijaTahunIni(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error,
+                      color: Colors.grey,
+                      size: 50,
+                    ),
+                    Text(
+                      "Internal Server Error",
+                      style: StyleTheme().styleBlack.copyWith(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              final dataList = snapshot.data as List<Map<String, dynamic>>;
+              return Card(
+                elevation: 3,
+                margin: EdgeInsets.symmetric(horizontal: 15.w),
+                color: ColorTheme().whiteColor,
+                surfaceTintColor: ColorTheme().whiteColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 30.w, vertical: 10.h),
+                      child: Column(
+                        children: [
+                          Text(
+                            "Data Panen Palawija Tahun Ini",
+                            style: StyleTheme().stylePrimary.copyWith(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          const Divider(),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 18.h,
+                          ),
+                          Expanded(
+                            child: PieChart(PieChartData(
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              sectionsSpace: 0,
+                              centerSpaceRadius: 40.r,
+                              sections:
+                                  PalawijaChart().showingSections(dataList),
+                            )),
+                          ),
+                          PalawijaChart().indicator(dataList),
+                          SizedBox(
+                            width: 28.w,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              );
+            }
+          }),
     );
   }
 
@@ -655,7 +747,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
                         SizedBox(
                           height: 180.h,
                           child: LineChart(
-                            HomeChart(data: result).mainData(),
+                            TrendChart(data: result).mainData(),
                           ),
                         ),
                         SizedBox(height: 3.h),

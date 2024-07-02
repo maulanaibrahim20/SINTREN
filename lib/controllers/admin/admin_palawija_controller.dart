@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
+import 'package:sintren_mobile/models/palawija_model.dart';
 
 class AdminPalawijaController {
   Future<List<DetailPalawijaModel>> getDetailPalawijaByDesa(
@@ -25,7 +26,7 @@ class AdminPalawijaController {
     }
   }
 
-   Future<List<DetailPalawijaModel>> getAllPenyuluhanPalawija() async {
+  Future<List<DetailPalawijaModel>> getAllPenyuluhanPalawija() async {
     try {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query(
@@ -39,6 +40,77 @@ class AdminPalawijaController {
           maps.map((map) => DetailPalawijaModel.fromMap(map)));
     } catch (e) {
       log("Get all palawija error: $e");
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getDataPenyuluhanPalawijaTahunIni() async {
+    try {
+      final db = await DatabaseHelper().database;
+      final DateTime now = DateTime.now();
+      final int year = now.year;
+
+      final List<Map<String, dynamic>> maps = await db.query(
+        'detailPalawija',
+        orderBy: 'date DESC',
+      );
+
+      // Filter data for current year and type 'panen'
+      List<Map<String, dynamic>> filteredData = maps.where((map) {
+        DateTime dataDate = DateTime.parse(map['date']);
+        return dataDate.year == year && map['tipe_data'] == 'panen';
+      }).toList();
+
+      // Aggregate nilai for palawija with the same id/name
+      Map<String, double> aggregatedValues = {};
+
+      for (var map in filteredData) {
+        String palawijaId = map['id_jenis_palawija'];
+        double nilai = double.parse(map['nilai'].toString());
+
+        if (aggregatedValues.containsKey(palawijaId)) {
+          aggregatedValues[palawijaId] = aggregatedValues[palawijaId]! + nilai;
+        } else {
+          aggregatedValues[palawijaId] = nilai;
+        }
+      }
+
+      // Prepare result list with aggregated values
+      List<Map<String, dynamic>> result = [];
+
+      aggregatedValues.forEach((palawijaId, nilai) {
+        var palawijaInfo = filteredData.firstWhere(
+          (map) => map['id_jenis_palawija'] == palawijaId,
+          orElse: () =>
+              <String, dynamic>{}, // Return an empty map instead of null
+        );
+
+        if (palawijaInfo.isNotEmpty) {
+          result.add({
+            'id_jenis_palawija': palawijaId,
+            'palawija_name': palawijaInfo['palawija_name'],
+            'nilai': nilai,
+          });
+        }
+      });
+
+      log(result.toString());
+
+      return result;
+    } catch (e) {
+      log("Get all palawija error: $e");
+      return [];
+    }
+  }
+
+  Future<List<PalawijaModel>> getPalawija() async {
+    try {
+      final db = await DatabaseHelper().database;
+      final List<Map<String, dynamic>> maps = await db.query('palawija');
+      return List<PalawijaModel>.from(
+          maps.map((map) => PalawijaModel.fromJson(map)));
+    } catch (e) {
+      log("Get palawija error: $e");
       return [];
     }
   }

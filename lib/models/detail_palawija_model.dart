@@ -56,7 +56,7 @@ class DetailPalawijaModel {
         userId: json['user_id']?.toString() ?? '',
         desaId: json['desa_id']?.toString() ?? '',
         kecamatanId: json['kecamatan_id']?.toString() ?? '',
-        kecamatanName: json['kecamatan_name'],
+        kecamatanName: json['kecamatan_name'] ?? '',
         jenisLahan: json['jenis_lahan'] ?? '',
         jenisBantuan: json['jenis_bantuan'] ?? '',
         tipeData: json['tipe_data'] ?? '',

@@ -5,10 +5,10 @@ import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
-class HomeChart {
+class TrendChart {
   final List<DataItem> data;
 
-  HomeChart({required this.data});
+  TrendChart({required this.data});
 
   final List<Color> actualDataGradientColors = [
     ColorTheme().secondaryColor,

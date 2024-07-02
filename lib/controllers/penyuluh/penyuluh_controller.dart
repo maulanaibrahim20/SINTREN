@@ -66,7 +66,6 @@ class PenyuluhController {
     try {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('desa');
-      log(maps.toString());
 
       return maps.map((map) => LuasWilayahModel.fromMap(map)).toList();
     } catch (e) {

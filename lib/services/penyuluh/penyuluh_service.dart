@@ -6,18 +6,19 @@ import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:http/http.dart';
+import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PenyuluhService {
   Future<bool> getDataPenyuluhanDesa() async {
-    final String url = '${ConfigApp().baseUrl}admin/getDesa';
+    final String url = '${ConfigApp().baseUrl}penyuluh/getDesa';
     final dbHelper = DatabaseHelper();
-
+    String? userId = await UserLoginModel().getUserId();
     try {
       final db = await dbHelper.database;
       await db.delete('desa');
 
-      final Response response = await get(Uri.parse('$url/dinas'));
+      final Response response = await get(Uri.parse('$url/$userId'));
 
       if (response.statusCode != 200) {
         log("Failed to get desa: ${response.statusCode} - ${response.body}");

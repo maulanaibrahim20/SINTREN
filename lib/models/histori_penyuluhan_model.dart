@@ -15,11 +15,11 @@ class HistoriPenyuluhanModel {
 
   factory HistoriPenyuluhanModel.fromJson(Map<String, dynamic> json) {
     return HistoriPenyuluhanModel(
-      date: json['month_year'],
-      desaId: json['desa_id'],
-      desaName: json['desa_name'],
-      nilai: (json['total_nilai'] as num).toDouble(),
-      totalTunggu: json['total_tunggu'],
+      date: json['month_year'] ?? '',
+      desaId: json['desa_id'] ?? '',
+      desaName: json['desa_name'] ?? '',
+      nilai: (json['total_nilai'] as num?)?.toDouble() ?? 0.0,
+      totalTunggu: json['total_tunggu'] ?? 0,
     );
   }
 
@@ -29,7 +29,7 @@ class HistoriPenyuluhanModel {
       'desa_id': desaId,
       'desa_name': desaName,
       'nilai': nilai,
-      "total_tunggu" : totalTunggu,
+      "total_tunggu": totalTunggu,
     };
   }
 }
