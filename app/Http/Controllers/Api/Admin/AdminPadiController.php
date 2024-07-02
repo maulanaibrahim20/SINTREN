@@ -70,10 +70,10 @@ class AdminPadiController extends Controller
 
     public function prediksi()
     {
-        // $dariTahun = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
-        // $sampaiTahun = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
-        $dariTahun = 2010;
-        $sampaiTahun = 2021;
+        $dariTahun = DB::table('laporan_padis')->orderBy('date', 'ASC')->value(DB::raw('YEAR(date)'));
+        $sampaiTahun = DB::table('laporan_padis')->orderBy('date', 'DESC')->value(DB::raw('YEAR(date)'));
+        // $dariTahun = 2010;
+        // $sampaiTahun = 2021;
 
         $laporanPadi = DB::table('laporan_padis')
             ->selectRaw('YEAR(date) AS tahun')
