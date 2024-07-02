@@ -40,7 +40,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   final statusNotifier = ValueNotifier<String>('Memulai sinkronisasi data...');
   late int selectedSampaiTahun;
   late int selectedDariTahun;
-  
+
   Future<void> _initializedData() async {
     kecamatan = await UserLoginModel().getKecamatanName();
     penyuluhanBulanIni = await adminC.getTotalNilaiPenyuluhanBulanIni();
@@ -52,7 +52,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   @override
   void initState() {
     AdminPadiController().getAllPenyuluhanPadi();
-    selectedSampaiTahun = DateTime.now().year - 3;
+    selectedSampaiTahun = DateTime.now().year;
     selectedDariTahun = selectedSampaiTahun - 5;
     super.initState();
   }

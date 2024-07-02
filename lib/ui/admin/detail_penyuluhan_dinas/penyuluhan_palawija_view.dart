@@ -57,8 +57,8 @@ class _PenyuluhanPalawijaViewState extends State<PenyuluhanPalawijaView> {
           matchJenisPalawija &&
           matchJenisBantuan &&
           matchJenisData &&
-          matchDesa &&
-          matchKecamatan;
+          (matchDesa ||
+          matchKecamatan);
     }).toList();
   }
 

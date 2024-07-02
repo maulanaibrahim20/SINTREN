@@ -193,8 +193,10 @@ class _AdminVerifyViewState extends State<AdminVerifyView> {
                                   ),
                                   Text(
                                     item.type == "padi"
-                                        ? dataPadi?.date ?? ""
-                                        : dataPalawija?.date ?? "",
+                                        ? UserController()
+                                            .normalizeDate(dataPadi?.date ?? "")
+                                        : UserController().normalizeDate(
+                                            dataPalawija?.date ?? ""),
                                     style: StyleTheme().styleBlack,
                                   ),
                                 ],

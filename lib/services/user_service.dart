@@ -36,7 +36,8 @@ class UserService {
 
       final Map<String, dynamic> dataJson = jsonResult['data'];
       final Map<String, dynamic> detail = dataJson['detail'];
-      final Map<String, dynamic>? kecamatan = dataJson['kecamatan'];
+      final Map<String, dynamic>? kecamatan =
+          dataJson['kecamatan'] != "" ? dataJson['kecamatan'] : null;
 
       updateUserLoginModel(dataJson, detail, kecamatan);
       log("Login successful");

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import screen_util
 
 class HomeChart {
   final List<DataItem> data;
@@ -51,7 +51,7 @@ class HomeChart {
       color: ColorTheme().primaryColor,
     );
     String text;
-    if (value % 5000 == 0) {
+    if (value % interval == 0) {
       text = '${value ~/ 1000}K';
     } else {
       return Container();
@@ -59,6 +59,8 @@ class HomeChart {
 
     return Text(text, style: style, textAlign: TextAlign.left);
   }
+
+  late double interval;
 
   LineChartData mainData() {
     int maxActualData = actualData.reduce((a, b) => a > b ? a : b);
@@ -77,6 +79,9 @@ class HomeChart {
     // Adjusting maxY and minY to be a multiple of 5000 for better display
     maxY = ((maxY / 5000).ceil() * 5000).toDouble();
     minY = ((minY / 5000).floor() * 5000).toDouble();
+
+    // Calculate interval based on the range and desired number of intervals
+    interval = ((maxY - minY) / 5).ceil().toDouble();
 
     return LineChartData(
       backgroundColor: Colors.white,
@@ -104,7 +109,7 @@ class HomeChart {
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        horizontalInterval: 5000,
+        horizontalInterval: interval,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return FlLine(
@@ -138,7 +143,7 @@ class HomeChart {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            interval: 5000,
+            interval: interval,
             getTitlesWidget: leftTitleWidgets,
             reservedSize: 42.w, // Add .w for reserved size
           ),

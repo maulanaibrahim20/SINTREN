@@ -65,18 +65,37 @@ class _LoginViewState extends State<LoginView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipRect(
-                      child: Align(
-                        alignment: Alignment.center,
-                        heightFactor: 1,
-                        child: Image.asset(
-                          'assets/images/pertanian.png',
-                          width: 100.w,
-                          height: 130.h,
-                          fit: BoxFit.fill,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipRect(
+                          child: Align(
+                            alignment: Alignment.center,
+                            heightFactor: 1,
+                            child: Image.asset(
+                              'assets/images/pertanian.png',
+                              width: 100.w,
+                              height: 110.h,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: 20.w),
+                        ClipRect(
+                          child: Align(
+                            alignment: Alignment.center,
+                            heightFactor: 1,
+                            child: Image.asset(
+                              'assets/images/logo-polindra.png',
+                              width: 100.w,
+                              height: 100.h,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    SizedBox(height: 20.h),
                     Text(
                       "SINTREN",
                       style: StyleTheme().styleWhite.copyWith(

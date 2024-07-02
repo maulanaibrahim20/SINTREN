@@ -5,23 +5,19 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:sintren_mobile/config/config_app.dart';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
-import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:http/http.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PenyuluhService {
   Future<bool> getDataPenyuluhanDesa() async {
-    final String url = '${ConfigApp().baseUrl}penyuluh/getDesa';
+    final String url = '${ConfigApp().baseUrl}admin/getDesa';
     final dbHelper = DatabaseHelper();
-    final userModel = UserLoginModel();
 
     try {
       final db = await dbHelper.database;
       await db.delete('desa');
 
-      final String? userId = await userModel.getUserId();
-
-      final Response response = await get(Uri.parse('$url/$userId'));
+      final Response response = await get(Uri.parse('$url/dinas'));
 
       if (response.statusCode != 200) {
         log("Failed to get desa: ${response.statusCode} - ${response.body}");

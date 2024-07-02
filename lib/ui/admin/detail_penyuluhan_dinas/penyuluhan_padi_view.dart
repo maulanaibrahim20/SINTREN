@@ -61,8 +61,7 @@ class _PenyuluhanPadiViewState extends State<PenyuluhanPadiView> {
           matchJenisPengairan &&
           matchJenisBantuan &&
           matchJenisData &&
-          matchDesa &&
-          matchKecamatan;
+          (matchDesa || matchKecamatan);
     }).toList();
   }
 
@@ -152,12 +151,11 @@ class _PenyuluhanPadiViewState extends State<PenyuluhanPadiView> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                UserController()
-                                    .toCamelCase(data.kecamatanName),
+                                "Kecamatan ${UserController().toCamelCase(data.kecamatanName)}",
                                 style: StyleTheme().styleBlack,
                               ),
                               Text(
-                                UserController().toCamelCase(data.desaName),
+                                "Desa ${UserController().toCamelCase(data.desaName)}",
                                 style: StyleTheme().styleBlack,
                               ),
                             ],
