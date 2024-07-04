@@ -78,7 +78,6 @@ class AppController extends Controller
         foreach ($actualData as $tahun => $aktual) {
             if (isset($hasilPrediksi[$tahun])) {
                 $prediksi = $hasilPrediksi[$tahun];
-                $selisih = abs($aktual - $prediksi);
                 $error = abs(($aktual - $prediksi) / $aktual);
                 $totalError += $error;
                 $n++;
@@ -91,8 +90,8 @@ class AppController extends Controller
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
-            'errors' => array_column($predictions, 'error'),
-            'mape' => $mape
+            'mape' => $mape,
+            'predictions' => $predictions
         ]);
     }
 }

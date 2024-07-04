@@ -50,6 +50,17 @@ class DashboardController extends Controller
         return view('operator.pages.dashboard.index', $data);
     }
 
+    // $laporanPadi = DB::table('laporan_padis')
+    //     ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
+    //     ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
+    //     ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
+    //     ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
+    //     ->whereYear('date', '>=', $dariTahun)
+    //     ->whereYear('date', '<=', $sampaiTahun)
+    //     ->groupBy('bulan')
+    //     ->orderBy('bulan', 'ASC')
+    //     ->get();
+
     public function pertanian()
     {
         $data = [
@@ -59,18 +70,6 @@ class DashboardController extends Controller
         ];
         $dariTahun = 2010;
         $sampaiTahun = 2021;
-
-        // $laporanPadi = DB::table('laporan_padis')
-        //     ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
-        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
-        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
-        //     ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
-        //     ->whereYear('date', '>=', $dariTahun)
-        //     ->whereYear('date', '<=', $sampaiTahun)
-        //     ->groupBy('bulan')
-        //     ->orderBy('bulan', 'ASC')
-        //     ->get();
-
 
         $laporanPadi = DB::table('laporan_padis')
             ->selectRaw('YEAR(date) AS tahun')
@@ -137,8 +136,10 @@ class DashboardController extends Controller
         foreach ($actualData as $tahun => $aktual) {
             if (isset($hasilPrediksi[$tahun])) {
                 $prediksi = $hasilPrediksi[$tahun];
-                $totalError += abs(($aktual - $prediksi) / $aktual);
+                $error = abs(($aktual - $prediksi) / $aktual);
+                $totalError += $error;
                 $n++;
+                $predictions[$tahun]['error'] = $error;
             }
         }
         $mape = round(($totalError / $n) * 100, 2);
@@ -147,7 +148,8 @@ class DashboardController extends Controller
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
-            'mape' => $mape
+            'mape' => $mape,
+            'predictions' => $predictions
         ]);
     }
 
