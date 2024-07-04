@@ -121,7 +121,7 @@
                                     </td>
                                     <td>
                                         @if (isset($actualData[$index]) && isset($predictedData[$index]))
-                                            {{ number_format(abs($actualData[$index] - $predictedData[$index]), 0, ',', '.') }}
+                                            {{ number_format($predictions[$tahun]['error'], 5, ',', '.') }}
                                         @else
                                             N/A
                                         @endif

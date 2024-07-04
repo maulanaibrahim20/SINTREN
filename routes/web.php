@@ -45,7 +45,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['guest'])->group(function () {
+
     Route::get('/', [AppController::class, 'index']);
+    Route::post('/kotakSaran', [AppController::class, 'kotakSaran']);
+
     Route::prefix('login')->name('login.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])
             ->name('index');
@@ -117,7 +120,7 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
-            Route::resource('pengguna/penyuluh', UptdAkunPenyuluhController::class);
+            // Route::resource('pengguna/penyuluh', UptdAkunPenyuluhController::class);
             Route::post('pengguna/penyuluh/penugasan', [UptdAkunPenyuluhController::class, 'penugasan']);
             Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);
             Route::prefix('laporan')->group(function () {
