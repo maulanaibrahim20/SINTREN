@@ -8,11 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pangan\Pangan;
+use App\Models\Pangan\LaporanPangan;
 use App\Models\Pasar\Pasar;
+use App\Models\Pasar\PetugasPasar;
 use App\Models\Pertanian\Pertanian;
 use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Uptd\Uptd;
 use App\Models\Wilayah\Desa;
+
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -89,12 +92,21 @@ class User extends Authenticatable
         return $this->hasOne(Pangan::class);
     }
 
+
     public function pasar()
     {
-        return $this->hasOne(Pasar::class);
+        return $this->hasOne(PetugasPasar::class);
     }
+
+    public function laporanPangan()
+    {
+        return $this->hasMany(LaporanPangan::class);
+    }
+
+
 
     public function penugasan(){
         return $this->hasMany(PenugasanPenyuluh::class);
     }
+
 }

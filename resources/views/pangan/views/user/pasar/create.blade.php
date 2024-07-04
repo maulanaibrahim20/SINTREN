@@ -68,7 +68,9 @@
                                 </select>
                             </div>
                         </div>
-                        @include('template.component.button')
+                        <div class="d-flex" style="justify-content: end">
+                            @include('template.component.button')
+                        </div>
                     </form>
                 </div>
             </div>
@@ -79,19 +81,20 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            $("#kecamatan").change(function() {
-                let kecamatan = $("#kecamatan").val();
-                $.ajax({
-                    url: "{{ url('/ambil_desa') }}",
-                    type: "GET",
-                    data: {
-                        kecamatan: kecamatan
-                    },
-                    success: function(res) {
-                        $("#desa").html(res);
-                    },
-                    error: function(error) {
-                        alert('Gagal mengambil data kecamatan.');
+            $('.needs-validation').submit(function(event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah data yang Anda isi sudah benar?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, kirim!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).unbind('submit')
+                            .submit();
                     }
                 });
             });

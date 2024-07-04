@@ -106,13 +106,26 @@
 
 
 <!-- Flatpickr js -->
-<script src="{{ url('/assets') }}/plugins/flatpickr/flatpickr.js"></script>
-<script src="{{ url('/assets') }}/js/flatpickr.js"></script>
+<script src="{{url('/assets')}}/plugins/flatpickr/flatpickr.js"></script>
+<script src="{{url('/assets')}}/js/flatpickr.js"></script>
 
 <!-- INTERNAL SUMMERNOTE Editor JS -->
 <script src="{{ url('/assets') }}/plugins/summernote/summernote1.js"></script>
 <script src="{{ url('/assets') }}/js/summernote.js"></script>
 
+<!-- chart js -->
+<script src="{{ url('/assets') }}/js/chart.js"></script>
+
+<!-- Chartist js -->
+<script src="{{ url('/assets') }}/plugins/chart/chart.bundle.js"></script>
+<script src="{{ url('/assets') }}/plugins/chart/utils.js"></script>
+<!-- Chart Circle js-->
+<script src="{{ url('/assets') }}/js/vendors/circle-progress.min.js"></script>
+
 <!-- INTERNAL FORMEDITOR JS -->
 <script src="{{ url('/assets') }}/plugins/quill/quill.min.js"></script>
 <script src="{{ url('/assets') }}/js/form-editor2.js"></script>
+
+<!-- ECharts js -->
+<script src="{{ url('/assets') }}/plugins/echarts/echarts.js"></script>
+<script src="{{ url('/assets') }}/js/echarts.js"></script>

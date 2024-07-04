@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('pangans', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id', 50);
-            $table->string('alamat', 50);
-            $table->string('no_telp', 20);
+            $table->string('user_id');
+            $table->text('alamat');
+            $table->string('no_telp',15);
             $table->timestamps();
         });
     }

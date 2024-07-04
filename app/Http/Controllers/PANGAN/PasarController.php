@@ -1,15 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\PANGAN;
+
 use App\Models\Pasar\Pasar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Requests\Pasar\CreateRequest;
 use App\Http\Requests\Pasar\UpdateRequest;
+
 class PasarController extends Controller
 {
     protected $pasar;
@@ -25,78 +26,56 @@ class PasarController extends Controller
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Data Pasar',
             'button_create' => 'Tambah Data Pasar',
-            'users' => $this->pasar::orderBy('created_at', 'asc')->get(),
+            // 'users' => $this->pasar::orderBy('created_at', 'asc')->get(),
         ];
-        return view('pangan.views.pasar.index', $data);
+        $pasar = $this->pasar::all();
+        return view('pangan.views.pasar.index', compact('pasar'), $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $data = [
-            'title' => 'Tambah Data Pasar',
-            'breadcrumb' => 'Dashboard',
-            'breadcrumb_1' => 'Data Pasar',
-            'breadcrumb_active' => 'Tambah Data Pasar',
-        ];
-        return view('pangan.views.pasar.create', $data);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CreateRequest $request)
     {
         try {
             DB::beginTransaction();
-            $this->pasar->create([
-                'name' => $request->name,
-            ]);
+            $this->pasar->create($request->all());
             DB::commit();
-            Alert::success('success', 'success Data Pasar Berhasil Ditambahkan!');
-            return redirect('/pangan/create/data_pasar')->with('success', 'Data Pasar Berhasil Ditambahkan');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            return redirect()->back()->withInput()->withErrors($e->errors());
+            Alert::success('success', ' Data Pasar Berhasil Ditambahkan!');
+            return back()->with('success', 'Data Pasar Berhasil Ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
-            $errorMessage = 'Gagal Menambahkan Data: ' . $e->getMessage();
-            Alert::error('Error', $errorMessage);
-            return back()->withInput()->withErrors($errorMessage);
+            Alert::error('error', 'Data Pasar Gagal Ditambahkan!' . $e->getMessage());
+            return back()->with('error', 'Data Pasar Gagal Ditambahkan!');
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UpdateRequest $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $pasar = $this->pasar->find($id);
+            $pasar->update($request->all());
+            DB::commit();
+            Alert::success('success', 'Data Pasar Berhasil Diubah!');
+            return back()->with('success', 'Data Pasar Berhasil Diubah!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Alert::error('error', 'Data Pasar Gagal Diubah! ' . $e->getMessage());
+            return back()->with('error', 'Data Pasarr Gagal Diubah!');
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        try {
+            DB::beginTransaction();
+            $pasar = $this->pasar->find($id);
+            $pasar->delete();
+            DB::commit();
+            Alert::success('success', 'Data Pasar Berhasil Dihapus!');
+            return back()->with('success', 'Data Pasar Berhasil Dihapus!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Alert::error('error', 'Data Pasar Gagal Dihapus! ' . $e->getMessage());
+            return back()->with('error', 'Data Pasar Dihapus!');
+        }
     }
 }

@@ -12,6 +12,8 @@ use App\Models\PrediksiSp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
+use App\Models\Pasar\PetugasPasar;
+use App\Models\Pangan\LaporanPangan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Phpml\Regression\LeastSquares;
@@ -150,63 +152,67 @@ class DashboardController extends Controller
     }
 
 
-    public function uptd()
-    {
-        $data = [
-            'countPenyuluh' => $this->penyuluh->count(),
-            'CountLaporanPadi' => $this->laporanPadi::where('kecamatan_id', Auth::user()->uptd->kecamatan->id)->count(),
-            'CountLaporanPalawija' => $this->laporanPalawija->count(),
-        ];
-
-        foreach ($data as $key => $value) {
-            if ($value === null) {
-                $data[$key] = 0;
-            }
-        }
-        return view('uptd.pages.dashboard.index', $data);
-    }
-
-    public function penyuluh()
-    {
-        $userId = Auth::user()->id;
-
-        $data['penugasan'] = $this->penugasan::where('user_id', $userId)->get();
-        $data['laporanPadi'] = $this->laporanPadi::where('user_id', $userId)->get();
-
-        $desaIds = $data['penugasan']->pluck('desa_id');
-
-        $data['luasLahanWilayah'] = $this->luasLahanWilayah::whereIn('desa_id', $desaIds)->get();
-
-        $data['perbandinganNilai'] = [];
-
-        foreach ($desaIds as $desaId) {
-            $luasLahan = $data['luasLahanWilayah']->where('desa_id', $desaId)->first();
-            $laporanPadi = $data['laporanPadi']->where('desa_id', $desaId);
-
-            $totalLahanSawah = $luasLahan ? $luasLahan->lahan_sawah : 0;
-            $totalLahanNonSawah = $luasLahan ? $luasLahan->lahan_non_sawah : 0;
-
-            $totalLaporanSawah = $laporanPadi->where('jenis_lahan', 'sawah')->sum('nilai');
-            $totalLaporanNonSawah = $laporanPadi->where('jenis_lahan', 'non sawah')->sum('nilai');
-
-            $persentaseSawah = $totalLahanSawah > 0 ? ($totalLaporanSawah / $totalLahanSawah) * 100 : 0;
-            $persentaseNonSawah = $totalLahanNonSawah > 0 ? ($totalLaporanNonSawah / $totalLahanNonSawah) * 100 : 0;
-
-            $data['perbandinganNilai'][$desaId] = [
-                'sawah' => $persentaseSawah,
-                'non_sawah' => $persentaseNonSawah,
-                'has_value' => $laporanPadi->isNotEmpty()
+        public function uptd()
+        {
+            $data = [
+                'countPenyuluh' => $this->penyuluh->count(),
+                'CountLaporanPadi' => $this->laporanPadi->count(),
+                'CountLaporanPalawija' => $this->laporanPalawija->count(),
             ];
+
+            foreach ($data as $key => $value) {
+                if ($value === null) {
+                    $data[$key] = 0;
+                }
+            }
+            return view('uptd.pages.dashboard.index', $data);
         }
 
-        return view('penyuluh.pages.dashboard.index', $data);
+        public function penyuluh()
+        {
+            $userId = Auth::user()->id;
+
+            $data['penugasan'] = $this->penugasan::where('user_id', $userId)->get();
+            $data['laporanPadi'] = $this->laporanPadi::where('user_id', $userId)->get();
+
+            $desaIds = $data['penugasan']->pluck('desa_id');
+
+            $data['luasLahanWilayah'] = $this->luasLahanWilayah::whereIn('desa_id', $desaIds)->get();
+
+            $data['perbandinganNilai'] = [];
+
+            foreach ($desaIds as $desaId) {
+                $luasLahan = $data['luasLahanWilayah']->where('desa_id', $desaId)->first();
+                $laporanPadi = $data['laporanPadi']->where('desa_id', $desaId);
+
+                $totalLahanSawah = $luasLahan ? $luasLahan->lahan_sawah : 0;
+                $totalLahanNonSawah = $luasLahan ? $luasLahan->lahan_non_sawah : 0;
+
+                $totalLaporanSawah = $laporanPadi->where('jenis_lahan', 'sawah')->sum('nilai');
+                $totalLaporanNonSawah = $laporanPadi->where('jenis_lahan', 'non sawah')->sum('nilai');
+
+                $persentaseSawah = $totalLahanSawah > 0 ? ($totalLaporanSawah / $totalLahanSawah) * 100 : 0;
+                $persentaseNonSawah = $totalLahanNonSawah > 0 ? ($totalLaporanNonSawah / $totalLahanNonSawah) * 100 : 0;
+
+                $data['perbandinganNilai'][$desaId] = [
+                    'sawah' => $persentaseSawah,
+                    'non_sawah' => $persentaseNonSawah,
+                    'has_value' => $laporanPadi->isNotEmpty()
+                ];
+            }
+
+            return view('penyuluh.pages.dashboard.index', $data);
+        }
+
+
+
+
+        public function pangan()
+        {
+            $jumlahPetugasPasar = PetugasPasar::count();
+            // $jumlahDataPangan = LaporanPangan::count();
+            $jumlahDataPangan = LaporanPangan::where('status', 1)->count();
+            return view('pangan.views.dashboard.index', compact('jumlahPetugasPasar','jumlahDataPangan'));
+        }
+
     }
-
-
-
-
-    public function pangan()
-    {
-        return view('pangan.views.dashboard.index');
-    }
-}

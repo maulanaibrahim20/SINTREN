@@ -2,18 +2,15 @@
 
 namespace App\Models\Pangan;
 
-use App\Models\Role;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pangan extends Model
+class JenisPangan extends Model
 {
     use HasFactory;
 
+    protected $table = 'jenis_pangans';
+
+
     protected $guarded = [''];
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 }

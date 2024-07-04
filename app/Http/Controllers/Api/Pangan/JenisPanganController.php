@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Pangan;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pasar\Pasar;
+use App\Models\Pangan\JenisPangan;
 use Illuminate\Http\Request;
 
-class PasarController extends Controller
+class JenisPanganController extends Controller
 {
-    public function getPasar()
+    public function getJenisPangan()
     {
-        $pasar = Pasar::all();
+        $jenispangan = JenisPangan::all();
         $responseData = [
             'status' => 'success',
             'message' => 'Get data successful',
-            'pasar' => $pasar
+            'jenis_pangan' => $jenispangan
         ];
         return response()->json($responseData);
     }

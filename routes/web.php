@@ -23,7 +23,15 @@ use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
+
+use App\Http\Controllers\PANGAN\JenisPanganController;
+use App\Http\Controllers\PANGAN\LaporanPanganController;
+use App\Http\Controllers\PANGAN\DataPanganController;
+use App\Http\Controllers\PANGAN\GrafikPanganController;
+
+
 use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
+
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\EditProfilePertanianController;
@@ -32,6 +40,8 @@ use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
 use Illuminate\Support\Facades\Route;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -168,7 +178,20 @@ Route::middleware(['autentikasi'])->group(function () {
         Route::prefix('pangan')->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'pangan']);
             Route::resource('/user/pasar', UserPasarController::class);
-            Route::resource('/pasar/data_pasar', PasarController::class);
+            Route::resource('/create/data_pasar', PasarController::class);
+            Route::resource('/create/jenis_pangan', JenisPanganController::class);
+
+            // Route::post('/create/data_pangan/kirim/{id}', [DataPanganController::class, 'kirimkan']);
+            Route::resource('/create/data_pangan', DataPanganController::class);
+            Route::resource('/data/laporan_pangan', LaporanPanganController::class);
+
+            Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
+            // Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPangan']);
+            Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPanganindex']);
+            Route::get('/grafik/neraca_pangan', [GrafikPanganController::class, 'grafikNeracaPanganindex']);
+            Route::get('/grafik/tren_ketahanan_pangan', [GrafikPanganController::class, 'grafikTrenKetahananPanganindex']);
+            Route::get('/grafik/harga_pangan', [GrafikPanganController::class, 'grafikHargaPanganindex']);
+
         });
     });
 });
