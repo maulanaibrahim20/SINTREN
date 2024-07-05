@@ -41,8 +41,8 @@ class UserPasarController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
+    * Show the form for creating a new resource.
+    */
     public function create()
     {
         $data = [
@@ -58,13 +58,14 @@ class UserPasarController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
+    * Store a newly created resource in storage.
+    */
 
     public function store(CreateRequest $request)
     {
         try {
             DB::beginTransaction();
+
             $user = $this->user->create($request->all() + [
                 'username' => Str::slug($request->name),
                 'password' => bcrypt('password'),
@@ -77,6 +78,7 @@ class UserPasarController extends Controller
 
             DB::commit();
             Alert::success('Success', 'Pengguna Pasar Berhasil Ditambahkan');
+
             return redirect('/pangan/user/pasar')->with('success', 'User Pasar Berhasil Ditambahkan!');
         } catch (\Exception $er) {
             DB::rollback();
@@ -85,8 +87,8 @@ class UserPasarController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
+    * Display the specified resource.
+    */
     public function show($id)
     {
         $data = [
@@ -100,8 +102,8 @@ class UserPasarController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
+    * Show the form for editing the specified resource.
+    */
     public function edit($id)
     {
         $user = $this->petugaspasar->findOrFail(decrypt($id));
@@ -118,8 +120,8 @@ class UserPasarController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
+    * Update the specified resource in storage.
+    */
     public function update(UpdatedRequest $request, $id)
     {
         try {
@@ -147,8 +149,8 @@ class UserPasarController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
+    * Remove the specified resource from storage.
+    */
     public function destroy($id)
     {
         try {

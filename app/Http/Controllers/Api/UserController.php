@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Pertanian\Pertanian;
+use App\Models\Pasar\PetugasPasar;
+use App\Models\Pangan\Pangan;
 use App\Models\Role;
 use App\Models\Uptd\Uptd;
 use App\Models\User;
@@ -50,6 +52,12 @@ class UserController extends Controller
             case Role::PENYULUH:
                 $detail = $user->penyuluh;
                 break;
+            case Role::PANGAN:
+                $detail = $user->pangan;
+                break;
+            case Role::PASAR:
+                $detail = $user->pasar;
+                break;
         }
 
         $userData = [
@@ -58,7 +66,8 @@ class UserController extends Controller
             'email' => $user->email,
             'username' => $user->username,
             'detail' => $detail,
-            'kecamatan' => $detail->kecamatan,
+            'pasar' => $detail->pasar->name ?? '',
+            'kecamatan' => $detail->kecamatan ?? '',
             'role_name' => $role ? $role->name : 'No Role'
         ];
 
@@ -93,6 +102,12 @@ class UserController extends Controller
                     Penyuluh::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
                     break;
                 case Role::UPTD:
+                    Uptd::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
+                    break;
+                case Role::PANGAN:
+                    Uptd::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
+                    break;
+                case Role::PASAR:
                     Uptd::where('user_id', $user->id)->update($request->only(['alamat', 'no_telp']));
                     break;
             }
@@ -174,6 +189,12 @@ class UserController extends Controller
                     break;
                 case Role::PENYULUH:
                     $detail = $user->penyuluh;
+                    break;
+                case Role::PANGAN:
+                    $detail = $user->pangan;
+                    break;
+                case Role::PASAR:
+                    $detail = $user->pasar;
                     break;
             }
 

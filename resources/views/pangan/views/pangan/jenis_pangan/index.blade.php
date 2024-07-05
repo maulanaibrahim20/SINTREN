@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Data Pasar ')
+@section('title', 'Jenis Pangan ')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -46,7 +46,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($pasar as $data)
+                                @foreach ($jenispangan as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
@@ -56,7 +56,7 @@
                                                 data-bs-target="#modalCenter1{{ $data->id }}"><i
                                                     class="fa fa-edit"></i></button>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/pangan/create/data_pasar/' . $data->id) }}"
+                                                action="{{ url('/pangan/create/jenis_pangan/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf
@@ -75,27 +75,27 @@
         </div>
     </div>
 
-    {{-- start modal tambah Data Pasar --}}
-    @include('pangan.views.pasar.modal_tambah')
-    {{-- end modal tambah Data Pasar --}}
-    {{-- start modal edit Data Pasar --}}
-    @foreach ($pasar as $item)
+    {{-- start modal tambah Jenis Pangan --}}
+    @include('pangan.views.pangan.jenis_pangan.modal_tambah')
+    {{-- end modal tambah Jenis Pangan --}}
+    {{-- start modal edit Jenis Pangan --}}
+    @foreach ($jenispangan as $item)
         <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <form action="{{ url('/pangan/create/data_pasar/' . $item->id) }}"
+                    <form action="{{ url('/pangan/create/jenis_pangan/' . $item->id) }}"
                         enctype="multipart/form-data" method="post">
                         @method('PUT')
                         @csrf
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalCenterTitle">Edit Data Pasar</h5>
+                            <h5 class="modal-title" id="modalCenterTitle">Edit Jenis Pangan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="col mb-3">
                                 <label for="nameBasic" class="form-label">Nama</label>
                                 <input type="text" value="{{ $item->name }}" name="name" class="form-control"
-                                    placeholder="Masukkan Nama Pasar" />
+                                    placeholder="Masukkan Nama Jenis Pangan" />
                             </div>
                             {{-- <div class="col mb-3">
                                 <label for="descriptionBasic" class="form-label">Deskripsi</label>
@@ -111,7 +111,7 @@
             </div>
         </div>
     @endforeach
-    {{-- end modal tambah Data Pasar --}}
+    {{-- end modal tambah Jenis Pangan --}}
 @endsection
 
 @section('script')

@@ -5,7 +5,8 @@ use App\Http\Controllers\Api\Admin\AdminPadiController;
 use App\Http\Controllers\Api\Admin\AdminPalawijaController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WilayahController;
-use App\Http\Controllers\Api\PasarController;
+use App\Http\Controllers\Api\Pangan\JenisPanganController;
+use App\Http\Controllers\Api\Pangan\DataPanganController;
 use App\Http\Controllers\Api\Penyuluh\PadiController;
 use App\Http\Controllers\Api\Penyuluh\PalawijaController;
 use App\Http\Controllers\Api\Penyuluh\PenyuluhController;
@@ -61,7 +62,17 @@ Route::get('/admin/getPenyuluh/{id}', [AdminController::class, 'getPenyuluh']);
 Route::post('/admin/addPenugasan/', [AdminController::class, 'addPenugasan']);
 Route::delete('/admin/deletePenugasan/{id}', [AdminController::class, 'deletePenugasan']);
 
-Route::get('/desa', [WilayahController::class, 'getDesa']);
-Route::get('/kecamatan', [WilayahController::class, 'getKecamatan']);
+
+Route::get('/desa',[WilayahController::class,'getDesa']);
+Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);
+
+// PANGAN END POINT
+Route::get('/pangan/jenis_pangan',[JenisPanganController::class,'getJenisPangan']);
+Route::get('/pasar', [DataPanganController::class, 'getPasar']);
+Route::post('/pangan/store', [DataPanganController::class, 'store']);
+Route::patch('/pangan/update/{id}',[DataPanganController::class,'update']);
+Route::get('/pangan/showByUser/{id}',[DataPanganController::class,'showAllByUser']);
+Route::delete('/pangan/deletaDetailById/{id}', [DataPanganController::class, 'deletaDetailById']);
+
 
 Route::get('/pasar', [PasarController::class, 'getPasar']);
