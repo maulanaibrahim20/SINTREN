@@ -15,12 +15,20 @@
                                     <a class="header-brand1" href="{{ url('/pangan/dashboard') }}">
                 @endif
             @endauth
-            <img src="{{ url('/assets') }}/images/brand/logo-sidebar-dark.png" style="width:200px; height: auto;"
-                class="header-brand-img main-logo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/logo-sidebar-light.png" style="width:200px; height: auto;"
-                class="header-brand-img darklogo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/icon.png" class="header-brand-img icon-logo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/icon2.png" class="header-brand-img icon-logo2"
+
+            <img src="{{ url('/landings') }}/img/imy.png"
+                style="float: left; width: 55px; height: auto; margin-right: 5px;" class="header-brand-img main-logo"
+                alt="Sparic logo">
+            <img src="{{ url('/landings') }}/img/polindra.png"
+                style="float: right; width: 55px; height: auto; margin-left: 5px;" class="header-brand-img main-logo"
+                alt="Sparic logo">
+
+
+            <img src="{{ url('/landings') }}/img/imy.png"
+                style="float: left; width: 55px; height: auto; margin-right: 5px;" class="header-brand-img darklogo"
+                alt="Sparic logo">
+            <img src="{{ url('/landings') }}/img/polindra.png"
+                style="float: right; width: 55px; height: auto; margin-left: 5px;" class="header-brand-img darklogo"
                 alt="Sparic logo">
             </a>
         </div>

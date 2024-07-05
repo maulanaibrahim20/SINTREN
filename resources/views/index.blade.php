@@ -42,31 +42,38 @@
                 <div class="bg-white">
                     <div class="best-ticker" id="newsticker">
                         <div class="bn-news">
+                            @php
+                                $totalPenyuluh = DB::table('penyuluhs')->count();
+                                $totalLaporanPadi = DB::table('laporan_padis')->count();
+                                $totalLaporanPalawija = DB::table('laporan_palawijas')->count();
+                                $totalLuasLahanWilayah = DB::table('luas_lahan_wilayah')->count();
+                                $totalPenugasan = DB::table('penugasan_penyuluh')->count();
+                            @endphp
                             <ul>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-users bg-danger-transparent text-danger mx-1"></span>
-                                    <span class="d-inline-block">Total Users</span>
-                                    <span class="bn-positive me-4">1,653</span>
+                                    <span class="d-inline-block">Total Laporan Padi</span>
+                                    <span class="bn-positive me-4">{{ $totalLaporanPadi }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-signal bg-info-transparent text-info mx-1"></span>
-                                    <span class="d-inline-block">Total Leads</span>
-                                    <span class="bn-negative me-4">639</span>
+                                    <span class="d-inline-block">Total Penyuluh</span>
+                                    <span class="bn-negative me-4">{{ $totalPenyuluh }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-briefcase bg-success-transparent text-success mx-1"></span>
-                                    <span class="d-inline-block"> Total Trials </span>
-                                    <span class="bn-negative me-4">12,765</span>
+                                    <span class="d-inline-block"> Total Laporan Palawija </span>
+                                    <span class="bn-negative me-4">{{ $totalLaporanPalawija }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-trophy bg-warning-transparent text-warning mx-1"></span>
-                                    <span class="d-inline-block">Total Wins</span>
-                                    <span class="bn-positive me-4">24</span>
+                                    <span class="d-inline-block">Total Luas Lahan Wilayah</span>
+                                    <span class="bn-positive me-4">{{ $totalLuasLahanWilayah }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-envelope bg-primary-transparent text-primary mx-1"></span>
-                                    <span class="d-inline-block">Active Email Accounts</span>
-                                    <span class="bn-positive me-4">74,526</span>
+                                    <span class="d-inline-block">Total Penugasan</span>
+                                    <span class="bn-positive me-4">{{ $totalPenugasan }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-check-circle bg-danger-transparent text-danger mx-1"></span>
