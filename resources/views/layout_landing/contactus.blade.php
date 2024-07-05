@@ -39,7 +39,7 @@
 
             </div>
 
-            <div class="col-lg-8 mt-5 mt-lg-0">
+            {{-- <div class="col-lg-8 mt-5 mt-lg-0">
                 <form action="{{ url('/kotakSaran') }}" method="POST" role="form" class="php-email-form">
                     @csrf
                     <div class="row">
@@ -66,7 +66,7 @@
                     </div>
                     <div class="text-center"><button type="submit">Kirim Pesan</button></div>
                 </form>
-            </div>
+            </div> --}}
         </div>
     </div>
 </section>
