@@ -96,8 +96,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div>
-                                    <div class="mb-0 fw-semibold text-dark">Sessions</div>
-                                    <h3 class="mt-1 mb-1 text-dark fw-semibold">46.4K</h3>
+                                    <div class="mb-0 fw-semibold text-dark">Total Luas Lahan Wilayah</div>
+                                    <h3 class="mt-1 mb-1 text-dark fw-semibold">{{ $CountLuasLahanWilayah }}</h3>
                                     <div class="text-muted fs-12 mt-2"><i
                                             class="fe fe-arrow-up-right text-success me-1"></i>
                                         <span class="fw-bold fs-12 text-success">04.12%</span> Since last month
@@ -106,27 +106,6 @@
                                 <i
                                     class="fe fe-database ms-auto fs-5 my-auto bg-secondary-transparent p-3 br-7 text-secondary">
                                 </i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row row-sm">
-                <div class="col-12">
-                    <div class="card overflow-hidden">
-                        <div class="card-header pb-0 border-bottom-0">
-                            <h3 class="card-title">Deliverables</h3>
-                        </div>
-                        <div class="card-body pt-0">
-                            <div class="d-block d-sm-inline-flex align-items-center my-3">
-                                <p class="mb-0 me-5"> <span class="legend bg-blue"></span>Marketing Strategy</p>
-                                <p class="mb-0 me-5"> <span class="legend bg-teal"></span>Engaging Audience</p>
-                                <p class="mb-0 me-5"> <span class="legend bg-pink"></span>Others</p>
-                            </div>
-                            <div class="progress br-10 progress-md">
-                                <div class="progress-bar lh-1 bg-blue w-20">20%</div>
-                                <div class="progress-bar lh-1 bg-cyan w-30">30%</div>
-                                <div class="progress-bar lh-1 bg-pink w-50">50%</div>
                             </div>
                         </div>
                     </div>

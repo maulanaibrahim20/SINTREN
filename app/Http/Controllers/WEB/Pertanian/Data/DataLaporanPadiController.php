@@ -28,12 +28,18 @@ class DataLaporanPadiController extends Controller
     {
         ini_set('max_execution_time', 300);
 
+        // Ambil data kecamatan yang ada di laporan padi
         $kecamatanId = $this->laporanPadi::pluck('kecamatan_id');
         $data['filterKecamatan'] = $this->kecamatan::whereIn('id', $kecamatanId)->get();
-        $data['laporanPadi'] = $this->laporanPadi::orderBy('date', 'desc')->get();
+
+        // Ambil data laporan padi yang sudah terima
+        $data['laporanPadi'] = $this->laporanPadi::whereHas('verifyPadi', function ($query) {
+            $query->where('status', 'terima');
+        })->orderBy('date', 'desc')->get();
 
         return view('pertanian.pages.data.padi.index', $data);
     }
+
 
 
     public function show($id)

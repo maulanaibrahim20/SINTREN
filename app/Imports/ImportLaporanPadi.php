@@ -55,7 +55,7 @@ class ImportLaporanPadi implements ToModel, WithMultipleSheets, WithHeadingRow
             'panen' => $row['panen'],
             'puso/rusak' => $row['puso']
         ];
-            
+
         foreach ($dataTipe as $tipeData => $nilai) {
             $bulan = rand(1, 12); // Bulan antara 1 sampai 12
             $tahun = $row['tahun']; // Tahun dari data excel
@@ -87,7 +87,7 @@ class ImportLaporanPadi implements ToModel, WithMultipleSheets, WithHeadingRow
             VerifyPadi::create([
                 'laporan_id' => $laporanPadi->id,
                 'user_id' => $laporanPadi->user_id,
-                'status' => 'tunggu',
+                'status' => 'terima',
                 'catatan' => null,
             ]);
         }

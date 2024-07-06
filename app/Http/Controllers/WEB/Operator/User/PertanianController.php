@@ -52,6 +52,10 @@ class PertanianController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            $randomPassword = Str::random(8);
+
+
             $user = $this->user->create($request->all() + [
                 'username' => Str::slug($request->name),
                 'password' => bcrypt('password'),
@@ -62,12 +66,10 @@ class PertanianController extends Controller
             ]);
 
             DB::commit();
-            Alert::success('Success', 'Success Data Berhasil Ditambahkan');
             return redirect('/operator/user/pertanian')->with('success', 'Data User Pertanian Berhasil Ditambahkan');
         } catch (\Exception $e) {
             DB::rollback();
             $errorMessage = 'Gagal Menambahkan Data: ' . $e->getMessage();
-            Alert::error('Error', $errorMessage);
             return back()->withInput()->withErrors($errorMessage);
         }
     }

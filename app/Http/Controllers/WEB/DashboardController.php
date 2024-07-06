@@ -238,6 +238,7 @@ class DashboardController extends Controller
             'countPenyuluh' => $this->penyuluh->count(),
             'CountLaporanPadi' => $this->laporanPadi->count(),
             'CountLaporanPalawija' => $this->laporanPalawija->count(),
+            'CountLuasLahanWilayah' => $this->luasLahanWilayah->where('kecamatan_id', $kecamatanId)->count(),
         ];
 
         return view('uptd.pages.dashboard.index', $data);
