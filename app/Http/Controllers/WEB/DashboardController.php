@@ -206,7 +206,7 @@ class DashboardController extends Controller
         // Ambil data laporan panen dari 5 tahun terakhir
         $laporanPanen = LaporanPadi::where('kecamatan_id', $kecamatanId)
             ->where('tipe_data', 'panen')
-            ->whereYear('date', '>=', $tahunSekarang - 4) // Ambil 5 tahun terakhir
+            ->whereYear('date', '>=', $tahunSekarang - 5) // Ambil 5 tahun terakhir
             ->with('desa') // Load relationship 'desa'
             ->get();
 

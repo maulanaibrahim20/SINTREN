@@ -32,7 +32,7 @@
                                 </a>
                             </div>
                             <!-- FULL-SCREEN -->
-                            <div class="dropdown d-flex notifications">
+                            {{-- <div class="dropdown d-flex notifications">
                                 <a class="nav-link icon" data-bs-toggle="dropdown"><i
                                         class="ri-notification-line"></i><span class=" pulse"></span>
                                 </a>
@@ -114,9 +114,9 @@
                                             href="notify-list.html">VIEW ALL NOTIFICATIONS</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- NOTIFICATIONS -->
-                            <div class="dropdown d-flex message">
+                            {{-- <div class="dropdown d-flex message">
                                 <a class="nav-link icon text-center" data-bs-toggle="dropdown">
                                     <i class="ri-chat-1-line"></i><span class="pulse-danger"></span>
                                 </a>
@@ -129,8 +129,7 @@
                                         <a class="dropdown-item border-bottom d-flex align-items-center"
                                             href="chat.html">
                                             <img class="avatar avatar-md brround cover-image"
-                                                src="{{ url('/assets') }}/images/users/male/28.jpg"
-                                                alt="person-image">
+                                                src="{{ url('/assets') }}/images/users/male/28.jpg" alt="person-image">
                                             <div class="wd-90p ms-2">
                                                 <div class="d-flex">
                                                     <h5 class="mb-0 text-dark fw-semibold ">Madeleine</h5>
@@ -145,8 +144,7 @@
                                         <a class="dropdown-item border-bottom d-flex align-items-center"
                                             href="chat.html">
                                             <img class="avatar avatar-md brround me-3 align-self-center cover-image"
-                                                src="{{ url('/assets') }}/images/users/male/32.jpg"
-                                                alt="person-image">
+                                                src="{{ url('/assets') }}/images/users/male/32.jpg" alt="person-image">
                                             <div class="wd-90p">
                                                 <div class="d-flex">
                                                     <h5 class="mb-0 text-dark fw-semibold ">Anthony</h5>
@@ -176,8 +174,7 @@
                                         </a>
                                         <a class="dropdown-item d-flex align-items-center" href="chat.html">
                                             <img class="avatar avatar-md brround me-3 cover-image"
-                                                src="{{ url('/assets') }}/images/users/male/33.jpg"
-                                                alt="person-image">
+                                                src="{{ url('/assets') }}/images/users/male/33.jpg" alt="person-image">
                                             <div class="wd-90p">
                                                 <div class="d-flex">
                                                     <h5 class="mb-0 text-dark fw-semibold ">Sanderson</h5>
@@ -213,7 +210,7 @@
                                             ALL AS READ</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- MESSAGE-BOX -->
                             <!-- SIDE-MENU -->
                             <div class="dropdown d-flex profile-1">
@@ -222,8 +219,7 @@
                                     <img src="{{ url('/assets') }}/images/users/male/user1.png" alt="profile-user"
                                         class="avatar  profile-user brround cover-image">
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
-                                    data-bs-popper="none">
+                                <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-popper="none">
                                     <div class="drop-heading">
                                         <div class="text-center">
                                             <h5 class="text-dark mb-0 fw-semibold">{{ Auth::user()->name }}</h5>
@@ -255,7 +251,7 @@
                                             <i class="dropdown-icon fe fe-user"></i> Profile Saya
                                         </a>
                                     @endif
-                                    <a class="dropdown-item text-dark fw-semibold" href="email-inbox.html">
+                                    {{-- <a class="dropdown-item text-dark fw-semibold" href="email-inbox.html">
                                         <i class="dropdown-icon fe fe-mail"></i> Inbox
                                         <span class="badge bg-success float-end">3</span>
                                     </a>
@@ -265,7 +261,7 @@
                                     <a class="dropdown-item text-dark fw-semibold" href="faq.html">
                                         <i class="dropdown-icon fe fe-alert-triangle"></i>
                                         Support ?
-                                    </a>
+                                    </a> --}}
                                     <a class="dropdown-item text-dark fw-semibold"
                                         href="{{ route('web.auth.logout') }}">
                                         <i class="dropdown-icon fe fe-log-out"></i> Sign

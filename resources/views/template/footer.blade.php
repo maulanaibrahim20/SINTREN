@@ -31,10 +31,10 @@
                 </div>
             </div>
             <div class="col-lg-6 col-md-12 text-end privacy">
-                <button class="btn btn-secondary btn-space btn-sm">Privacy</button>
+                {{-- <button class="btn btn-secondary btn-space btn-sm">Privacy</button>
                 <button class="btn btn-success btn-space btn-sm">Terms</button>
                 <button class="btn btn-primary btn-space btn-sm">About
-                    Us</button>
+                    Us</button> --}}
             </div>
         </div>
         <div class="row align-items-center flex-row-reverse">

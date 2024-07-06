@@ -56,14 +56,15 @@ class LaporanPadiController extends Controller
             )
             ->join('desas', 'desas.id', '=', 'laporan_padis.desa_id')
             ->groupBy('month_year', 'laporan_padis.desa_id', 'desas.name')
-            ->orderBy('month_year', 'asc')
+            ->orderBy('month_year', 'desc') // Urutkan berdasarkan month_year dari yang terbaru
             ->orderBy('laporan_padis.desa_id')
             ->get();
 
         $desaId = $this->penugasanDesa::where('user_id', Auth::user()->id)->pluck('desa_id');
         $data = [
-            'padi' => $results->whereIn('desa_id', $desaId)->sortBy('created_at'),
+            'padi' => $results->whereIn('desa_id', $desaId)->sortByDesc('created_at'), // Sortir dari yang terbaru
         ];
+
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
 

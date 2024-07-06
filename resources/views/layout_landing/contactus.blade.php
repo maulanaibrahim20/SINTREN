@@ -13,9 +13,7 @@
     </div>
 
     <div class="container">
-
         <div class="row mt-5">
-
             <div class="col-lg-4">
                 <div class="info">
                     <div class="address">
@@ -24,16 +22,16 @@
                         <p>Dinas Ketahanan Pangan Dan Pertanian Kabupaten Indramayu</p>
                     </div>
 
-                    <div class="email">
+                    {{-- <div class="email">
                         <i class="ri-mail-line"></i>
                         <h4>Email:</h4>
                         <p>contact@sintrenayu.com</p>
-                    </div>
+                    </div> --}}
 
                     <div class="phone">
                         <i class="ri-phone-line"></i>
-                        <h4>Call:</h4>
-                        <p>+6285942842400</p>
+                        <h4>Call Center :</h4>
+                        <p>0821 2045 8881</p>
                     </div>
 
                 </div>
