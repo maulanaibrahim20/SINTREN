@@ -7,8 +7,9 @@
                 tersedia </p>
         </div>
         <iframe style="border:0; width: 100%; height: 350px;"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3964.8881322506227!2d108.27887677580723!3d-6.408409362676324!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6eb87d1fcaf97d%3A0x4fc15b3c8407ada4!2sPoliteknik%20Negeri%20Indramayu!5e0!3m2!1sid!2sid!4v1719040978145!5m2!1sid!2sid"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.5123632638874!2d108.31956217580621!3d-6.327587461916571!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6eb94fa13c431f%3A0x5d65c7d29a656c60!2sDinas%20Pertanian%20Kab%20Indramayu!5e0!3m2!1sid!2sid!4v1720192106198!5m2!1sid!2sid"
             frameborder="0" allowfullscreen></iframe>
+
     </div>
 
     <div class="container">
@@ -20,7 +21,7 @@
                     <div class="address">
                         <i class="ri-map-pin-line"></i>
                         <h4>Lokasi:</h4>
-                        <p>Politeknik Negeri Indramayu</p>
+                        <p>Dinas Ketahanan Pangan Dan Pertanian Kabupaten Indramayu</p>
                     </div>
 
                     <div class="email">

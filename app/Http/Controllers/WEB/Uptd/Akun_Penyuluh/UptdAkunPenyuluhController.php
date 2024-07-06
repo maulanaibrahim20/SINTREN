@@ -98,7 +98,7 @@ class UptdAkunPenyuluhController extends Controller
             ]);
             DB::commit();
 
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Success data penyuluh berhasil dibuat!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Success data penyuluh berhasil dibuat!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Pengguna penyuluh gagal ditambahkan!' . $e->getMessage());
@@ -159,7 +159,7 @@ class UptdAkunPenyuluhController extends Controller
                 'email' => $request['email'],
             ]);
             DB::commit();
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Data penyuluh berhasil diubah!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Data penyuluh berhasil diubah!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Data penyuluh gagal diubah!' . $e->getMessage());
@@ -177,7 +177,7 @@ class UptdAkunPenyuluhController extends Controller
             $penyuluh->delete();
             $penyuluh->user->delete();
             DB::commit();
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Data penyuluh berhasil dihapus!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Data penyuluh berhasil dihapus!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Data penyuluh gagal dihapus!' . $e->getMessage());
@@ -224,7 +224,7 @@ class UptdAkunPenyuluhController extends Controller
             }
 
             DB::commit();
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Penugasan Untuk Penyuluh Berhasil Diubah!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Penugasan Untuk Penyuluh Berhasil Diubah!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Error: Terjadi Kesalahan - ' . $e->getMessage());

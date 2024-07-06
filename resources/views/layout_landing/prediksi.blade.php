@@ -44,8 +44,5 @@
                 </tr>
             </tbody>
         </table>
-
-
     </div>
-
 </section>

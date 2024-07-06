@@ -31,7 +31,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->name }}</td>
-                                        <td>{{ $data->month_year }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($data->month_year)->translatedFormat('F Y') }}</td>
                                         <td>{{ $data->total_nilai }}</td>
                                         <td class="text-center">
                                             <a href="{{ url('/uptd/laporan/palawija/showDetailLaporan/' . $data->desa_id) }}"

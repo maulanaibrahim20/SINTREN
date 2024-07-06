@@ -66,7 +66,7 @@ class PrediksiPadiController extends Controller
         $labels = [];
 
         foreach ($data as $year => $total_nilai) {
-            $samples[] = [(int)$year];
+            $samples[] = [(int) $year];
             $targets[] = $total_nilai;
             $labels[] = $year;
         }
@@ -76,6 +76,9 @@ class PrediksiPadiController extends Controller
 
         $predictions = [];
         $prevValue = null;
+        $totalError = 0;
+        $totalData = $sampaiTahun - $dariTahun + 1;
+
         for ($year = $dariTahun; $year <= 2030; $year++) {
             $predictedValue = $regression->predict([$year]);
 
@@ -101,58 +104,26 @@ class PrediksiPadiController extends Controller
                 ];
             }
             $prevValue = $predictedValue;
-        }
 
-        $detailedPredictions = [];
-        foreach ($predictions as $prediction) {
-            if ($prediction['change_from_previous_year'] === null) {
-                $description = "Pada tahun {$prediction['year']} diprediksi mendapatkan nilai " . number_format($prediction['predicted_value'], 2) . ".";
-            } else {
-                $description = "Pada tahun {$prediction['year']} diprediksi mendapatkan nilai "
-                    . number_format($prediction['predicted_value'], 2) . " dengan perubahan sebesar " . number_format($prediction['change_from_previous_year'], 2) . " dari tahun sebelumnya.";
-            }
-            $detailedPredictions[] = $description;
-        }
-
-        $totalError = 0;
-        $totalData = $sampaiTahun - $dariTahun + 1;
-        foreach ($predictions as $key => $prediction) {
-            if ($key < count($actualData)) {
-                $tahun = $prediction['year'];
-                $nilaiPrediksi = $prediction['predicted_value'];
-                $error = abs(($targets[$key] - $nilaiPrediksi) / $targets[$key]) * 100;
+            // Hitung MAPE
+            if (isset($actualData[$year])) {
+                $actualValue = $actualData[$year];
+                $error = abs(($actualValue - $predictedValue) / $actualValue) * 100;
                 $totalError += $error;
-
-                // Simpan nilai aktual ke prediksi
-                $predictions[$key]['nilai_aktual'] = $targets[$key];
-                $predictions[$key]['error'] = $error;
+                $predictions[count($predictions) - 1]['nilai_aktual'] = $actualValue;
+                $predictions[count($predictions) - 1]['error'] = $error;
             }
         }
 
-        $hasilMape = $totalError / $totalData;
-        $tanpaRound = $hasilMape;
-        $mape = round($hasilMape);
-
-        // Simpan ke database
-        // foreach ($predictions as $prediction) {
-        //     Prediksi::create([
-        //         'tipe_data' => $tipeData,
-        //         'tahun' => $prediction['year'],
-        //         'nilai_prediksi' => $prediction['predicted_value'],
-        //         'perubahan_dari_tahun_sebelumnya' => $prediction['change_from_previous_year'],
-        //         'nilai_aktual' => $prediction['nilai_aktual'] ?? null,
-        //         'error' => $prediction['error'] ?? null,
-        //         'mape' => $mape
-        //     ]);
-        // }
+        // Hitung MAPE rata-rata
+        $hasilmape = $totalError / count($actualData);
+        $mape = round($hasilmape, 2);
 
         return view('pertanian.pages.prediksi.padi.view', [
             'tipeData' => $tipeDataDescription,
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
-            'detailedPredictions' => $detailedPredictions,
-            'tanpaRound' => $tanpaRound,
             'mape' => $mape
         ]);
     }

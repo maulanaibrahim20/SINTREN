@@ -25,7 +25,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ url('/uptd/pengguna/penyuluh/' . $edit['id']) }}" method="post">
+                    <form action="{{ url('/uptd/pengguna/penyuluhUptd/' . $edit['id']) }}" method="post">
                         @method('PUT')
                         @csrf
                         <div class="form-row">
@@ -68,7 +68,7 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label class="form-label">Multiple Select</label>
+                            <label class="form-label">Pilih Desa Penugasan</label>
                             <select multiple class="form-control select2-show-search form-select"
                                 data-placeholder="Choose one" name="penugasan[]">
                                 @foreach ($desa as $d)

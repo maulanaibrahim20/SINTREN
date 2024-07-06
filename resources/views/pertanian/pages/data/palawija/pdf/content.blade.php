@@ -7,5 +7,6 @@
         </td>
         <td>{{ $item->jenis_lahan }}</td>
         <td>{{ $item->date }}</td>
+        <td>{{ $item->nilai }}</td>
     </tr>
 @endforeach

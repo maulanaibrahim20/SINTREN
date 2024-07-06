@@ -25,7 +25,8 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ url('/uptd/pengguna/penyuluh') }}" method="post" class="needs-validation" novalidate>
+                    <form action="{{ url('/uptd/pengguna/penyuluhUptd') }}" method="post" class="needs-validation"
+                        novalidate>
                         @csrf
                         <div class="form-row">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">

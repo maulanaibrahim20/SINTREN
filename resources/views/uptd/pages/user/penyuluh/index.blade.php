@@ -10,7 +10,7 @@
         </ol><!-- End breadcrumb -->
         <div class="ms-auto">
             <div>
-                <a href="{{ url('/uptd/pengguna/penyuluh/create') }}" class="btn bg-primary-transparent">
+                <a href="{{ url('/uptd/pengguna/penyuluhUptd/create') }}" class="btn bg-primary-transparent">
                     <span>
                         <i class="fa fa-plus"></i>
                     </span>
@@ -71,13 +71,13 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <a href="{{ url('/uptd/pengguna/penyuluh/' . encrypt($data->id) . '/edit') }}"
+                                            <a href="{{ url('/uptd/pengguna/penyuluhUptd/' . encrypt($data->id) . '/edit') }}"
                                                 class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ url('/uptd/pengguna/penyuluh/' . encrypt($data->id)) }}"
+                                            <a href="{{ url('/uptd/pengguna/penyuluhUptd/' . encrypt($data->id)) }}"
                                                 class="btn btn-primary">
                                                 <i class="ti ti-eye"></i></a>
                                             <form id="deleteForm{{ $data->id }}"
-                                                action="{{ url('/uptd/pengguna/penyuluh/' . $data->id) }}"
+                                                action="{{ url('/uptd/pengguna/penyuluhUptd/' . $data->id) }}"
                                                 style="display: inline;" method="POST">
                                                 @method('DELETE')
                                                 @csrf

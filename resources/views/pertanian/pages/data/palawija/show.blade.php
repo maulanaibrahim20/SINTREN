@@ -96,6 +96,9 @@
                         </table>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i>Kembali</a>
+                </div>
             </div>
         </div>
     </div>

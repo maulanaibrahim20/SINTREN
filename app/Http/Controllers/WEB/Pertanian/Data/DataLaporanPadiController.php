@@ -22,14 +22,19 @@ class DataLaporanPadiController extends Controller
         $this->kecamatan = $kecamatan;
         $this->desa = $desa;
     }
+
+
     public function index()
     {
+        ini_set('max_execution_time', 300);
+
         $kecamatanId = $this->laporanPadi::pluck('kecamatan_id');
         $data['filterKecamatan'] = $this->kecamatan::whereIn('id', $kecamatanId)->get();
-        $data['laporanPadi'] = $this->laporanPadi::all();
+        $data['laporanPadi'] = $this->laporanPadi::orderBy('date', 'desc')->get();
 
         return view('pertanian.pages.data.padi.index', $data);
     }
+
 
     public function show($id)
     {

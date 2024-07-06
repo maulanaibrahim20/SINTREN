@@ -34,37 +34,10 @@
         <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header custom-header d-flex justify-content-between align-items-center border-bottom">
-                    <h3 class="card-title">Trend Pertanian</h3>
-                    <div class="dropdown">
-                        <a href="javascript:void(0);"
-                            class="d-flex align-items-center bg-primary btn btn-sm mx-1 fw-semibold"
-                            data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Sort by:
-                            Weekly<i class="fe fe-chevron-down fw-semibold mx-1"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" role="menu" data-popper-placement="bottom-end">
-                            <li><a href="javascript:void(0);">Monthly</a></li>
-                            <li><a href="javascript:void(0);">Yearly</a></li>
-                        </ul>
-                    </div>
+                    <h3 class="card-title">Grafik Panen Per Desa</h3>
                 </div>
                 <div class="card-body pb-0">
-                    <div class="d-flex ms-5">
-                        <div>
-                            <p class="mb-0 fs-15 text-muted">
-                                This month
-                            </p>
-                            <span class="text-primary fs-20 fw-semibold"><i
-                                    class="fe fe-dollar-sign fs-13"></i>815,320</span>
-                        </div>
-                        <div class="ms-5">
-                            <p class="mb-0 fs-15 text-muted">
-                                Last month
-                            </p>
-                            <span class="fs-20 text-secondary fw-semibold"><i
-                                    class="fe fe-dollar-sign fs-13"></i>743,950</span>
-                        </div>
-                    </div>
-                    <div id="revenue_chart">
+                    <div id="chart-container">
                     </div>
                 </div>
             </div>
@@ -161,4 +134,33 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        var chartData = {!! $chartData !!};
+
+        Highcharts.chart('chart-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Total Panen per Desa'
+            },
+            xAxis: {
+                type: 'category',
+                title: {
+                    text: 'Desa dan Tahun'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Panen'
+                }
+            },
+            series: [{
+                name: 'Total Panen',
+                data: chartData
+            }]
+        });
+    </script>
 @endsection

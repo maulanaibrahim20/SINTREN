@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Pasar\PetugasPasar;
 use App\Models\Pangan\LaporanPangan;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Phpml\Regression\LeastSquares;
@@ -50,23 +51,63 @@ class DashboardController extends Controller
         return view('operator.pages.dashboard.index', $data);
     }
 
-    // $laporanPadi = DB::table('laporan_padis')
-    //     ->selectRaw("DATE_FORMAT(date, '%Y-%m') AS bulan")
-    //     ->selectRaw("SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) AS total_panen")
-    //     ->selectRaw("SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) AS total_tanam")
-    //     ->selectRaw("SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) AS total_puso_rusak")
-    //     ->whereYear('date', '>=', $dariTahun)
-    //     ->whereYear('date', '<=', $sampaiTahun)
-    //     ->groupBy('bulan')
-    //     ->orderBy('bulan', 'ASC')
-    //     ->get();
-
     public function pertanian()
     {
+        $latestYear = $this->laporanPadi::orderBy('date', 'desc')->value(DB::raw('YEAR(date)'));
+
+        $laporan = LaporanPadi::where('tipe_data', 'panen')
+            ->whereYear('date', $latestYear)
+            ->select(
+                DB::raw('MONTH(date) as month'),
+                DB::raw('SUM(nilai) as total')
+            )
+            ->groupBy('month')
+            ->get();
+
+        $chartMonths = [];
+        $chartData = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthName = \Carbon\Carbon::create()->month($i)->monthName;
+            $chartMonths[] = "$monthName $latestYear";
+            $chartData[$i] = 0;
+        }
+
+        foreach ($laporan as $item) {
+            $chartData[$item->month] = $item->total;
+        }
+
+        $chartData = array_values($chartData);
+
+        $latestYear = DB::table('laporan_padis')
+            ->select(DB::raw('YEAR(MAX(date)) as latest_year'))
+            ->first()->latest_year;
+
+        $kecamatanData = DB::table('laporan_padis')
+            ->join('kecamatans', 'laporan_padis.kecamatan_id', '=', 'kecamatans.id')
+            ->select('kecamatans.name as kecamatan', DB::raw('SUM(laporan_padis.nilai) as total_produksi'))
+            ->where('laporan_padis.tipe_data', 'panen')
+            ->whereYear('laporan_padis.date', $latestYear)
+            ->groupBy('kecamatans.name')
+            ->get();
+
+        $desaData = DB::table('laporan_padis')
+            ->join('desas', 'laporan_padis.desa_id', '=', 'desas.id')
+            ->select('desas.name as desa', 'desas.district_id as kecamatan_id', DB::raw('SUM(laporan_padis.nilai) as total_produksi'))
+            ->where('laporan_padis.tipe_data', 'panen')
+            ->whereYear('laporan_padis.date', $latestYear)
+            ->groupBy('desas.name', 'desas.district_id')
+            ->get();
         $data = [
             'countPenyuluh' => $this->penyuluh::count(),
             'CountLaporanPadi' => $this->laporanPadi::count(),
             'CountLaporanPalawija' => $this->laporanPalawija::count(),
+            'CountLuasLahanWilayah' => $this->luasLahanWilayah::count(),
+            'chartMonths' => $chartMonths,
+            'chartData' => $chartData,
+            'kecamatanData' => $kecamatanData,
+            'desaData' => $desaData,
+            'latestYear' => $latestYear
         ];
         $dariTahun = 2010;
         $sampaiTahun = 2021;
@@ -107,7 +148,7 @@ class DashboardController extends Controller
         $hasilPrediksi = [];
         $prevValue = null;
         for ($tahun = $dariTahun; $tahun <= 2030; $tahun++) {
-            $prediksi = round($regression->predict([$tahun])); // Membulatkan hasil prediksi
+            $prediksi = round($regression->predict([$tahun]));
             $hasilPrediksi[$tahun] = $prediksi;
 
             if ($tahun > $sampaiTahun) {
@@ -154,67 +195,100 @@ class DashboardController extends Controller
     }
 
 
-        public function uptd()
-        {
-            $data = [
-                'countPenyuluh' => $this->penyuluh->count(),
-                'CountLaporanPadi' => $this->laporanPadi->count(),
-                'CountLaporanPalawija' => $this->laporanPalawija->count(),
-            ];
+    public function uptd()
+    {
+        // Ambil kecamatan_id dari user yang sedang login
+        $kecamatanId = Auth::user()->uptd->kecamatan_id;
 
-            foreach ($data as $key => $value) {
-                if ($value === null) {
-                    $data[$key] = 0;
-                }
-            }
-            return view('uptd.pages.dashboard.index', $data);
-        }
+        // Ambil tahun sekarang
+        $tahunSekarang = Carbon::now()->year;
 
-        public function penyuluh()
-        {
-            $userId = Auth::user()->id;
+        // Ambil data laporan panen dari 5 tahun terakhir
+        $laporanPanen = LaporanPadi::where('kecamatan_id', $kecamatanId)
+            ->where('tipe_data', 'panen')
+            ->whereYear('date', '>=', $tahunSekarang - 4) // Ambil 5 tahun terakhir
+            ->with('desa') // Load relationship 'desa'
+            ->get();
 
-            $data['penugasan'] = $this->penugasan::where('user_id', $userId)->get();
-            $data['laporanPadi'] = $this->laporanPadi::where('user_id', $userId)->get();
+        // Inisialisasi array untuk menampung data untuk Highcharts
+        $chartData = [];
 
-            $desaIds = $data['penugasan']->pluck('desa_id');
+        // Hitung total panen per desa
+        foreach ($laporanPanen as $laporan) {
+            $namaDesa = $laporan->desa->name;
+            $tahunData = date('Y', strtotime($laporan->date));
+            $key = $namaDesa . ' ' . $tahunData;
 
-            $data['luasLahanWilayah'] = $this->luasLahanWilayah::whereIn('desa_id', $desaIds)->get();
-
-            $data['perbandinganNilai'] = [];
-
-            foreach ($desaIds as $desaId) {
-                $luasLahan = $data['luasLahanWilayah']->where('desa_id', $desaId)->first();
-                $laporanPadi = $data['laporanPadi']->where('desa_id', $desaId);
-
-                $totalLahanSawah = $luasLahan ? $luasLahan->lahan_sawah : 0;
-                $totalLahanNonSawah = $luasLahan ? $luasLahan->lahan_non_sawah : 0;
-
-                $totalLaporanSawah = $laporanPadi->where('jenis_lahan', 'sawah')->sum('nilai');
-                $totalLaporanNonSawah = $laporanPadi->where('jenis_lahan', 'non sawah')->sum('nilai');
-
-                $persentaseSawah = $totalLahanSawah > 0 ? ($totalLaporanSawah / $totalLahanSawah) * 100 : 0;
-                $persentaseNonSawah = $totalLahanNonSawah > 0 ? ($totalLaporanNonSawah / $totalLahanNonSawah) * 100 : 0;
-
-                $data['perbandinganNilai'][$desaId] = [
-                    'sawah' => $persentaseSawah,
-                    'non_sawah' => $persentaseNonSawah,
-                    'has_value' => $laporanPadi->isNotEmpty()
+            // Tambahkan nilai panen ke dalam array
+            if (!isset($chartData[$key])) {
+                $chartData[$key] = [
+                    'name' => $key,
+                    'y' => 0, // Inisialisasi nilai total panen
                 ];
             }
-
-            return view('penyuluh.pages.dashboard.index', $data);
+            $chartData[$key]['y'] += $laporan->nilai;
         }
 
+        // Ubah format data untuk Highcharts
+        $chartDataFormatted = array_values($chartData); // Ubah ke array indexed
 
+        // Data untuk dikirim ke view
+        $data = [
+            'chartData' => json_encode($chartDataFormatted),
+            'countPenyuluh' => $this->penyuluh->count(),
+            'CountLaporanPadi' => $this->laporanPadi->count(),
+            'CountLaporanPalawija' => $this->laporanPalawija->count(),
+        ];
 
-
-        public function pangan()
-        {
-            $jumlahPetugasPasar = PetugasPasar::count();
-            // $jumlahDataPangan = LaporanPangan::count();
-            $jumlahDataPangan = LaporanPangan::where('status', 1)->count();
-            return view('pangan.views.dashboard.index', compact('jumlahPetugasPasar','jumlahDataPangan'));
-        }
-
+        return view('uptd.pages.dashboard.index', $data);
     }
+
+
+
+    public function penyuluh()
+    {
+        $userId = Auth::user()->id;
+
+        $data['penugasan'] = $this->penugasan::where('user_id', $userId)->get();
+        $data['laporanPadi'] = $this->laporanPadi::where('user_id', $userId)->get();
+
+        $desaIds = $data['penugasan']->pluck('desa_id');
+
+        $data['luasLahanWilayah'] = $this->luasLahanWilayah::whereIn('desa_id', $desaIds)->get();
+
+        $data['perbandinganNilai'] = [];
+
+        foreach ($desaIds as $desaId) {
+            $luasLahan = $data['luasLahanWilayah']->where('desa_id', $desaId)->first();
+            $laporanPadi = $data['laporanPadi']->where('desa_id', $desaId);
+
+            $totalLahanSawah = $luasLahan ? $luasLahan->lahan_sawah : 0;
+            $totalLahanNonSawah = $luasLahan ? $luasLahan->lahan_non_sawah : 0;
+
+            $totalLaporanSawah = $laporanPadi->where('jenis_lahan', 'sawah')->sum('nilai');
+            $totalLaporanNonSawah = $laporanPadi->where('jenis_lahan', 'non sawah')->sum('nilai');
+
+            $persentaseSawah = $totalLahanSawah > 0 ? ($totalLaporanSawah / $totalLahanSawah) * 100 : 0;
+            $persentaseNonSawah = $totalLahanNonSawah > 0 ? ($totalLaporanNonSawah / $totalLahanNonSawah) * 100 : 0;
+
+            $data['perbandinganNilai'][$desaId] = [
+                'sawah' => $persentaseSawah,
+                'non_sawah' => $persentaseNonSawah,
+                'has_value' => $laporanPadi->isNotEmpty()
+            ];
+        }
+
+        return view('penyuluh.pages.dashboard.index', $data);
+    }
+
+
+
+
+    public function pangan()
+    {
+        $jumlahPetugasPasar = PetugasPasar::count();
+        // $jumlahDataPangan = LaporanPangan::count();
+        $jumlahDataPangan = LaporanPangan::where('status', 1)->count();
+        return view('pangan.views.dashboard.index', compact('jumlahPetugasPasar', 'jumlahDataPangan'));
+    }
+}
