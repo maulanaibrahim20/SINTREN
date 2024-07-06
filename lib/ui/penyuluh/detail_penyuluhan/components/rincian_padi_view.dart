@@ -57,10 +57,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
               isRincian: widget.isRincian,
             ),
             Card(
-              margin: EdgeInsets.symmetric(
-                horizontal: 10.w,
-                vertical: 10.h,
-              ),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
               elevation: 3,
               color: ColorTheme().whiteColor,
               surfaceTintColor: ColorTheme().whiteColor,
@@ -268,7 +265,8 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                   ),
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     itemCount: pengairanData.length,
                                     itemBuilder: (context, index) {
                                       String jenisPengairan =

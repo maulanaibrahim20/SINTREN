@@ -50,6 +50,14 @@ class DetailPalawijaModel {
       return DateFormat('yyyy-MM-dd HH:mm:ss').format(rawDate);
     }
 
+     String editDate(String date) {
+      if (date.isEmpty) {
+        return "";
+      }
+      DateTime rawDate = DateTime.parse(date);
+      return DateFormat('yyyy-MM-dd').format(rawDate);
+    }
+
     try {
       return DetailPalawijaModel(
         id: json['id'] ?? 0,
@@ -66,7 +74,7 @@ class DetailPalawijaModel {
         desaName: json['desa_name'] ?? '',
         idJenisPalawija: json['id_jenis_palawija']?.toString() ?? '',
         palawijaName: json['palawija_name'] ?? '',
-        date: json['date'] ?? '',
+        date: editDate(json['date'] ?? ''),
         status: json['status'] ?? '',
         catatan: json['catatan'] ?? '',
         createdAt:

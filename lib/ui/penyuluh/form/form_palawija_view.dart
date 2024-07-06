@@ -51,8 +51,8 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
     palawijaList = await palawijaC.getPalawija();
     setState(() {
       if (widget.detail != null) {
-        value = TextEditingController(text: widget.detail!.nilai.toString());
-        date = TextEditingController(text: widget.detail!.date);
+        value.text = widget.detail!.nilai.toString();
+        date.text = widget.detail!.date;
         selectedDesaValue =
             DesaModel(id: widget.detail!.desaId, name: widget.detail!.desaName);
         selectedBantuanValue = widget.detail!.jenisBantuan;

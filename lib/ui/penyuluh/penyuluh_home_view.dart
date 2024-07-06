@@ -91,7 +91,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _customAppBar(context),
-                SizedBox(height: 30.h),
+                SizedBox(height: 40.h),
                 _buttonAddData(context),
                 SizedBox(height: 10.h),
                 _buttonHistory(context),
@@ -298,7 +298,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                               fontWeight: FontWeight.w500, fontSize: 14.sp),
                         ),
                         barRadius: Radius.circular(10.r),
-                        linearGradient: ColorTheme().linearColor,
+                        linearGradient: ColorTheme().progressColor,
                       ),
                       SizedBox(height: 10.h),
                     ],
@@ -312,37 +312,39 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
     );
   }
 
-  Container _buttonHistory(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.w),
-      width: MediaQuery.of(context).size.width,
-      height: 50.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.r),
-        gradient: ColorTheme().linearColor,
-      ),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const HistoriPenyuluhanView()),
-          );
-        },
-        icon: Icon(Icons.history, color: ColorTheme().whiteColor),
-        label: Text(
-          'Histori Penyuluhan',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14.sp,
-            color: ColorTheme().whiteColor,
+  InkWell _buttonHistory(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const HistoriPenyuluhanView()),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 5.w),
+        width: MediaQuery.of(context).size.width,
+        height: 50.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.r),
+          gradient: ColorTheme().linearColorGrey,
+          border: Border.all(
+            color: ColorTheme().grey,
           ),
         ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          side: BorderSide(color: ColorTheme().primaryColor, width: 2.w),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.r),
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.history, color: ColorTheme().primaryColor),
+            SizedBox(width: 10.w),
+            Text(
+              'Histori Penyuluhan',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14.sp,
+                color: ColorTheme().primaryColor,
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -356,82 +358,93 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
         children: [
           Expanded(
             flex: 1,
-            child: Container(
-              height: 50.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                gradient: ColorTheme().linearColor,
-              ),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  desa.then((value) {
-                    if (value.isEmpty) {
-                      EasyLoading.showToast("Belum Dilakukan Penyuluhan");
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const FormPadiView(
-                            onCreate: true,
-                          ),
+            child: InkWell(
+              onTap: () {
+                desa.then((value) {
+                  if (value.isEmpty) {
+                    EasyLoading.showToast("Belum Dilakukan Penyuluhan");
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const FormPadiView(
+                          onCreate: true,
                         ),
-                      );
-                    }
-                  });
-                },
-                icon: Icon(Icons.add, color: ColorTheme().whiteColor),
-                label: Text(
-                  'Padi',
-                  style: StyleTheme().styleWhite.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
                       ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  side:
-                      BorderSide(color: ColorTheme().primaryColor, width: 2.w),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
+                    );
+                  }
+                });
+              },
+              child: Container(
+                height: 50.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  gradient: ColorTheme().linearColorGreen,
+                  border: Border.all(
+                    color: ColorTheme().green,
                   ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add, color: ColorTheme().whiteColor),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'Padi',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
+                        color: ColorTheme().whiteColor,
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
           ),
           SizedBox(width: 10.w),
           Expanded(
-            child: Container(
-              height: 50.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                gradient: ColorTheme().linearColor,
-              ),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const FormPalawijaView(
-                        onCreate: true,
+            flex: 1,
+            child: InkWell(
+              onTap: () {
+                desa.then((value) {
+                  if (value.isEmpty) {
+                    EasyLoading.showToast("Belum Dilakukan Penyuluhan");
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const FormPalawijaView(
+                          onCreate: true,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.add, color: ColorTheme().whiteColor),
-                label: Text(
-                  'Palawija',
-                  style: StyleTheme().styleWhite.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  side:
-                      BorderSide(color: ColorTheme().primaryColor, width: 2.w),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
+                    );
+                  }
+                });
+              },
+              child: Container(
+                height: 50.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  gradient: ColorTheme().linearColorGreen,
+                  border: Border.all(
+                    color: ColorTheme().green,
                   ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add, color: ColorTheme().whiteColor),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'Palawija',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.sp,
+                        color: ColorTheme().whiteColor,
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),

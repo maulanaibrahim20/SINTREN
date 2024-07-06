@@ -8,11 +8,7 @@ import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_combined_model.dart';
-import 'package:sintren_mobile/models/detail_padi_model.dart';
-import 'package:sintren_mobile/models/detail_palawija_model.dart';
-import 'package:sintren_mobile/models/prediksi_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
-import 'package:sintren_mobile/services/admin/admin_service.dart';
 import 'package:sintren_mobile/ui/admin/admin_verify_view.dart';
 import 'package:sintren_mobile/ui/admin/components/palawija_chart.dart';
 import 'package:sintren_mobile/ui/admin/components/trend_chart.dart';
@@ -30,7 +26,8 @@ class AdminHomeView extends StatefulWidget {
   State<AdminHomeView> createState() => _AdminHomeViewState();
 }
 
-class _AdminHomeViewState extends State<AdminHomeView> {
+class _AdminHomeViewState extends State<AdminHomeView>
+    with SingleTickerProviderStateMixin {
   final userC = UserController();
   final adminC = AdminController();
   TextEditingController ulasan = TextEditingController();
@@ -40,24 +37,40 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   double? penyuluhanBulanIni;
   double? totalLuasLahanKecamatan;
   final statusNotifier = ValueNotifier<String>('Memulai sinkronisasi data...');
-  late int selectedSampaiTahun;
-  late int selectedDariTahun;
+  late int selectedTahun;
   late String? role;
+  int currentYear = DateTime.now().year;
+  late List<int> years;
+  late TabController _tabController;
+  final List<String> _tabs = ['Padi', 'Palawija'];
 
   Future<void> _initializedData() async {
+    years = List.generate(currentYear - 2009, (index) => 2010 + index);
     kecamatan = await UserLoginModel().getKecamatanName();
     penyuluhanBulanIni = await adminC.getTotalNilaiPenyuluhanBulanIni();
     totalLuasLahanKecamatan = await adminC.getTotalLuasLahanKecamatan();
     presentasePenyuluhan =
         (penyuluhanBulanIni! / totalLuasLahanKecamatan!) * 100;
     role = await UserLoginModel().getRole();
+    await AdminPadiController().getDataGrafikPenyuluhanPadi("2021");
+  }
+
+  Future<dynamic> _fetchChartData(String type) async {
+    // Implementasi pengambilan data berdasarkan jenis data (padi/palawija)
+    if (type == 'Padi') {
+      return await AdminPadiController()
+          .getDataGrafikPenyuluhanPadi(selectedTahun.toString());
+    } else if (type == 'Palawija') {
+      return await AdminPalawijaController()
+          .getDataGrafikPenyuluhanPalawija(selectedTahun.toString());
+    }
   }
 
   @override
   void initState() {
+    _tabController = TabController(length: _tabs.length, vsync: this);
     AdminPadiController().getAllPenyuluhanPadi();
-    selectedSampaiTahun = DateTime.now().year;
-    selectedDariTahun = selectedSampaiTahun - 5;
+    selectedTahun = DateTime.now().year;
     super.initState();
   }
 
@@ -70,7 +83,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
-            height: 250.h,
+            height: 300.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 bottomLeft: const Radius.circular(10).r,
@@ -79,42 +92,36 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               gradient: ColorTheme().linearColor,
             ),
           ),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              double appBarHeight = 30.h + 10.h;
-              double trendChartHeight = 280.h + 10.h;
-              double progressHeight = 20.h + 50.h + 10.h + 10.h + 10.h;
-              return FutureBuilder(
-                future: _initializedData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return const Center(child: Text('Error loading data'));
-                  } else {
-                    return Column(
-                      children: [
-                        SizedBox(height: 30.h),
-                        _customAppBar(context),
-                        _trendLineChart(context),
-                        SizedBox(height: 15.h),
-                        _progresPenyuluhan(context),
-                        SizedBox(height: 15.h),
-                        role == "UPTD"
-                            ? _listVerify(
-                                isShow: constraints.maxHeight -
-                                        (appBarHeight +
-                                            trendChartHeight +
-                                            progressHeight +
-                                            10.h) >=
-                                    390.h)
-                            : _palawijaChart(),
-                        SizedBox(height: 20.h),
-                      ],
-                    );
-                  }
-                },
-              );
+          FutureBuilder(
+            future: _initializedData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Error loading data'));
+              } else {
+                return Column(
+                  children: [
+                    SizedBox(height: 30.h),
+                    _customAppBar(context),
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: [
+                          _trendLineChart(context),
+                          SizedBox(height: 10.h),
+                          _notifVerify(),
+                          SizedBox(height: 10.h),
+                          _progresPenyuluhan(context),
+                          SizedBox(height: 10.h),
+                          role == "UPTD" ? _palawijaChart() : _palawijaChart(),
+                          SizedBox(height: 20.h),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
             },
           ),
         ],
@@ -122,8 +129,10 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     );
   }
 
-  Expanded _palawijaChart() {
-    return Expanded(
+  SizedBox _palawijaChart() {
+    return SizedBox(
+      width: double.infinity,
+      height: 270.h,
       child: FutureBuilder(
           future: AdminPalawijaController().getDataPenyuluhanPalawijaTahunIni(),
           builder: (context, snapshot) {
@@ -208,333 +217,92 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     );
   }
 
-  Expanded _listVerify({required bool isShow}) {
-    return Expanded(
-      child: FutureBuilder<List<DetailCombinedModel>>(
-        future: AdminController().getDetailCombinedByStatus(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error Data Tidak Ditemukan'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: MediaQuery.of(context).size.width.w,
-                height: 50.h,
-                margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Center(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.verified_outlined,
-                        color: ColorTheme().whiteColor,
-                      ),
-                      SizedBox(width: 10.w),
-                      Text(
-                        'Semua Data Sudah Diverifikasi',
-                        style: StyleTheme().styleWhite.copyWith(
-                            fontSize: 14.sp, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+  FutureBuilder _notifVerify() {
+    return FutureBuilder<List<DetailCombinedModel>>(
+      future: AdminController().getDetailCombinedByStatus(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return const Center(
+            child: Text('Error Data Tidak Ditemukan'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: MediaQuery.of(context).size.width.w,
+              height: 50.h,
+              margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Center(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.verified_outlined,
+                      color: ColorTheme().whiteColor,
+                    ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'Semua Data Sudah Diverifikasi',
+                      style: StyleTheme().styleWhite.copyWith(
+                          fontSize: 14.sp, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
-            );
-          } else {
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const AdminVerifyView()));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width.w,
-                    height: isShow ? 50.h : 100.h,
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
-                    decoration: BoxDecoration(
-                      color: ColorTheme().primaryColor,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Center(
-                        child: Row(
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: ColorTheme().whiteColor,
-                        ),
-                        SizedBox(width: 10.w),
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${snapshot.data!.length} Data Menunggu Diverifikasi',
-                                style: StyleTheme().styleWhite.copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Icon(
-                                Icons.arrow_right_rounded,
-                                size: 35.sp,
-                                color: ColorTheme().whiteColor,
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    )),
+            ),
+          );
+        } else {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const AdminVerifyView()));
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width.w,
+              height: 50.h,
+              margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              decoration: BoxDecoration(
+                color: ColorTheme().primaryColor,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Center(
+                  child: Row(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    color: ColorTheme().whiteColor,
                   ),
-                ),
-                if (isShow)
+                  SizedBox(width: 10.w),
                   Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        var item = snapshot.data![index];
-                        DetailPadiModel? dataPadi;
-                        DetailPalawijaModel? dataPalawija;
-                        if (item.type == "padi") {
-                          dataPadi = item.data;
-                        }
-                        if (item.type == "palawija") {
-                          dataPalawija = item.data;
-                        }
-                        return Card(
-                          surfaceTintColor: ColorTheme().whiteColor,
-                          margin: EdgeInsets.symmetric(
-                              vertical: 5.h, horizontal: 15.w),
-                          elevation: 3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${snapshot.data!.length} Data Menunggu Diverifikasi',
+                          style: StyleTheme().styleWhite.copyWith(
+                              fontSize: 14.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Icon(
+                          Icons.arrow_right_rounded,
+                          size: 35.sp,
                           color: ColorTheme().whiteColor,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.w, vertical: 10.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        item.type == "padi"
-                                            ? dataPadi?.padiName ?? ""
-                                            : dataPalawija?.palawijaName ?? "",
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16.sp),
-                                      ),
-                                      Container(
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 3.h),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.w, vertical: 3.h),
-                                        decoration: BoxDecoration(
-                                          color: Colors.amber,
-                                          borderRadius:
-                                              BorderRadius.circular(5.r),
-                                        ),
-                                        child: Text(
-                                          "Membutuhkan Verifikasi",
-                                          style:
-                                              StyleTheme().styleWhite.copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        UserController().toCamelCase(
-                                            item.type == "padi"
-                                                ? dataPadi?.jenisBantuan ?? ""
-                                                : dataPalawija?.jenisBantuan ??
-                                                    ""),
-                                        style: StyleTheme().styleBlack,
-                                      ),
-                                      Text(
-                                        item.type == "padi"
-                                            ? UserController().normalizeDate(
-                                                dataPadi?.date ?? "")
-                                            : UserController().normalizeDate(
-                                                dataPalawija?.date ?? ""),
-                                        style: StyleTheme().styleBlack,
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Lahan ${UserController().toCamelCase(item.type == "padi" ? dataPadi?.jenisLahan ?? "" : dataPalawija?.jenisLahan ?? "")}',
-                                        style: StyleTheme().styleBlack,
-                                      ),
-                                      Text(
-                                        item.type == "padi"
-                                            ? UserController().toCamelCase(
-                                                dataPadi?.pengairanName ?? "")
-                                            : "",
-                                        style: StyleTheme().styleBlack,
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        UserController().toCamelCase(
-                                            item.type == "padi"
-                                                ? dataPadi?.tipeData ?? ""
-                                                : dataPalawija?.tipeData ?? ""),
-                                        style: StyleTheme().styleBlack.copyWith(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(
-                                        "${item.type == "padi" ? dataPadi?.nilai : dataPalawija?.nilai} hektar",
-                                        style: StyleTheme().styleBlack.copyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(),
-                                  SizedBox(height: 5.h),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () async {
-                                            bool? shouldVerify =
-                                                await _showVerifyDialog(
-                                                    context);
-                                            if (shouldVerify == true) {
-                                              await AdminController().verify(
-                                                dataId: item.type == "padi"
-                                                    ? dataPadi!.id.toString()
-                                                    : dataPalawija!.id
-                                                        .toString(),
-                                                map: {
-                                                  "status": "terima",
-                                                  "catatan": "oke"
-                                                },
-                                                isPalawija: item.type == "padi"
-                                                    ? false
-                                                    : true,
-                                              );
-                                              setState(() {});
-                                            }
-                                          },
-                                          icon: const Icon(
-                                              Icons.verified_outlined,
-                                              color: Colors.green),
-                                          label: Text('Verifikasi',
-                                              style: StyleTheme()
-                                                  .stylePrimary
-                                                  .copyWith(
-                                                      fontSize: 14.sp,
-                                                      color: Colors.green)),
-                                          style: ElevatedButton.styleFrom(
-                                            surfaceTintColor:
-                                                ColorTheme().whiteColor,
-                                            side: BorderSide(
-                                                color: Colors.green,
-                                                width: 2.w),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.r),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 10.w),
-                                      Expanded(
-                                        flex: 1,
-                                        child: ElevatedButton.icon(
-                                          onPressed: () async {
-                                            bool? shouldReject =
-                                                await _showRejectedDialog(
-                                                    context);
-                                            if (shouldReject == true) {
-                                              await AdminController().verify(
-                                                dataId: item.type == "padi"
-                                                    ? dataPadi!.id.toString()
-                                                    : dataPalawija!.id
-                                                        .toString(),
-                                                map: {
-                                                  "status": "tolak",
-                                                  "catatan": ulasan.text
-                                                },
-                                                isPalawija: item.type == "padi"
-                                                    ? false
-                                                    : true,
-                                              );
-                                              setState(() {});
-                                            }
-                                          },
-                                          icon: const Icon(
-                                              Icons.dangerous_outlined,
-                                              color: Colors.red),
-                                          label: Text('Tolak',
-                                              style: StyleTheme()
-                                                  .stylePrimary
-                                                  .copyWith(
-                                                      fontSize: 14.sp,
-                                                      color: Colors.red)),
-                                          style: ElevatedButton.styleFrom(
-                                            surfaceTintColor:
-                                                ColorTheme().whiteColor,
-                                            side: BorderSide(
-                                                color: Colors.red, width: 2.w),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.r),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5.h),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                        )
+                      ],
                     ),
                   ),
-              ],
-            );
-          }
-        },
-      ),
+                ],
+              )),
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -665,155 +433,176 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       elevation: 3,
       color: ColorTheme().whiteColor,
       surfaceTintColor: ColorTheme().whiteColor,
-      child: Container(
-        height: 280.h,
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        child: FutureBuilder<PrediksiModel>(
-          future: AdminService().getPrediksiPadi(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        children: [
+          TabBar(
+            controller: _tabController,
+            tabs: _tabs.map((String tab) {
+              return Tab(text: tab);
+            }).toList(),
+            labelColor: ColorTheme().primaryColor,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: ColorTheme().primaryColor,
+            indicatorWeight: 2.0.r,
+            indicatorSize: TabBarIndicatorSize.tab,
+          ),
+          Container(
+            height: 280.h,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Tab untuk data Padi
+                _buildChartTab(context, 'Padi'),
+                // Tab untuk data Palawija
+                _buildChartTab(context, 'Palawija'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChartTab(BuildContext context, String type) {
+    return FutureBuilder(
+      future: _fetchChartData(type),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error,
+                  color: Colors.grey,
+                  size: 50.r,
+                ),
+                Text(
+                  "Internal Server Error : ${snapshot.error}",
+                  style: StyleTheme().styleBlack.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        } else {
+          final data = snapshot.data;
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.error,
-                      color: Colors.grey,
-                      size: 50.r,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.multiline_chart_rounded,
+                          color: ColorTheme().primaryColor,
+                          size: 30.r,
+                        ),
+                        SizedBox(width: 10.w),
+                        Text(
+                          "Trend $type", // Judul dinamis sesuai dengan jenis data
+                          style: StyleTheme().stylePrimary.copyWith(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Internal Server Error : ${snapshot.error}",
-                      style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey),
+                    GestureDetector(
+                      onTap: () {
+                        _showDialogFilterTrend(context, years);
+                      },
+                      child: Icon(
+                        Icons.filter_list,
+                        color: ColorTheme().primaryColor,
+                      ),
                     ),
                   ],
                 ),
-              );
-            } else {
-              final prediksi = snapshot.data;
-              List<DataItem> result =
-                  selectedDariTahun == 0 || selectedSampaiTahun == 0
-                      ? prediksi!.result
-                      : prediksi!.result
-                          .where((item) =>
-                              item.label >= selectedDariTahun &&
-                              item.label <= selectedSampaiTahun)
-                          .toList();
-              List<int> labels =
-                  prediksi.result.map((item) => item.label).toList();
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.multiline_chart_rounded,
-                            color: ColorTheme().primaryColor,
-                            size: 30.r,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            "Trend Pertanian",
-                            style: StyleTheme().stylePrimary.copyWith(
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                          ),
-                        ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20.h),
+                width: MediaQuery.of(context).size.width,
+                height: 207.h,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 180.h,
+                      width: 330.w,
+                      child: LineChart(
+                        TrendChart(data: data!).mainData(),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          _showDialogFilterTrend(context, labels);
-                        },
-                        child: Icon(
-                          Icons.filter_list,
-                          color: ColorTheme().primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20.h),
-                    width: MediaQuery.of(context).size.width,
-                    height: 207.h,
-                    child: Column(
+                    ),
+                    SizedBox(height: 3.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: 180.h,
-                          child: LineChart(
-                            TrendChart(data: result).mainData(),
-                          ),
-                        ),
-                        SizedBox(height: 3.h),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Expanded(
-                                child: GestureDetector(
-                              onTap: () {
-                                _showMapeDialog(context);
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(Icons.error_outline, size: 20.r),
-                                  SizedBox(width: 5.w),
-                                  Text(
-                                    "Mape: ${prediksi.mape}",
-                                    style: TextStyle(fontSize: 12.sp),
-                                  ),
-                                ],
-                              ),
-                            )),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 10.w,
-                                  height: 10.h,
-                                  color: ColorTheme().secondaryColor,
-                                ),
-                                SizedBox(width: 5.w),
-                                Text(
-                                  "Data Aktual",
-                                  style: TextStyle(
-                                    color: ColorTheme().primaryColor,
-                                    fontSize: 12.sp,
-                                  ),
-                                ),
-                              ],
+                            Container(
+                              width: 10.w,
+                              height: 10.h,
+                              color: ColorTheme().secondaryColor,
                             ),
-                            SizedBox(width: 10.w),
-                            Row(
-                              children: [
-                                Container(
-                                    width: 10.w,
-                                    height: 10.h,
-                                    color: Colors.amber[900]),
-                                SizedBox(width: 5.w),
-                                Text(
-                                  "Data Prediksi",
-                                  style: TextStyle(
-                                      color: ColorTheme().primaryColor,
-                                      fontSize: 12.sp),
-                                ),
-                              ],
-                            )
+                            SizedBox(width: 5.w),
+                            Text(
+                              "Data Tanam",
+                              style: TextStyle(
+                                color: Colors.indigo,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 10.w),
+                        Row(
+                          children: [
+                            Container(
+                                width: 10.w,
+                                height: 10.h,
+                                color: Colors.amber[900]),
+                            SizedBox(width: 5.w),
+                            Text(
+                              "Data Panen",
+                              style: TextStyle(
+                                  color: ColorTheme().primaryColor,
+                                  fontSize: 12.sp),
+                            ),
+                          ],
+                        ),
+                        SizedBox(width: 5.w),
+                        Row(
+                          children: [
+                            Container(
+                                width: 10.w,
+                                height: 10.h,
+                                color: Colors.red[900]),
+                            SizedBox(width: 5.w),
+                            Text(
+                              "Data Puso/Rusak",
+                              style: TextStyle(
+                                  color: ColorTheme().primaryColor,
+                                  fontSize: 12.sp),
+                            ),
                           ],
                         ),
                       ],
                     ),
-                  ),
-                ],
-              );
-            }
-          },
-        ),
-      ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -829,85 +618,31 @@ class _AdminHomeViewState extends State<AdminHomeView> {
               Divider(),
             ],
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButtonComponent(
-                icon: Icons.dataset,
-                label: 'Dari Tahun',
-                selectedItem: selectedDariTahun,
-                items: tahun.map(
-                  (value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(value.toString()),
-                    );
-                  },
-                ).toList(),
-                hint: 'Pilih Dari Tahun',
-                validator: (value) =>
-                    value == null ? 'Pilih tahun terlebih dahulu' : null,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedDariTahun = newValue!;
-                  });
-                },
-                onSaved: (newValue) {
-                  setState(() {
-                    selectedDariTahun = newValue!;
-                  });
-                },
-              ),
-              SizedBox(height: 10.h), // Using screen_util for height
-              DropdownButtonComponent(
-                icon: Icons.dataset,
-                label: 'Sampai Tahun',
-                selectedItem: selectedSampaiTahun,
-                items: tahun.map(
-                  (value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child:
-                          Text(UserController().toCamelCase(value.toString())),
-                    );
-                  },
-                ).toList(),
-                hint: 'Pilih Sampai Tahun',
-                validator: (value) {
-                  if (value == null) {
-                    return 'Pilih tahun terlebih dahulu';
-                  }
-                  if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
-                    final int dari = selectedDariTahun;
-                    final int sampai = selectedSampaiTahun;
-                    if (dari > sampai) {
-                      return 'Dari Tahun tidak boleh lebih besar daripada Sampai Tahun';
-                    }
-                  }
-                  return null;
-                },
-                onChanged: (newValue) {
-                  if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
-                    final int dari = selectedDariTahun;
-                    if (dari < newValue!) {
-                      setState(() {
-                        selectedSampaiTahun = newValue;
-                      });
-                    }
-                  }
-                },
-                onSaved: (newValue) {
-                  if (selectedDariTahun != 0 && selectedSampaiTahun != 0) {
-                    final int dari = selectedDariTahun;
-                    if (dari < newValue!) {
-                      setState(() {
-                        selectedSampaiTahun = newValue;
-                      });
-                    }
-                  }
-                },
-              ),
-            ],
+          content: DropdownButtonComponent(
+            icon: Icons.dataset,
+            label: 'Tahun',
+            selectedItem: selectedTahun,
+            items: tahun.map(
+              (value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text(value.toString()),
+                );
+              },
+            ).toList(),
+            hint: 'Pilih Tahun',
+            validator: (value) =>
+                value == null ? 'Pilih tahun terlebih dahulu' : null,
+            onChanged: (newValue) {
+              setState(() {
+                selectedTahun = newValue!;
+              });
+            },
+            onSaved: (newValue) {
+              setState(() {
+                selectedTahun = newValue!;
+              });
+            },
           ),
           actions: <Widget>[
             TextButton(
@@ -924,8 +659,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  selectedDariTahun = DateTime.now().year - 5;
-                  selectedSampaiTahun = DateTime.now().year;
+                  selectedTahun = DateTime.now().year;
                 });
               },
               child: Text(
@@ -1028,177 +762,6 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           ),
         ],
       ),
-    );
-  }
-
-  Future<bool> _showVerifyDialog(BuildContext context) async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Column(
-            children: [
-              Text('Konfirmasi Aksi'),
-              Divider(),
-            ],
-          ),
-          content: Text(
-            "Apakah anda yakin ingin memverifikasi data ini?",
-            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(false);
-              },
-              child: Text(
-                "Tidak",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(fontSize: 14.sp, color: Colors.red),
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-              },
-              child: Text(
-                "Ya",
-                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<bool> _showRejectedDialog(BuildContext context) async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Form(
-          key: formKey,
-          child: AlertDialog(
-            title: const Column(
-              children: [
-                Text('Konfirmasi Aksi'),
-                Divider(),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Apakah anda yakin ingin menolak data ini?",
-                  style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
-                ),
-                SizedBox(height: 10.h),
-                const Text("Berikan Ulasan:"),
-                TextFormField(
-                  controller: ulasan,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    filled: true,
-                    fillColor: ColorTheme().whiteColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  maxLines: 5,
-                  validator: (value) {
-                    return value == null || value.isEmpty
-                        ? "Ulasan tidak boleh kosong"
-                        : null;
-                  },
-                )
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () async {
-                  setState(() {
-                    ulasan.clear();
-                  });
-
-                  Navigator.of(context).pop(false);
-                },
-                child: Text(
-                  "Tidak",
-                  style: StyleTheme()
-                      .stylePrimary
-                      .copyWith(fontSize: 14.sp, color: Colors.red),
-                ),
-              ),
-              TextButton(
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    Navigator.of(context).pop(true);
-                  }
-                },
-                child: Text(
-                  "Ya",
-                  style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  _showMapeDialog(BuildContext context) {
-    final List<Map<String, String>> mapeData = [
-      {'mape': '< 10%', 'akurasi': 'Sangat Baik'},
-      {'mape': '10-20%', 'akurasi': 'Baik'},
-      {'mape': '20-50%', 'akurasi': 'Layak/Memadai'},
-      {'mape': '> 50%', 'akurasi': 'Sangat Buruk'},
-    ];
-    showDialog(
-      context: context,
-      builder: ((context) {
-        return AlertDialog(
-          content: DataTable(
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Text(
-                  'MAPE (%)',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Akurasi',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ],
-            rows: mapeData.map((data) {
-              return DataRow(
-                cells: <DataCell>[
-                  DataCell(Text(data['mape']!)),
-                  DataCell(Text(data['akurasi']!)),
-                ],
-              );
-            }).toList(),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(
-                "Tutup",
-                style: StyleTheme()
-                    .stylePrimary
-                    .copyWith(color: Colors.red, fontSize: 16.sp),
-              ),
-            ),
-          ],
-        );
-      }),
     );
   }
 }

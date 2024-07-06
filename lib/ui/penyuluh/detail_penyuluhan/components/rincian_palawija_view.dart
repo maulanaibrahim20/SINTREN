@@ -57,10 +57,7 @@ class _RincianPalawijaViewState extends State<RincianPalawijaView> {
               isRincian: widget.isRincian,
             ),
             Card(
-              margin: EdgeInsets.symmetric(
-                horizontal: 10.w,
-                vertical: 10.h,
-              ),
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
               elevation: 3,
               color: ColorTheme().whiteColor,
               surfaceTintColor: ColorTheme().whiteColor,

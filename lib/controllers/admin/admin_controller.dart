@@ -16,7 +16,6 @@ import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
 import 'package:sintren_mobile/services/user_service.dart';
-import 'package:sqflite/sqflite.dart';
 
 class AdminController {
   Future<void> synchronizeData(ValueNotifier<String> statusNotifier) async {
@@ -294,19 +293,7 @@ class AdminController {
         return false;
       }
 
-      final responseData = response['data'];
-
-      final penugasan = Penugasan.fromJson({
-        ...responseData,
-        'desa_name': map['desa_name'],
-      });
-
-      final db = await DatabaseHelper().database;
-      await db.insert(
-        'penugasan',
-        penugasan.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      await AdminService().getPenyuluh();
 
       EasyLoading.showToast("Berhasil menyimpan data");
       return true;

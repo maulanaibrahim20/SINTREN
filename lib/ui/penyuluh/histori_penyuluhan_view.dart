@@ -311,7 +311,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                   fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
                             barRadius: const Radius.circular(10),
-                            linearGradient: ColorTheme().linearColor,
+                            linearGradient: ColorTheme().progressColor,
                           ),
                           SizedBox(height: 10.h),
                         ],

@@ -13,5 +13,37 @@ class ColorTheme {
     colors: [Colors.blue[800]!, Colors.indigo[900]!],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-   );
+  );
+
+  final LinearGradient linearColorWhite = const LinearGradient(
+    colors: [Colors.white, Colors.white54],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  final LinearGradient linearColorAmber = LinearGradient(
+    colors: [Colors.amber[900]!, Colors.amberAccent],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  final Color green = Colors.green[800]!;
+  final LinearGradient linearColorGreen = LinearGradient(
+    colors: [Colors.green, Colors.green[800]!],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  final LinearGradient progressColor = LinearGradient(
+    colors: [Colors.greenAccent[400]!, Colors.greenAccent],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  final Color grey = Colors.grey[600]!;
+  final LinearGradient linearColorGrey = LinearGradient(
+    colors: [Colors.white54, Colors.grey[600]!],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 }

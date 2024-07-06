@@ -1,29 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sintren_mobile/models/prediksi_model.dart';
+import 'package:sintren_mobile/models/trend_grafik_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class TrendChart {
-  final List<DataItem> data;
+  final TrendGrafik data;
 
   TrendChart({required this.data});
 
-  final List<Color> actualDataGradientColors = [
-    ColorTheme().secondaryColor,
-    ColorTheme().thirdColor,
+  final List<Color> tanamGradientColors = [
+    Colors.deepPurple,
+    Colors.indigo,
   ];
 
-  final List<Color> predictedDataGradientColors = [
-    Colors.amber[900]!, // You can choose any other color to differentiate
+  final List<Color> panenGradientColors = [
+    Colors.amber[900]!,
     Colors.amberAccent,
   ];
 
-  List<int> get actualData => data.map((item) => item.actualData).toList();
-  List<int> get predictedData =>
-      data.map((item) => item.predictedData).toList();
-  List<int> get labels => data.map((item) => item.label).toList();
+  final List<Color> pusoRusakGradientColors = [
+    Colors.red[900]!,
+    Colors.redAccent[400]!
+  ];
+
+  List<double> get tanamData =>
+      data.allData.map((item) => item['tanam'] ?? 0).toList();
+  List<double> get panenData =>
+      data.allData.map((item) => item['panen'] ?? 0).toList();
+  List<double> get pusoRusakData =>
+      data.allData.map((item) => item['puso/rusak'] ?? 0).toList();
+  List<String> get labels => [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'Mei',
+        'Jun',
+        'Jul',
+        'Agt',
+        'Sep',
+        'Okt',
+        'Nov',
+        'Des',
+      ];
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     TextStyle style = TextStyle(
@@ -31,9 +52,9 @@ class TrendChart {
       color: ColorTheme().primaryColor,
     );
     Widget text;
-    int yearIndex = value.toInt();
-    if (yearIndex >= 0 && yearIndex < labels.length) {
-      text = Text(labels[yearIndex].toString(), style: style);
+    int monthIndex = value.toInt();
+    if (monthIndex >= 0 && monthIndex < labels.length) {
+      text = Text(labels[monthIndex], style: style);
     } else {
       text = Text('', style: style);
     }
@@ -60,28 +81,26 @@ class TrendChart {
     return Text(text, style: style, textAlign: TextAlign.left);
   }
 
-  late double interval;
+  double interval = 1.0;
 
   LineChartData mainData() {
-    int maxActualData = actualData.reduce((a, b) => a > b ? a : b);
-    int minActualData = actualData.reduce((a, b) => a < b ? a : b);
-
-    int maxPredictedData = predictedData.reduce((a, b) => a > b ? a : b);
-    int minPredictedData = predictedData.reduce((a, b) => a < b ? a : b);
-
-    double maxY = [maxActualData, maxPredictedData]
-        .reduce((a, b) => a > b ? a : b)
-        .toDouble();
-    double minY = [minActualData, minPredictedData]
-        .reduce((a, b) => a < b ? a : b)
-        .toDouble();
+    double maxY = [tanamData, panenData, pusoRusakData]
+        .expand((i) => i)
+        .reduce((a, b) => a > b ? a : b);
+    double minY = [tanamData, panenData, pusoRusakData]
+        .expand((i) => i)
+        .reduce((a, b) => a < b ? a : b);
 
     // Adjusting maxY and minY to be a multiple of 5000 for better display
     maxY = ((maxY / 5000).ceil() * 5000).toDouble();
     minY = ((minY / 5000).floor() * 5000).toDouble();
 
     // Calculate interval based on the range and desired number of intervals
-    interval = ((maxY - minY) / 5).ceil().toDouble();
+    if (maxY > minY) {
+      interval = ((maxY - minY) / 5).ceil().toDouble();
+    } else {
+      interval = 1.0; // Set a default interval if maxY == minY
+    }
 
     return LineChartData(
       backgroundColor: Colors.white,
@@ -89,15 +108,20 @@ class TrendChart {
         touchTooltipData: LineTouchTooltipData(
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots.map((spot) {
-              final isActualData = spot.barIndex == 0;
-              final dataType = isActualData ? 'Actual Data' : 'Predicted Data';
-              final textStyle = isActualData
+              final dataType = spot.barIndex == 0
+                  ? 'Tanam'
+                  : spot.barIndex == 1
+                      ? 'Panen'
+                      : 'Puso/Rusak';
+              final textStyle = spot.barIndex == 0
                   ? StyleTheme()
                       .styleWhite
                       .copyWith(fontWeight: FontWeight.w500)
-                  : StyleTheme()
-                      .styleWhite
-                      .copyWith(fontWeight: FontWeight.bold);
+                  : spot.barIndex == 1
+                      ? StyleTheme()
+                          .styleWhite
+                          .copyWith(fontWeight: FontWeight.bold)
+                      : StyleTheme().styleWhite;
               return LineTooltipItem(
                 '$dataType: ${spot.y.toStringAsFixed(2)}',
                 textStyle,
@@ -151,7 +175,10 @@ class TrendChart {
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(color: Colors.white),
+        border: Border.all(
+          color: Colors.grey,
+          width: 0.w, // Add .w for border width
+        ),
       ),
       minX: 0,
       maxX: (labels.length - 1).toDouble(),
@@ -159,13 +186,11 @@ class TrendChart {
       maxY: maxY,
       lineBarsData: [
         LineChartBarData(
-          spots: List.generate(
-              actualData.length,
-              (index) =>
-                  FlSpot(index.toDouble(), actualData[index].toDouble())),
+          spots: List.generate(tanamData.length,
+              (index) => FlSpot(index.toDouble(), tanamData[index])),
           isCurved: true,
           gradient: LinearGradient(
-            colors: actualDataGradientColors,
+            colors: tanamGradientColors,
           ),
           barWidth: 5.w, // Add .w for bar width
           isStrokeCapRound: true,
@@ -173,17 +198,20 @@ class TrendChart {
             show: false,
           ),
           belowBarData: BarAreaData(
-            show: false,
+            show: true,
+            gradient: LinearGradient(
+              colors: tanamGradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
           ),
         ),
         LineChartBarData(
-          spots: List.generate(
-              predictedData.length,
-              (index) =>
-                  FlSpot(index.toDouble(), predictedData[index].toDouble())),
+          spots: List.generate(panenData.length,
+              (index) => FlSpot(index.toDouble(), panenData[index])),
           isCurved: true,
           gradient: LinearGradient(
-            colors: predictedDataGradientColors,
+            colors: panenGradientColors,
           ),
           barWidth: 5.w, // Add .w for bar width
           isStrokeCapRound: true,
@@ -191,7 +219,33 @@ class TrendChart {
             show: false,
           ),
           belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: panenGradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
+          ),
+        ),
+        LineChartBarData(
+          spots: List.generate(pusoRusakData.length,
+              (index) => FlSpot(index.toDouble(), pusoRusakData[index])),
+          isCurved: true,
+          gradient: LinearGradient(
+            colors: pusoRusakGradientColors,
+          ),
+          barWidth: 5.w, // Add .w for bar width
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
             show: false,
+          ),
+          belowBarData: BarAreaData(
+            show: true,
+            gradient: LinearGradient(
+              colors: pusoRusakGradientColors
+                  .map((color) => color.withOpacity(0.3))
+                  .toList(),
+            ),
           ),
         ),
       ],

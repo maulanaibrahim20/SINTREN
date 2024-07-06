@@ -54,6 +54,14 @@ class DetailPadiModel {
       return DateFormat('yyyy-MM-dd HH:mm:ss').format(rawDate);
     }
 
+    String editDate(String date) {
+      if (date.isEmpty) {
+        return "";
+      }
+      DateTime rawDate = DateTime.parse(date);
+      return DateFormat('yyyy-MM-dd').format(rawDate);
+    }
+
     try {
       return DetailPadiModel(
         id: json['id'] ?? 0,
@@ -72,7 +80,7 @@ class DetailPadiModel {
         pengairanName: json['pengairan_name'] ?? '',
         idJenisPadi: json['id_jenis_padi']?.toString() ?? '',
         padiName: json['padi_name'] ?? '',
-        date: json['date'] ?? '',
+        date: editDate(json['date'] ?? ''),
         status: json['status'] ?? '',
         catatan: json['catatan'] ?? '',
         createdAt:
