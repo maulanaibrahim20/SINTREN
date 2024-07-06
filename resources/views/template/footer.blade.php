@@ -39,7 +39,7 @@
         </div>
         <div class="row align-items-center flex-row-reverse">
             <div class="col-lg-12 col-sm-12   text-center mt-3 mt-md-0">
-                Copyright © 2023 <a href="#">Sintren Team Polindra</a>. Designed by <a href="#">Sintren
+                Copyright © 2024 <a href="#">Sintren Team Polindra</a>. Designed by <a href="#">Sintren
                     Team</a>
                 All rights
                 reserved.
