@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Pangan\DataPanganController;
 use App\Http\Controllers\Api\Penyuluh\PadiController;
 use App\Http\Controllers\Api\Penyuluh\PalawijaController;
 use App\Http\Controllers\Api\Penyuluh\PenyuluhController;
+use App\Http\Controllers\PANGAN\PasarController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

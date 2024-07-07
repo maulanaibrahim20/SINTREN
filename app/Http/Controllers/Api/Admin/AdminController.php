@@ -19,12 +19,12 @@ class AdminController extends Controller
     {
         try {
             if ($id == "dinas") {
-                $assignments = LuasLahanWilayah::with('desa')->get();
+                $assignments = LuasLahanWilayah::with('desa.kecamatan')->get();
             } else {
-                $assignments = LuasLahanWilayah::with('desa')->where('kecamatan_id', $id)->get();
+                $assignments = LuasLahanWilayah::with('desa.kecamatan')->where('kecamatan_id', $id)->get();
             }
 
-            if (is_null($assignments)) {
+            if ($assignments->isEmpty()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Data kosong',
@@ -32,10 +32,28 @@ class AdminController extends Controller
                 ], 201);
             }
 
+            $data = [];
+            foreach ($assignments as $assignment) {
+                $data[] = [
+                    'id' => $assignment->id,
+                    'kecamatan_id' => $assignment->desa->kecamatan->id ?? '',
+                    'kecamatan_name' => $assignment->desa->kecamatan->name ?? '',
+                    'desa_id' => $assignment->desa_id,
+                    'desa_name' => $assignment->desa->name ?? '',
+                    'lahan_sawah' => $assignment->lahan_sawah,
+                    'lahan_non_sawah' => $assignment->lahan_non_sawah,
+                    'desa' => [
+                        'id' => $assignment->desa->id ?? '',
+                        'district_id' => $assignment->desa->district_id ?? '',
+                        'name' => $assignment->desa->name ?? '',
+                    ],
+                ];
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil didapatkan',
-                'data' => $assignments
+                'data' => $data
             ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
@@ -51,6 +69,7 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
 
     public function verify(Request $request, $id)
     {

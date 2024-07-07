@@ -8,43 +8,10 @@ use Illuminate\Http\Request;
 
 class PenyuluhController extends Controller
 {
-    // public function getDesa($id)
-    // {
-    //     try {
-    //         $assignments = User::with(['desas.luasLahanWilayah'])->find($id);
-
-    //         if (is_null($assignments)) {
-    //             return response()->json([
-    //                 'status' => 'error',
-    //                 'message' => 'Data kosong',
-    //                 'data' => null
-    //             ], 201);
-    //         }
-
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'Data berhasil didapatkan',
-    //             'data' => $assignments->desas
-    //         ], 200);
-    //     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Data tidak ditemukan.',
-    //             'data' => null
-    //         ], 404);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => 'Gagal mendapatkan data: ' . $e->getMessage(),
-    //             'data' => null
-    //         ], 500);
-    //     }
-    // }
-
     public function getDesa($id)
     {
         try {
-            $user = User::with(['desas.luasLahanWilayah'])->find($id);
+            $user = User::with(['desas.luasLahanWilayah','desas.kecamatan'])->find($id);
 
             if (is_null($user)) {
                 return response()->json([
@@ -60,6 +27,7 @@ class PenyuluhController extends Controller
                     $data[] = [
                         'id' => $desa->luasLahanWilayah->id,
                         'kecamatan_id' => $desa->luasLahanWilayah->kecamatan_id,
+                        'kecamatan_name' => $desa->kecamatan->name,
                         'desa_id' => $desa->luasLahanWilayah->desa_id,
                         'lahan_sawah' => $desa->luasLahanWilayah->lahan_sawah,
                         'lahan_non_sawah' => $desa->luasLahanWilayah->lahan_non_sawah,
