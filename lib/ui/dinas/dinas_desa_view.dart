@@ -135,12 +135,6 @@ class _DinasDesaViewState extends State<DinasDesaView> {
             List<HistoriPenyuluhanModel> historiList = snapshot.data?[0];
             List<LuasWilayahModel> desaList = snapshot.data?[1];
 
-            historiList = widget.kecamatanId != null
-                ? historiList
-                    .where((histori) => histori.id == widget.kecamatanId)
-                    .toList()
-                : historiList;
-
             desaList = widget.kecamatanId != null
                 ? desaList
                     .where((desa) => desa.kecamatanId == widget.kecamatanId)
@@ -285,7 +279,7 @@ class _DinasDesaViewState extends State<DinasDesaView> {
                                   fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
                             barRadius: Radius.circular(10.r),
-                            linearGradient: ColorTheme().linearColor,
+                            linearGradient: ColorTheme().progressColor,
                           ),
                           SizedBox(height: 10.h),
                         ],

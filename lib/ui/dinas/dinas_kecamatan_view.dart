@@ -273,7 +273,7 @@ class _DinasKecamatanViewState extends State<DinasKecamatanView> {
                                   fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
                             barRadius: Radius.circular(10.r),
-                            linearGradient: ColorTheme().linearColor,
+                            linearGradient: ColorTheme().progressColor,
                           ),
                           SizedBox(height: 10.h),
                         ],

@@ -5,7 +5,6 @@ import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
-import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/ui/components/palawija_chart.dart';
 import 'package:sintren_mobile/ui/components/progress_chart.dart';
 import 'package:sintren_mobile/ui/components/trend_chart.dart';
@@ -339,10 +338,8 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
             child: TabBarView(
               controller: _tabProgressController,
               children: [
-                // Tab untuk data Padi
-                ProgressChart(desaId: widget.kecamatanId)
+                ProgressChart(kecamatanId: widget.kecamatanId)
                     .buildProgressChartTab('Padi'),
-                // Tab untuk data Palawija
                 ProgressChart(kecamatanId: widget.kecamatanId)
                     .buildProgressChartTab('Palawija'),
               ],
@@ -380,11 +377,9 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
           Icons.refresh_rounded,
         ),
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          adminC.getHistoriPenyuluhan(isMonthNow: false, isKecamatan: true),
-          adminC.getLuasLahanDesa(isKecamatan: true),
-        ]),
+      body: FutureBuilder<List<HistoriPenyuluhanModel>>(
+        future:
+            adminC.getHistoriPenyuluhan(isMonthNow: false, isKecamatan: true),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -410,21 +405,10 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
               ),
             );
           } else {
-            final historiList =
-                (snapshot.data?[0] as List<HistoriPenyuluhanModel>)
-                    .where((histori) {
+            final historiList = (snapshot.data as List<HistoriPenyuluhanModel>)
+                .where((histori) {
               return histori.id == widget.kecamatanId!;
             });
-            final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
-
-            double getLuasDesa(String id) {
-              for (LuasWilayahModel wilayah in luasDesaList) {
-                if (wilayah.id == id) {
-                  return wilayah.totalLuasLahan;
-                }
-              }
-              return 0;
-            }
 
             if (historiList.isEmpty) {
               return Center(
