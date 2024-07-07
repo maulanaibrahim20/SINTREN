@@ -5,18 +5,18 @@ import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
-import 'package:sintren_mobile/ui/admin/admin_detail_desa_view.dart';
+import 'package:sintren_mobile/ui/uptd/uptd_detail_desa_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
-class AdminDesaView extends StatefulWidget {
-  const AdminDesaView({super.key});
+class UptdDesaView extends StatefulWidget {
+  const UptdDesaView({super.key});
 
   @override
-  State<AdminDesaView> createState() => _AdminDesaViewState();
+  State<UptdDesaView> createState() => _UptdDesaViewState();
 }
 
-class _AdminDesaViewState extends State<AdminDesaView> {
+class _UptdDesaViewState extends State<UptdDesaView> {
   TextEditingController search = TextEditingController();
   bool isSearchOpen = false;
 
@@ -137,7 +137,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
             double getNilaiByDesaId(String desaId) {
               try {
                 return historiList
-                    .firstWhere((element) => element.desaId == desaId)
+                    .firstWhere((element) => element.id == desaId)
                     .nilai;
               } catch (e) {
                 return 0;
@@ -190,7 +190,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => AdminDetailDesaView(
+                          builder: (_) => UptdDetailDesaView(
                             desaId: desa.id,
                             desaName: desa.name,
                           ),
@@ -272,7 +272,7 @@ class _AdminDesaViewState extends State<AdminDesaView> {
                                   fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
                             barRadius: Radius.circular(10.r),
-                            linearGradient: ColorTheme().linearColor,
+                            linearGradient: ColorTheme().progressColor,
                           ),
                           SizedBox(height: 10.h),
                         ],

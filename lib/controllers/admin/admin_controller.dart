@@ -40,6 +40,7 @@ class AdminController {
 
   Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan({
     required bool isMonthNow,
+    bool isKecamatan = false,
   }) async {
     try {
       final db = await DatabaseHelper().database;
@@ -47,32 +48,31 @@ class AdminController {
       final String currentMonthYear =
           '${now.year}-${now.month.toString().padLeft(2, '0')}';
 
-      const String query = '''
+      String query = '''
       SELECT
           strftime('%Y-%m', date) AS month_year,
-          desa_id,
-          desa_name,
+          ${isKecamatan ? 'kecamatan_id AS id, kecamatan_name AS name' : 'desa_id AS id, desa_name AS name'},
           SUM(nilai) AS total_nilai,
           (SELECT COUNT(*) FROM (
-              SELECT date, desa_id, desa_name, status FROM detailPadi
+              SELECT date, ${isKecamatan ? 'kecamatan_id' : 'desa_id'}, status FROM detailPadi
               UNION ALL
-              SELECT date, desa_id, desa_name, status FROM detailPalawija
+              SELECT date, ${isKecamatan ? 'kecamatan_id' : 'desa_id'}, status FROM detailPalawija
           ) AS status_data
           WHERE status = 'tunggu' AND
                 strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
-                status_data.desa_id = combined_data.desa_id
+                status_data.${isKecamatan ? 'kecamatan_id' : 'desa_id'} = combined_data.${isKecamatan ? 'kecamatan_id' : 'desa_id'}
           ) AS total_tunggu
       FROM (
-          SELECT date, desa_id, desa_name, nilai FROM detailPadi
+          SELECT date, ${isKecamatan ? 'kecamatan_id, kecamatan_name' : 'desa_id, desa_name'}, nilai FROM detailPadi
           UNION ALL
-          SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+          SELECT date, ${isKecamatan ? 'kecamatan_id, kecamatan_name' : 'desa_id, desa_name'}, nilai FROM detailPalawija
       ) AS combined_data
       WHERE strftime('%Y-%m', date) LIKE ?
       GROUP BY
           month_year,
-          desa_id
+          ${isKecamatan ? 'kecamatan_id' : 'desa_id'}
       ORDER BY
-          month_year DESC, desa_id;
+          month_year DESC, ${isKecamatan ? 'kecamatan_id' : 'desa_id'};
     ''';
 
       final List<String> args = isMonthNow ? [currentMonthYear] : ['%'];
@@ -86,19 +86,46 @@ class AdminController {
     }
   }
 
-  Future<List<LuasWilayahModel>> getLuasLahanDesa() async {
+  Future<List<LuasWilayahModel>> getLuasLahanDesa(
+      {bool isKecamatan = false}) async {
     try {
       final db = await DatabaseHelper().database;
-      final List<Map<String, dynamic>> maps = await db.query('desa');
 
-      return maps.map((map) => LuasWilayahModel.fromMap(map)).toList();
+      if (isKecamatan) {
+        final List<Map<String, dynamic>> maps = await db.rawQuery('''
+        SELECT 
+          kecamatan_id, 
+          kecamatan_name, 
+          SUM(lahan_sawah) as total_lahan_sawah, 
+          SUM(lahan_non_sawah) as total_lahan_non_sawah, 
+          SUM(lahan_sawah + lahan_non_sawah) as total_luas_lahan 
+        FROM desa 
+        GROUP BY kecamatan_id, kecamatan_name
+      ''');
+
+        return maps
+            .map((map) => LuasWilayahModel(
+                  id: map['kecamatan_id'],
+                  name: '',
+                  kecamatanId: map['kecamatan_id'],
+                  kecamatanName: map['kecamatan_name'],
+                  luasLahanNonSawah: map['total_lahan_non_sawah'],
+                  luasLahanSawah: map['total_lahan_sawah'],
+                  totalLuasLahan: map['total_luas_lahan'],
+                ))
+            .toList();
+      } else {
+        final List<Map<String, dynamic>> maps = await db.query('desa');
+
+        return maps.map((map) => LuasWilayahModel.fromMap(map)).toList();
+      }
     } catch (e) {
       log("Get luas lahan desa error: $e");
       return [];
     }
   }
 
-  Future<double> getTotalLuasLahanKecamatan() async {
+  Future<double> getTotalLuasLahan() async {
     try {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> maps = await db.query('desa');

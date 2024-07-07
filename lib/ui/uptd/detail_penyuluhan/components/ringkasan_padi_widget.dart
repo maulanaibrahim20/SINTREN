@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sintren_mobile/controllers/penyuluh/palawija_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
-import 'package:sintren_mobile/models/desa_model.dart';
-import 'package:sintren_mobile/ui/uptd/detail_penyuluhan/components/rincian_palawija_view.dart';
+import 'package:sintren_mobile/ui/uptd/detail_penyuluhan/components/rincian_padi_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
 
-class RingkasanPalawijaWidget extends StatefulWidget {
-  const RingkasanPalawijaWidget({
-    super.key,
-    required this.date,
-    required this.desaId,
-    required this.desaName,
-    required this.isRincian,
-  });
+class RingkasanPadiWidget extends StatefulWidget {
+  const RingkasanPadiWidget(
+      {super.key,
+      required this.date,
+      required this.desaId,
+      required this.desaName,
+      required this.isRincian});
   final String date;
   final String desaId;
   final String desaName;
   final bool isRincian;
 
   @override
-  State<RingkasanPalawijaWidget> createState() =>
-      _RingkasanPalawijaWidgetState();
+  State<RingkasanPadiWidget> createState() => _RingkasanPadiWidgetState();
 }
 
-class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
+class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -82,40 +78,6 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                       ),
                     ],
                   ),
-                  widget.isRincian
-                      ? const SizedBox.shrink()
-                      : Container(
-                          height: 40.h,
-                          width: 40.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: ColorTheme().whiteColor),
-                            gradient: ColorTheme().linearColorWhite,
-                          ),
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                DesaModel desa = DesaModel(
-                                    id: widget.desaId, name: widget.desaName);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => FormPalawijaView(
-                                      desa: desa,
-                                      onCreate: true,
-                                      date: "${widget.date}-01",
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Icon(
-                                Icons.add,
-                                color: ColorTheme().green,
-                                size: 25.sp,
-                              ),
-                            ),
-                          ),
-                        ),
                 ],
               ),
             ),
@@ -124,8 +86,8 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: FutureBuilder(
-                future: PalawijaController()
-                    .getDetailPalawijaByUser(widget.date, widget.desaId),
+                future: AdminPadiController()
+                    .getDetailPadiByDesa(widget.date, widget.desaId),
                 builder: ((context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -239,7 +201,7 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => RincianPalawijaView(
+                          builder: (_) => RincianPadiView(
                             date: widget.date,
                             desaId: widget.desaId,
                             desaName: widget.desaName,

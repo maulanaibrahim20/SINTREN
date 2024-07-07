@@ -29,8 +29,8 @@ class PenyuluhController {
       const String query = '''
         SELECT
             strftime('%Y-%m', date) AS month_year,
-            desa_id,
-            desa_name,
+            desa_id AS id,
+            desa_name AS name,
             SUM(nilai) AS total_nilai,
             (SELECT COUNT(*) FROM (
                 SELECT date, desa_id, desa_name, status FROM detailPadi

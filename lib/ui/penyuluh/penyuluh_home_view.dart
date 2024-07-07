@@ -189,8 +189,8 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                       builder: (_) => DetailPenyuluhanView(
                         index: 0,
                         date: desa.date,
-                        desaId: desa.desaId,
-                        desaName: desa.desaName,
+                        desaId: desa.id,
+                        desaName: desa.name,
                       ),
                     ),
                   ).then((value) => setState(() {}));
@@ -249,7 +249,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Desa ${UserController().toCamelCase(desa.desaName)}",
+                                  "Desa ${UserController().toCamelCase(desa.name)}",
                                   style: StyleTheme().stylePrimary.copyWith(
                                       fontSize: 20.sp,
                                       fontWeight: FontWeight.bold),
@@ -289,11 +289,11 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                         animation: true,
                         lineHeight: 30.h,
                         animationDuration: 2000,
-                        percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
+                        percent: (desa.nilai / getLuasDesa(desa.id)) > 1
                             ? 1
-                            : desa.nilai / getLuasDesa(desa.desaId),
+                            : desa.nilai / getLuasDesa(desa.id),
                         center: Text(
-                          "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
+                          "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.id)})",
                           style: StyleTheme().styleWhite.copyWith(
                               fontWeight: FontWeight.w500, fontSize: 14.sp),
                         ),

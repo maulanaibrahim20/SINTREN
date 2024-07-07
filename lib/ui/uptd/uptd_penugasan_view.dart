@@ -3,18 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/penyuluh_model.dart';
-import 'package:sintren_mobile/ui/admin/detail_penugasan_view.dart';
+import 'package:sintren_mobile/ui/uptd/detail_penugasan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
-class AdminPenugasanView extends StatefulWidget {
-  const AdminPenugasanView({super.key});
+class UptdPenugasanView extends StatefulWidget {
+  const UptdPenugasanView({super.key});
 
   @override
-  State<AdminPenugasanView> createState() => _AdminPenugasanViewState();
+  State<UptdPenugasanView> createState() => _UptdPenugasanViewState();
 }
 
-class _AdminPenugasanViewState extends State<AdminPenugasanView> {
+class _UptdPenugasanViewState extends State<UptdPenugasanView> {
   final adminC = AdminController();
 
   @override

@@ -9,9 +9,10 @@ import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart'
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_combined_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
-import 'package:sintren_mobile/ui/admin/admin_verify_view.dart';
-import 'package:sintren_mobile/ui/admin/components/palawija_chart.dart';
-import 'package:sintren_mobile/ui/admin/components/trend_chart.dart';
+import 'package:sintren_mobile/ui/uptd/uptd_verify_view.dart';
+import 'package:sintren_mobile/ui/components/palawija_chart.dart';
+import 'package:sintren_mobile/ui/components/progress_chart.dart';
+import 'package:sintren_mobile/ui/components/trend_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
@@ -19,15 +20,15 @@ import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/users/change_password_view.dart';
 import 'package:sintren_mobile/ui/users/change_profile_view.dart';
 
-class AdminHomeView extends StatefulWidget {
-  const AdminHomeView({super.key});
+class UptdHomeView extends StatefulWidget {
+  const UptdHomeView({super.key});
 
   @override
-  State<AdminHomeView> createState() => _AdminHomeViewState();
+  State<UptdHomeView> createState() => _UptdHomeViewState();
 }
 
-class _AdminHomeViewState extends State<AdminHomeView>
-    with SingleTickerProviderStateMixin {
+class _UptdHomeViewState extends State<UptdHomeView>
+    with TickerProviderStateMixin {
   final userC = UserController();
   final adminC = AdminController();
   TextEditingController ulasan = TextEditingController();
@@ -35,41 +36,49 @@ class _AdminHomeViewState extends State<AdminHomeView>
   String? kecamatan;
   double? presentasePenyuluhan;
   double? penyuluhanBulanIni;
-  double? totalLuasLahanKecamatan;
+  double? totalLuasLahan;
   final statusNotifier = ValueNotifier<String>('Memulai sinkronisasi data...');
   late int selectedTahun;
-  late String? role;
+  String? kecamatanId;
   int currentYear = DateTime.now().year;
   late List<int> years;
   late TabController _tabController;
+  late TabController _tabProgressController;
   final List<String> _tabs = ['Padi', 'Palawija'];
 
   Future<void> _initializedData() async {
     years = List.generate(currentYear - 2009, (index) => 2010 + index);
     kecamatan = await UserLoginModel().getKecamatanName();
     penyuluhanBulanIni = await adminC.getTotalNilaiPenyuluhanBulanIni();
-    totalLuasLahanKecamatan = await adminC.getTotalLuasLahanKecamatan();
+    totalLuasLahan = await adminC.getTotalLuasLahan();
     presentasePenyuluhan =
-        (penyuluhanBulanIni! / totalLuasLahanKecamatan!) * 100;
-    role = await UserLoginModel().getRole();
-    await AdminPadiController().getDataGrafikPenyuluhanPadi("2021");
+        (penyuluhanBulanIni! / totalLuasLahan!) * 100;
+    kecamatanId = await UserLoginModel().getKecamatanId();
   }
 
   Future<dynamic> _fetchChartData(String type) async {
-    // Implementasi pengambilan data berdasarkan jenis data (padi/palawija)
     if (type == 'Padi') {
-      return await AdminPadiController()
-          .getDataGrafikPenyuluhanPadi(selectedTahun.toString());
+      return await AdminPadiController().getDataGrafikPenyuluhanPadi(
+          selectedTahun.toString(),
+          kecamatanId: kecamatanId);
     } else if (type == 'Palawija') {
-      return await AdminPalawijaController()
-          .getDataGrafikPenyuluhanPalawija(selectedTahun.toString());
+      return await AdminPalawijaController().getDataGrafikPenyuluhanPalawija(
+          selectedTahun.toString(),
+          kecamatanId: kecamatanId);
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _tabProgressController.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
     _tabController = TabController(length: _tabs.length, vsync: this);
-    AdminPadiController().getAllPenyuluhanPadi();
+    _tabProgressController = TabController(length: _tabs.length, vsync: this);
     selectedTahun = DateTime.now().year;
     super.initState();
   }
@@ -79,6 +88,29 @@ class _AdminHomeViewState extends State<AdminHomeView>
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: ColorTheme().bgColor,
+      floatingActionButton: FloatingActionButton(
+        shape: const CircleBorder(),
+        heroTag: 'sinkronisasi_home',
+        onPressed: () async {
+          EasyLoading.show(status: statusNotifier.value);
+
+          statusNotifier.addListener(() {
+            EasyLoading.show(status: statusNotifier.value);
+          });
+
+          try {
+            await adminC.synchronizeData(statusNotifier);
+          } finally {
+            EasyLoading.dismiss();
+          }
+          setState(() {});
+        },
+        backgroundColor: ColorTheme().primaryColor,
+        foregroundColor: ColorTheme().whiteColor,
+        child: const Icon(
+          Icons.refresh_rounded,
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -114,8 +146,8 @@ class _AdminHomeViewState extends State<AdminHomeView>
                           SizedBox(height: 10.h),
                           _progresPenyuluhan(context),
                           SizedBox(height: 10.h),
-                          role == "UPTD" ? _palawijaChart() : _palawijaChart(),
-                          SizedBox(height: 20.h),
+                          PalawijaChart().chart(kecamatanId: kecamatanId),
+                          SizedBox(height: 80.h),
                         ],
                       ),
                     ),
@@ -126,94 +158,6 @@ class _AdminHomeViewState extends State<AdminHomeView>
           ),
         ],
       ),
-    );
-  }
-
-  SizedBox _palawijaChart() {
-    return SizedBox(
-      width: double.infinity,
-      height: 270.h,
-      child: FutureBuilder(
-          future: AdminPalawijaController().getDataPenyuluhanPalawijaTahunIni(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error,
-                      color: Colors.grey,
-                      size: 50,
-                    ),
-                    Text(
-                      "Internal Server Error",
-                      style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              final dataList = snapshot.data as List<Map<String, dynamic>>;
-              return Card(
-                elevation: 3,
-                margin: EdgeInsets.symmetric(horizontal: 15.w),
-                color: ColorTheme().whiteColor,
-                surfaceTintColor: ColorTheme().whiteColor,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 30.w, vertical: 10.h),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Data Panen Palawija Tahun Ini",
-                            style: StyleTheme().stylePrimary.copyWith(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          const Divider(),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 18.h,
-                          ),
-                          Expanded(
-                            child: PieChart(PieChartData(
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 0,
-                              centerSpaceRadius: 40.r,
-                              sections:
-                                  PalawijaChart().showingSections(dataList),
-                            )),
-                          ),
-                          PalawijaChart().indicator(dataList),
-                          SizedBox(
-                            width: 28.w,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                  ],
-                ),
-              );
-            }
-          }),
     );
   }
 
@@ -261,7 +205,7 @@ class _AdminHomeViewState extends State<AdminHomeView>
           return GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const AdminVerifyView()));
+                  MaterialPageRoute(builder: (_) => const UptdVerifyView()));
             },
             child: Container(
               width: MediaQuery.of(context).size.width.w,
@@ -354,36 +298,6 @@ class _AdminHomeViewState extends State<AdminHomeView>
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      height: 50.h,
-                      width: 50.w,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: ColorTheme().linearColor),
-                      child: IconButton(
-                        icon: Icon(Icons.refresh, size: 24.sp),
-                        color: ColorTheme().whiteColor,
-                        onPressed: () async {
-                          EasyLoading.show(status: statusNotifier.value);
-
-                          statusNotifier.addListener(() {
-                            EasyLoading.show(status: statusNotifier.value);
-                          });
-
-                          try {
-                            await adminC.synchronizeData(statusNotifier);
-                          } finally {
-                            EasyLoading.dismiss();
-                          }
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -413,15 +327,43 @@ class _AdminHomeViewState extends State<AdminHomeView>
                 ? 1
                 : (presentasePenyuluhan! / 100),
             center: Text(
-              "${presentasePenyuluhan!.toStringAsFixed(1)}% (${penyuluhanBulanIni!.toStringAsFixed(1)}/${totalLuasLahanKecamatan!.toStringAsFixed(1)})",
+              "${presentasePenyuluhan!.toStringAsFixed(1)}% (${penyuluhanBulanIni!.toStringAsFixed(1)}/${totalLuasLahan!.toStringAsFixed(1)})",
               style: StyleTheme()
                   .styleWhite
                   .copyWith(fontWeight: FontWeight.w500, fontSize: 14.sp),
             ),
             barRadius: Radius.circular(10.r),
-            linearGradient: ColorTheme().linearColor,
+            linearGradient: ColorTheme().progressColor,
           ),
           SizedBox(height: 10.h),
+          if (presentasePenyuluhan! > 0) ...[
+            TabBar(
+              controller: _tabProgressController,
+              tabs: _tabs.map((String tab) {
+                return Tab(text: tab);
+              }).toList(),
+              labelColor: ColorTheme().primaryColor,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: ColorTheme().primaryColor,
+              indicatorWeight: 2.0.r,
+              indicatorSize: TabBarIndicatorSize.tab,
+            ),
+            Container(
+              height: 280.h,
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              child: TabBarView(
+                controller: _tabProgressController,
+                children: [
+                  // Tab untuk data Padi
+                  ProgressChart(kecamatanId: kecamatanId)
+                      .buildProgressChartTab('Padi'),
+                  // Tab untuk data Palawija
+                  ProgressChart(kecamatanId: kecamatanId)
+                      .buildProgressChartTab('Palawija'),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

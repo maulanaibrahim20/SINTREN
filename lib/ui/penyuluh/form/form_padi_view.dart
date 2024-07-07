@@ -413,7 +413,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       TextFormFieldComponent(
                         controller: value,
                         icon: Icons.numbers,
-                        hint: "Masukkan Nilai",
+                        hint: "Masukkan Nilai, Contoh : 1000",
                         label: "Nilai",
                         validator: (value) => value == null || value.isEmpty
                             ? "Masukkan nilai terlebih dahulu"
@@ -429,6 +429,14 @@ class _FormPadiViewState extends State<FormPadiView> {
                               fontWeight: FontWeight.w500,
                               fontSize: 15.sp,
                             ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: Text(
+                          "* Nilai dimasukkan dalam hektar",
+                          style:
+                              StyleTheme().styleBlack.copyWith(color: Colors.red,fontSize: 16.sp),
+                        ),
                       ),
                     ],
                   ),

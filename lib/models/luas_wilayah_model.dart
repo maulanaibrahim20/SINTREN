@@ -2,6 +2,7 @@ class LuasWilayahModel {
   final String id;
   final String name;
   final String kecamatanId;
+  final String kecamatanName;
   final double luasLahanSawah;
   final double luasLahanNonSawah;
   final double totalLuasLahan;
@@ -11,6 +12,7 @@ class LuasWilayahModel {
     required this.luasLahanNonSawah,
     required this.totalLuasLahan,
     required this.kecamatanId,
+    required this.kecamatanName,
     required this.id,
     required this.name,
   });
@@ -38,6 +40,7 @@ class LuasWilayahModel {
       luasLahanNonSawah: luasLahanNonSawah,
       luasLahanSawah: luasLahanSawah,
       totalLuasLahan: luasLahanSawah + luasLahanNonSawah,
+      kecamatanName: json['kecamatan_name'],
     );
   }
 
@@ -46,6 +49,7 @@ class LuasWilayahModel {
       id: map['id'],
       name: map['name'],
       kecamatanId: map['kecamatan_id'],
+      kecamatanName: map['kecamatan_name'],
       luasLahanNonSawah: map['lahan_non_sawah'],
       luasLahanSawah: map['lahan_sawah'],
       totalLuasLahan: map['total_luas_lahan'],
@@ -57,6 +61,7 @@ class LuasWilayahModel {
       'id': id,
       'name': name,
       'kecamatan_id': kecamatanId,
+      'kecamatan_name': kecamatanName,
       'lahan_sawah': luasLahanSawah,
       'lahan_non_sawah': luasLahanNonSawah,
       'total_luas_lahan': totalLuasLahan,

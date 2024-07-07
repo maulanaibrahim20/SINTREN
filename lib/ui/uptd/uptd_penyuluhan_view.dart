@@ -1,58 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
+import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
-import 'package:sintren_mobile/ui/admin/detail_penyuluhan_view.dart';
+import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
+import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
+import 'package:sintren_mobile/services/admin/admin_service.dart';
+import 'package:sintren_mobile/ui/uptd/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 
-class AdminDetailDesaView extends StatefulWidget {
-  const AdminDetailDesaView({super.key, this.desaId, this.desaName});
-
-  final String? desaId;
-  final String? desaName;
+class UptdPenyuluhanView extends StatefulWidget {
+  const UptdPenyuluhanView({super.key});
 
   @override
-  State<AdminDetailDesaView> createState() => _AdminDetailDesaViewState();
+  State<UptdPenyuluhanView> createState() => _UptdPenyuluhanViewState();
 }
 
-class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
+class _UptdPenyuluhanViewState extends State<UptdPenyuluhanView> {
+  final userC = UserController();
   final adminC = AdminController();
-  TextEditingController search = TextEditingController();
+  late List<DesaModel> desaList;
+  late DesaModel? selectedDesaValue;
+
+  Future<void> _synchronizeData() async {
+    await AdminService().getDataPenyuluhanDesa();
+    await AdminPadiService().getDetailPadiByKecamatan();
+    await AdminPalawijaService().getDetailPalawijaByKecamatan();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _initializeData();
+    super.initState();
+  }
+
+  void refresh() {
+    setState(() {});
+  }
+
+  Future<void> _initializeData() async {
+    desaList = await adminC.getDesa();
+    selectedDesaValue = null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorTheme().bgColor,
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: false,
         foregroundColor: ColorTheme().whiteColor,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(gradient: ColorTheme().linearColor),
+        ),
         title: Text(
-          'Detail Desa ${UserController().toCamelCase(widget.desaName!)}',
+          'Histori Penyuluhan Bulan Ini',
           style: StyleTheme().styleWhite.copyWith(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
               ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.filter_list,
+              color: ColorTheme().whiteColor,
+            ),
+            onPressed: () {
+              _filter(context);
+            },
+          ),
+          IconButton(
+              onPressed: () async {
+                EasyLoading.show(status: "Sinkronisasi Data");
+                await _synchronizeData();
+                EasyLoading.dismiss();
+              },
+              icon: Icon(
+                Icons.refresh_rounded,
+                color: ColorTheme().whiteColor,
+              ))
+        ],
         backgroundColor: ColorTheme().primaryColor,
-      ),
-      floatingActionButton: FloatingActionButton(
-        shape: const CircleBorder(),
-        heroTag: 'sinkron_detail',
-        onPressed: () {
-          setState(() {});
-        },
-        backgroundColor: ColorTheme().primaryColor,
-        foregroundColor: ColorTheme().whiteColor,
-        child: const Icon(
-          Icons.refresh_rounded,
-        ),
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          adminC.getHistoriPenyuluhan(isMonthNow: false),
+          adminC.getHistoriPenyuluhan(isMonthNow: true),
           adminC.getLuasLahanDesa(),
         ]),
         builder: (context, snapshot) {
@@ -71,20 +112,16 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                   Text(
                     "Internal Server Error",
                     style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                        ),
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
                   ),
                 ],
               ),
             );
           } else {
             final historiList =
-                (snapshot.data?[0] as List<HistoriPenyuluhanModel>)
-                    .where((histori) {
-              return histori.desaId == widget.desaId!;
-            });
+                snapshot.data?[0] as List<HistoriPenyuluhanModel>;
             final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
 
             double getLuasDesa(String id) {
@@ -109,10 +146,9 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                     Text(
                       "Penyuluhan Belum Dilakukan",
                       style: StyleTheme().styleBlack.copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                          ),
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey),
                     ),
                   ],
                 ),
@@ -122,10 +158,19 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
               padding: EdgeInsets.symmetric(vertical: 10.h),
               child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: historiList.length,
+                itemCount: (selectedDesaValue == null)
+                    ? historiList.length
+                    : historiList
+                        .where((desa) => desa.id == selectedDesaValue!.id)
+                        .length,
                 itemBuilder: (BuildContext context, int index) {
-                  var displayList = historiList.toList();
+                  var displayList = (selectedDesaValue == null)
+                      ? historiList
+                      : historiList
+                          .where((desa) => desa.id == selectedDesaValue!.id)
+                          .toList();
                   HistoriPenyuluhanModel desa = displayList[index];
+
                   return GestureDetector(
                     onTap: () async {
                       await Navigator.push(
@@ -134,8 +179,8 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                           builder: (_) => DetailPenyuluhanView(
                             index: 0,
                             date: desa.date,
-                            desaId: desa.desaId,
-                            desaName: desa.desaName,
+                            desaId: desa.id,
+                            desaName: desa.name,
                           ),
                         ),
                       );
@@ -143,10 +188,10 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                     },
                     child: Card(
                       margin: EdgeInsets.symmetric(
-                          horizontal: 15.w, vertical: 10.h),
+                          horizontal: 20.w, vertical: 10.h),
                       elevation: 3,
-                      color: ColorTheme().whiteColor,
                       surfaceTintColor: ColorTheme().whiteColor,
+                      color: ColorTheme().whiteColor,
                       child: Column(
                         children: [
                           if (desa.totalTunggu > 0)
@@ -167,9 +212,8 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                                 child: Text(
                                   "${desa.totalTunggu} Data Belum Diverifikasi",
                                   style: StyleTheme().styleWhite.copyWith(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -196,21 +240,21 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                                 SizedBox(width: 15.w),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
-                                      "Desa ${UserController().toCamelCase(desa.desaName)}",
+                                      "Desa ${UserController().toCamelCase(desa.name)}",
                                       style: StyleTheme().stylePrimary.copyWith(
-                                            fontSize: 20.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      UserController().convertDate(desa.date),
+                                      userC.convertDate(desa.date),
                                       style: StyleTheme().styleBlack.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey[700],
-                                            fontSize: 14.sp,
-                                          ),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700],
+                                          fontSize: 14.sp),
                                     ),
                                   ],
                                 )
@@ -220,39 +264,36 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
                           SizedBox(height: 10.h),
                           Stack(
                             children: [
-                              Divider(thickness: 2.sp, color: Colors.grey),
+                              Divider(thickness: 2.h, color: Colors.grey),
                               Container(
                                 color: ColorTheme().whiteColor,
                                 margin: EdgeInsets.only(left: 20.w),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: EdgeInsets.symmetric(horizontal: 8.w),
                                 child: Text(
                                   "Progres bulan ini",
-                                  style: StyleTheme().styleBlack.copyWith(
-                                        color: Colors.black87,
-                                      ),
+                                  style: StyleTheme()
+                                      .styleBlack
+                                      .copyWith(color: Colors.black87),
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(height: 10.h),
                           LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 30.w,
+                            width: MediaQuery.of(context).size.width - 40.w,
                             animation: true,
                             lineHeight: 30.h,
                             animationDuration: 2000,
-                            percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
+                            percent: (desa.nilai / getLuasDesa(desa.id)) > 1
                                 ? 1
-                                : desa.nilai / getLuasDesa(desa.desaId),
+                                : desa.nilai / getLuasDesa(desa.id),
                             center: Text(
-                              "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
+                              "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai.toStringAsFixed(1)}/${getLuasDesa(desa.id).toStringAsFixed(1)})",
                               style: StyleTheme().styleWhite.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14.sp,
-                                  ),
+                                  fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),
                             barRadius: Radius.circular(10.r),
-                            linearGradient: ColorTheme().linearColor,
+                            linearGradient: ColorTheme().progressColor,
                           ),
                           SizedBox(height: 10.h),
                         ],
@@ -265,6 +306,71 @@ class _AdminDetailDesaViewState extends State<AdminDetailDesaView> {
           }
         },
       ),
+    );
+  }
+
+  void _filter(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: ColorTheme().whiteColor,
+          title: const Column(
+            children: [
+              Text('Filter Desa'),
+              Divider(),
+            ],
+          ),
+          content: DropdownButtonComponent(
+            icon: Icons.villa,
+            label: 'Desa',
+            selectedItem: selectedDesaValue,
+            items: desaList.map((desa) {
+              return DropdownMenuItem<DesaModel>(
+                value: desa,
+                child: Text(UserController().toCamelCase(desa.name)),
+              );
+            }).toList(),
+            hint: 'Pilih Desa',
+            validator: (value) =>
+                value == null ? 'Pilih desa terlebih dahulu' : null,
+            onChanged: (newValue) {
+              setState(() {
+                selectedDesaValue = newValue;
+              });
+            },
+            onSaved: (newValue) {
+              setState(() {
+                selectedDesaValue = newValue!;
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text(
+                "Tutup",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(color: Colors.red, fontSize: 16.sp),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedDesaValue = null;
+                });
+              },
+              child: Text(
+                "Reset",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 16.sp),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

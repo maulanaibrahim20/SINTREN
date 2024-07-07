@@ -32,6 +32,7 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         name TEXT,
         kecamatan_id TEXT,
+        kecamatan_name TEXT,
         lahan_sawah REAL,
         lahan_non_sawah REAL,
         total_luas_lahan REAL

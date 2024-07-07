@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
-import 'package:sintren_mobile/ui/admin/admin_landing_view.dart';
+import 'package:sintren_mobile/ui/dinas/dinas_landing_view.dart';
+import 'package:sintren_mobile/ui/uptd/uptd_landing_view.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
 import 'package:sintren_mobile/ui/splash_screen.dart';
@@ -104,8 +105,10 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
           if (widget.isLogin ?? false) {
             if (widget.role == "PENYULUH") {
               return const PenyuluhHomeView();
-            } else if (widget.role == "PERTANIAN" || widget.role == "UPTD") {
-              return const AdminLandingView();
+            } else if (widget.role == "UPTD") {
+              return const UptdLandingView();
+            } else if (widget.role == "PERTANIAN") {
+              return const DinasLandingView();
             }
           }
           return const LoginView();

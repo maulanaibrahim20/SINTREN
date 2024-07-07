@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
 import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
+import 'package:sintren_mobile/models/pie_chart_model.dart';
 import 'package:sintren_mobile/models/trend_grafik_model.dart';
 
 class AdminPalawijaController {
@@ -44,27 +45,44 @@ class AdminPalawijaController {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getDataPenyuluhanPalawijaTahunIni() async {
+  Future<List<Map<String, dynamic>>> getDataPenyuluhanPalawijaTahunIni(
+      {String? desaId, String? kecamatanId}) async {
     try {
       final db = await DatabaseHelper().database;
       final DateTime now = DateTime.now();
       final int year = now.year;
 
+      // Membuat daftar kondisi dan argumen
+      List<String> conditions = [
+        "strftime('%Y', date) = ?",
+        "tipe_data = 'panen'"
+      ];
+      List<dynamic> args = [year.toString()];
+
+      // Menambahkan kondisi desaId jika tidak null
+      if (desaId != null) {
+        conditions.add('desa_id = ?');
+        args.add(desaId);
+      }
+
+      // Menambahkan kondisi kecamatanId jika tidak null
+      if (kecamatanId != null) {
+        conditions.add('kecamatan_id = ?');
+        args.add(kecamatanId);
+      }
+
+      // Query database dengan kondisi yang dinamis
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPalawija',
+        where: conditions.join(' AND '),
+        whereArgs: args,
         orderBy: 'date DESC',
       );
-
-      // Filter data for current year and type 'panen'
-      List<Map<String, dynamic>> filteredData = maps.where((map) {
-        DateTime dataDate = DateTime.parse(map['date']);
-        return dataDate.year == year && map['tipe_data'] == 'panen';
-      }).toList();
 
       // Aggregate nilai for palawija with the same id/name
       Map<String, double> aggregatedValues = {};
 
-      for (var map in filteredData) {
+      for (var map in maps) {
         String palawijaId = map['id_jenis_palawija'];
         double nilai = double.parse(map['nilai'].toString());
 
@@ -79,7 +97,7 @@ class AdminPalawijaController {
       List<Map<String, dynamic>> result = [];
 
       aggregatedValues.forEach((palawijaId, nilai) {
-        var palawijaInfo = filteredData.firstWhere(
+        var palawijaInfo = maps.firstWhere(
           (map) => map['id_jenis_palawija'] == palawijaId,
           orElse: () =>
               <String, dynamic>{}, // Return an empty map instead of null
@@ -159,13 +177,32 @@ class AdminPalawijaController {
     }
   }
 
-  Future<TrendGrafik> getDataGrafikPenyuluhanPalawija(String year) async {
+  Future<TrendGrafik> getDataGrafikPenyuluhanPalawija(String year,
+      {String? desaId, String? kecamatanId}) async {
     try {
       final db = await DatabaseHelper().database;
+
+      // Membuat daftar kondisi dan argumen
+      List<String> conditions = ['date LIKE ?'];
+      List<dynamic> args = ['%$year%'];
+
+      // Menambahkan kondisi desaId jika tidak null
+      if (desaId != null) {
+        conditions.add('desa_id = ?');
+        args.add(desaId);
+      }
+
+      // Menambahkan kondisi kecamatanId jika tidak null
+      if (kecamatanId != null) {
+        conditions.add('kecamatan_id = ?');
+        args.add(kecamatanId);
+      }
+
+      // Membuat query dengan kondisi yang dinamis
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPalawija',
-        where: 'date LIKE ?',
-        whereArgs: ['%$year%'],
+        where: conditions.join(' AND '),
+        whereArgs: args,
         orderBy: 'date DESC',
       );
 
@@ -253,6 +290,56 @@ class AdminPalawijaController {
         return 'Des';
       default:
         return '';
+    }
+  }
+
+  Future<PieChartModel?> getDataProgressPieChart(
+      {String? desaId, String? kecamatanId}) async {
+    try {
+      final db = await DatabaseHelper().database;
+      final now = DateTime.now();
+      final currentMonth = now.month;
+      final currentYear = now.year;
+
+      // Membuat daftar kondisi dan argumen
+      List<String> conditions = [
+        "strftime('%m', date) = ?",
+        "strftime('%Y', date) = ?"
+      ];
+      List<dynamic> args = [
+        currentMonth.toString().padLeft(2, '0'),
+        currentYear.toString()
+      ];
+
+      // Menambahkan kondisi desaId jika tidak null
+      if (desaId != null) {
+        conditions.add('desa_id = ?');
+        args.add(desaId);
+      }
+
+      // Menambahkan kondisi kecamatanId jika tidak null
+      if (kecamatanId != null) {
+        conditions.add('kecamatan_id = ?');
+        args.add(kecamatanId);
+      }
+
+      final List<Map<String, dynamic>> maps = await db.rawQuery('''
+      SELECT 
+        SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) as sum_panen,
+        SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) as sum_tanam,
+        SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) as sum_puso_rusak
+      FROM detailPalawija
+      WHERE ${conditions.join(' AND ')}
+    ''', args);
+
+      if (maps.isNotEmpty) {
+        return PieChartModel.fromMap(maps.first);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("Get all padi error: $e");
+      return null;
     }
   }
 }

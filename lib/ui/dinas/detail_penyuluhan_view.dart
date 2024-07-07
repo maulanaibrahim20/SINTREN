@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sintren_mobile/ui/admin/detail_penyuluhan/detail_padi_view.dart';
-import 'package:sintren_mobile/ui/admin/detail_penyuluhan/detail_palawija_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
+import 'package:sintren_mobile/ui/dinas/detail_penyuluhan/detail_padi_view.dart';
+import 'package:sintren_mobile/ui/dinas/detail_penyuluhan/detail_palawija_view.dart';
 
 class DetailPenyuluhanView extends StatefulWidget {
   const DetailPenyuluhanView(

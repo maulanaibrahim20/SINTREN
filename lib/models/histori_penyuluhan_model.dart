@@ -1,14 +1,14 @@
 class HistoriPenyuluhanModel {
   final String date;
-  final String desaId;
-  final String desaName;
+  final String id;
+  final String name;
   final double nilai;
   final int totalTunggu;
 
   HistoriPenyuluhanModel({
     required this.date,
-    required this.desaId,
-    required this.desaName,
+    required this.id,
+    required this.name,
     required this.nilai,
     required this.totalTunggu,
   });
@@ -16,8 +16,8 @@ class HistoriPenyuluhanModel {
   factory HistoriPenyuluhanModel.fromJson(Map<String, dynamic> json) {
     return HistoriPenyuluhanModel(
       date: json['month_year'] ?? '',
-      desaId: json['desa_id'] ?? '',
-      desaName: json['desa_name'] ?? '',
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
       nilai: (json['total_nilai'] as num?)?.toDouble() ?? 0.0,
       totalTunggu: json['total_tunggu'] ?? 0,
     );
@@ -26,8 +26,8 @@ class HistoriPenyuluhanModel {
   Map<String, dynamic> toMap() {
     return {
       'date': date,
-      'desa_id': desaId,
-      'desa_name': desaName,
+      'id': id,
+      'name': name,
       'nilai': nilai,
       "total_tunggu": totalTunggu,
     };

@@ -198,12 +198,7 @@ class TrendChart {
             show: false,
           ),
           belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: tanamGradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
+            show: false,
           ),
         ),
         LineChartBarData(
@@ -219,12 +214,7 @@ class TrendChart {
             show: false,
           ),
           belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: panenGradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
+            show: false,
           ),
         ),
         LineChartBarData(
@@ -240,12 +230,7 @@ class TrendChart {
             show: false,
           ),
           belowBarData: BarAreaData(
-            show: true,
-            gradient: LinearGradient(
-              colors: pusoRusakGradientColors
-                  .map((color) => color.withOpacity(0.3))
-                  .toList(),
-            ),
+            show: false,
           ),
         ),
       ],

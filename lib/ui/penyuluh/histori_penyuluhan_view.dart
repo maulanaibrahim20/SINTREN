@@ -175,13 +175,13 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                 itemCount: (selectedDesaValue == null)
                     ? historiList.length
                     : historiList
-                        .where((desa) => desa.desaId == selectedDesaValue!.id)
+                        .where((desa) => desa.id == selectedDesaValue!.id)
                         .length,
                 itemBuilder: (BuildContext context, int index) {
                   var displayList = (selectedDesaValue == null)
                       ? historiList
                       : historiList
-                          .where((desa) => desa.desaId == selectedDesaValue!.id)
+                          .where((desa) => desa.id == selectedDesaValue!.id)
                           .toList();
                   HistoriPenyuluhanModel desa = displayList[index];
                   return GestureDetector(
@@ -192,8 +192,8 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                           builder: (_) => DetailPenyuluhanView(
                             index: 0,
                             date: desa.date,
-                            desaId: desa.desaId,
-                            desaName: desa.desaName,
+                            desaId: desa.id,
+                            desaName: desa.name,
                           ),
                         ),
                       );
@@ -259,7 +259,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Desa ${UserController().toCamelCase(desa.desaName)}",
+                                        "Desa ${UserController().toCamelCase(desa.name)}",
                                         style: StyleTheme()
                                             .stylePrimary
                                             .copyWith(
@@ -302,11 +302,11 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                             animation: true,
                             lineHeight: 30.h,
                             animationDuration: 2000,
-                            percent: (desa.nilai / getLuasDesa(desa.desaId)) > 1
+                            percent: (desa.nilai / getLuasDesa(desa.id)) > 1
                                 ? 1
-                                : desa.nilai / getLuasDesa(desa.desaId),
+                                : desa.nilai / getLuasDesa(desa.id),
                             center: Text(
-                              "${((desa.nilai / getLuasDesa(desa.desaId)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.desaId)})",
+                              "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.id)})",
                               style: StyleTheme().styleWhite.copyWith(
                                   fontWeight: FontWeight.w500, fontSize: 14.sp),
                             ),

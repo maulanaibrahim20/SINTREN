@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sintren_mobile/controllers/penyuluh/padi_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
-import 'package:sintren_mobile/models/kesimpulan_data_padi_model.dart';
-import 'package:sintren_mobile/ui/admin/detail_penyuluhan/components/ringkasan_padi_widget.dart';
+import 'package:sintren_mobile/models/kesimpulan_data_palawija_model.dart';
+import 'package:sintren_mobile/ui/uptd/detail_penyuluhan/components/ringkasan_palawija_widget.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
-class RincianPadiView extends StatefulWidget {
-  const RincianPadiView(
+class RincianPalawijaView extends StatefulWidget {
+  const RincianPalawijaView(
       {super.key,
       required this.date,
       required this.desaId,
@@ -19,11 +19,11 @@ class RincianPadiView extends StatefulWidget {
   final String desaName;
   final bool isRincian;
   @override
-  State<RincianPadiView> createState() => _RincianPadiViewState();
+  State<RincianPalawijaView> createState() => _RincianPalawijaViewState();
 }
 
-class _RincianPadiViewState extends State<RincianPadiView> {
-  final padiC = PadiController();
+class _RincianPalawijaViewState extends State<RincianPalawijaView> {
+  final palawijaC = AdminPalawijaController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +34,10 @@ class _RincianPadiViewState extends State<RincianPadiView> {
         centerTitle: false,
         foregroundColor: ColorTheme().whiteColor,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: ColorTheme().linearColor,
-          ),
+          decoration: BoxDecoration(gradient: ColorTheme().linearColor),
         ),
         title: Text(
-          'Rincian Data Padi',
+          'Rincian Data Palawija',
           style: StyleTheme().styleWhite.copyWith(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
@@ -50,41 +48,36 @@ class _RincianPadiViewState extends State<RincianPadiView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            RingkasanPadiWidget(
+            RingkasanPalawijaWidget(
               date: widget.date,
               desaId: widget.desaId,
               desaName: widget.desaName,
               isRincian: widget.isRincian,
             ),
             Card(
-              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               elevation: 3,
               surfaceTintColor: ColorTheme().whiteColor,
               color: ColorTheme().whiteColor,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(),
                 child: FutureBuilder(
-                  future: Future.wait([
-                    padiC.getKesimpulanDataPengairan(
-                        widget.date, widget.desaId),
-                    padiC.getKesimpulanDataPadi(widget.date, widget.desaId),
-                  ]),
-                  builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  future: palawijaC.getKesimpulanDataPalawija(
+                      widget.date, widget.desaId),
+                  builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else {
-                      final pengairanData =
-                          snapshot.data![0] as Map<String, JenisPengairan>;
-                      final padiData =
-                          snapshot.data![1] as Map<String, JenisPadi>;
+                      final palawijaData =
+                          snapshot.data as Map<String, JenisPalawija>;
 
-                      if (pengairanData.isEmpty && padiData.isEmpty) {
+                      if (palawijaData.isEmpty) {
                         return const SizedBox.shrink();
                       } else {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(8.sp),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -93,7 +86,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 20.w, vertical: 5.h),
                                 child: Text(
-                                  "Rincian Data Padi",
+                                  "Rincian Data Palawija",
                                   style: StyleTheme().styleBlack.copyWith(
                                         fontSize: 18.sp,
                                         fontWeight: FontWeight.w500,
@@ -110,12 +103,12 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: padiData.length,
+                                  itemCount: palawijaData.length,
                                   itemBuilder: (context, index) {
                                     String jenisPadi =
-                                        padiData.keys.elementAt(index);
-                                    JenisPadi padiDataItem =
-                                        padiData[jenisPadi]!;
+                                        palawijaData.keys.elementAt(index);
+                                    JenisPalawija palawijaDataItem =
+                                        palawijaData[jenisPadi]!;
                                     return ExpansionTile(
                                       title: Row(
                                         mainAxisAlignment:
@@ -128,7 +121,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                 .copyWith(fontSize: 14.sp),
                                           ),
                                           Text(
-                                            "${padiDataItem.total} hektar",
+                                            "${palawijaDataItem.total} hektar",
                                             style: StyleTheme()
                                                 .styleBlack
                                                 .copyWith(
@@ -138,7 +131,8 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                           ),
                                         ],
                                       ),
-                                      children: padiDataItem.jenisLahan.entries
+                                      children: palawijaDataItem
+                                          .jenisLahan.entries
                                           .map((lahanEntry) {
                                         final jenisLahan = lahanEntry.key;
                                         final lahanData = lahanEntry.value;
@@ -230,7 +224,7 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                                                   FontWeight
                                                                       .w500,
                                                             ),
-                                                      ),
+                                                      )
                                                     ],
                                                   ),
                                                 );
@@ -243,94 +237,6 @@ class _RincianPadiViewState extends State<RincianPadiView> {
                                   },
                                 ),
                               ),
-                              const Divider(),
-                              if (pengairanData.isNotEmpty) ...[
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w, vertical: 5.h),
-                                  child: Text(
-                                    "Rincian Data Pengairan",
-                                    style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                ),
-                                const Divider(),
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height -
-                                            150.h,
-                                  ),
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: pengairanData.length,
-                                    itemBuilder: (context, index) {
-                                      String jenisPengairan =
-                                          pengairanData.keys.elementAt(index);
-                                      JenisPengairan pengairanDataItem =
-                                          pengairanData[jenisPengairan]!;
-                                      return ExpansionTile(
-                                        title: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              UserController()
-                                                  .toCamelCase(jenisPengairan),
-                                              style: StyleTheme()
-                                                  .styleBlack
-                                                  .copyWith(fontSize: 14.sp),
-                                            ),
-                                            Text(
-                                              "${pengairanDataItem.total} hektar",
-                                              style: StyleTheme()
-                                                  .styleBlack
-                                                  .copyWith(
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
-                                        children: [
-                                          for (var entry in pengairanDataItem
-                                              .pengairanData.entries)
-                                            ListTile(
-                                              title: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'Data ${UserController().toCamelCase(entry.key)}',
-                                                    style: StyleTheme()
-                                                        .styleBlack
-                                                        .copyWith(
-                                                            fontSize: 14.sp),
-                                                  ),
-                                                  Text(
-                                                    "${entry.value.total} hektar",
-                                                    style: StyleTheme()
-                                                        .styleBlack
-                                                        .copyWith(
-                                                          fontSize: 14.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ]
                             ],
                           ),
                         );

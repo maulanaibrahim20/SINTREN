@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
+import 'package:sintren_mobile/models/pie_chart_model.dart';
 import 'package:sintren_mobile/models/trend_grafik_model.dart';
 
 class AdminPadiController {
@@ -43,13 +44,82 @@ class AdminPadiController {
     }
   }
 
-  Future<TrendGrafik> getDataGrafikPenyuluhanPadi(String year) async {
+  Future<PieChartModel?> getDataProgressPieChart(
+      {String? desaId, String? kecamatanId}) async {
     try {
       final db = await DatabaseHelper().database;
+      final now = DateTime.now();
+      final currentMonth = now.month;
+      final currentYear = now.year;
+
+      // Membuat daftar kondisi dan argumen
+      List<String> conditions = [
+        "strftime('%m', date) = ?",
+        "strftime('%Y', date) = ?"
+      ];
+      List<dynamic> args = [
+        currentMonth.toString().padLeft(2, '0'),
+        currentYear.toString()
+      ];
+
+      // Menambahkan kondisi desaId jika tidak null
+      if (desaId != null) {
+        conditions.add('desa_id = ?');
+        args.add(desaId);
+      }
+
+      // Menambahkan kondisi kecamatanId jika tidak null
+      if (kecamatanId != null) {
+        conditions.add('kecamatan_id = ?');
+        args.add(kecamatanId);
+      }
+
+      final List<Map<String, dynamic>> maps = await db.rawQuery('''
+      SELECT 
+        SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) as sum_panen,
+        SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) as sum_tanam,
+        SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) as sum_puso_rusak
+      FROM detailPadi
+      WHERE ${conditions.join(' AND ')}
+    ''', args);
+    
+      if (maps.isNotEmpty) {
+        return PieChartModel.fromMap(maps.first);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log("Get all padi error: $e");
+      return null;
+    }
+  }
+
+  Future<TrendGrafik> getDataGrafikPenyuluhanPadi(String year,
+      {String? desaId, String? kecamatanId}) async {
+    try {
+      final db = await DatabaseHelper().database;
+
+      // Membuat daftar kondisi dan argumen
+      List<String> conditions = ['date LIKE ?'];
+      List<dynamic> args = ['%$year%'];
+
+      // Menambahkan kondisi desaId jika tidak null
+      if (desaId != null) {
+        conditions.add('desa_id = ?');
+        args.add(desaId);
+      }
+
+      // Menambahkan kondisi kecamatanId jika tidak null
+      if (kecamatanId != null) {
+        conditions.add('kecamatan_id = ?');
+        args.add(kecamatanId);
+      }
+
+      // Membuat query dengan kondisi yang dinamis
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPadi',
-        where: 'date LIKE ?',
-        whereArgs: ['%$year%'],
+        where: conditions.join(' AND '),
+        whereArgs: args,
         orderBy: 'date DESC',
       );
 

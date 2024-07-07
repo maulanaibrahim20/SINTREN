@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
-import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
+import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
-import 'package:sintren_mobile/models/detail_palawija_model.dart';
-import 'package:sintren_mobile/ui/admin/detail_penyuluhan/components/ringkasan_palawija_widget.dart';
+import 'package:sintren_mobile/models/detail_padi_model.dart';
+import 'package:sintren_mobile/ui/uptd/detail_penyuluhan/components/ringkasan_padi_widget.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 
-class DetailPalawijaView extends StatefulWidget {
-  const DetailPalawijaView(
+class DetailPadiView extends StatefulWidget {
+  const DetailPadiView(
       {super.key,
       required this.date,
       required this.desaId,
-      required this.desaName});
-
+      this.desaName = ""});
   final String date;
   final String desaId;
   final String desaName;
 
   @override
-  State<DetailPalawijaView> createState() => DetailPalawijaViewState();
+  State<DetailPadiView> createState() => DetailPadiViewState();
 }
 
-class DetailPalawijaViewState extends State<DetailPalawijaView> {
-  final palawijaC = AdminPalawijaController();
+class DetailPadiViewState extends State<DetailPadiView> {
+  final padiC = AdminPadiController();
   TextEditingController ulasan = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isOpen = false;
@@ -56,15 +55,14 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
       ),
       body: ListView(
         children: [
-          RingkasanPalawijaWidget(
+          RingkasanPadiWidget(
             date: widget.date,
             desaId: widget.desaId,
             desaName: widget.desaName,
             isRincian: false,
           ),
-          FutureBuilder<List<DetailPalawijaModel>>(
-            future:
-                palawijaC.getDetailPalawijaByDesa(widget.date, widget.desaId),
+          FutureBuilder<List<DetailPadiModel>>(
+            future: padiC.getDetailPadiByDesa(widget.date, widget.desaId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -116,7 +114,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                         : itemList
                             .where((data) => data.status == selectedStatus)
                             .toList();
-                    DetailPalawijaModel data = displayList[index];
+                    DetailPadiModel data = displayList[index];
                     return Card(
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
@@ -136,7 +134,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    data.palawijaName,
+                                    data.padiName,
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16.sp),
@@ -181,9 +179,20 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   ),
                                 ],
                               ),
-                              Text(
-                                'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
-                                style: StyleTheme().styleBlack,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Lahan ${UserController().toCamelCase(data.jenisLahan)}',
+                                    style: StyleTheme().styleBlack,
+                                  ),
+                                  Text(
+                                    UserController()
+                                        .toCamelCase(data.pengairanName),
+                                    style: StyleTheme().styleBlack,
+                                  ),
+                                ],
                               ),
                               const Divider(),
                               Row(
@@ -223,7 +232,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                 "status": "terima",
                                                 "catatan": "oke"
                                               },
-                                              isPalawija: true,
+                                              isPalawija: false,
                                             );
                                             setState(() {});
                                           }
@@ -264,7 +273,7 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                                 "status": "tolak",
                                                 "catatan": ulasan.text
                                               },
-                                              isPalawija: true,
+                                              isPalawija: false,
                                             );
                                             setState(() {
                                               ulasan.clear();

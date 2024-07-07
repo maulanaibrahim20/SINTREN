@@ -8,14 +8,14 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AdminVerifyView extends StatefulWidget {
-  const AdminVerifyView({super.key});
+class UptdVerifyView extends StatefulWidget {
+  const UptdVerifyView({super.key});
 
   @override
-  State<AdminVerifyView> createState() => _AdminVerifyViewState();
+  State<UptdVerifyView> createState() => _UptdVerifyViewState();
 }
 
-class _AdminVerifyViewState extends State<AdminVerifyView> {
+class _UptdVerifyViewState extends State<UptdVerifyView> {
   TextEditingController ulasan = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
