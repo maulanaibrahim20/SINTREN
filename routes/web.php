@@ -37,6 +37,7 @@ use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPalawijaController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
+use App\Http\Controllers\WEB\Uptd\LaporanNotVerifyController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -129,6 +130,10 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
+
+            Route::get('/laporanNotVerify', [LaporanNotVerifyController::class, 'index']);
+            Route::post('/laporanNotVerify/changeStatus/{id}', [LaporanNotVerifyController::class, 'changeStatus']);
+
             Route::resource('pengguna/penyuluhUptd', UptdAkunPenyuluhController::class);
             Route::post('pengguna/penyuluh/penugasan', [UptdAkunPenyuluhController::class, 'penugasan']);
             Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);

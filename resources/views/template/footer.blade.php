@@ -5,27 +5,16 @@
                 <div class="social">
                     <ul class="float-start m-0 ">
                         <li>
-                            <a class="social-icon text-center" href="javascript:void(0);"><i
-                                    class="fa fa-facebook"></i></a>
+                            <a class="social-icon text-center" href="https://www.facebook.com/dkpp.indramayu/"
+                                target="_blank"><i class="fa fa-facebook"></i></a>
                         </li>
                         <li>
-                            <a class="social-icon text-center" href="javascript:void(0);"><i
+                            <a class="social-icon text-center" href="https://x.com/dkpp_indramayu/" target="_blank"><i
                                     class="fa fa-twitter"></i></a>
                         </li>
                         <li>
-                            <a class="social-icon text-center" href="javascript:void(0);"><i class="fa fa-rss"></i></a>
-                        </li>
-                        <li>
-                            <a class="social-icon text-center" href="javascript:void(0);"><i
-                                    class="fa fa-youtube"></i></a>
-                        </li>
-                        <li>
-                            <a class="social-icon text-center" href="javascript:void(0);"><i
-                                    class="fa fa-linkedin"></i></a>
-                        </li>
-                        <li>
-                            <a class="social-icon text-center" href="javascript:void(0);"><i
-                                    class="fa fa-google-plus"></i></a>
+                            <a class="social-icon text-center" href="https://www.instagram.com/dkpp.indramayu/"
+                                target="_blank"><i class="fa fa-instagram"></i></a>
                         </li>
                     </ul>
                 </div>

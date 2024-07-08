@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Pasar\PetugasPasar;
 use App\Models\Pangan\LaporanPangan;
+use App\Models\Uptd\VerifyPadi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,9 @@ class DashboardController extends Controller
         $latestYear = $this->laporanPadi::orderBy('date', 'desc')->value(DB::raw('YEAR(date)'));
 
         $laporan = LaporanPadi::where('tipe_data', 'panen')
+            ->join('verify_padis', 'laporan_padis.id', '=', 'verify_padis.laporan_id')
             ->whereYear('date', $latestYear)
+            ->where('verify_padis.status', 'terima')
             ->select(
                 DB::raw('MONTH(date) as month'),
                 DB::raw('SUM(nilai) as total')
@@ -84,18 +87,22 @@ class DashboardController extends Controller
             ->first()->latest_year;
 
         $kecamatanData = DB::table('laporan_padis')
+            ->join('verify_padis', 'laporan_padis.id', '=', 'verify_padis.laporan_id')
             ->join('kecamatans', 'laporan_padis.kecamatan_id', '=', 'kecamatans.id')
-            ->select('kecamatans.name as kecamatan', DB::raw('SUM(laporan_padis.nilai) as total_produksi'))
+            ->select('kecamatans.id as kecamatan_id', 'kecamatans.name as kecamatan', DB::raw('SUM(laporan_padis.nilai) as total_produksi'))
             ->where('laporan_padis.tipe_data', 'panen')
             ->whereYear('laporan_padis.date', $latestYear)
-            ->groupBy('kecamatans.name')
+            ->where('verify_padis.status', 'terima') // Menambahkan kondisi untuk memfilter berdasarkan status verify
+            ->groupBy('kecamatans.id', 'kecamatans.name')
             ->get();
 
         $desaData = DB::table('laporan_padis')
             ->join('desas', 'laporan_padis.desa_id', '=', 'desas.id')
+            ->join('verify_padis', 'laporan_padis.id', '=', 'verify_padis.laporan_id')
             ->select('desas.name as desa', 'desas.district_id as kecamatan_id', DB::raw('SUM(laporan_padis.nilai) as total_produksi'))
             ->where('laporan_padis.tipe_data', 'panen')
             ->whereYear('laporan_padis.date', $latestYear)
+            ->where('verify_padis.status', 'terima') // Menambahkan kondisi untuk memfilter berdasarkan status verify
             ->groupBy('desas.name', 'desas.district_id')
             ->get();
         $data = [
@@ -113,10 +120,12 @@ class DashboardController extends Controller
         $sampaiTahun = 2021;
 
         $laporanPadi = DB::table('laporan_padis')
-            ->selectRaw('YEAR(date) AS tahun')
-            ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
-            ->whereYear('date', '>=', $dariTahun)
-            ->whereYear('date', '<=', $sampaiTahun)
+            ->join('verify_padis', 'laporan_padis.id', '=', 'verify_padis.laporan_id') // Menggunakan join untuk menghubungkan tabel verify
+            ->selectRaw('YEAR(laporan_padis.date) AS tahun')
+            ->selectRaw('SUM(CASE WHEN laporan_padis.tipe_data = "panen" THEN laporan_padis.nilai ELSE 0 END) AS total_panen')
+            ->whereYear('laporan_padis.date', '>=', '2010')
+            ->whereYear('laporan_padis.date', '<=', '2021')
+            ->where('verify_padis.status', 'terima')   // Menambahkan kondisi untuk memfilter berdasarkan status verify
             ->groupBy('tahun')
             ->orderBy('tahun', 'ASC')
             ->get();
@@ -239,6 +248,8 @@ class DashboardController extends Controller
             'CountLaporanPadi' => $this->laporanPadi->count(),
             'CountLaporanPalawija' => $this->laporanPalawija->count(),
             'CountLuasLahanWilayah' => $this->luasLahanWilayah->where('kecamatan_id', $kecamatanId)->count(),
+            'CountSudahVerifikasi' => VerifyPadi::where('status', 'terima')->count(),
+            'CountBelumVerifikasi' => VerifyPadi::where('status', 'tunggu')->count(),
         ];
 
         return view('uptd.pages.dashboard.index', $data);

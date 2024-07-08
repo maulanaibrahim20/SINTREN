@@ -84,7 +84,7 @@ class LaporanPalawijaController extends Controller
     {
         try {
             DB::beginTransaction();
-            $this->laporanPalawija->create([
+            $laporanPalawija = $this->laporanPalawija->create([
                 'user_id' => Auth::user()->id,
                 'desa_id' => $request->desa,
                 'kecamatan_id' => Auth::user()->penyuluh->kecamatan_id,
@@ -94,6 +94,12 @@ class LaporanPalawijaController extends Controller
                 'date' => $request->date,
                 'tipe_data' => $request->jenis_data,
                 'nilai' => $request->nilai,
+            ]);
+            $this->verifyPalawija->create([
+                'laporan_id' => $laporanPalawija['id'],
+                'user_id' => Auth::user()->id,
+                'status' => 'tunggu',
+                'catatan' => null
             ]);
             DB::commit();
 

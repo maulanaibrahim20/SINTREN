@@ -14,10 +14,12 @@ class AppController extends Controller
         $sampaiTahun = 2021;
 
         $laporanPadi = DB::table('laporan_padis')
-            ->selectRaw('YEAR(date) AS tahun')
-            ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
-            ->whereYear('date', '>=', $dariTahun)
-            ->whereYear('date', '<=', $sampaiTahun)
+            ->join('verify_padis', 'laporan_padis.id', '=', 'verify_padis.laporan_id') // Menggunakan join untuk menghubungkan tabel verify
+            ->selectRaw('YEAR(laporan_padis.date) AS tahun')
+            ->selectRaw('SUM(CASE WHEN laporan_padis.tipe_data = "panen" THEN laporan_padis.nilai ELSE 0 END) AS total_panen')
+            ->whereYear('laporan_padis.date', '>=', $dariTahun)
+            ->whereYear('laporan_padis.date', '<=', $sampaiTahun)
+            ->where('verify_padis.status', 'terima') // Menambahkan kondisi untuk memfilter berdasarkan status verify
             ->groupBy('tahun')
             ->orderBy('tahun', 'ASC')
             ->get();

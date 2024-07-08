@@ -1,5 +1,28 @@
 @extends('index')
 @section('title', 'Dashboard Pertanian')
+@section('css')
+    <style>
+        .buttons {
+            margin: 10px 0;
+        }
+
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .buttons button.active,
+        .buttons button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+@endsection
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -70,6 +93,14 @@
         </div>
     </div>
     <div class="row">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between allign-items-center">
+                <h3 class="card-title mb-0">Trend Rata Rata Hasil
+            </div>
+            @include('pertanian.pages.dashboard.prediksi_pertanian')
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header">
@@ -98,22 +129,24 @@
                     <h3 class="card-title mb-0">Produksi Padi Per Desa</h3>
                 </div>
                 <div class="card-body pb-0">
+                    <div class='buttons'>
+                        @foreach ($kecamatanData as $kecamatan)
+                            <button id='kecamatan-{{ $kecamatan->kecamatan_id }}'>
+                                {{ $kecamatan->kecamatan }}
+                            </button>
+                        @endforeach
+                    </div>
+
                     <div id="chart-per-desa"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between allign-items-center">
-                <h3 class="card-title mb-0">Trend Rata Rata Hasil
-            </div>
-            @include('pertanian.pages.dashboard.prediksi_pertanian')
-        </div>
-    </div>
+
 @endsection
 @section('script')
+    {{-- script prediksi padi --}}
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             const labels = @json($labels);
@@ -125,7 +158,7 @@
                     type: 'line'
                 },
                 title: {
-                    text: 'Trend Pertanian Padi'
+                    text: 'Trend Pertanian Padi Tahun 2010-2030'
                 },
                 subtitle: {
                     text: 'Sumber: Dinas Ketahanan Pangan Dan Pertanian Kabupaten Indramayu'
@@ -167,6 +200,7 @@
             });
         });
     </script>
+    {{-- script panen perbulan berdasarkan 1 tahun paling akhir di database --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const chartMonths = @json($chartMonths);
@@ -194,10 +228,15 @@
             });
         });
     </script>
+    {{-- script untuk panen padi berdasarkan filter kecamatan total dan masing-masing desa pada kecamatan tersebut --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const kecamatanData = @json($kecamatanData);
             const desaData = @json($desaData);
+            const latestYear = @json($latestYear);
+
+            // Menampilkan tahun data yang diambil
+            document.querySelector('h3').innerText = `Data Produksi Padi Tahun ${latestYear}`;
 
             // Format data kecamatan untuk Highcharts
             const kecamatanChartData = kecamatanData.map(item => ({
@@ -205,23 +244,13 @@
                 y: item.total_produksi
             }));
 
-            // Format data desa untuk Highcharts (dikelompokkan per kecamatan)
-            const desaChartData = kecamatanData.map(kecamatan => {
-                const desaInKecamatan = desaData.filter(desa => desa.district_id === kecamatan.id);
-                console.log(`Desa in Kecamatan ${kecamatan.name}:`, desaInKecamatan);
-                return {
-                    name: kecamatan.kecamatan,
-                    data: desaInKecamatan.map(desa => [desa.desa, desa.total_produksi])
-                };
-            });
-
-            // Chart untuk produksi padi per kecamatan
+            // Buat pie chart untuk produksi padi per kecamatan
             Highcharts.chart('chart-per-kecamatan', {
                 chart: {
                     type: 'pie'
                 },
                 title: {
-                    text: 'Produksi Padi Per Kecamatan'
+                    text: `Produksi Padi Per Kecamatan Tahun ${latestYear}`
                 },
                 series: [{
                     name: 'Produksi',
@@ -230,30 +259,60 @@
                 }]
             });
 
-            // Chart untuk produksi padi per desa
-            Highcharts.chart('chart-per-desa', {
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: 'Produksi Padi Per Desa'
-                },
-                xAxis: {
-                    type: 'category',
+            const getDataByKecamatan = (kecamatanId) => {
+                return desaData.filter(desa => desa.kecamatan_id === kecamatanId)
+                    .map(desa => ({
+                        name: desa.desa,
+                        y: desa.total_produksi
+                    }));
+            };
+
+            const createChart = (kecamatanId) => {
+                const data = getDataByKecamatan(kecamatanId);
+
+                Highcharts.chart('chart-per-desa', {
+                    chart: {
+                        type: 'column'
+                    },
                     title: {
-                        text: 'Desa'
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: 'Total Produksi (ton)'
-                    }
-                },
-                accessibility: {
-                    enabled: true
-                },
-                series: desaChartData
+                        text: `Produksi Padi Per Desa Tahun ${latestYear}`
+                    },
+                    xAxis: {
+                        type: 'category',
+                        title: {
+                            text: 'Desa'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Total Produksi (ton)'
+                        }
+                    },
+                    series: [{
+                        name: 'Produksi',
+                        data
+                    }]
+                });
+            };
+
+            kecamatanData.forEach(kecamatan => {
+                const btn = document.getElementById(`kecamatan-${kecamatan.kecamatan_id}`);
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.buttons button.active')
+                        .forEach(active => {
+                            active.className = '';
+                        });
+                    btn.className = 'active';
+
+                    createChart(kecamatan.kecamatan_id);
+                });
             });
+
+            // Load the first kecamatan's data by default
+            if (kecamatanData.length > 0) {
+                createChart(kecamatanData[0].kecamatan_id);
+                document.getElementById(`kecamatan-${kecamatanData[0].kecamatan_id}`).className = 'active';
+            }
         });
     </script>
 

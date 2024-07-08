@@ -111,6 +111,22 @@
                     </div>
                 </div>
             </div>
+            <div class="row row-sm">
+                <div class="col-sm-12 col-lg-12">
+                    <div class="card overflow-hidden">
+                        <div class="card-body">
+                            <a href="{{ url('/uptd/laporanNotVerify') }}" class="d-flex">
+                                <div>
+                                    <div class="mb-0 fw-semibold text-dark">Total Yang Belum Diverifikasi</div>
+                                    <h3 class="mt-1 mb-1 text-dark fw-semibold">{{ $CountBelumVerifikasi }} Padi & Palawija
+                                    </h3>
+                                </div>
+                                <i class="fa fa-times ms-auto fs-5 my-auto bg-danger-transparent p-3 br-7 text-danger"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

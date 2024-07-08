@@ -117,17 +117,17 @@
                                     <span class="bn-positive me-4">{{ $totalVerifyPalawija }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-tractor bg-danger-transparent text-danger mx-1"></span>
+                                    <span class="fa fa-user bg-danger-transparent text-danger mx-1"></span>
                                     <span class="d-inline-block">Total Petani</span>
                                     <span class="bn-negative me-4">{{ $totalPetani }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-tools bg-primary-transparent text-primary mx-1"></span>
+                                    <span class="fa fa-gear bg-primary-transparent text-primary mx-1"></span>
                                     <span class="d-inline-block">Total Alat Pertanian</span>
                                     <span class="bn-negative me-4">{{ $totalAlatPertanian }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-wheat bg-info-transparent text-info mx-1"></span>
+                                    <span class="fa fa-seedling bg-info-transparent text-info mx-1"></span>
                                     <span class="d-inline-block">Total Produksi Beras</span>
                                     <span class="bn-positive me-4">{{ $totalProduksiBeras }} ton</span>
                                 </li>

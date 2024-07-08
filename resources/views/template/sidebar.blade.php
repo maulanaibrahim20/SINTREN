@@ -236,10 +236,16 @@
                                 Saya</span></a>
                     </li>
                 @endcan
+
                 @can('uptd')
+                    @php
+                        $belumDiverifikasiPadi = DB::table('verify_padis')->where('status', 'tunggu')->count();
+                        $belumDiverifikasiPalawija = DB::table('verify_palawijas')->where('status', 'tunggu')->count();
+                    @endphp
                     <li class="sub-category">
                         <h3>Kelola Akun</h3>
                     </li>
+
                     <li>
                         <a class="side-menu__item {{ Request::segment(3) == 'penyuluhUptd' ? 'active' : '' }}"
                             href="{{ url('/uptd/pengguna/penyuluhUptd') }}"><i
