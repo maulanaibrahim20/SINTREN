@@ -3,19 +3,24 @@ import 'package:sintren_mobile/helpers/database_helper.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/pie_chart_model.dart';
 import 'package:sintren_mobile/models/trend_grafik_model.dart';
+import 'package:sintren_mobile/models/user_login_model.dart';
 
 class AdminPadiController {
   Future<List<DetailPadiModel>> getDetailPadiByDesa(
       String date, String desaId) async {
     try {
       final db = await DatabaseHelper().database;
+      final role = await UserLoginModel().getRole();
+
+      String statusFilter = role == 'PERTANIAN' ? "status = 'terima'" : "1=1";
+
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPadi',
-        where: 'date LIKE ? AND desa_id = ?',
+        where: 'date LIKE ? AND desa_id = ? AND $statusFilter',
         whereArgs: ['%$date%', desaId],
         orderBy: '''
-          COALESCE(updated_at, created_at) DESC
-        ''',
+        COALESCE(updated_at, created_at) DESC
+      ''',
       );
 
       return List<DetailPadiModel>.from(
@@ -29,8 +34,12 @@ class AdminPadiController {
   Future<List<DetailPadiModel>> getAllPenyuluhanPadi() async {
     try {
       final db = await DatabaseHelper().database;
+      final role = await UserLoginModel().getRole();
+      String statusFilter = role == 'PERTANIAN' ? "status = 'terima'" : "1=1";
+
       final List<Map<String, dynamic>> maps = await db.query(
         'detailPadi',
+        where: statusFilter,
         orderBy: '''
           date DESC
         ''',
@@ -55,11 +64,13 @@ class AdminPadiController {
       // Membuat daftar kondisi dan argumen
       List<String> conditions = [
         "strftime('%m', date) = ?",
-        "strftime('%Y', date) = ?"
+        "strftime('%Y', date) = ?",
+        "status = ?"
       ];
       List<dynamic> args = [
         currentMonth.toString().padLeft(2, '0'),
-        currentYear.toString()
+        currentYear.toString(),
+        "terima"
       ];
 
       // Menambahkan kondisi desaId jika tidak null
@@ -82,7 +93,7 @@ class AdminPadiController {
       FROM detailPadi
       WHERE ${conditions.join(' AND ')}
     ''', args);
-    
+
       if (maps.isNotEmpty) {
         return PieChartModel.fromMap(maps.first);
       } else {
@@ -100,8 +111,8 @@ class AdminPadiController {
       final db = await DatabaseHelper().database;
 
       // Membuat daftar kondisi dan argumen
-      List<String> conditions = ['date LIKE ?'];
-      List<dynamic> args = ['%$year%'];
+      List<String> conditions = ['date LIKE ?', 'status = ?'];
+      List<dynamic> args = ['%$year%', 'terima'];
 
       // Menambahkan kondisi desaId jika tidak null
       if (desaId != null) {
@@ -158,6 +169,8 @@ class AdminPadiController {
           result[month] = {tipeData: nilai};
         }
       }
+
+      log(result.toString());
 
       return TrendGrafik.fromMap(result);
     } catch (e) {

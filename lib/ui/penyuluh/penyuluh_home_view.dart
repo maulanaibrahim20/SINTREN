@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -148,6 +150,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
           double getLuasDesa(String id) {
             for (LuasWilayahModel wilayah in luasDesaList) {
               if (wilayah.id == id) {
+                log(wilayah.totalLuasLahan.toString());
                 return wilayah.totalLuasLahan;
               }
             }
@@ -293,7 +296,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                             ? 1
                             : desa.nilai / getLuasDesa(desa.id),
                         center: Text(
-                          "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.id)})",
+                          "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.id).toStringAsFixed(1)})",
                           style: StyleTheme().styleWhite.copyWith(
                               fontWeight: FontWeight.w500, fontSize: 14.sp),
                         ),
@@ -326,22 +329,22 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
         height: 50.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.r),
-          gradient: ColorTheme().linearColorGrey,
+          gradient: ColorTheme().buttonColor2,
           border: Border.all(
-            color: ColorTheme().grey,
+            color: ColorTheme().buttonBorderColor2,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history, color: ColorTheme().primaryColor),
+            Icon(Icons.history, color: ColorTheme().whiteColor),
             SizedBox(width: 10.w),
             Text(
               'Histori Penyuluhan',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14.sp,
-                color: ColorTheme().primaryColor,
+                color: ColorTheme().whiteColor,
               ),
             )
           ],
@@ -379,9 +382,9 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                 height: 50.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  gradient: ColorTheme().linearColorGreen,
+                  gradient: ColorTheme().buttonColor1,
                   border: Border.all(
-                    color: ColorTheme().green,
+                    color: ColorTheme().buttonBorderColor1,
                   ),
                 ),
                 child: Row(
@@ -426,9 +429,9 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                 height: 50.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  gradient: ColorTheme().linearColorGreen,
+                  gradient: ColorTheme().buttonColor1,
                   border: Border.all(
-                    color: ColorTheme().green,
+                    color: ColorTheme().buttonBorderColor1,
                   ),
                 ),
                 child: Row(

@@ -44,9 +44,13 @@ class AdminController {
   }) async {
     try {
       final db = await DatabaseHelper().database;
+      final role = await UserLoginModel().getRole();
       final DateTime now = DateTime.now();
       final String currentMonthYear =
           '${now.year}-${now.month.toString().padLeft(2, '0')}';
+
+      String statusFilter =
+          role == 'PERTANIAN' ? "status = 'terima'" : "status = 'tunggu'";
 
       String query = '''
       SELECT
@@ -58,7 +62,7 @@ class AdminController {
               UNION ALL
               SELECT date, ${isKecamatan ? 'kecamatan_id' : 'desa_id'}, status FROM detailPalawija
           ) AS status_data
-          WHERE status = 'tunggu' AND
+          WHERE $statusFilter AND
                 strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
                 status_data.${isKecamatan ? 'kecamatan_id' : 'desa_id'} = combined_data.${isKecamatan ? 'kecamatan_id' : 'desa_id'}
           ) AS total_tunggu

@@ -450,7 +450,7 @@ class _UptdHomeViewState extends State<UptdHomeView>
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          "Trend $type", // Judul dinamis sesuai dengan jenis data
+                          "Grafik Pertanian $type", // Judul dinamis sesuai dengan jenis data
                           style: StyleTheme().stylePrimary.copyWith(
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,

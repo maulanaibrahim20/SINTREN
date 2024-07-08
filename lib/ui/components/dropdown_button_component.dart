@@ -5,7 +5,7 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 
 class DropdownButtonComponent<T> extends StatelessWidget {
   final String label;
-  final IconData icon;
+  final IconData? icon;
   final List<DropdownMenuItem<T>> items;
   final T? selectedItem;
   final String hint;
@@ -16,7 +16,7 @@ class DropdownButtonComponent<T> extends StatelessWidget {
   const DropdownButtonComponent({
     super.key,
     required this.label,
-    required this.icon,
+    this.icon,
     required this.items,
     this.selectedItem,
     required this.hint,
@@ -41,11 +41,13 @@ class DropdownButtonComponent<T> extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
         ),
-        prefixIcon: Icon(
-          icon,
-          color: ColorTheme().primaryColor,
-          size: 20.sp,
-        ),
+        prefixIcon: icon == null
+            ? null
+            : Icon(
+                icon,
+                color: ColorTheme().primaryColor,
+                size: 20.sp,
+              ),
       ),
       items: items,
       validator: validator,

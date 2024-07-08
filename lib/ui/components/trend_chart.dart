@@ -6,9 +6,9 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 
 class TrendChart {
-  final TrendGrafik data;
-
   TrendChart({required this.data});
+
+  final TrendGrafik data;
 
   final List<Color> tanamGradientColors = [
     Colors.deepPurple,
@@ -237,3 +237,4 @@ class TrendChart {
     );
   }
 }
+

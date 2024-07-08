@@ -87,8 +87,8 @@ class PenyuluhController {
       const String query = '''
         SELECT
             strftime('%Y-%m', date) AS month_year,
-            desa_id,
-            desa_name,
+            desa_id AS id,
+            desa_name AS name,
             SUM(nilai) AS total_nilai,
             (SELECT COUNT(*) FROM (
                 SELECT date, desa_id, desa_name, status FROM detailPadi
@@ -116,13 +116,13 @@ class PenyuluhController {
           await db.rawQuery(query, [currentMonthYear]);
 
       final Set<String> desaIdsCurrentMonth =
-          mapsCurrentMonth.map((map) => map['desa_id'] as String).toSet();
+          mapsCurrentMonth.map((map) => map['id'] as String).toSet();
 
       final List<Map<String, dynamic>> mapsLastMonth =
           await db.rawQuery(query, [lastMonthYear]);
 
       final List<Map<String, dynamic>> mapsFilteredLastMonth = mapsLastMonth
-          .where((map) => !desaIdsCurrentMonth.contains(map['desa_id']))
+          .where((map) => !desaIdsCurrentMonth.contains(map['id']))
           .toList();
 
       final List<Map<String, dynamic>> combinedMaps = [

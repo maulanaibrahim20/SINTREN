@@ -224,8 +224,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.villa,
-                        label: 'Desa',
+                        label: 'Pilih Desa',
                         selectedItem: selectedDesaValue,
                         items: desaList.map((desa) {
                           return DropdownMenuItem<DesaModel>(
@@ -251,8 +250,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.date_range,
-                        label: "Jenis Lahan",
+                        label: "Pilih Jenis Lahan",
                         selectedItem: selectedJenisLahanValue.isEmpty
                             ? null
                             : selectedJenisLahanValue,
@@ -281,8 +279,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.villa,
-                        label: 'Jenis Palawija',
+                        label: 'Pilih Jenis Palawija',
                         selectedItem: selectedJenisPalawijaValue,
                         items: palawijaList.map((palawija) {
                           return DropdownMenuItem<PalawijaModel>(
@@ -308,8 +305,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.date_range,
-                        label: "Jenis Bantuan",
+                        label: "Pilih Jenis Bantuan",
                         selectedItem: selectedBantuanValue.isEmpty
                             ? null
                             : selectedBantuanValue,
@@ -338,8 +334,7 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.type_specimen,
-                        label: "Jenis Data",
+                        label: "Pilih Jenis Data",
                         selectedItem: selectedTipeDataValue.isEmpty
                             ? null
                             : selectedTipeDataValue,
@@ -369,9 +364,8 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       SizedBox(height: 10.h),
                       TextFormFieldComponent(
                         controller: value,
-                        icon: Icons.numbers,
                         hint: "Masukkan Nilai, Contoh : 1000",
-                        label: "Nilai",
+                        label: "Masukkan Nilai",
                         validator: (value) => value == null || value.isEmpty
                             ? "Masukkan nilai terlebih dahulu"
                             : null,
@@ -388,7 +382,8 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                             ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 5.h),
                         child: Text(
                           "* Nilai dimasukkan dalam hektar",
                           style: StyleTheme()

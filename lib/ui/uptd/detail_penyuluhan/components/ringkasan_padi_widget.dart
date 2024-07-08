@@ -30,9 +30,9 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
       elevation: 3,
       child: Container(
         decoration: BoxDecoration(
-            gradient: ColorTheme().linearColorGreen,
+            gradient: ColorTheme().linearColor2,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: ColorTheme().green)),
+            border: Border.all(color: ColorTheme().linearBorderColor2)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -55,7 +55,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                         child: Center(
                           child: Icon(
                             Icons.home_rounded,
-                            color: ColorTheme().green,
+                            color: ColorTheme().linearBorderColor2,
                             size: 30.sp,
                           ),
                         ),

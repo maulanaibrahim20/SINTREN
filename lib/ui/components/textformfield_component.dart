@@ -4,7 +4,7 @@ import 'package:sintren_mobile/ui/components/color_theme.dart';
 
 class TextFormFieldComponent extends StatelessWidget {
   final dynamic controller;
-  final IconData icon;
+  final IconData? icon;
   final String hint;
   final String label;
   final dynamic validator;
@@ -19,7 +19,7 @@ class TextFormFieldComponent extends StatelessWidget {
   const TextFormFieldComponent({
     super.key,
     required this.controller,
-    required this.icon,
+    this.icon,
     required this.hint,
     required this.label,
     required this.validator,
@@ -41,19 +41,20 @@ class TextFormFieldComponent extends StatelessWidget {
       controller: controller,
       keyboardType: inputType,
       decoration: InputDecoration(
-        contentPadding:
-            EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
+        contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
         isDense: false,
         filled: true,
         fillColor: ColorTheme().whiteColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.r),
         ),
-        prefixIcon: Icon(
-          icon,
-          color: ColorTheme().primaryColor,
-          size: 25.sp,
-        ),
+        prefixIcon: icon == null
+            ? null
+            : Icon(
+                icon,
+                color: ColorTheme().primaryColor,
+                size: 25.sp,
+              ),
         hintText: hint,
         hintStyle: TextStyle(fontSize: 14.sp),
         labelText: label,
@@ -64,5 +65,5 @@ class TextFormFieldComponent extends StatelessWidget {
       readOnly: readOnly,
       onTap: onTap,
     );
-   }
+  }
 }

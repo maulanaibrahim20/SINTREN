@@ -233,8 +233,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.villa,
-                        label: 'Desa',
+                        label: 'Pilih Desa',
                         selectedItem: selectedDesaValue,
                         items: desaList.map((desa) {
                           return DropdownMenuItem<DesaModel>(
@@ -263,8 +262,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.date_range,
-                        label: "Jenis Lahan",
+                        label: "Pilih Jenis Lahan",
                         selectedItem: selectedJenisLahanValue.isEmpty
                             ? null
                             : selectedJenisLahanValue,
@@ -296,8 +294,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                         const SizedBox.shrink()
                       ] else ...[
                         DropdownButtonComponent(
-                          icon: Icons.water,
-                          label: 'Pengairan',
+                          label: 'Pilih Jenis Pengairan',
                           selectedItem: selectedJenisPengairanValue,
                           items: pengiranList.map((pengiran) {
                             return DropdownMenuItem<PengairanModel>(
@@ -324,8 +321,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                         SizedBox(height: 10.h),
                       ],
                       DropdownButtonComponent(
-                        icon: Icons.date_range,
-                        label: "Jenis Padi",
+                        label: "Pilih Jenis Padi",
                         selectedItem: selectedJenisPadiValue,
                         items: padiList.map((padi) {
                           return DropdownMenuItem<PadiModel>(
@@ -351,8 +347,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.date_range,
-                        label: "Jenis Bantuan",
+                        label: "Pilih Jenis Bantuan",
                         selectedItem: selectedBantuanValue.isEmpty
                             ? null
                             : selectedBantuanValue,
@@ -381,8 +376,7 @@ class _FormPadiViewState extends State<FormPadiView> {
                       ),
                       SizedBox(height: 10.h),
                       DropdownButtonComponent(
-                        icon: Icons.type_specimen,
-                        label: "Jenis Data",
+                        label: "Pilih Jenis Data",
                         selectedItem: selectedTipeDataValue.isEmpty
                             ? null
                             : selectedTipeDataValue,
@@ -412,9 +406,8 @@ class _FormPadiViewState extends State<FormPadiView> {
                       SizedBox(height: 10.h),
                       TextFormFieldComponent(
                         controller: value,
-                        icon: Icons.numbers,
                         hint: "Masukkan Nilai, Contoh : 1000",
-                        label: "Nilai",
+                        label: "Masukkan Nilai",
                         validator: (value) => value == null || value.isEmpty
                             ? "Masukkan nilai terlebih dahulu"
                             : null,
@@ -431,11 +424,13 @@ class _FormPadiViewState extends State<FormPadiView> {
                             ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.w, vertical: 5.h),
                         child: Text(
                           "* Nilai dimasukkan dalam hektar",
-                          style:
-                              StyleTheme().styleBlack.copyWith(color: Colors.red,fontSize: 16.sp),
+                          style: StyleTheme()
+                              .styleBlack
+                              .copyWith(color: Colors.red, fontSize: 16.sp),
                         ),
                       ),
                     ],
