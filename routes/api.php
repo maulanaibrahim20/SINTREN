@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Pangan\DataPanganController;
 use App\Http\Controllers\Api\Penyuluh\PadiController;
 use App\Http\Controllers\Api\Penyuluh\PalawijaController;
 use App\Http\Controllers\Api\Penyuluh\PenyuluhController;
+use App\Http\Controllers\PANGAN\PasarController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,7 +57,6 @@ Route::delete('/palawija/deleteDetailById/{id}', [PalawijaController::class, 'de
 Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
 Route::get('/padi/showByKecamatan/{id}', [AdminPadiController::class, 'showAllByKecamatan']);
 Route::get('/palawija/showByKecamatan/{id}', [AdminPalawijaController::class, 'showAllByKecamatan']);
-Route::get('/padi/prediksiSp', [AdminPadiController::class, 'prediksi']);
 Route::patch('/verify/{id}', [AdminController::class, 'verify']);
 Route::get('/admin/getPenyuluh/{id}', [AdminController::class, 'getPenyuluh']);
 Route::post('/admin/addPenugasan/', [AdminController::class, 'addPenugasan']);
