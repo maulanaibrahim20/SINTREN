@@ -170,7 +170,7 @@ class UserController extends Controller
         $searchNotelp = $request->input('no_telp');
 
         // Cari nomor telepon di tabel dinas
-        $user = User::whereHas('dinas', function ($query) use ($searchNotelp) {
+        $user = User::whereHas('pertanian', function ($query) use ($searchNotelp) {
             $query->where('no_telp', $searchNotelp);
         })->first();
 
