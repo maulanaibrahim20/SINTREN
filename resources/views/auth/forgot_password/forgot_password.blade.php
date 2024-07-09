@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="row">
                                             <div>
-                                                <button type="submit" class="btn btn-primary d-grid w-100">Log in</button>
+                                                <button type="submit" class="btn btn-primary d-grid w-100">Submit</button>
                                             </div>
                                             <div class="col-12">
                                                 <a href="{{ url('/login') }}" class="btn btn-link box-shadow-0 px-0">Sudah
