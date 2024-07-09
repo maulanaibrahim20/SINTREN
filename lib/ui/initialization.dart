@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
+import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/ui/dinas/dinas_landing_view.dart';
 import 'package:sintren_mobile/ui/uptd/uptd_landing_view.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
@@ -25,6 +26,7 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
       ValueNotifier<String>('Memulai aplikasi...');
   bool _initializationError = false;
   bool isDialogShown = false;
+  late String kecamatan;
 
   Future<void> _initializeDataWithTimeout() async {
     try {
@@ -36,6 +38,9 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
         await AdminController()
             .synchronizeData(statusNotifier)
             .timeout(const Duration(minutes: 5));
+        if (widget.role == "UPTD") {
+          kecamatan = await UserLoginModel().getKecamatanName() ?? "";
+        }
       }
     } catch (e) {
       log("error initialized: $e");
@@ -106,7 +111,7 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
             if (widget.role == "PENYULUH") {
               return const PenyuluhHomeView();
             } else if (widget.role == "UPTD") {
-              return const UptdLandingView();
+              return UptdLandingView(kecamatan: kecamatan);
             } else if (widget.role == "PERTANIAN") {
               return const DinasLandingView();
             }

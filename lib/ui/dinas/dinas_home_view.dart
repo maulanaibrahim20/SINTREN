@@ -78,8 +78,7 @@ class DinasHomeViewState extends State<DinasHomeView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(60.h), 
+        preferredSize: Size.fromHeight(60.h),
         child: AppBar(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
@@ -97,7 +96,7 @@ class DinasHomeViewState extends State<DinasHomeView>
             ),
           ),
           title: Text(
-            'Data Penyuluhan',
+            'Dinas Pertanian Kab. Indramayu',
             style: StyleTheme().styleWhite.copyWith(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w500,
@@ -473,7 +472,6 @@ class DinasHomeViewState extends State<DinasHomeView>
       },
     );
   }
-
 
   void _showDialogFilterTrend(BuildContext context, List<int> tahun) {
     showDialog(

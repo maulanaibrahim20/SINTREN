@@ -85,8 +85,8 @@ class ExampleChartState extends State<ExampleChart> {
         .reduce((a, b) => a > b ? a : b);
     minY = 0; // Set minimum value to 0 for better readability
 
-    // Adjusting maxY to be a multiple of 10000 for better display
-    maxY = ((maxY / 10000).ceil() * 10000).toDouble();
+    // Adjusting maxY to be a multiple of 1000 for better display
+    maxY = ((maxY / 1000).ceil() * 1000).toDouble();
 
     // Calculate interval based on the range and desired number of intervals
     if (maxY > minY) {
@@ -162,6 +162,7 @@ class ExampleChartState extends State<ExampleChart> {
                                   return "";
                               }
                             }
+
                             return BarTooltipItem(
                               '$month\n',
                               TextStyle(
@@ -201,7 +202,7 @@ class ExampleChartState extends State<ExampleChart> {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 28.w, // Use .w for width
+                            reservedSize: 35.w, // Use .w for width
                             interval: interval, // Use the calculated interval
                             getTitlesWidget: leftTitles,
                           ),
@@ -278,7 +279,12 @@ class ExampleChartState extends State<ExampleChart> {
 
     // Display titles at regular intervals
     if (value % interval == 0) {
-      text = '${value ~/ 1000}K';
+      if (maxY >= 1000) {
+        text =
+            '${(value / 1000).toStringAsFixed(1)}K'; // Display in thousands with one decimal place
+      } else {
+        text = '${value.toInt()}'; // Display exact value for smaller numbers
+      }
     } else {
       return Container();
     }

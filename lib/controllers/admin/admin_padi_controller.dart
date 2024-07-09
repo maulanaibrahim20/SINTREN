@@ -170,8 +170,6 @@ class AdminPadiController {
         }
       }
 
-      log(result.toString());
-
       return TrendGrafik.fromMap(result);
     } catch (e) {
       log("Get all padi error: $e");

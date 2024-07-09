@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
@@ -7,9 +6,9 @@ import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart'
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
 import 'package:sintren_mobile/models/luas_wilayah_model.dart';
+import 'package:sintren_mobile/ui/components/example_chart.dart';
 import 'package:sintren_mobile/ui/components/palawija_chart.dart';
 import 'package:sintren_mobile/ui/components/progress_chart.dart';
-import 'package:sintren_mobile/ui/components/trend_chart.dart';
 import 'package:sintren_mobile/ui/uptd/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
@@ -54,6 +53,7 @@ class _UptdDetailDesaViewState extends State<UptdDetailDesaView>
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabProgressController = TabController(length: _tabs.length, vsync: this);
     selectedTahun = DateTime.now().year;
+    years = List.generate(currentYear - 2009, (index) => 2010 + index);
     super.initState();
   }
 
@@ -70,9 +70,9 @@ class _UptdDetailDesaViewState extends State<UptdDetailDesaView>
             tabs: _tabs.map((String tab) {
               return Tab(text: tab);
             }).toList(),
-            labelColor: ColorTheme().primaryColor,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: ColorTheme().primaryColor,
+            labelColor: ColorTheme().whiteColor,
+            unselectedLabelColor: ColorTheme().whiteColor,
+            indicatorColor: ColorTheme().whiteColor,
             indicatorWeight: 2.0.r,
             indicatorSize: TabBarIndicatorSize.tab,
           ),
@@ -133,13 +133,13 @@ class _UptdDetailDesaViewState extends State<UptdDetailDesaView>
                       children: [
                         Icon(
                           Icons.multiline_chart_rounded,
-                          color: ColorTheme().primaryColor,
+                          color: ColorTheme().whiteColor,
                           size: 30.r,
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          "Trend $type", // Judul dinamis sesuai dengan jenis data
-                          style: StyleTheme().stylePrimary.copyWith(
+                          "Grafik Pertanian $type", // Judul dinamis sesuai dengan jenis data
+                          style: StyleTheme().styleWhite.copyWith(
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -152,83 +152,17 @@ class _UptdDetailDesaViewState extends State<UptdDetailDesaView>
                       },
                       child: Icon(
                         Icons.filter_list,
-                        color: ColorTheme().primaryColor,
+                        color: ColorTheme().whiteColor,
                       ),
                     ),
                   ],
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 20.h),
-                width: MediaQuery.of(context).size.width,
-                height: 207.h,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 180.h,
-                      width: 330.w,
-                      child: LineChart(
-                        TrendChart(data: data!).mainData(),
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 10.w,
-                              height: 10.h,
-                              color: ColorTheme().secondaryColor,
-                            ),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "Data Tanam",
-                              style: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 10.w),
-                        Row(
-                          children: [
-                            Container(
-                                width: 10.w,
-                                height: 10.h,
-                                color: Colors.amber[900]),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "Data Panen",
-                              style: TextStyle(
-                                  color: ColorTheme().primaryColor,
-                                  fontSize: 12.sp),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 5.w),
-                        Row(
-                          children: [
-                            Container(
-                                width: 10.w,
-                                height: 10.h,
-                                color: Colors.red[900]),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "Data Puso/Rusak",
-                              style: TextStyle(
-                                  color: ColorTheme().primaryColor,
-                                  fontSize: 12.sp),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                  margin: EdgeInsets.only(top: 20.h),
+                  width: MediaQuery.of(context).size.width,
+                  height: 207.h,
+                  child: ExampleChart(data: data)),
             ],
           );
         }
@@ -593,11 +527,10 @@ class _UptdDetailDesaViewState extends State<UptdDetailDesaView>
                                   animation: true,
                                   lineHeight: 30.h,
                                   animationDuration: 2000,
-                                  percent: (desa.nilai /
-                                              getLuasDesa(desa.id)) >
-                                          1
-                                      ? 1
-                                      : desa.nilai / getLuasDesa(desa.id),
+                                  percent:
+                                      (desa.nilai / getLuasDesa(desa.id)) > 1
+                                          ? 1
+                                          : desa.nilai / getLuasDesa(desa.id),
                                   center: Text(
                                     "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.id)})",
                                     style: StyleTheme().styleWhite.copyWith(

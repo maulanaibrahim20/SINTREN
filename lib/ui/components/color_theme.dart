@@ -35,11 +35,6 @@ class ColorTheme {
     end: Alignment.bottomCenter,
   );
 
-  final LinearGradient linearColorAmber = LinearGradient(
-    colors: [Colors.amber[900]!, Colors.amberAccent],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
   final Color linearBorderColor2 = const Color.fromRGBO(133, 118, 255, 1);
   final LinearGradient linearColor2 = const LinearGradient(
     colors: [Color.fromRGBO(133, 118, 255, 1), Color.fromRGBO(28, 22, 120, 1)],

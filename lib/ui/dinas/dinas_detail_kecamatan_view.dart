@@ -1,13 +1,12 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
+import 'package:sintren_mobile/ui/components/example_chart.dart';
 import 'package:sintren_mobile/ui/components/palawija_chart.dart';
 import 'package:sintren_mobile/ui/components/progress_chart.dart';
-import 'package:sintren_mobile/ui/components/trend_chart.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/dropdown_button_component.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
@@ -54,42 +53,48 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
     _tabController = TabController(length: _tabs.length, vsync: this);
     _tabProgressController = TabController(length: _tabs.length, vsync: this);
     selectedTahun = DateTime.now().year;
+    years = List.generate(currentYear - 2009, (index) => 2010 + index);
     super.initState();
   }
 
   Card _trendLineChart(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 15.w),
+      margin: EdgeInsets.symmetric(horizontal: 10.w),
       elevation: 3,
       color: ColorTheme().whiteColor,
       surfaceTintColor: ColorTheme().whiteColor,
-      child: Column(
-        children: [
-          TabBar(
-            controller: _tabController,
-            tabs: _tabs.map((String tab) {
-              return Tab(text: tab);
-            }).toList(),
-            labelColor: ColorTheme().primaryColor,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: ColorTheme().primaryColor,
-            indicatorWeight: 2.0.r,
-            indicatorSize: TabBarIndicatorSize.tab,
-          ),
-          Container(
-            height: 280.h,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            child: TabBarView(
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: ColorTheme().linearColor2,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            TabBar(
               controller: _tabController,
-              children: [
-                // Tab untuk data Padi
-                _buildChartTab(context, 'Padi'),
-                // Tab untuk data Palawija
-                _buildChartTab(context, 'Palawija'),
-              ],
+              tabs: _tabs.map((String tab) {
+                return Tab(text: tab);
+              }).toList(),
+              labelColor: ColorTheme().whiteColor,
+              unselectedLabelColor: ColorTheme().whiteColor,
+              indicatorColor: ColorTheme().whiteColor,
+              indicatorWeight: 2.0.r,
+              indicatorSize: TabBarIndicatorSize.tab,
             ),
-          ),
-        ],
+            Container(
+              height: 280.h,
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Tab untuk data Padi
+                  _buildChartTab(context, 'Padi'),
+                  // Tab untuk data Palawija
+                  _buildChartTab(context, 'Palawija'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -133,13 +138,13 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
                       children: [
                         Icon(
                           Icons.multiline_chart_rounded,
-                          color: ColorTheme().primaryColor,
+                          color: ColorTheme().whiteColor,
                           size: 30.r,
                         ),
                         SizedBox(width: 10.w),
                         Text(
-                          "Trend $type", // Judul dinamis sesuai dengan jenis data
-                          style: StyleTheme().stylePrimary.copyWith(
+                          "Grafik Pertanian $type", // Judul dinamis sesuai dengan jenis data
+                          style: StyleTheme().styleWhite.copyWith(
                                 fontSize: 20.sp,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -152,83 +157,17 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
                       },
                       child: Icon(
                         Icons.filter_list,
-                        color: ColorTheme().primaryColor,
+                        color: ColorTheme().whiteColor,
                       ),
                     ),
                   ],
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 20.h),
-                width: MediaQuery.of(context).size.width,
-                height: 207.h,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 180.h,
-                      width: 330.w,
-                      child: LineChart(
-                        TrendChart(data: data!).mainData(),
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 10.w,
-                              height: 10.h,
-                              color: ColorTheme().secondaryColor,
-                            ),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "Data Tanam",
-                              style: TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 10.w),
-                        Row(
-                          children: [
-                            Container(
-                                width: 10.w,
-                                height: 10.h,
-                                color: Colors.amber[900]),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "Data Panen",
-                              style: TextStyle(
-                                  color: ColorTheme().primaryColor,
-                                  fontSize: 12.sp),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 5.w),
-                        Row(
-                          children: [
-                            Container(
-                                width: 10.w,
-                                height: 10.h,
-                                color: Colors.red[900]),
-                            SizedBox(width: 5.w),
-                            Text(
-                              "Data Puso/Rusak",
-                              style: TextStyle(
-                                  color: ColorTheme().primaryColor,
-                                  fontSize: 12.sp),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+                  margin: EdgeInsets.only(top: 20.h),
+                  width: MediaQuery.of(context).size.width,
+                  height: 207.h,
+                  child: ExampleChart(data: data)),
             ],
           );
         }
@@ -356,6 +295,9 @@ class _DinasDetailKecamatanViewState extends State<DinasDetailKecamatanView>
       backgroundColor: ColorTheme().bgColor,
       appBar: AppBar(
         foregroundColor: ColorTheme().whiteColor,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(gradient: ColorTheme().linearColor),
+        ),
         title: Text(
           'Detail Kecamatan ${UserController().toCamelCase(widget.kecamatanName!)}',
           style: StyleTheme().styleWhite.copyWith(
