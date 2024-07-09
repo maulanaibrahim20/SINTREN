@@ -28,6 +28,9 @@ use App\Http\Controllers\PANGAN\LaporanPanganController;
 use App\Http\Controllers\PANGAN\DataPanganController;
 use App\Http\Controllers\PANGAN\GrafikPanganController;
 use App\Http\Controllers\PANGAN\PasarController;
+use App\Http\Controllers\WEB\Auth\ForgotPasswordController;
+use App\Http\Controllers\WEB\Auth\NewPasswordController;
+use App\Http\Controllers\WEB\Auth\VerificationController;
 use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
 
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
@@ -38,6 +41,7 @@ use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPalawijaController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanNotVerifyController;
+use App\Http\Requests\Auth\NewPasswordRequest;
 use Illuminate\Support\Facades\Route;
 
 
@@ -64,12 +68,24 @@ Route::middleware(['guest'])->group(function () {
         Route::post('/', [LoginController::class, 'process'])
             ->name('process');
     });
-});
 
+    Route::get('lupa_password', [ForgotPasswordController::class, 'index']);
+    Route::post('lupa_password', [ForgotPasswordController::class, 'sendEmail']);
+
+    Route::prefix('new-password')->name('new-password.')->group(function () {
+        Route::get('/', [NewPasswordController::class, 'index'])->name('index');
+        Route::post('/', [NewPasswordController::class, 'process'])->name('process');
+    });
+
+    Route::get('/verification', VerificationController::class)
+        ->name('verification');
+});
 Route::middleware(['auth'])->name('web.')->group(function () {
     Route::get('/logout', LogoutController::class)
         ->name('auth.logout');
 });
+
+
 
 
 Route::middleware(['autentikasi'])->group(function () {
