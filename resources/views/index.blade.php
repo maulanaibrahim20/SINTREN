@@ -212,8 +212,8 @@
 
     @include('template.component.style_js')
     @include('sweetalert::alert')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @if (session('success'))
         <script type="text/javascript">
             Swal.fire({

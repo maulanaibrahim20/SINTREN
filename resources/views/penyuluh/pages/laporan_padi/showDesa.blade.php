@@ -53,7 +53,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            {{ $data->date }}
+                                            {{ \Carbon\Carbon::parse($data->date)->translatedFormat('d F Y') }}
                                         </td>
                                         <td>{{ $data->jenis_lahan }}</td>
                                         <td>

@@ -47,6 +47,15 @@
                         <div class="tab-pane active p-0" id="style6tab2">
                             <div class="card overflow-hidden border-0">
                                 <div class="card-body">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <form action="{{ url('/penyuluh/pengaturan/editProfile/' . $penyuluh->id) }}"
                                         method="POST" class="form-horizontal" enctype="multipart/form-data">
                                         @method('PUT')
@@ -65,19 +74,8 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <input type="text" class="form-control" name="nama"
-                                                        placeholder="Masukan Nama" value="{{ $penyuluh->user->name }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group ">
-                                            <div class="row row-sm">
-                                                <div class="col-md-3">
-                                                    <label class="form-label fw-semibold text-muted-dark">Username</label>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <input type="text" class="form-control" name="username"
-                                                        placeholder="Masukan Username"
-                                                        value="{{ $penyuluh->user->username }}" disabled>
+                                                        placeholder="Masukan Nama"
+                                                        value="{{ old('nama', $penyuluh->user->name) }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -88,42 +86,12 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <input type="text" class="form-control" name="email"
-                                                        placeholder="Masukan Email" value="{{ $penyuluh->user->email }}">
+                                                        placeholder="Masukan Email"
+                                                        value="{{ old('email', $penyuluh->user->email) }}">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="row row-sm">
-                                                <div class="col-md-3">
-                                                    <h6 class="text-uppercase fw-semibold mb-0">Your Photo</h6>
-                                                    <span class="text-muted-dark">This will be displayed on Your
-                                                        Profile</span>
-                                                </div>
-                                                <div class="col-md-9 d-flex justify-content-between">
-                                                    <img src="{{ url('/assets') }}/images/users/male/24.jpg"
-                                                        class="avatar avatar-xl br-7" alt="person-image">
-                                                    <div class="d-flex">
-                                                        <a href="javascript:void(0);"
-                                                            class="mb-0 fw-semibold mx-2">Change</a>
-                                                        <a href="javascript:void(0);" class="mb-0 fw-semibold">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-uppercase fw-semibold mb-3">Pekerjaan</h6>
-                                        <div class="form-group ">
-                                            <div class="row row-sm">
-                                                <div class="col-md-3">
-                                                    <label class="form-label fw-semibold text-muted-dark">Pekerjaan</label>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <input type="text" class="form-control" name="pekerjaan"
-                                                        value="{{ $penyuluh->user->getAkses->name }}" readonly disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h6 class="text-uppercase fw-semibold mb-3">Kontak</h6>
-                                        <div class="form-group ">
                                             <div class="row row-sm">
                                                 <div class="col-md-3">
                                                     <label class="form-label fw-semibold text-muted-dark">Nomor
@@ -131,17 +99,18 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <input type="text" class="form-control" name="no_telp"
-                                                        placeholder="phone number" value="{{ $penyuluh->no_telp }}">
+                                                        placeholder="Nomor Telepon"
+                                                        value="{{ old('no_telp', $penyuluh->no_telp) }}">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group ">
+                                        <div class="form-group">
                                             <div class="row row-sm">
                                                 <div class="col-md-3">
                                                     <label class="form-label fw-semibold text-muted-dark">Alamat</label>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <textarea class="form-control" name="alamat" rows="2">{{ $penyuluh->alamat }}</textarea>
+                                                    <textarea class="form-control" name="alamat" rows="2">{{ old('alamat', $penyuluh->alamat) }}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -159,7 +128,7 @@
                                         <div class="d-flex">
                                             <div class="ms-auto">
                                                 <button type="submit" class="btn btn-sm btn-success mx-1">Update
-                                                    Passsword</button>
+                                                    Password</button>
                                                 <button type="reset" class="btn btn-sm btn-danger">Cancel</button>
                                             </div>
                                         </div>
@@ -176,7 +145,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group ">
+                                        <div class="form-group">
                                             <div class="row row-sm">
                                                 <div class="col-md-3">
                                                     <label class="form-label fw-semibold text-muted-dark">Password
@@ -210,4 +179,20 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    @if ($errors->any())
+        <script type="text/javascript">
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '{{ $error }}\n';
+            @endforeach
+            Swal.fire({
+                title: "Gagal",
+                text: errorMessages,
+                icon: "error"
+            });
+        </script>
+    @endif
 @endsection

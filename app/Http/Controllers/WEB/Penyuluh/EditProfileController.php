@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Penyuluh\EditProfile\UpdatePasswordPenyuluhRequest;
+use App\Http\Requests\Penyuluh\EditProfile\UpdateProfilePenyuluhRequest;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,7 +28,7 @@ class EditProfileController extends Controller
         return view('penyuluh.pages.editProfile.index', $data);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateProfilePenyuluhRequest $request, $id)
     {
         try {
             DB::beginTransaction();
@@ -47,7 +49,7 @@ class EditProfileController extends Controller
         }
     }
 
-    public function updatePassword(Request $request, $id)
+    public function updatePassword(UpdatePasswordPenyuluhRequest $request, $id)
     {
         try {
             DB::beginTransaction();
@@ -56,12 +58,10 @@ class EditProfileController extends Controller
             $user = $penyuluh->user;
 
             if (!Hash::check($request->password_lama, $user->password)) {
-                Alert::error('Error', 'Password lama tidak sesuai.');
                 return back()->with('error', 'Password lama tidak sesuai.');
             }
 
             if ($request->password_baru !== $request->konfirmasi_password) {
-                Alert::error('Error', 'Konfirmasi password tidak sesuai dengan password baru.');
                 return back()->with('error', 'Konfirmasi password tidak sesuai dengan password baru.');
             }
 
@@ -70,7 +70,6 @@ class EditProfileController extends Controller
             ]);
 
             DB::commit();
-            Alert::success('Success', 'Password berhasil diubah.');
             return back()->with('success', 'Password berhasil diubah');
         } catch (\Exception $e) {
             DB::rollback();

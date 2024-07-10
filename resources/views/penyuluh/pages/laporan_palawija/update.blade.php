@@ -14,6 +14,15 @@
                 <div class="card-header">
                     <h3 class="mb-0 card-title">Tambah Data Laporan Palawija</h3>
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form action="{{ url('/penyuluh/create/laporan_palawija/' . $editPalawija->id) }}" method="POST"
                     id="myForm">
                     <div class="card-body">
@@ -136,4 +145,20 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    @if ($errors->any())
+        <script type="text/javascript">
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '{{ $error }}\n';
+            @endforeach
+            Swal.fire({
+                title: "Gagal",
+                text: errorMessages,
+                icon: "error"
+            });
+        </script>
+    @endif
 @endsection

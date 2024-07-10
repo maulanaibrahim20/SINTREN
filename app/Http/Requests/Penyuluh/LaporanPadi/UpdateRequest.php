@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Penyuluh;
+namespace App\Http\Requests\Penyuluh\LaporanPadi;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LaporanPadiRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

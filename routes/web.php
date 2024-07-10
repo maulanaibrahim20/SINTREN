@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AppController;
-use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
@@ -41,7 +40,6 @@ use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPalawijaController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanNotVerifyController;
-use App\Http\Requests\Auth\NewPasswordRequest;
 use Illuminate\Support\Facades\Route;
 
 

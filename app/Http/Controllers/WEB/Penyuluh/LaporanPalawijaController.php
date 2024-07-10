@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Penyuluh\LaporanPalawija\StoreRequest;
+use App\Http\Requests\Penyuluh\LaporanPalawija\UpdateRequest;
 use App\Models\Operator\TanamanPalawija;
 use App\Models\Penyuluh\DetailLaporanPalawija;
 use App\Models\Penyuluh\JenisPalawija;
@@ -53,7 +55,7 @@ class LaporanPalawijaController extends Controller
             )
             ->join('desas', 'desas.id', '=', 'laporan_palawijas.desa_id')
             ->groupBy('month_year', 'laporan_palawijas.desa_id', 'desas.name')
-            ->orderBy('month_year', 'asc')
+            ->orderBy('month_year', 'desc')
             ->orderBy('laporan_palawijas.desa_id')
             ->get();
 
@@ -80,7 +82,7 @@ class LaporanPalawijaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -118,18 +120,13 @@ class LaporanPalawijaController extends Controller
     {
         $data['desa'] = $this->laporanPalawija::where('desa_id', $desa_id)->first();
         $data['verify'] = $this->verifyPalawija::where('laporan_id', $data['desa']->id)->get();
-        $data['showDesa'] = $this->laporanPalawija::with('verify')->where('desa_id', $desa_id)->get();
+        $data['showDesa'] = $this->laporanPalawija::with('verify')->where('desa_id', $desa_id)->orderBy('created_at', 'desc')->get();
         return view('penyuluh.pages.laporan_palawija.showDesa', $data)->with('success', 'Data Desa Berhasil Ditampilkan!');
     }
 
     public function show(string $id)
     {
-        $laporanPalawija = $this->laporanPalawija::findOrFail($id);
-        $data = [
-            'laporanPalawija' => $laporanPalawija,
-
-
-        ];
+        $data['laporanPalawija'] = $this->laporanPalawija::findOrFail($id);
         return view('penyuluh.pages.laporan_palawija.show', $data);
     }
 
@@ -152,7 +149,7 @@ class LaporanPalawijaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         try {
             DB::beginTransaction();
