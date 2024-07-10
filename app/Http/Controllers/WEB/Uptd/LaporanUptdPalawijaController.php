@@ -20,23 +20,25 @@ class LaporanUptdPalawijaController extends Controller
     }
     public function index()
     {
-        $results = DB::table('laporan_padis')
+        $results = DB::table('laporan_palawijas')
             ->select(
-                DB::raw("DATE_FORMAT(laporan_padis.date, '%Y-%m') AS month_year"),
-                'laporan_padis.desa_id',
+                DB::raw("DATE_FORMAT(laporan_palawijas.date, '%Y-%m') AS month_year"),
+                'laporan_palawijas.desa_id',
                 'desas.name',
-                'laporan_padis.kecamatan_id',
-                DB::raw('SUM(laporan_padis.nilai) AS total_nilai')
+                'laporan_palawijas.kecamatan_id',
+                DB::raw('SUM(laporan_palawijas.nilai) AS total_nilai')
             )
-            ->join('desas', 'desas.id', '=', 'laporan_padis.desa_id')
+            ->join('desas', 'desas.id', '=', 'laporan_palawijas.desa_id')
             ->groupBy(
-                DB::raw("DATE_FORMAT(laporan_padis.date, '%Y-%m')"),
-                'laporan_padis.desa_id',
+                DB::raw("DATE_FORMAT(laporan_palawijas.date, '%Y-%m')"),
+                'laporan_palawijas.desa_id',
                 'desas.name',
-                'laporan_padis.kecamatan_id'
+                'laporan_palawijas.kecamatan_id',
+                'laporan_palawijas.created_at'
             )
-            ->orderBy('month_year')
-            ->orderBy('laporan_padis.desa_id')
+            ->orderBy('month_year', 'desc')
+            ->orderBy('laporan_palawijas.desa_id')
+            ->orderBy('laporan_palawijas.created_at', 'desc')
             ->get();
         $kecamatanId = Auth::user()->uptd->kecamatan_id;
         $data['laporanPalawija'] = $results->where('kecamatan_id', $kecamatanId)->sortBy('created_at');

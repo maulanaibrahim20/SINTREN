@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WEB\Uptd;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Uptd\EditProfile\UpdatePasswordUptdRequest;
+use App\Http\Requests\Uptd\EditProfile\UpdateProfileUptdRequest;
 use App\Models\Uptd\Uptd;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,7 +29,7 @@ class EditProfileUptdController extends Controller
         return view('uptd.pages.editProfile.index', $data);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateProfileUptdRequest $request, $id)
     {
         try {
             DB::beginTransaction();
@@ -49,7 +51,7 @@ class EditProfileUptdController extends Controller
         }
     }
 
-    public function updatePassword(Request $request, $id)
+    public function updatePassword(UpdatePasswordUptdRequest $request, $id)
     {
         try {
             DB::beginTransaction();

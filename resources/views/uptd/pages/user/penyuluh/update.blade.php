@@ -54,6 +54,7 @@
                         </div>
                         @include('template.component.button')
                     </form>
+
                 </div>
             </div>
         </div>
@@ -85,4 +86,19 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    @if ($errors->any())
+        <script type="text/javascript">
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '{{ $error }}\n';
+            @endforeach
+            Swal.fire({
+                title: "Gagal",
+                text: errorMessages,
+                icon: "error"
+            });
+        </script>
+    @endif
 @endsection

@@ -47,6 +47,15 @@
                         <div class="tab-pane active p-0" id="style6tab2">
                             <div class="card overflow-hidden border-0">
                                 <div class="card-body">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <form action="{{ url('/uptd/pengaturan/editProfile/' . $uptd->id) }}" method="POST"
                                         class="form-horizontal" enctype="multipart/form-data">
                                         @method('PUT')
@@ -152,6 +161,15 @@
                         <div class="tab-pane p-0" id="style6tab3">
                             <div class="card overflow-hidden border-0">
                                 <div class="card-body">
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
                                     <form action="{{ url('/uptd/pengaturan/editPassword/' . $uptd->id) }}" method="POST"
                                         class="form-horizontal" enctype="multipart/form-data">
                                         @method('PUT')
@@ -210,4 +228,20 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    @if ($errors->any())
+        <script type="text/javascript">
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '{{ $error }}\n';
+            @endforeach
+            Swal.fire({
+                title: "Gagal",
+                text: errorMessages,
+                icon: "error"
+            });
+        </script>
+    @endif
 @endsection

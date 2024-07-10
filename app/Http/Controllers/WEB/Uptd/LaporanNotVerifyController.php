@@ -25,7 +25,6 @@ class LaporanNotVerifyController extends Controller
         try {
             DB::beginTransaction();
 
-            // Cari data yang sesuai dengan id
             $verify = VerifyPadi::find($id) ?? VerifyPalawija::find($id);
 
             if ($verify) {
