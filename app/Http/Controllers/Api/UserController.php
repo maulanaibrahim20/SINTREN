@@ -165,6 +165,83 @@ class UserController extends Controller
         }
     }
 
+    public function searchNotelp(Request $request)
+    {
+        $searchNotelp = $request->input('no_telp');
+
+        // Cari nomor telepon di tabel dinas
+        $user = User::whereHas('pertanian', function ($query) use ($searchNotelp) {
+            $query->where('no_telp', $searchNotelp);
+        })->first();
+
+        if ($user) {
+            return response()->json([
+                'status' => 'success',
+                'user' => $user,
+            ]);
+        }
+
+        // Cari nomor telepon di tabel uptd
+        $user = User::whereHas('uptd', function ($query) use ($searchNotelp) {
+            $query->where('no_telp', $searchNotelp);
+        })->first();
+
+        if ($user) {
+            return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'notelp' => $user->uptd->notelp,
+            ]);
+        }
+
+        // Cari nomor telepon di tabel penyuluh
+        $user = User::whereHas('penyuluh', function ($query) use ($searchNotelp) {
+            $query->where('no_telp', $searchNotelp);
+        })->first();
+
+        if ($user) {
+            return response()->json([
+                'status' => 'success',
+                'user' => $user,
+                'notelp' => $user->penyuluh->notelp,
+            ]);
+        }
+
+        // Jika tidak ditemukan
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Nomor telepon tidak ditemukan',
+        ], 404);
+    }
+
+    public function forgotPassword(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'new_password' => 'required|string|min:8|different:current_password',
+                'confirm_password' => 'required|string|same:new_password',
+            ]);
+
+            $user = User::findOrFail($id);
+
+            $user->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password berhasil diubah.',
+                'data' => null
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Password gagal diubah: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
+    }
+
     public function getUserById($id)
     {
         try {
