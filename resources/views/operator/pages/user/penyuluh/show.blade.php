@@ -73,10 +73,10 @@
                 <div class="card-body">
                     <div class="">
                         <div class="d-flex overflow-visible">
-                            <a href="blog-details.html" class="card-recent-post cover-image">
+                            <div class="card-recent-post cover-image">
                                 <img src="{{ url('/assets') }}/images/photos/9.jpg" style="height: 200px; width: auto"
                                     class="br-7" alt="image">
-                            </a>
+                            </div>
                             <div class="ps-3 flex-column">
                                 <span class="badge bg-primary me-1 mb-1 mt-1">{{ $user->user->name }}</span>
                                 <h6 class="fw-semibold"><a href=""> Role

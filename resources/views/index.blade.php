@@ -66,7 +66,7 @@
                                     <span class="bn-positive me-4">{{ $totalLaporanPadi }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-user-alt bg-info-transparent text-info mx-1"></span>
+                                    <span class="fa fa-user bg-info-transparent text-info mx-1"></span>
                                     <span class="d-inline-block">Total Penyuluh</span>
                                     <span class="bn-negative me-4">{{ $totalPenyuluh }}</span>
                                 </li>
@@ -126,12 +126,12 @@
                                     <span class="bn-negative me-4">{{ $totalAlatPertanian }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-seedling bg-info-transparent text-info mx-1"></span>
+                                    <span class="fa fa-tree bg-info-transparent text-info mx-1"></span>
                                     <span class="d-inline-block">Total Produksi Beras</span>
                                     <span class="bn-positive me-4">{{ $totalProduksiBeras }} ton</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-seedling bg-success-transparent text-success mx-1"></span>
+                                    <span class="fa fa-tree bg-success-transparent text-success mx-1"></span>
                                     <span class="d-inline-block">Total Penggunaan Pupuk</span>
                                     <span class="bn-positive me-4">{{ $totalPenggunaanPupuk }} ton</span>
                                 </li>
