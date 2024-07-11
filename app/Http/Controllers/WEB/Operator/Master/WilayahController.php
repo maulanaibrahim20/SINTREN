@@ -26,6 +26,10 @@ class WilayahController extends Controller
         $desa = Desa::where('district_id', $id)
             ->orderBy('name', 'asc')
             ->get();
+
+        if ($desa->isEmpty()) {
+            return back()->with('error', 'Data Desa Tidak Ditemukan');
+        }
         return view('operator.pages.master.wilayah.view', compact('desa'), $data);
     }
 }

@@ -17,6 +17,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class PenyuluhController extends Controller
 {
@@ -93,8 +94,8 @@ class PenyuluhController extends Controller
     public function edit($id)
     {
         $user = $this->penyuluh::findOrFail(decrypt($id));
-        $desa = $this->desa::all();
-        $kec = $this->kecamatan::all();
+        $desa = $this->desa::orderBy('name', 'asc')->get();
+        $kec = $this->kecamatan::orderBy('name', 'asc')->get();
         $data = [
             'kecamatan' => $this->kecamatan::where('id', $user->kecamatan_id)->get(),
             'selected_kec' => $user->kecamatan_id,
@@ -109,28 +110,27 @@ class PenyuluhController extends Controller
 
     public function update(UpdateRequest $request, $id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            $user = $this->penyuluh->findOrFail($id);
-            $user->update($request->all() + [
+            $decryptedId = Crypt::decrypt($id); // Pastikan ID terdekripsi dengan benar
+            $penyuluh = $this->penyuluh->findOrFail($decryptedId);
+            $user = $penyuluh->user;
+
+            $penyuluh->update($request->all() + [
                 'updated_at' => Carbon::now(),
                 'desa_id' => $request->desa,
                 'kecamatan_id' => $request->kecamatan
             ]);
-            $user->user->update($request->all() + [
+
+            $user->update($request->all() + [
                 'updated_at' => Carbon::now(),
             ]);
+
             DB::commit();
-            Alert::success('success', 'User penyuluh berhasil diubah!');
             return redirect('/operator/user/penyuluh')->with('success', 'User Penyuluh Berhasil Diubah!');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            Alert::warning('kesalahan' . $e->errors());
-            return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $er) {
             DB::rollback();
-            Alert::error('error', 'User penyuluh gagal diubah!' . $er->getMessage());
-            return back()->with('error', 'Gagal Mengubah User Penyuluh' . $er->getMessage());
+            return back()->with('error', 'Gagal Mengubah User Penyuluh: ' . $er->getMessage());
         }
     }
 
@@ -144,10 +144,6 @@ class PenyuluhController extends Controller
             DB::commit();
             Alert::success('success', 'User penyuluh berhasil dihapus!');
             return redirect('/operator/user/penyuluh')->with('success', 'User Penyuluh Berhasil Dihapus!');
-        } catch (ValidationException $e) {
-            DB::rollback();
-            Alert::warning('kesalahan' . $e->errors());
-            return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $er) {
             DB::rollback();
             Alert::error('error', 'User penyuluh gagal dihapus!' . $er->getMessage());

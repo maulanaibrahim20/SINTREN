@@ -50,12 +50,8 @@ class PertanianController extends Controller
 
     public function store(CreateRequest $request)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-
-            $randomPassword = Str::random(8);
-
-
             $user = $this->user->create($request->all() + [
                 'username' => Str::slug($request->name),
                 'password' => bcrypt('password'),
@@ -66,7 +62,8 @@ class PertanianController extends Controller
             ]);
 
             DB::commit();
-            return redirect('/operator/user/pertanian')->with('success', 'Data User Pertanian Berhasil Ditambahkan');
+            $successMessage = "Data User Pertanian Berhasil Ditambahkan!\n\nUsername: {$user->username}\nPassword: password";
+            return redirect('/operator/user/pertanian')->with('success', $successMessage);
         } catch (\Exception $e) {
             DB::rollback();
             $errorMessage = 'Gagal Menambahkan Data: ' . $e->getMessage();
@@ -100,8 +97,8 @@ class PertanianController extends Controller
 
     public function update(UpdatedRequest $request, $id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $user = $this->pertanian->findOrFail(decrypt($id));
             $user->update($request->all() + [
                 'updated_at' => now(),
@@ -110,31 +107,27 @@ class PertanianController extends Controller
                 'updated_at' => now(),
             ]);
             DB::commit();
-            Alert::success('success', 'Data berhasil diubah!');
             return redirect('/operator/user/pertanian')->with('success', 'Success data berhasil diubah!');
         } catch (\Exception $er) {
             DB::rollback();
             $errorMessage = 'Gagal Menambahkan Data: ' . $er->getMessage();
-            Alert::error('Error', $errorMessage);
             return back()->withInput()->withErrors($errorMessage);
         }
     }
 
     public function destroy($id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $user = $this->pertanian->findOrFail($id);
             $user->user->delete();
             $user->delete();
 
             DB::commit();
 
-            Alert::success('success', 'Data Berhasil Dihapus!');
             return back()->with('success', 'Data Berhasil Dihapus');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data Gagal Dihapus' . $e->getMessage());
             return back()->with('error', 'Data GagalDihapus!');
         }
     }

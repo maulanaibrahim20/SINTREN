@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Wilayah\Kecamatan;
+use Illuminate\Support\Facades\Crypt;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class UptdController extends Controller
@@ -52,8 +53,8 @@ class UptdController extends Controller
     }
     public function store(CreateRequest $request)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $user = $this->user->create($request->all() + [
                 'username' => Str::slug($request->name),
                 'password' => bcrypt('password'),
@@ -64,12 +65,11 @@ class UptdController extends Controller
                 'kecamatan_id' => $request->kecamatan
             ]);
             DB::commit();
-            Alert::success('success', 'Data User Uptd Berhasil Ditambahkan!');
-            return redirect('/operator/user/uptd')->with('success', 'Data User Uptd Berhasil Ditambahkan!');
+            $successMessage = "Data User Uptd Berhasil Ditambahkan!\n\nUsername: {$user->username}\nPassword: password";
+            return redirect('/operator/user/uptd')->with('success', $successMessage);
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data User Uptd Gagal Ditambahkan!' . $e->getMessage());
-            return back()->with('error', 'Data User Uptd gagal ditambahkan!');
+            return back()->with('error', 'Data User Uptd gagal ditambahkan!' . $e->getMessage());
         }
     }
 
@@ -101,30 +101,33 @@ class UptdController extends Controller
 
     public function update(UpdateRequest $request, $id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
-            $user = $this->uptd->findOrFail(decrypt($id));
-            $user->update($request->all() + [
+            $decryptedId = Crypt::decrypt($id);
+            $uptd = $this->uptd->findOrFail($decryptedId);
+            $user = $uptd->user;
+
+            $uptd->update($request->all() + [
                 'updated_at' => now(),
                 'kecamatan_id' => $request->kecamatan,
             ]);
-            $user->user->update($request->all() + [
+
+            $user->update($request->all() + [
                 'updated_at' => now(),
             ]);
+
             DB::commit();
-            Alert::success('success', 'Data Berhasil Diubah!');
             return redirect('/operator/user/uptd')->with('success', 'Data Berhasil Diubah!');
         } catch (\Exception $e) {
             DB::rollback();
-            Alert::error('error', 'Data user gagal diubah!' . $e->getMessage());
-            return back()->with('error', 'Data user gagal diubah!');
+            return back()->with('error', 'Data user gagal diubah! ' . $e->getMessage());
         }
     }
 
     public function destroy($id)
     {
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $user = $this->uptd->findOrFail($id);
             $user->user->delete();
             $user->delete();

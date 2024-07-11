@@ -29,7 +29,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ url('/operator/user/penyuluh/' . $user->id) }}" method="post">
+                    <form action="{{ url('/operator/user/penyuluh/' . encrypt($user->id)) }}" method="post">
                         @csrf
                         @method('PUT')
                         <div class="form-row">
@@ -63,11 +63,10 @@
                                     data-placeholder="Pilih Kecamatan">
                                     <option value="">-- pilih --</option>
                                     @foreach ($kec as $data)
-                                        @php
-                                            $selected = $data->id == $selected_kec ? 'selected' : '';
-                                        @endphp
-                                        <option value="{{ $data->id }}" {{ $selected ? 'selected' : '' }}>
-                                            {{ $data->name }}</option>
+                                        <option value="{{ $data->id }}"
+                                            {{ $data->id == $selected_kec ? 'selected' : '' }}>
+                                            {{ $data->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -75,12 +74,10 @@
                                 <label class="form-label">Desa</label>
                                 <select name="desa" id="desa" class="form-control select2 form-select"
                                     data-placeholder="Pilih Desa">
-                                    @php
-                                        $isSelected = $selected_desa ? 'selected' : '';
-                                    @endphp
                                     @foreach ($desa as $des)
-                                        <option value="{{ $user->desa_id }}"
-                                            {{ $des->id == $selected_desa ? 'selected' : '' }}> {{ $des->name }}
+                                        <option value="{{ $des->id }}"
+                                            {{ $des->id == $selected_desa ? 'selected' : '' }}>
+                                            {{ $des->name }}
                                         </option>
                                     @endforeach
                                 </select>

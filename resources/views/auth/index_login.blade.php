@@ -18,6 +18,7 @@
     <title> Sintrenayu | @yield('title')</title>
 
     @include('auth.component.style_css')
+    @yield('css')
 
 </head>
 

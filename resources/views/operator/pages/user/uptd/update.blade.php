@@ -64,7 +64,7 @@
                                     <option label="Pilih Kecamatan"></option>
                                     @foreach ($kecamatan as $kec)
                                         <option value="{{ $kec->id }}"
-                                            {{ in_array($kec->id, $selected) ? 'selected' : '' }}>
+                                            {{ $user->kecamatan_id == $kec->id ? 'selected' : '' }}>
                                             {{ $kec->name }}
                                         </option>
                                     @endforeach
@@ -73,6 +73,7 @@
                         </div>
                         @include('template.component.button')
                     </form>
+
                 </div>
             </div>
         </div>

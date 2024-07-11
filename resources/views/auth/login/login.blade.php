@@ -19,7 +19,7 @@
                                         </div>
                                     @endif
                                     <div class="text-center mb-2">
-                                        <a class="header-brand1" href="{{ url('/login') }}">
+                                        <a class="header-brand1" href="{{ url('/') }}">
                                             <img src="{{ url('/landings') }}/img/imy.png"
                                                 style="height: 100px; width: auto; margin-right: 5px; margin-top:5px;"
                                                 alt="Logo Sintren">

@@ -1,5 +1,58 @@
 @extends('auth.index_login')
 @section('title', 'Lupa Password')
+@section('css')
+    <style>
+        #submit-button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #button-text {
+            margin-right: 10px;
+        }
+
+        .spinner4 {
+            display: flex;
+            position: absolute;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        .bounce1,
+        .bounce2,
+        .bounce3 {
+            width: 18px;
+            height: 18px;
+            background-color: #fff;
+            border-radius: 100%;
+            display: inline-block;
+            animation: bouncedelay 1.4s infinite ease-in-out both;
+        }
+
+        .bounce1 {
+            animation-delay: -0.32s;
+        }
+
+        .bounce2 {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bouncedelay {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+    </style>
+@endsection
 @section('content')
     <div class="page-content">
         <div class="container text-center text-dark">
@@ -9,16 +62,6 @@
                         <div class="col-xl-12 col-md-12 col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div id="loading" class="sk-folding-cube"
-                                        style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background-color: rgba(255, 255, 255, 0.7);">
-                                        <div class="sk-folding-cube"
-                                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                                            <div class="sk-cube1 sk-cube"></div>
-                                            <div class="sk-cube2 sk-cube"></div>
-                                            <div class="sk-cube4 sk-cube"></div>
-                                            <div class="sk-cube3 sk-cube"></div>
-                                        </div>
-                                    </div>
                                     @if ($errors->any())
                                         <div class="alert alert-danger">
                                             <ul>
@@ -50,7 +93,15 @@
                                         </div>
                                         <div class="row">
                                             <div>
-                                                <button type="submit" class="btn btn-primary d-grid w-100">Submit</button>
+                                                <button type="submit" class="btn btn-primary d-grid w-100"
+                                                    id="submit-button">
+                                                    <span id="button-text">Submit</span>
+                                                    <span id="button-spinner" class="spinner4" style="display: none;">
+                                                        <div class="bounce1"></div>
+                                                        <div class="bounce2"></div>
+                                                        <div class="bounce3"></div>
+                                                    </span>
+                                                </button>
                                             </div>
                                             <div class="col-12">
                                                 <a href="{{ url('/login') }}" class="btn btn-link box-shadow-0 px-0">Sudah
@@ -71,17 +122,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('#forgot-password-form');
-            const loading = document.getElementById('loading');
-            const submitButton = document.querySelector('button[type="submit"]');
-            const cardBody = document.querySelector('.card-body');
+            const submitButton = document.getElementById('submit-button');
+            const buttonText = document.getElementById('button-text');
+            const buttonSpinner = document.getElementById('button-spinner');
 
             form.addEventListener('submit', function(event) {
                 event.preventDefault(); // Mencegah pengiriman form default
 
-                // Menampilkan loading dan mendisable semua elemen dalam card
-                loading.style.display = 'block';
-                cardBody.style.pointerEvents = 'none'; // Mendisable semua elemen dalam card
-                cardBody.style.opacity = '0.5'; // Membuat komponen menjadi abu-abu
+                // Mengubah teks tombol menjadi loader
+                buttonText.style.display = 'none';
+                buttonSpinner.style.display = 'flex';
                 submitButton.disabled = true;
 
                 // Simulasikan pengiriman form
