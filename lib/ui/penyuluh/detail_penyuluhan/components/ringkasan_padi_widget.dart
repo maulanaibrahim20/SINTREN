@@ -31,6 +31,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       elevation: 3,
+      color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
             gradient: ColorTheme().linearColor2,
@@ -52,7 +53,8 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                         width: 50.w,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: ColorTheme().whiteColor),
+                          border: Border.all(
+                              color: ColorTheme().linearBorderColor2),
                           gradient: ColorTheme().linearColorWhite,
                         ),
                         child: Center(
@@ -69,12 +71,12 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                         children: [
                           Text(
                             "Desa ${UserController().toCamelCase(widget.desaName)}",
-                            style: StyleTheme().styleWhite.copyWith(
+                            style: StyleTheme().styleBlack.copyWith(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
                           Text(
                             UserController().convertDate(widget.date),
-                            style: StyleTheme().styleWhite.copyWith(
+                            style: StyleTheme().styleBlack.copyWith(
                                 fontWeight: FontWeight.bold, fontSize: 14.sp),
                           ),
                         ],
@@ -87,10 +89,10 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                           height: 40.h,
                           width: 40.w,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: ColorTheme().whiteColor),
-                            gradient: ColorTheme().linearColorWhite,
-                          ),
+                              shape: BoxShape.circle,
+                              gradient: ColorTheme().buttonColor1,
+                              border: Border.all(
+                                  color: ColorTheme().buttonBorderColor1)),
                           child: Center(
                             child: GestureDetector(
                               onTap: () {
@@ -109,7 +111,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                               },
                               child: Icon(
                                 Icons.add,
-                                color: ColorTheme().linearBorderColor2,
+                                color: ColorTheme().whiteColor,
                                 size: 25.sp,
                               ),
                             ),
@@ -119,7 +121,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
               ),
             ),
             SizedBox(height: 10.h),
-            Divider(thickness: 2.h),
+            Divider(color: ColorTheme().buttonBorderColor1, thickness: 2.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: FutureBuilder(
@@ -179,7 +181,7 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                           padding: EdgeInsets.all(8.sp),
                           child: Text(
                             "Data Kosong",
-                            style: StyleTheme().styleWhite.copyWith(
+                            style: StyleTheme().styleBlack.copyWith(
                                 color: Colors.grey,
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w500),
@@ -192,10 +194,12 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                       children: [
                         Text(
                           "Ringkasan penyuluhan bulan ini",
-                          style: StyleTheme().styleWhite.copyWith(
+                          style: StyleTheme().styleBlack.copyWith(
                               fontSize: 14.sp, fontWeight: FontWeight.bold),
                         ),
-                        Divider(thickness: 2.h),
+                        Divider(
+                            color: ColorTheme().buttonBorderColor1,
+                            thickness: 2.h),
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: totalValues.entries.map((entry) {
@@ -209,12 +213,12 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                                   Text(
                                     "${UserController().toCamelCase(entry.key)}:",
                                     style: StyleTheme()
-                                        .styleWhite
+                                        .styleBlack
                                         .copyWith(fontSize: 14.sp),
                                   ),
                                   Text(
                                     '${entry.value} hektar',
-                                    style: StyleTheme().styleWhite.copyWith(
+                                    style: StyleTheme().styleBlack.copyWith(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
@@ -223,14 +227,16 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                             );
                           }).toList(),
                         ),
-                        Divider(thickness: 2.h),
+                        Divider(
+                            color: ColorTheme().buttonBorderColor1,
+                            thickness: 2.h),
                       ],
                     );
                   }
                 }),
               ),
             ),
-            Divider(thickness: 2.h),
+            Divider(color: ColorTheme().buttonBorderColor1, thickness: 2.h),
             widget.isRincian
                 ? const SizedBox.shrink()
                 : GestureDetector(
@@ -252,12 +258,12 @@ class _RingkasanPadiWidgetState extends State<RingkasanPadiWidget> {
                       children: [
                         Text(
                           "Lihat Selengkapnya",
-                          style: StyleTheme().styleWhite.copyWith(
+                          style: StyleTheme().styleBlack.copyWith(
                               fontSize: 16.sp, fontWeight: FontWeight.w500),
                         ),
                         Icon(
                           Icons.arrow_right_outlined,
-                          color: ColorTheme().whiteColor,
+                          color: ColorTheme().blackColor,
                         ),
                       ],
                     ),

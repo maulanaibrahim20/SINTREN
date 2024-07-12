@@ -164,4 +164,37 @@ class UserService {
       return false;
     }
   }
+
+  Future<bool> checkNotelp(String number) async {
+    final String url = '${ConfigApp().baseUrl}checkNotelp';
+    final Map<String, dynamic> data = {
+      "no_telp": number,
+    };
+
+    try {
+      final Response response = await post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode != 200) {
+        log("Number not found: ${response.statusCode}");
+        return false;
+      }
+
+      final Map<String, dynamic> jsonResult = jsonDecode(response.body);
+      if (jsonResult['user'] == null) {
+        log("Login failed: user not found");
+        return false;
+      }
+      return true;
+    } catch (e) {
+      EasyLoading.showToast("Internal Server Error");
+      log("Check Error: $e");
+      return false;
+    }
+  }
 }

@@ -337,14 +337,14 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.history, color: ColorTheme().whiteColor),
+            Icon(Icons.history, color: ColorTheme().blackColor),
             SizedBox(width: 10.w),
             Text(
               'Histori Penyuluhan',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14.sp,
-                color: ColorTheme().whiteColor,
+                color: ColorTheme().blackColor,
               ),
             )
           ],

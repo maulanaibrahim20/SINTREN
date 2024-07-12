@@ -63,33 +63,38 @@ class _UptdDetailDesaViewState extends State<UptdDetailDesaView>
       elevation: 3,
       color: ColorTheme().whiteColor,
       surfaceTintColor: ColorTheme().whiteColor,
-      child: Column(
-        children: [
-          TabBar(
-            controller: _tabController,
-            tabs: _tabs.map((String tab) {
-              return Tab(text: tab);
-            }).toList(),
-            labelColor: ColorTheme().whiteColor,
-            unselectedLabelColor: ColorTheme().whiteColor,
-            indicatorColor: ColorTheme().whiteColor,
-            indicatorWeight: 2.0.r,
-            indicatorSize: TabBarIndicatorSize.tab,
-          ),
-          Container(
-            height: 280.h,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-            child: TabBarView(
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: ColorTheme().linearColor2,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            TabBar(
               controller: _tabController,
-              children: [
-                // Tab untuk data Padi
-                _buildChartTab(context, 'Padi'),
-                // Tab untuk data Palawija
-                _buildChartTab(context, 'Palawija'),
-              ],
+              tabs: _tabs.map((String tab) {
+                return Tab(text: tab);
+              }).toList(),
+              labelColor: ColorTheme().whiteColor,
+              unselectedLabelColor: ColorTheme().whiteColor,
+              indicatorColor: ColorTheme().whiteColor,
+              indicatorWeight: 2.0.r,
+              indicatorSize: TabBarIndicatorSize.tab,
             ),
-          ),
-        ],
+            Container(
+              height: 280.h,
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Tab untuk data Padi
+                  _buildChartTab(context, 'Padi'),
+                  // Tab untuk data Palawija
+                  _buildChartTab(context, 'Palawija'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

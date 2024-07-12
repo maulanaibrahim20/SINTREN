@@ -143,7 +143,7 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                         .toCamelCase(data.palawijaName),
                                     style: StyleTheme().styleBlack.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: ScreenUtil().setSp(16)),
+                                        fontSize: 16.sp),
                                   ),
                                   Container(
                                     margin: EdgeInsets.symmetric(
@@ -167,6 +167,7 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                               ? "Data Ditolak"
                                               : "Menunggu Verifikasi",
                                       style: StyleTheme().styleWhite.copyWith(
+                                            fontSize: 14.sp,
                                             fontWeight: FontWeight.w500,
                                           ),
                                     ),
@@ -180,11 +181,15 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   Text(
                                     UserController()
                                         .toCamelCase(data.jenisBantuan),
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme()
+                                        .styleBlack
+                                        .copyWith(fontSize: 14.sp),
                                   ),
                                   Text(
                                     UserController().normalizeDate(data.date),
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme()
+                                        .styleBlack
+                                        .copyWith(fontSize: 14.sp),
                                   ),
                                 ],
                               ),
@@ -194,7 +199,9 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                 children: [
                                   Text(
                                     "Lahan ${UserController().toCamelCase(data.jenisLahan)}",
-                                    style: StyleTheme().styleBlack,
+                                    style: StyleTheme()
+                                        .styleBlack
+                                        .copyWith(fontSize: 14.sp),
                                   ),
                                 ],
                               ),
@@ -206,13 +213,13 @@ class _DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   Text(
                                     UserController().toCamelCase(data.tipeData),
                                     style: StyleTheme().styleBlack.copyWith(
-                                        fontSize: ScreenUtil().setSp(14),
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
                                     data.nilai.toString(),
                                     style: StyleTheme().styleBlack.copyWith(
-                                          fontSize: ScreenUtil().setSp(14),
+                                          fontSize: 14.sp,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
