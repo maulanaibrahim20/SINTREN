@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -165,53 +166,22 @@ class UserController extends Controller
         }
     }
 
-    public function searchNotelp(Request $request)
+    public function searchEmail(Request $request)
     {
-        $searchNotelp = $request->input('no_telp');
-
-        // Cari nomor telepon di tabel dinas
-        $user = User::whereHas('pertanian', function ($query) use ($searchNotelp) {
-            $query->where('no_telp', $searchNotelp);
-        })->first();
-
-        if ($user) {
+        $user = User::whereEmail($request->input('email'))->first();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email tidak ditemukan',
+            ], 404);
+        }
+        $status = Password::sendResetLink($request->only('email'));
+        if ($status == Password::RESET_LINK_SENT) {
             return response()->json([
                 'status' => 'success',
-                'user' => $user,
-            ]);
+                'message' => 'Periksa Email Anda Untuk Mendapatkan Link Reset Password'
+            ], 200);
         }
-
-        // Cari nomor telepon di tabel uptd
-        $user = User::whereHas('uptd', function ($query) use ($searchNotelp) {
-            $query->where('no_telp', $searchNotelp);
-        })->first();
-
-        if ($user) {
-            return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'notelp' => $user->uptd->notelp,
-            ]);
-        }
-
-        // Cari nomor telepon di tabel penyuluh
-        $user = User::whereHas('penyuluh', function ($query) use ($searchNotelp) {
-            $query->where('no_telp', $searchNotelp);
-        })->first();
-
-        if ($user) {
-            return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'notelp' => $user->penyuluh->notelp,
-            ]);
-        }
-
-        // Jika tidak ditemukan
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Nomor telepon tidak ditemukan',
-        ], 404);
     }
 
     public function forgotPassword(Request $request, $id)
