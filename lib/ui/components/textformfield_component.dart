@@ -15,6 +15,7 @@ class TextFormFieldComponent extends StatelessWidget {
   final bool readOnly;
   final dynamic onTap;
   final dynamic style;
+  final dynamic onChanged;
 
   const TextFormFieldComponent({
     super.key,
@@ -30,6 +31,7 @@ class TextFormFieldComponent extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.style,
+    this.onChanged,
   });
 
   @override
@@ -63,6 +65,7 @@ class TextFormFieldComponent extends StatelessWidget {
       validator: validator,
       onSaved: onSaved,
       readOnly: readOnly,
+      onChanged: onChanged,
       onTap: onTap,
     );
   }

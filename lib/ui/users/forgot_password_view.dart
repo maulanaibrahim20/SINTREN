@@ -17,26 +17,26 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final userC = UserController();
   final userS = UserService();
   final formKey = GlobalKey<FormState>();
-  TextEditingController number = TextEditingController();
+  TextEditingController email = TextEditingController();
 
   bool isKeyboardVisible = false;
-  final FocusNode _fnnumber = FocusNode();
+  final FocusNode _fnEmail = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _fnnumber.addListener(_onFocusChange);
+    _fnEmail.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
-    _fnnumber.removeListener(_onFocusChange);
+    _fnEmail.removeListener(_onFocusChange);
     super.dispose();
   }
 
   void _onFocusChange() {
     setState(() {
-      isKeyboardVisible = _fnnumber.hasFocus;
+      isKeyboardVisible = _fnEmail.hasFocus;
     });
   }
 
@@ -113,15 +113,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 child: Column(
                   children: [
                     Text(
-                      "LOGIN",
+                      "LUPA PASSWORD",
                       style: StyleTheme().stylePrimary.copyWith(
                           fontSize: 30.sp, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20.h),
-                    Text(
-                      "Silahkan Login Terlebih Dahulu",
-                      style: StyleTheme().styleBlack.copyWith(
-                          fontSize: 16.sp, fontWeight: FontWeight.w500),
                     ),
                     Form(
                         key: formKey,
@@ -132,9 +126,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             children: [
                               TextFormField(
                                 style: TextStyle(fontSize: 14.sp),
-                                focusNode: _fnnumber,
-                                controller: number,
-                                keyboardType: TextInputType.phone,
+                                focusNode: _fnEmail,
+                                controller: email,
+                                keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 15.h, horizontal: 10.w),
@@ -147,12 +141,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     color: ColorTheme().primaryColor,
                                     size: 25.sp,
                                   ),
-                                  hintText: "Contoh: +6289321456780",
-                                  labelText: "Masukkan No.Telepon/Whatsapp",
+                                  hintText: "Contoh: contoh@gmail.com",
+                                  labelText: "Masukkan Email",
                                 ),
                                 validator: (value) {
                                   return value == null || value.isEmpty
-                                      ? "Nomor tidak boleh kosong"
+                                      ? "Email tidak boleh kosong"
                                       : null;
                                 },
                               ),
@@ -166,31 +160,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   borderRadius: BorderRadius.circular(10.r),
                                   gradient: ColorTheme().linearColor,
                                 ),
-                                child: ElevatedButton.icon(
-                                  onPressed: () async {
-                                    if (formKey.currentState!.validate()) {
-                                      await userS
-                                          .checkNotelp(number.text)
-                                          .then((value) async {
-                                        EasyLoading.showInfo("Nomor ditemukan");
-                                        if (value) {
-                                          // await userC.sendCode(number.text);
-                                          EasyLoading.showInfo(
-                                              "Kode telah dikirim ke Whatsapp");
-                                        }
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(Icons.login_rounded,
-                                      color: ColorTheme().whiteColor,
-                                      size: 14.sp),
-                                  label: Text(
-                                    'LOGIN',
-                                    style: StyleTheme().styleWhite.copyWith(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
+                                child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,
                                     side: BorderSide(
@@ -198,6 +168,59 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                         width: 2.w),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10.r),
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await userS
+                                          .checkEmail(email.text)
+                                          .then((value) async {
+                                        EasyLoading.showInfo(
+                                            "Email ditemukan, Kode telah dikirim ke Email");
+                                      });
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'KIRIM',
+                                        style: StyleTheme().styleWhite.copyWith(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Icon(Icons.send,
+                                          color: ColorTheme().whiteColor,
+                                          size: 16.sp),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 60.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    gradient: ColorTheme().buttonColor3,
+                                    border: Border.all(
+                                      color: ColorTheme().buttonBorderColor3,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      'KEMBALI',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16.sp,
+                                        color: ColorTheme().blackColor,
+                                      ),
                                     ),
                                   ),
                                 ),

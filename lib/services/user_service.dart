@@ -165,10 +165,10 @@ class UserService {
     }
   }
 
-  Future<bool> checkNotelp(String number) async {
-    final String url = '${ConfigApp().baseUrl}checkNotelp';
+  Future<bool> checkEmail(String email) async {
+    final String url = '${ConfigApp().baseUrl}checkEmail';
     final Map<String, dynamic> data = {
-      "no_telp": number,
+      "email": email,
     };
 
     try {
@@ -181,13 +181,13 @@ class UserService {
       );
 
       if (response.statusCode != 200) {
-        log("Number not found: ${response.statusCode}");
+        log("Email not found: ${response.statusCode}");
         return false;
       }
 
       final Map<String, dynamic> jsonResult = jsonDecode(response.body);
       if (jsonResult['user'] == null) {
-        log("Login failed: user not found");
+        log("Email not found");
         return false;
       }
       return true;

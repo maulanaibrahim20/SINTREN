@@ -34,7 +34,14 @@ class ColorTheme {
   final Color buttonBorderColor2 = Colors.grey;
   final LinearGradient buttonColor2 = const LinearGradient(
     // colors: [Color.fromRGBO(123, 201, 255, 1), Color.fromRGBO(28, 22, 120, 1)],
-    colors: [Colors.white, Colors.white],
+    colors: [Colors.white, Colors.white12],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  final Color buttonBorderColor3 = Colors.grey;
+  final LinearGradient buttonColor3 = const LinearGradient(
+    // colors: [Color.fromRGBO(123, 201, 255, 1), Color.fromRGBO(28, 22, 120, 1)],
+    colors: [Colors.white, Colors.black12],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );

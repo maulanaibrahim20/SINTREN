@@ -301,7 +301,11 @@ class _UptdHomeViewState extends State<UptdHomeView>
               margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
               padding: EdgeInsets.symmetric(horizontal: 15.w),
               decoration: BoxDecoration(
-                color: Colors.red[900],
+                gradient: LinearGradient(
+                  colors: [Colors.red[600]!, Colors.red[900]!],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Center(

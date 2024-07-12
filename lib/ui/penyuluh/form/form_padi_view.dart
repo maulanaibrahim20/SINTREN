@@ -41,6 +41,7 @@ class _FormPadiViewState extends State<FormPadiView> {
   late String selectedTipeDataValue;
   TextEditingController value = TextEditingController();
   TextEditingController date = TextEditingController();
+  bool _isKomaFound = false;
 
   @override
   void initState() {
@@ -406,8 +407,8 @@ class _FormPadiViewState extends State<FormPadiView> {
                       SizedBox(height: 10.h),
                       TextFormFieldComponent(
                         controller: value,
-                        hint: "Masukkan Nilai, Contoh : 1000",
-                        label: "Masukkan Nilai",
+                        hint: "Masukkan Nilai (hektar), Contoh : 1000",
+                        label: "Masukkan Nilai (hektar)",
                         validator: (value) => value == null || value.isEmpty
                             ? "Masukkan nilai terlebih dahulu"
                             : null,
@@ -418,19 +419,30 @@ class _FormPadiViewState extends State<FormPadiView> {
                             value.text = value!;
                           });
                         },
+                        onChanged: (String value) {
+                          setState(() {
+                            if (value.contains(',')) {
+                              _isKomaFound = true;
+                            } else {
+                              _isKomaFound = false;
+                            }
+                          });
+                        },
                         style: StyleTheme().styleBlack.copyWith(
                               fontWeight: FontWeight.w500,
                               fontSize: 15.sp,
                             ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 10.w, vertical: 5.h),
-                        child: Text(
-                          "* Nilai dimasukkan dalam hektar",
-                          style: StyleTheme()
-                              .styleBlack
-                              .copyWith(color: Colors.red, fontSize: 16.sp),
+                      Visibility(
+                        visible: _isKomaFound,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Text(
+                            "Tidak boleh menggunakan tanda koma",
+                            style: StyleTheme()
+                                .styleBlack
+                                .copyWith(color: Colors.red),
+                          ),
                         ),
                       ),
                     ],
