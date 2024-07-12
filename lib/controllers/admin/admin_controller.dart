@@ -364,4 +364,26 @@ class AdminController {
       EasyLoading.dismiss();
     }
   }
+
+  String getPeriode() {
+    final now = DateTime.now();
+    final currentMonth = now.month;
+    final currentYear = now.year;
+
+    // Mengidentifikasi periode MT1 dan MT2
+    List<String> mt1Months = ['10', '11', '12', '01', '02', '03'];
+    List<String> mt2Months = ['04', '05', '06', '07', '08', '09'];
+
+    String periode = '';
+
+    if (mt1Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+      periode = 'MT1 ${currentYear -1 } Oktober - $currentYear Maret';
+    } else if (mt2Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+      periode = 'MT2 April - September $currentYear';
+    } else {
+      periode = 'Tidak diketahui';
+    }
+
+    return periode;
+  }
 }

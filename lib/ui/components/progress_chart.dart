@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_padi_controller.dart';
 import 'package:sintren_mobile/controllers/admin/admin_palawija_controller.dart';
 import 'package:sintren_mobile/models/pie_chart_model.dart';
@@ -77,10 +78,10 @@ class ProgressChart {
   Future<dynamic> _fetchProgressChartData(String type) async {
     if (type == 'Padi') {
       return await AdminPadiController()
-          .getDataProgressPieChart(kecamatanId: kecamatanId,desaId: desaId);
+          .getDataProgressPieChart(kecamatanId: kecamatanId, desaId: desaId);
     } else if (type == 'Palawija') {
       return await AdminPalawijaController()
-          .getDataProgressPieChart(kecamatanId: kecamatanId,desaId: desaId);
+          .getDataProgressPieChart(kecamatanId: kecamatanId, desaId: desaId);
     }
   }
 
@@ -137,14 +138,18 @@ class ProgressChart {
           }
 
           return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                AdminController().getPeriode(),
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20.sp),
               Expanded(
                 child: Row(
                   children: <Widget>[
-                    SizedBox(
-                      height: 18.h,
-                    ),
                     Expanded(
                       child: PieChart(PieChartData(
                         borderData: FlBorderData(

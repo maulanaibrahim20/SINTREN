@@ -61,37 +61,65 @@ class AdminPadiController {
       final currentMonth = now.month;
       final currentYear = now.year;
 
-      // Membuat daftar kondisi dan argumen
-      List<String> conditions = [
-        "strftime('%m', date) = ?",
-        "strftime('%Y', date) = ?",
-        "status = ?"
-      ];
-      List<dynamic> args = [
-        currentMonth.toString().padLeft(2, '0'),
-        currentYear.toString(),
-        "terima"
-      ];
+      // Mengidentifikasi periode MT1 dan MT2
+      List<String> mt1Months = ['10', '11', '12', '01', '02', '03'];
+      List<String> mt2Months = ['04', '05', '06', '07', '08', '09'];
 
-      // Menambahkan kondisi desaId jika tidak null
+      List<String> selectedMonths = [];
+      String selectedYearCondition = '';
+
+      if (mt1Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedMonths = mt1Months;
+        // Menentukan kondisi tahun untuk MT1
+        selectedYearCondition = '''
+      (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?) OR
+      (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?)
+      ''';
+      } else if (mt2Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedMonths = mt2Months;
+        // Menentukan kondisi tahun untuk MT2
+        selectedYearCondition = '''
+      strftime('%m', date) IN (${List.filled(mt2Months.length, '?').join(', ')}) AND strftime('%Y', date) = ?
+      ''';
+      }
+
+      List<String> conditions = [selectedYearCondition, "status = ?"];
+
+      List<dynamic> args = [];
+      if (selectedMonths == mt1Months) {
+        args.addAll([
+          '10',
+          '11',
+          '12',
+          (currentYear - 1).toString(),
+          '01',
+          '02',
+          '03',
+          currentYear.toString()
+        ]);
+      } else if (selectedMonths == mt2Months) {
+        args.addAll(selectedMonths);
+        args.add(currentYear.toString());
+      }
+      args.add("terima");
+
       if (desaId != null) {
         conditions.add('desa_id = ?');
         args.add(desaId);
       }
 
-      // Menambahkan kondisi kecamatanId jika tidak null
       if (kecamatanId != null) {
         conditions.add('kecamatan_id = ?');
         args.add(kecamatanId);
       }
 
       final List<Map<String, dynamic>> maps = await db.rawQuery('''
-      SELECT 
-        SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) as sum_panen,
-        SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) as sum_tanam,
-        SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) as sum_puso_rusak
-      FROM detailPadi
-      WHERE ${conditions.join(' AND ')}
+        SELECT 
+          SUM(CASE WHEN tipe_data = 'panen' THEN nilai ELSE 0 END) as sum_panen,
+          SUM(CASE WHEN tipe_data = 'tanam' THEN nilai ELSE 0 END) as sum_tanam,
+          SUM(CASE WHEN tipe_data = 'puso/rusak' THEN nilai ELSE 0 END) as sum_puso_rusak
+        FROM detailPadi
+        WHERE ${conditions.join(' AND ')}
     ''', args);
 
       if (maps.isNotEmpty) {

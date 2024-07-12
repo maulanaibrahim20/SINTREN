@@ -10,10 +10,20 @@ class PieChartModel {
   });
 
   factory PieChartModel.fromMap(Map<String, dynamic> json) {
+    double parseToDouble(dynamic value) {
+      if (value is int) {
+        return value.toDouble();
+      } else if (value is double) {
+        return value;
+      } else {
+        return 0.0;
+      }
+    }
+
     return PieChartModel(
-      sumPanen: json['sum_panen'] ?? 0.0,
-      sumTanam: json['sum_tanam'] ?? 0.0,
-      sumPusoRusak: json['sum_puso_rusak'] ?? 0.0,
+      sumPanen: parseToDouble(json['sum_panen']),
+      sumTanam: parseToDouble(json['sum_tanam']),
+      sumPusoRusak: parseToDouble(json['sum_puso_rusak']),
     );
   }
 }
