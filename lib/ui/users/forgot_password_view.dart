@@ -174,7 +174,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                           .then((value) async {
                                         EasyLoading.showInfo("Nomor ditemukan");
                                         if (value) {
-                                          await userC.sendCode(number.text);
+                                          // await userC.sendCode(number.text);
                                           EasyLoading.showInfo(
                                               "Kode telah dikirim ke Whatsapp");
                                         }

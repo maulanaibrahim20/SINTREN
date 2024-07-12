@@ -301,7 +301,7 @@ class _UptdHomeViewState extends State<UptdHomeView>
               margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
               padding: EdgeInsets.symmetric(horizontal: 15.w),
               decoration: BoxDecoration(
-                color: ColorTheme().primaryColor,
+                color: Colors.red[900],
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Center(
@@ -459,11 +459,11 @@ class _UptdHomeViewState extends State<UptdHomeView>
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10.w),
       elevation: 3,
-      color: ColorTheme().whiteColor,
-      surfaceTintColor: ColorTheme().whiteColor,
+      color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
             gradient: ColorTheme().linearColor2,
+            border: Border.all(color: ColorTheme().linearBorderColor2),
             borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
@@ -472,9 +472,9 @@ class _UptdHomeViewState extends State<UptdHomeView>
               tabs: _tabs.map((String tab) {
                 return Tab(text: tab);
               }).toList(),
-              labelColor: ColorTheme().whiteColor,
+              labelColor: ColorTheme().linearBorderColor2,
               unselectedLabelColor: ColorTheme().whiteColor,
-              indicatorColor: ColorTheme().whiteColor,
+              indicatorColor: ColorTheme().linearBorderColor2,
               indicatorWeight: 2.0.r,
               indicatorSize: TabBarIndicatorSize.tab,
             ),

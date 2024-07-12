@@ -359,11 +359,11 @@ class DinasHomeViewState extends State<DinasHomeView>
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 10.w),
       elevation: 3,
-      color: ColorTheme().whiteColor,
-      surfaceTintColor: ColorTheme().whiteColor,
+      color: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
             gradient: ColorTheme().linearColor2,
+            border: Border.all(color: ColorTheme().linearBorderColor2),
             borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
@@ -372,9 +372,9 @@ class DinasHomeViewState extends State<DinasHomeView>
               tabs: _tabs.map((String tab) {
                 return Tab(text: tab);
               }).toList(),
-              labelColor: ColorTheme().whiteColor,
+              labelColor: ColorTheme().linearBorderColor2,
               unselectedLabelColor: ColorTheme().whiteColor,
-              indicatorColor: ColorTheme().whiteColor,
+              indicatorColor: ColorTheme().linearBorderColor2,
               indicatorWeight: 2.0.r,
               indicatorSize: TabBarIndicatorSize.tab,
             ),
@@ -385,9 +385,9 @@ class DinasHomeViewState extends State<DinasHomeView>
                 controller: _tabController,
                 children: [
                   // Tab untuk data Padi
-                  _buildChartTab2(context, 'Padi'),
+                  _buildChartTab(context, 'Padi'),
                   // Tab untuk data Palawija
-                  _buildChartTab2(context, 'Palawija'),
+                  _buildChartTab(context, 'Palawija'),
                 ],
               ),
             ),
@@ -397,7 +397,7 @@ class DinasHomeViewState extends State<DinasHomeView>
     );
   }
 
-  Widget _buildChartTab2(BuildContext context, String type) {
+  Widget _buildChartTab(BuildContext context, String type) {
     return FutureBuilder(
       future: _fetchChartData(type),
       builder: (context, snapshot) {

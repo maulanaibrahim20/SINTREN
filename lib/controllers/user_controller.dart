@@ -5,8 +5,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/user_service.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class UserController {
   Future<void> logout() async {
@@ -155,27 +153,6 @@ class UserController {
   String normalizeDate(String date) {
     final DateTime parsedDate = DateTime.parse(date);
     return DateFormat('dd MMMM yyyy', 'id_ID').format(parsedDate);
-  }
-
-  Future<void> sendCode(String number) async {
-    String randomNumbersString = generateRandomNumbersString(6);
-
-    if (number.startsWith('0')) {
-      number = "+62${number.substring(1)}";
-    } else if (!number.startsWith('+62')) {
-      number = "+62$number";
-    }
-    String message = 'Kode anda: $randomNumbersString';
-
-    final link = WhatsAppUnilink(phoneNumber: number, text: message);
-
-    final url = "whatsapp://send?phone=$number&text=$message";
-
-    if (await canLaunch('$link')) {
-      await launch('$link');
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
   String generateRandomNumbersString(int count) {
