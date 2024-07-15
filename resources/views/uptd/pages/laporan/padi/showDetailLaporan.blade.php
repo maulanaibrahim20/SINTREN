@@ -43,7 +43,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            {{ $data->date }}
+                                            {{ \Carbon\Carbon::parse($data->date)->translatedFormat('l, d F Y') }}
                                         </td>
                                         <td>{{ $data->jenis_lahan }}</td>
                                         <td class="text-center">
@@ -94,7 +94,8 @@
                                         <td class="text-right">Tanggal Input</td>
                                         <td>:</td>
                                         <td>
-                                            {{ $itemShow->date }}
+                                            {{ \Carbon\Carbon::parse($itemShow->date)->translatedFormat('l, d F Y') }}
+
                                         </td>
                                     </tr>
                                     <tr>

@@ -47,13 +47,26 @@ class LaporanUptdPadiController extends Controller
         return view('uptd.pages.laporan.padi.index', $data);
     }
 
-    public function showDetailLaporanKecamatan($desa_id)
+    public function showDetailLaporanKecamatan($desa_id, $month_year)
     {
-        $data['desa'] = $this->laporanPadi::where('desa_id', $desa_id)->first();
+        $data['desa'] = $this->laporanPadi::where('desa_id', $desa_id)
+            ->where(DB::raw("DATE_FORMAT(date, '%Y-%m')"), $month_year)
+            ->first();
+
+        if (!$data['desa']) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
         $data['verify'] = $this->verifyPadi::where('laporan_id', $data['desa']->id)->get();
-        $data['showDesa'] = $this->laporanPadi::with('verify')->where('desa_id', $desa_id)->orderBy('created_at', 'desc')->get();
+        $data['showDesa'] = $this->laporanPadi::with('verify')
+            ->where('desa_id', $desa_id)
+            ->where(DB::raw("DATE_FORMAT(date, '%Y-%m')"), $month_year)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('uptd.pages.laporan.padi.showDetailLaporan', $data);
     }
+
 
     public function changeStatus(Request $request, $id)
     {
