@@ -216,7 +216,7 @@
                             <div class="dropdown d-flex profile-1">
                                 <a href="javascript:void(0)" data-bs-toggle="dropdown"
                                     class="nav-link leading-none d-flex">
-                                    <img src="{{ url('/assets') }}/images/users/male/user1.png" alt="profile-user"
+                                    <img src="{{ url('/assets') }}/images/user-profile.png" alt="profile-user"
                                         class="avatar  profile-user brround cover-image">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow" data-bs-popper="none">
