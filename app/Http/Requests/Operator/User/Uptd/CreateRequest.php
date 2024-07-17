@@ -25,7 +25,7 @@ class CreateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'alamat' => ['required', 'string', 'max:255'],
-            'no_telp' => ['required', 'string', 'max:255'],
+            'no_telp' => ['required', 'string', 'min:9', 'max:255'],
         ];
     }
 
@@ -46,6 +46,7 @@ class CreateRequest extends FormRequest
             'no_telp.required' => 'Nomor telepon harus diisi.',
             'no_telp.string' => 'Nomor telepon harus berupa teks.',
             'no_telp.max' => 'Nomor telepon maksimal 255 karakter.',
+            'no_telp.min' => 'Nomor telepon minimal 9 karakter.',
             'kecamatan.required' => 'Kecamatan harus dipilih.',
             'kecamatan.integer' => 'Kecamatan harus berupa angka.',
             'kecamatan.exists' => 'Kecamatan tidak ditemukan dalam database.',

@@ -16,6 +16,7 @@ class PrediksiPalawijaController extends Controller
     {
         $this->laporanPalawija = $laporanPalawija;
     }
+    
     public function index()
     {
         $content = [

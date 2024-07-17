@@ -101,7 +101,6 @@
                     data: predictedData,
                     color: 'rgb(255, 99, 132)', // Merah untuk data prediksi
                     lineWidth: 2,
-                    dashStyle: 'Dash' // Garis putus-putus untuk prediksi
                 }]
             };
 

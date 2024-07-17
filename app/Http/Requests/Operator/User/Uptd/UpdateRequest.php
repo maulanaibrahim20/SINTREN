@@ -31,7 +31,7 @@ class UpdateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'alamat' => ['required', 'string', 'max:255'],
-            'no_telp' => ['required', 'string', 'max:15'],
+            'no_telp' => ['required', 'string', 'min:9', 'max:15'],
             'kecamatan' => ['required', 'integer', 'exists:kecamatans,id', Rule::unique('uptds', 'kecamatan_id')->ignore($decryptedId)]
         ];
     }
@@ -53,6 +53,7 @@ class UpdateRequest extends FormRequest
             'no_telp.required' => 'Nomor telepon harus diisi.',
             'no_telp.string' => 'Nomor telepon harus berupa teks.',
             'no_telp.max' => 'Nomor telepon maksimal 15 karakter.',
+            'no_telp.min' => 'Nomor telepon minimal 9 karakter.',
             'kecamatan.required' => 'Kecamatan harus dipilih.',
             'kecamatan.integer' => 'Kecamatan harus berupa angka.',
             'kecamatan.exists' => 'Kecamatan tidak ditemukan dalam database.',

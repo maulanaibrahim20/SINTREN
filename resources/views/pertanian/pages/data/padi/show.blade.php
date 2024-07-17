@@ -21,9 +21,7 @@
                             <tr>
                                 <td class="text-right">Tanggal Input</td>
                                 <td>:</td>
-                                <td>
-                                    {{ $show->date }}
-                                </td>
+                                <td>{{ \Carbon\Carbon::parse($show->date)->format('d-m-Y') }}</td>
                             </tr>
                             <tr>
                                 <td class="text-right">Jenis Lahan</td>
@@ -36,7 +34,7 @@
                                 <td class="text-right">Nama Penyuluh</td>
                                 <td>:</td>
                                 <td>
-                                    {{ $show->user_id }}
+                                    {{ $show->user->name }}
                                 </td>
                             </tr>
                             <tr>

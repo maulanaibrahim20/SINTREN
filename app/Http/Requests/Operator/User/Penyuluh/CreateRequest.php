@@ -26,7 +26,7 @@ class CreateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'alamat' => ['required', 'string', 'max:255'],
-            'no_telp' => ['required', 'numeric', 'min:8'],
+            'no_telp' => ['required', 'numeric', 'min:9'],
             'kecamatan' => ['required', 'numeric', 'exists:kecamatans,id', Rule::unique('penyuluhs', 'kecamatan_id')],
         ];
     }
@@ -47,7 +47,7 @@ class CreateRequest extends FormRequest
             'alamat.max' => 'Alamat maksimal 255 karakter.',
             'no_telp.required' => 'Nomor telepon harus diisi.',
             'no_telp.numeric' => 'Nomor telepon harus berupa angka.',
-            'no_telp.min' => 'Nomor telepon minimal 8 angka.',
+            'no_telp.min' => 'Nomor telepon minimal 9 angka.',
             'kecamatan.required' => 'Kecamatan harus dipilih.',
             'kecamatan.numeric' => 'Kecamatan harus berupa angka.',
             'kecamatan.exists' => 'Kecamatan tidak ditemukan dalam database.',

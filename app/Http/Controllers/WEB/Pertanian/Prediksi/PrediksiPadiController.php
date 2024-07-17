@@ -80,7 +80,7 @@ class PrediksiPadiController extends Controller
         $totalData = $sampaiTahun - $dariTahun + 1;
 
         for ($year = $dariTahun; $year <= 2030; $year++) {
-            $predictedValue = $regression->predict([$year]);
+            $predictedValue = round($regression->predict([$year]));
 
             if ($year > $sampaiTahun) {
                 $samples[] = [$year];
@@ -127,6 +127,7 @@ class PrediksiPadiController extends Controller
             'mape' => $mape
         ]);
     }
+
 
 
 

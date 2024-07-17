@@ -30,7 +30,7 @@ class UpdatedRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
             'alamat' => ['required', 'string', 'max:255'],
-            'no_telp' => ['required', 'string', 'max:15'],
+            'no_telp' => ['required', 'string', 'min:9', 'max:15'],
         ];
     }
 
@@ -51,6 +51,7 @@ class UpdatedRequest extends FormRequest
             'no_telp.required' => 'Nomor telepon harus diisi.',
             'no_telp.string' => 'Nomor telepon harus berupa teks.',
             'no_telp.max' => 'Nomor telepon maksimal 15 karakter.',
+            'no_telp.min' => 'Nomor telepon minimal 9 karakter.',
         ];
     }
 }
