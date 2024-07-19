@@ -13,6 +13,7 @@
                         <li><a class="nav-link scrollto active" href="#hero">Dashboard</a></li>
                         <li><a class="nav-link scrollto" href="#about">Tentang</a></li>
                         <li><a class="nav-link scrollto" href="#features">Trend Pertanian</a></li>
+                        <li><a class="nav-link scrollto" href="#pangan">Trend Pangan</a></li>
                         <li><a class="nav-link scrollto" href="#cta">Mobile Application</a></li>
                         <li><a class="nav-link scrollto" href="#contact">Kontak Kami</a></li>
                     </ul>

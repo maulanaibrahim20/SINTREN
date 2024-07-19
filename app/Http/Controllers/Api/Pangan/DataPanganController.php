@@ -50,6 +50,18 @@ class DataPanganController extends Controller
                 'data' => null
             ], 500);
         }
+        $laporanPangan = LaporanPangan::where('user_id', $id)->with(['pasar']);
+
+        if(request('status')){
+
+            if(request('status') == 'terkirim'){
+                $laporanPangan->where('status', true);
+            }else{
+                $laporanPangan->where('status', false);
+            }
+        }
+
+        $laporanPangan->get();
     }
 
     public function deleteDetailById($id)
@@ -90,9 +102,7 @@ class DataPanganController extends Controller
             'pasar_id' => 'required|string',
             'jenis_pangan_id' => 'required|string',
             'name' => 'required|string|max:255',
-            'kebutuhan' => 'required|numeric',
-            'ketersediaan' => 'required|numeric',
-            'neraca' => 'required|numeric',
+            'stok' => 'required|numeric',
             'harga' => 'required|numeric',
             'date' => 'required|string|max:255',
         ]);
@@ -138,9 +148,7 @@ class DataPanganController extends Controller
             'pasar_id' => 'required|string',
             'jenis_pangan_id' => 'required|string',
             'name' => 'required|string|max:255',
-            'kebutuhan' => 'required|numeric',
-            'ketersediaan' => 'required|numeric',
-            'neraca' => 'required|numeric',
+            'stok' => 'required|numeric',
             'harga' => 'required|numeric',
             'date' => 'required|string|max:255',
         ]);

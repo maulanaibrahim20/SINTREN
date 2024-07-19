@@ -1,5 +1,5 @@
 @extends('index')
-@section('title', 'Jenis Pangan ')
+@section('title', 'Jenis Pangan')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb mb-sm-0 mb-3">
@@ -40,8 +40,8 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p border-bottom-0">No.</th>
+                                    <th class="wd-15p border-bottom-0">Gambar</th>
                                     <th class="wd-15p border-bottom-0">Nama</th>
-                                    {{-- <th class="wd-15p border-bottom-0">Deskripsi</th> --}}
                                     <th class="text-center wd-10p border-bottom-0">Actions</th>
                                 </tr>
                             </thead>
@@ -49,8 +49,14 @@
                                 @foreach ($jenispangan as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            @if ($data->gambar)
+                                                <img src="{{ asset('storage/' . $data->gambar) }}" alt="{{ $data->name }}" class="img-fluid" style="max-width: 100px;">
+                                            @else
+                                                <span>No Image</span>
+                                            @endif
+                                        </td>
                                         <td>{{ $data->name }}</td>
-                                        {{-- <td>{{ $data->description }}</td> --}}
                                         <td class="text-center">
                                             <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                                 data-bs-target="#modalCenter1{{ $data->id }}"><i
@@ -66,7 +72,6 @@
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -76,15 +81,43 @@
     </div>
 
     {{-- start modal tambah Jenis Pangan --}}
-    @include('pangan.views.pangan.jenis_pangan.modal_tambah')
+    <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form action="{{ url('/pangan/create/jenis_pangan') }}" enctype="multipart/form-data" method="post">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalCenterTitle">Tambah Jenis Pangan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col mb-3">
+                            <label for="nameBasic" class="form-label">Nama</label>
+                            <input type="text" name="name" class="form-control"
+                                placeholder="Masukkan Nama Jenis Pangan" />
+                        </div>
+                        <div class="col mb-3">
+                            <label for="gambar" class="form-label">Gambar</label>
+                            <input type="file" name="gambar" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     {{-- end modal tambah Jenis Pangan --}}
+
     {{-- start modal edit Jenis Pangan --}}
     @foreach ($jenispangan as $item)
         <div class="modal fade" id="modalCenter1{{ $item->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <form action="{{ url('/pangan/create/jenis_pangan/' . $item->id) }}"
-                        enctype="multipart/form-data" method="post">
+                    <form action="{{ url('/pangan/create/jenis_pangan/' . $item->id) }}" enctype="multipart/form-data" method="post">
                         @method('PUT')
                         @csrf
                         <div class="modal-header">
@@ -94,13 +127,12 @@
                         <div class="modal-body">
                             <div class="col mb-3">
                                 <label for="nameBasic" class="form-label">Nama</label>
-                                <input type="text" value="{{ $item->name }}" name="name" class="form-control"
-                                    placeholder="Masukkan Nama Jenis Pangan" />
+                                <input type="text" value="{{ $item->name }}" name="name" class="form-control" placeholder="Masukkan Nama Jenis Pangan" />
                             </div>
-                            {{-- <div class="col mb-3">
-                                <label for="descriptionBasic" class="form-label">Deskripsi</label>
-                                <textarea name="description" class="form-control" placeholder="Masukkan Deskripsi">{{ $item->description }}</textarea>
-                            </div> --}}
+                            <div class="col mb-3">
+                                <label for="gambar" class="form-label">Gambar</label>
+                                <input type="file" name="gambar" class="form-control" />
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -111,7 +143,8 @@
             </div>
         </div>
     @endforeach
-    {{-- end modal tambah Jenis Pangan --}}
+    {{-- end modal edit Jenis Pangan --}}
+
 @endsection
 
 @section('script')

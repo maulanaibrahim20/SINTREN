@@ -41,7 +41,7 @@
                 <tr>
                     <th></th>
                     <th colspan="3" style="text-align:right">MAPE:</th>
-                    <th>{{ $mape }}%</th>
+                    {{-- <th>{{ $mape }}%</th> --}}
                 </tr>
             </tbody>
         </table>

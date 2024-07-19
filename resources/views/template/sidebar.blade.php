@@ -376,8 +376,8 @@
                 <li class="sub-category">
                     <h3>Pangan</h3>
                 </li>
-                <li class="slide {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'jenis_pangan' ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'jenis_pangan' ? 'active open' : '' }}"
+                <li class="slide {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'jenis_pangan' || Request::segment(3) == 'subjenis_pangan' ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ Request::segment(3) == 'data_pangan' || Request::segment(3) == 'jenis_pangan' || Request::segment(3) == 'subjenis_pangan' ? 'active open' : '' }}"
                         data-bs-toggle="slide" href="javascript:void(0)">
                         <i class="side-menu__icon fa fa-files-o"></i>
                         <span class="side-menu__label">Pangan</span>
@@ -402,6 +402,12 @@
                                                     Jenis Pangan
                                                 </a>
                                             </li>
+                                            <li>
+                                                <a href="{{ url('/pangan/create/subjenis_pangan') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'subjenis_pangan' ? 'active' : '' }}">
+                                                    SubJenis Pangan
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -412,13 +418,52 @@
                 <li class="sub-category">
                     <h3>Laporan</h3>
                 </li>
-                <li>
+                <li class="slide {{ Request::segment(3) == 'laporan_harian' || Request::segment(3) == 'laporan_bulanan' || Request::segment(3) == 'laporan_tahunan' ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ Request::segment(3) == 'laporan_harian' || Request::segment(3) == 'laporan_bulanan' || Request::segment(3) == 'laporan_tahunan' ? 'active open' : '' }}"
+                        data-bs-toggle="slide" href="javascript:void(0)">
+                        <i class="side-menu__icon fa fa-files-o"></i>
+                        <span class="side-menu__label">Laporan</span>
+                        <i class="angle fe fe-chevron-right"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="panel sidetab-menu">
+                            <div class="panel-body tabs-menu-body p-0 border-0">
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="side29">
+                                        <ul class="sidemenu-list">
+                                            <li class="side-menu-label1"><a href="javascript:void(0)">Laporan</a></li>
+                                            <li>
+                                                <a href="{{ url('/pangan/data/laporan_harian') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'laporan_harian' ? 'active' : '' }}">
+                                                    Laporan Harian
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ url('/pangan/data/laporan_bulanan') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'laporan_bulanan' ? 'active' : '' }}">
+                                                    Laporan Bulanan
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ url('/pangan/data/laporan_tahunan') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'laporan_tahunan' ? 'active' : '' }}">
+                                                    Laporan Tahunan
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                {{-- <li>
                     <a class="side-menu__item {{ Request::segment(3) == 'laporan_pangan' ? 'active' : '' }}"
                         href="{{ url('/pangan/data/laporan_pangan') }}">
                         <i class="side-menu__icon fa fa-folder-o"></i>
                         <span class="side-menu__label">Laporan Pangan</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="sub-category">
                     <h3>Grafik</h3>
                 </li>

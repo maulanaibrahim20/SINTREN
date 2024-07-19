@@ -28,7 +28,7 @@ class PasarController extends Controller
             'button_create' => 'Tambah Data Pasar',
             // 'users' => $this->pasar::orderBy('created_at', 'asc')->get(),
         ];
-        $pasar = $this->pasar::all();
+        $pasar = $this->pasar::orderBy('name', 'asc')->get();
         return view('pangan.views.pasar.index', compact('pasar'), $data);
     }
 

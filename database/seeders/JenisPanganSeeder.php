@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Pangan\JenisPangan;
+// use App\Models\Pangan\JenisPangan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

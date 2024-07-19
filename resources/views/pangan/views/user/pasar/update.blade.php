@@ -82,6 +82,7 @@
                         </div>
                     </div>
                     <div class="d-flex" style="justify-content: end">
+                    <a href="{{ url('/pangan/create/data_pangan') }}" class="btn ripple btn-warning mr-2">Cancel</a>
                     <button class="btn btn-primary" type="submit">Submit </button>
                     </div>
                 </form>

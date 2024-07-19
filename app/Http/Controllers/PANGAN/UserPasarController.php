@@ -74,6 +74,7 @@ class UserPasarController extends Controller
             $this->petugaspasar->create($request->all() + [
                 'user_id' => $user->id,
                 'pasar_id' => $request->pasar,
+                'gambar' => $request->gambar ?? 'image_pangan/profile.png',
             ]);
 
             DB::commit();

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             MasterTanamanSeeder::class,
             // LaporanTanamanSeeder::class,
             PasarSeeder::class,
-            JenisPanganSeeder::class,
+            // JenisPanganSeeder::class,
         ]);
     }
 }

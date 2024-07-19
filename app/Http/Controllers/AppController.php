@@ -44,7 +44,7 @@ class AppController extends Controller
         }
 
         $regression = new LeastSquares();
-        $regression->train($fitur, $target);
+        // $regression->train($fitur, $target);
 
         $hasilPrediksi = [];
         $prevValue = null;
@@ -56,7 +56,7 @@ class AppController extends Controller
                 $samples[] = [$tahun];
                 $targets[] = $hasilPrediksi[$tahun];
                 $labels[] = $tahun;
-                $regression->train($samples, $targets);
+                // $regression->train($samples, $targets);
             }
 
             $change = null;
@@ -85,14 +85,14 @@ class AppController extends Controller
                 $predictions[$tahun]['error'] = $error;
             }
         }
-        $mape = round(($totalError / $n) * 100, 2);
+        // $mape = round(($totalError / $n) * 100, 2);
 
         return view('landing', [
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
             'errors' => array_column($predictions, 'error'),
-            'mape' => $mape
+            // 'mape' => $mape
         ]);
     }
 }

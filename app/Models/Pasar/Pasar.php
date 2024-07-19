@@ -14,8 +14,7 @@ class Pasar extends Model
 
     public function laporanPangans()
     {
-        return $this->belongsTo(Pasar::class, 'pasar_id');
-        // return $this->hasMany(LaporanPangan::class, 'pasar_id');
+        return $this->hasMany(LaporanPangan::class, 'pasar_id');
     }
 
     public function laporanPangan()

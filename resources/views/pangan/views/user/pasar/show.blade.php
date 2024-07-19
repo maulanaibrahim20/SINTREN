@@ -70,7 +70,6 @@
                                 password
                             </td>
                         </tr>
-
                     </table>
                 </div>
                 <div class="card-footer">
@@ -89,15 +88,12 @@
                     <div class="">
                         <div class="d-flex overflow-visible">
                             <a href="#" class="card-recent-post cover-image">
-                                <img src="{{ asset('image_pangan/profile.png') }}" style="height: 200px; width: auto"
-                                    class="br-7" alt="image">
+                                <img src="{{ asset($user->gambar ?? 'image_pangan/profile.png') }}" style="height: 200px; width: auto" class="br-7" alt="image">
                             </a>
                             <div class="ps-3 flex-column">
                                 <span class="badge bg-primary me-1 mb-1 mt-1">{{ $user->user->name }}</span>
-                                <h6 class="fw-semibold"><a href=""> Role
-                                        {{ $user->user->getAkses->name }}</a>
-                                </h6>
-                                <div class="text-muted-dark">{{ $user->user->alamat }}</div>
+                                <h6 class="fw-semibold"><a href=""> Role {{ $user->user->getAkses->name }}</a></h6>
+                                <div class="text-muted-dark">{{ $user->alamat }}</div>
                             </div>
                         </div>
                     </div>

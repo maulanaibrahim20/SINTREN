@@ -1,6 +1,6 @@
 @extends('index')
 
-@section('title', 'Data Stok Pangan | Pangan')
+@section('title', 'Laporan Harian | Pangan')
 
 @section('content')
 <div class="page-header d-sm-flex d-block">
@@ -9,19 +9,8 @@
         <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
     </ol>
 </div>
-<!-- Filter Tanggal Mulai dan Akhir -->
-<div class="row mb-3">
-    <div class="col-md-2">
-        <label for="start_date" class="form-label"><b>Tanggal Mulai</b></label>
-        <input type="date" class="form-control" id="start_date" name="start_date" placeholder="Tanggal Mulai"
-            value="{{ request()->get('start_date') ?? now()->format('Y-m-d') }}">
-    </div>
-    <div class="col-md-2">
-        <label for="end_date" class="form-label"><b>Tanggal Akhir</b></label>
-        <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Tanggal Akhir"
-            value="{{ request()->get('end_date') ?? now()->format('Y-m-d') }}">
-    </div>
 
+<div class="row mb-3">
     <div class="col-md-2">
         <label for="pasar_id" class="form-label"><b>Pasar</b></label>
         <select class="form-control" id="pasar_id" name="pasar_id">
@@ -34,12 +23,27 @@
         </select>
     </div>
 
-    <div class="col-md-2 d-flex align-items-end">
+    <div class="col-md-2">
+        <label for="subjenis_pangan_id" class="form-label"><b>Nama Pangan</b></label>
+        <select class="form-control" id="subjenis_pangan_id" name="subjenis_pangan_id">
+            <option value="1" {{ request()->get('subjenis_pangan_id') == 1 ? 'selected' : '' }}>Bawang Merah</option>
+            @foreach($subjenisPangan as $subjenispangan)
+                <option value="{{ $subjenispangan->id }}" {{ request()->get('subjenis_pangan_id') == $subjenispangan->id ? 'selected' : '' }}>
+                    {{ $subjenispangan->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end">
         <button class="btn btn-primary" id="filterButton">Filter</button>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end justify-content-end">
+        <a href="{{ route('export.laporan.pangan', ['pasar_id' => request()->get('pasar_id'), 'subjenis_pangan_id' => request()->get('subjenis_pangan_id')]) }}" class="btn btn-success">Export to Excel</a>
     </div>
 </div>
 
-<!-- Tabel Data -->
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -70,7 +74,6 @@
                                 <th class="wd-20p border-bottom-0">Tanggal</th>
                                 <th class="wd-20p border-bottom-0">Stok</th>
                                 <th class="wd-20p border-bottom-0">Harga</th>
-                                <th class="wd-20p border-bottom-0 text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,7 +92,8 @@
                                 <td>{{ $data->pasar ? $data->pasar->name : 'Pasar Tidak Ditemukan' }}</td>
                                 <td>
                                     @if ($data->jenis_pangan)
-                                    <img src="{{ asset('storage/' . $data->jenis_pangan->gambar) }}" alt="{{ $data->name }}" class="img-fluid" style="max-width: 100px;">
+                                    <img src="{{ asset('storage/' . $data->jenis_pangan->gambar) }}"
+                                        alt="{{ $data->name }}" class="img-fluid" style="max-width: 100px;">
                                     @else
                                     <span>No Image</span>
                                     @endif
@@ -99,15 +103,6 @@
                                 <td>{{ $data->date }}</td>
                                 <td>{{ formatRibuan($data->stok) }}</td>
                                 <td>{{ formatRibuan($data->harga) }}</td>
-                                <td class="text-center">
-                                    <a href="{{ url('/pangan/create/data_pangan/' . $data->id . '/edit') }}" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                                    <a href="{{ url('/pangan/create/data_pangan/' . $data->id) }}" class="btn btn-primary"><i class="ti ti-eye"></i></a>
-                                    <form id="deleteForm{{ $data->id }}" action="{{ url('/pangan/create/data_pangan/' . $data->id) }}" style="display: inline;" method="POST">
-                                        @method('DELETE')
-                                        @csrf
-                                        <button type="button" class="btn btn-danger deleteBtn" data-id="{{ $data->id }}"><i class="ti ti-trash"></i></button>
-                                    </form>
-                                </td>
                             </tr>
                             @php
                             $totalStok += $data->stok;
@@ -118,11 +113,41 @@
                         <tfoot>
                             <tr>
                                 <th></th>
-                                <th colspan="6" class="text-center">Total</th>
+                                <th></th>
+                                <th colspan="5" class="text-center">Total</th>
                                 <th>{{ formatRibuan($totalStok) }}</th>
                                 <th>{{ formatRibuan($totalHarga) }}</th>
-                                <th></th>
                             </tr>
+                            @if ($groupedData && count($groupedData) > 0)
+                            @php
+                                $defaultSubjenisPanganId = 1; // Ganti dengan ID subjenis pangan default yang Anda inginkan
+                                $filteredGroupedData = $groupedData->where('subjenis_pangan_id', $defaultSubjenisPanganId);
+                                $averagePrice = $filteredGroupedData->avg('rata_rata_harga');
+                            @endphp
+                            @if ($filteredGroupedData->count() > 0)
+                            <tr>
+                                <th></th>
+                                <th colspan="3" class="text-center">Rata-rata Harga Pangan</th>
+                                <th></th>
+                                <td>
+                                    @foreach ($filteredGroupedData as $group)
+                                        {{ $group->subjenis_pangan->name }}
+                                    @endforeach
+                                </td>
+                                <th></th>
+                                <th></th>
+                                <td>
+                                    @foreach ($filteredGroupedData as $group)
+                                        {{ formatRibuan($averagePrice) }}
+                                    @endforeach
+                                </td>
+                            </tr>
+                            @else
+                                <tr>
+                                    <td colspan="5" class="text-center">Data rata-rata harga tidak tersedia untuk subjenis pangan ini.</td>
+                                </tr>
+                            @endif
+                        @endif
                         </tfoot>
                     </table>
                 </div>
@@ -156,17 +181,14 @@
     });
 
     document.getElementById('filterButton').addEventListener('click', function() {
-        const startDate = document.getElementById('start_date').value;
-        const endDate = document.getElementById('end_date').value;
         const pasarId = document.getElementById('pasar_id').value;
+        const subjenisPanganId = document.getElementById('subjenis_pangan_id').value;
 
         const url = new URL(window.location.href);
-        url.searchParams.set('start_date', startDate);
-        url.searchParams.set('end_date', endDate);
         url.searchParams.set('pasar_id', pasarId);
+        url.searchParams.set('subjenis_pangan_id', subjenisPanganId);
 
         window.location.href = url.toString();
     });
-
 </script>
 @endsection

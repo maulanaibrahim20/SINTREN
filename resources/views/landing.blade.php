@@ -28,6 +28,8 @@
         <!-- End About Us Section -->
         @include('layout_landing.prediksi')
 
+        @include('layout_landing.trend_pangan')
+
         @include('layout_landing.ctamobile')
 
         <!-- ======= Contact Section ======= -->

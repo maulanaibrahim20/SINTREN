@@ -34,8 +34,9 @@
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <p class="mb-0 fw-semibold text-dark lh-1">Data Pengguna Pasar</p>
-                                <div class="fs-12 text-muted mb-5">Total Pengguna</div>
+                                <p class="mb-0 fw-semibold text-dark lh-1 mb-2">Data Pengguna Pasar</p>
+                                <div class="fs-12 text-muted mb-5"> <a href="{{ url('/pangan/user/pasar') }}">Lihat</a></div>
+                                <div class="fs-12 text-muted mb-3">Total Pengguna</div>
                                 <div class="fs-30 fw-semibold mb-0 lh-1">
                                     {{ $jumlahPetugasPasar }}
                                 </div>
@@ -57,10 +58,11 @@
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <p class="mb-0 fw-semibold text-dark lh-1">Data Pangan</p>
-                                <div class="fs-12 text-muted mb-5">Jumlah Data</div>
+                                <p class="mb-0 fw-semibold text-dark lh-1 mb-2">Data Pangan</p>
+                                <div class="fs-12 text-muted mb-5"><a href="{{ url('/pangan/create/data_pangan') }}">Lihat</a></div>
+                                <div class="fs-12 text-muted mb-3">Jumlah Data</div>
                                 <div class="fs-30 fw-semibold mb-0 lh-1">
-                                    {{-- {{ $jumlahDataPangan }} --}}
+                                    {{ $jumlahDataPangan }}
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
@@ -73,7 +75,7 @@
         </div>
     </div>
     <!-- col end -->
-    <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
+    {{-- <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
         <div class="card overflow-hidden">
             <div class="card-body">
                 <div class="row">
@@ -83,7 +85,7 @@
                                 <p class="mb-0 fw-semibold text-dark lh-1">Laporan Pangan</p>
                                 <div class="fs-12 text-muted mb-5"></div>
                                 <div class="fs-30 fw-semibold mb-0 lh-1">
-                                    <!-- Jumlah laporan pangan -->
+
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
@@ -94,8 +96,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
+    </div> --}}
+    {{-- <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
         <div class="card overflow-hidden">
             <div class="card-body">
                 <div class="row">
@@ -105,7 +107,7 @@
                                 <p class="mb-0 fw-semibold text-dark lh-1">Grafik Pangan</p>
                                 <div class="fs-12 text-muted mb-5"></div>
                                 <div class="fs-30 fw-semibold mb-0 lh-1">
-                                    <!-- Grafik pangan -->
+
                                 </div>
                             </div>
                             <div class="text-end d-flex flex-column align-items-center">
@@ -116,6 +118,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 @endsection

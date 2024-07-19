@@ -19,21 +19,21 @@
                         @csrf
                         @method('PUT')
                         <div class="row">
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="select2Basic" class="form-label">Pilih Tanggal</label>
+                                    <label for="select2Basic" class="form-label">Tanggal Input</label>
                                     <div class="input-group">
                                         <div class="input-group-text">
                                             <i class="typcn typcn-calendar-outline tx-24 lh--9 op-6"></i>
                                         </div>
-                                        <input type="text" class="form-control" name="date" id="date" placeholder="Pilih Tanggal" value="{{ $editPangan->date }}">
+                                        <input type="text" class="form-control" name="date" id="date" placeholder="Pilih Tanggal" value="{{ $editPangan->date }}" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
+                            </div> --}}
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Pasar</label>
-                                    <select id="pasar" class="form-control form-select select2" aria-label="Default select example" name="pasar_id">
+                                    <select id="pasar" class="form-control form-select select2" aria-label="Default select example" name="pasar_id" disabled>
                                         <option value="">-- Pilih --</option>
                                         @foreach ($pasar as $item)
                                             <option value="{{ $item->id }}" {{ $editPangan->pasar_id == $item->id ? 'selected' : '' }}>
@@ -43,10 +43,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="jenispangan" class="form-label">Jenis Pangan</label>
-                                    <select id="jenispangan" class="form-control form-select select2" aria-label="Default select example" name="jenis_pangan_id">
+                                    <select id="jenispangan" class="form-control form-select select2" aria-label="Default select example" name="jenis_pangan_id" disabled>
                                         <option value="">-- Pilih --</option>
                                         @foreach ($jenispangan as $item)
                                             <option value="{{ $item->id }}" {{ $editPangan->jenis_pangan_id == $item->id ? 'selected' : '' }}>
@@ -56,44 +56,40 @@
                                     </select>
                                 </div>
                             </div>
+
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-label">Nama Pangan</label>
-                                    <input type="text" class="form-control" name="name" value="{{ $editPangan->name }}">
+                                    <label for="subjenispangan" class="form-label">Nama Pangan</label>
+                                    <select id="subjenispangan" class="form-control form-select select2" aria-label="Default select example" name="subjenis_pangan_id" disabled>
+                                        <option value="">-- Pilih --</option>
+                                        @foreach ($subjenispangan as $item)
+                                            <option value="{{ $item->id }}" {{ $editPangan->subjenis_pangan_id == $item->id ? 'selected' : '' }}>
+                                                {{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-label">Kebutuhan</label>
-                                    <input type="number" class="form-control" name="kebutuhan" value="{{ $editPangan->kebutuhan }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Ketersediaan</label>
-                                    <input type="number" class="form-control" name="ketersediaan" value="{{ $editPangan->ketersediaan }}">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label">Neraca</label>
-                                    <input type="number" class="form-control" name="neraca" value="{{ $editPangan->neraca }}">
+                                    <label class="form-label">Stok</label>
+                                    <input type="number" class="form-control" name="stok" value="{{ $editPangan->stok }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Harga</label>
-                                    <input type="number" class="form-control" name="harga" value="{{ $editPangan->harga }}">
+                                    <input type="number" class="form-control" name="harga" value="{{ $editPangan->harga }}" required>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <div class="col-md-12">
-                            <button type="reset" class="btn ripple btn-warning mr-3">Cancel</button>
-                            <button type="submit" class="btn ripple btn-success mr-3">Kirim</button>
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <a href="{{ url('/pangan/create/data_pangan') }}" class="btn ripple btn-warning mr-2">Cancel</a>
+                            <button type="submit" class="btn ripple btn-success">Kirim</button>
                         </div>
                     </div>
                 </form>

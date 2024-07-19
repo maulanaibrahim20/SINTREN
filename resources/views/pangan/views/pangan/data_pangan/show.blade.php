@@ -60,27 +60,28 @@
                             <tr>
                                 <td class="text-right">Nama Pangan</td>
                                 <td>:</td>
-                                <td>{{ $laporanpangan->name }}</td>
+                                <td>{{ $laporanpangan->subjenis_pangan->name }}</td>
                             </tr>
                             <tr>
-                                <td class="text-right">Kebutuhan</td>
+                                <td class="text-right">Stok</td>
                                 <td>:</td>
-                                <td>{{ $laporanpangan->kebutuhan }}</td>
-                            </tr>
-                            <tr>
-                                <td class="text-right">Ketersediaan</td>
-                                <td>:</td>
-                                <td>{{ $laporanpangan->ketersediaan }}</td>
-                            </tr>
-                            <tr>
-                                <td class="text-right">Neraca</td>
-                                <td>:</td>
-                                <td>{{ $laporanpangan->neraca }}</td>
+                                <td>{{ formatRibuan($laporanpangan->stok) }}</td>
                             </tr>
                             <tr>
                                 <td class="text-right">Harga</td>
                                 <td>:</td>
-                                <td>{{ $laporanpangan->harga }}</td>
+                                <td>{{ formatRibuan($laporanpangan->harga) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right">Gambar</td>
+                                <td>:</td>
+                                <td>
+                                    @if ($laporanpangan->jenis_pangan->gambar)
+                                        <img src="{{ asset('storage/' . $laporanpangan->jenis_pangan->gambar) }}" alt="Gambar Jenis Pangan" class="img-fluid">
+                                    @else
+                                        <p>Tidak ada gambar untuk jenis pangan ini.</p>
+                                    @endif
+                                </td>
                             </tr>
                         </table>
                     </div>

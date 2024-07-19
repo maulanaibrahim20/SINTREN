@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Pangan\JenisPangan;
+namespace App\Http\Requests\Pangan\SubjenisPangan;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class CreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'jenis_pangan_id' => 'required|exists:jenis_pangans,id',
             'name' => 'required|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

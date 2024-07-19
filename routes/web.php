@@ -25,6 +25,7 @@ use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
 
 use App\Http\Controllers\PANGAN\JenisPanganController;
+use App\Http\Controllers\PANGAN\SubjenisPanganController;
 use App\Http\Controllers\PANGAN\LaporanPanganController;
 use App\Http\Controllers\PANGAN\DataPanganController;
 use App\Http\Controllers\PANGAN\GrafikPanganController;
@@ -180,10 +181,13 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::resource('/user/pasar', UserPasarController::class);
             Route::resource('/create/data_pasar', PasarController::class);
             Route::resource('/create/jenis_pangan', JenisPanganController::class);
+            Route::resource('/create/subjenis_pangan', SubjenisPanganController::class);
 
             // Route::post('/create/data_pangan/kirim/{id}', [DataPanganController::class, 'kirimkan']);
             Route::resource('/create/data_pangan', DataPanganController::class);
-            Route::resource('/data/laporan_pangan', LaporanPanganController::class);
+            Route::resource('/data/laporan_harian', LaporanPanganController::class);
+            Route::get('/data/laporan_bulanan', [LaporanPanganController::class, 'bulanan'])->name('laporan_bulanan.bulanan');
+            Route::get('/data/laporan_tahunan', [LaporanPanganController::class, 'tahunan'])->name('laporan_tahunan.tahunan');
 
             Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
             // Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPangan']);

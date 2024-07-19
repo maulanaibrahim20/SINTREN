@@ -19,26 +19,41 @@ class JenisPanganController extends Controller
     {
         $this->jenispangan = $jenispangan;
     }
+
     public function index()
     {
+        $jenispangan = $this->jenispangan::orderBy('name', 'asc')->get();
         $data = [
             'title' => 'Jenis Pangan',
             'breadcrumb' => 'Dashboard',
             'breadcrumb_active' => 'Jenis Pangan',
             'button_create' => 'Tambah Jenis Pangan',
+            'jenispangan' => $jenispangan
         ];
-        $jenispangan = $this->jenispangan::all();
-        return view('pangan.views.pangan.jenis_pangan.index', compact('jenispangan'), $data);
-    }
 
+        return view('pangan.views.pangan.jenis_pangan.index', $data);
+    }
 
     public function store(CreateRequest $request)
     {
         try {
             DB::beginTransaction();
-            $this->jenispangan->create($request->all());
+
+            $data = $request->all();
+
+            if ($request->hasFile('gambar')) {
+                $image = $request->file('gambar');
+                $name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = storage_path('app/public/images'); // Simpan di direktori storage/app/public/images
+                $image->move($destinationPath, $name);
+                $data['gambar'] = 'images/' . $name; // Path yang disimpan di database, perhatikan 'images/' sebagai prefix
+            } else {
+                $data['gambar'] = 'images/profile.png'; // Default image jika tidak ada gambar yang diunggah
+            }
+
+            $this->jenispangan->create($data);
             DB::commit();
-            Alert::success('success', ' Data Jenis Pangan Berhasil Ditambahkan!');
+            Alert::success('success', 'Data Jenis Pangan Berhasil Ditambahkan!');
             return back()->with('success', 'Data Jenis Pangan Berhasil Ditambahkan!');
         } catch (\Exception $e) {
             DB::rollback();
@@ -52,7 +67,26 @@ class JenisPanganController extends Controller
         try {
             DB::beginTransaction();
             $jenispangan = $this->jenispangan->find($id);
-            $jenispangan->update($request->all());
+
+            $data = $request->all();
+
+            if ($request->hasFile('gambar')) {
+                // Hapus gambar lama jika ada
+                if ($jenispangan->gambar && strpos($jenispangan->gambar, 'images') !== false) {
+                    $oldImagePath = storage_path('app/public/' . $jenispangan->gambar);
+                    if (File::exists($oldImagePath)) {
+                        File::delete($oldImagePath);
+                    }
+                }
+
+                $image = $request->file('gambar');
+                $name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = storage_path('app/public/images'); // Simpan di direktori storage/app/public/images
+                $image->move($destinationPath, $name);
+                $data['gambar'] = 'images/' . $name; // Path yang disimpan di database, perhatikan 'images/' sebagai prefix
+            }
+
+            $jenispangan->update($data);
             DB::commit();
             Alert::success('success', 'Data Jenis Pangan Berhasil Diubah!');
             return back()->with('success', 'Data Jenis Pangan Berhasil Diubah!');
@@ -68,6 +102,15 @@ class JenisPanganController extends Controller
         try {
             DB::beginTransaction();
             $jenispangan = $this->jenispangan->find($id);
+
+            // Hapus gambar jika ada
+            if ($jenispangan->gambar && strpos($jenispangan->gambar, 'images') !== false) {
+                $imagePath = storage_path('app/public/' . $jenispangan->gambar);
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
+
             $jenispangan->delete();
             DB::commit();
             Alert::success('success', 'Data Jenis Pangan Berhasil Dihapus!');

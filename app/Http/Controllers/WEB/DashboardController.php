@@ -210,8 +210,9 @@ class DashboardController extends Controller
         public function pangan()
         {
             $jumlahPetugasPasar = PetugasPasar::count();
-            $jumlahDataPangan = LaporanPangan::count();
-            return view('pangan.views.dashboard.index', compact('jumlahPetugasPasar'));
+            // $jumlahDataPangan = LaporanPangan::count();
+            $jumlahDataPangan = LaporanPangan::where('status', 1)->count();
+            return view('pangan.views.dashboard.index', compact('jumlahPetugasPasar','jumlahDataPangan'));
         }
 
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jenis_pangans', function (Blueprint $table) {
             $table->id();
             $table->string('name', 25);
-            // $table->text('description')->nullable();
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }

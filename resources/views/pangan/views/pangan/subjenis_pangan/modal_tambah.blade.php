@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <form action="{{ url('/pangan/create/jenis_pangan') }}" enctype="multipart/form-data" method="post">
+            <form action="{{ url('/pangan/create/subjenis_pangan') }}" enctype="multipart/form-data" method="post">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCenterTitle">Tambah Jenis Pangan</h5>
@@ -9,12 +9,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="col mb-3">
-                        <label for="nameBasic" class="form-label">Nama</label>
-                        <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Jenis Pangan" required />
+                        <label for="jenis_pangan_id" class="form-label">Jenis Pangan</label>
+                        <select name="jenis_pangan_id" class="form-control">
+                            @foreach ($jenisPangan as $jp)
+                                <option value="{{ $jp->id }}">{{ $jp->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col mb-3">
-                        <label for="gambar" class="form-label">Gambar</label>
-                        <input type="file" name="gambar" class="form-control" accept="image/*" required />
+                        <label for="nameBasic" class="form-label">Nama SubjenisPangan</label>
+                        <input type="text" name="name" class="form-control"
+                            placeholder="Masukkan Nama Subjenis Pangan" />
                     </div>
                 </div>
                 <div class="modal-footer">
