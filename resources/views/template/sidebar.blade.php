@@ -467,8 +467,8 @@
                 <li class="sub-category">
                     <h3>Grafik</h3>
                 </li>
-                <li class="slide {{ Request::segment(3) == 'stok_pangan' || Request::segment(3) == 'neraca_pangan' || Request::segment(3) == 'harga_pangan' || Request::segment(3) == 'tren_ketahanan_pangan' ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item {{ Request::segment(3) == 'stok_pangan' || Request::segment(3) == 'neraca_pangan' || Request::segment(3) == 'harga_pangan' || Request::segment(3) == 'tren_ketahanan_pangan' ? 'active open' : '' }}"
+                <li class="slide {{ Request::segment(3) == 'grafik_harian' || Request::segment(3) == 'grafik_bulanan' || Request::segment(3) == 'grafik_tahunan' ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item {{ Request::segment(3) == 'grafik_harian' || Request::segment(3) == 'grafik_bulanan' || Request::segment(3) == 'grafik_tahunan' ? 'active open' : '' }}"
                         data-bs-toggle="slide" href="javascript:void(0)">
                         <i class="side-menu__icon ti ti-bar-chart-alt"></i>
                         <span class="side-menu__label">Grafik</span>
@@ -482,27 +482,21 @@
                                         <ul class="sidemenu-list">
                                             <li class="side-menu-label1"><a href="javascript:void(0)">Grafik</a></li>
                                             <li>
-                                                <a href="{{ url('/pangan/grafik/stok_pangan') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'stok_pangan' ? 'active' : '' }}">
-                                                    Grafik Stok Pangan
+                                                <a href="{{ url('/pangan/grafik/harian') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'grafik_harian' ? 'active' : '' }}">
+                                                    Grafik Pangan Harian
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{{ url('/pangan/grafik/neraca_pangan') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'neraca_pangan' ? 'active' : '' }}">
-                                                    Grafik Neraca Pangan
+                                                <a href="{{ url('/pangan/grafik/bulanan') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'grafik_bulanan' ? 'active' : '' }}">
+                                                    Grafik Pangan Bulanan
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="{{ url('/pangan/grafik/harga_pangan') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'harga_pangan' ? 'active' : '' }}">
-                                                    Grafik Harga Pangan
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ url('/pangan/grafik/tren_ketahanan_pangan') }}"
-                                                    class="slide-item {{ Request::segment(3) == 'tren_ketahanan_pangan' ? 'active' : '' }}">
-                                                    Grafik Tren Ketahanan Pangan
+                                                <a href="{{ url('/pangan/grafik/tahunan') }}"
+                                                    class="slide-item {{ Request::segment(3) == 'grafik_tahunan' ? 'active' : '' }}">
+                                                    Grafik Pangan Tahunan
                                                 </a>
                                             </li>
                                         </ul>

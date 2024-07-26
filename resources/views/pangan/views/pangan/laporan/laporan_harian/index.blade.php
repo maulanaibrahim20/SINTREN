@@ -11,43 +11,17 @@
 </div>
 
 <div class="row mb-3">
-    <div class="col-md-2">
-        <label for="pasar_id" class="form-label"><b>Pasar</b></label>
-        <select class="form-control" id="pasar_id" name="pasar_id">
-            <option value="">Semua</option>
-            @foreach($pasarList as $pasar)
-                <option value="{{ $pasar->id }}" {{ request()->get('pasar_id') == $pasar->id ? 'selected' : '' }}>
-                    {{ $pasar->name }}
-                </option>
-            @endforeach
-        </select>
+    <div class="col-md-4 d-flex align-items-center">
+        <div class="form-group mb-0">
+            <label for="current_date" class="form-label">Tanggal Hari Ini:</label>
+            <input type="text" id="current_date" class="form-control" value="{{ now()->toDateString() }}" readonly>
+        </div>
     </div>
-
-    <div class="col-md-2">
-        <label for="subjenis_pangan_id" class="form-label"><b>Nama Pangan</b></label>
-        <select class="form-control" id="subjenis_pangan_id" name="subjenis_pangan_id">
-            <option value="1" {{ request()->get('subjenis_pangan_id') == 1 ? 'selected' : '' }}>Bawang Merah</option>
-            @foreach($subjenisPangan as $subjenispangan)
-                <option value="{{ $subjenispangan->id }}" {{ request()->get('subjenis_pangan_id') == $subjenispangan->id ? 'selected' : '' }}>
-                    {{ $subjenispangan->name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-
-    <div class="col-md-4 d-flex align-items-end">
-        <button class="btn btn-primary" id="filterButton">Filter</button>
-    </div>
-
-    <div class="col-md-4 d-flex align-items-end justify-content-end">
-        <a href="{{ route('export.laporan.pangan', ['pasar_id' => request()->get('pasar_id'), 'subjenis_pangan_id' => request()->get('subjenis_pangan_id')]) }}" class="btn btn-success">Export to Excel</a>
+    <div class="col-md-8 d-flex align-items-center justify-content-end">
+        <a href="{{ route('export.laporan.harian') }}" class="btn btn-success">Export to Excel</a>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            @if (session('success'))
+ @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -57,6 +31,13 @@
                 {{ session('error') }}
             </div>
             @endif
+
+<div class="row">
+    <div class="col-lg-12">
+        {{-- @if (!empty($laporanpangan->subjenis_pangan))
+
+        @endif --}}
+        <div class="card">
             <div class="card-header">
                 <h3 class="card-title">{{ $title }}</h3>
             </div>
@@ -66,14 +47,12 @@
                         <thead>
                             <tr>
                                 <th class="wd-15p border-bottom-0">No</th>
-                                <th class="wd-15p border-bottom-0">Status</th>
-                                <th class="wd-15p border-bottom-0">Pasar</th>
                                 <th class="wd-20p border-bottom-0">Gambar</th>
                                 <th class="wd-20p border-bottom-0">Jenis Pangan</th>
                                 <th class="wd-20p border-bottom-0">Nama Pangan</th>
                                 <th class="wd-20p border-bottom-0">Tanggal</th>
-                                <th class="wd-20p border-bottom-0">Stok</th>
-                                <th class="wd-20p border-bottom-0">Harga</th>
+                                <th class="wd-20p border-bottom-0">Jumlah Stok</th>
+                                <th class="wd-20p border-bottom-0">Harga Rata-rata</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,74 +60,40 @@
                             $totalStok = 0;
                             $totalHarga = 0;
                             @endphp
-                            @foreach ($datapangan as $data)
+
+                            @foreach ($dataGroupedBySubjenis as $subjenisId => $data)
+                            @if ($data['total_stok'] != 0 && $data['avg_harga'] != 0)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    @if ($data->status == '1')
-                                    <span class="badge bg-success-transparent text-warning fw-semibold">Terkirim</span>
-                                    @endif
-                                </td>
-                                <td>{{ $data->pasar ? $data->pasar->name : 'Pasar Tidak Ditemukan' }}</td>
-                                <td>
-                                    @if ($data->jenis_pangan)
-                                    <img src="{{ asset('storage/' . $data->jenis_pangan->gambar) }}"
-                                        alt="{{ $data->name }}" class="img-fluid" style="max-width: 100px;">
+                                    @if ($data['gambar'])
+                                    <img src="{{ asset('storage/' . $data['gambar']) }}" alt="{{ $data['name'] }}" class="img-fluid" style="max-width: 100px;">
                                     @else
                                     <span>No Image</span>
                                     @endif
                                 </td>
-                                <td>{{ $data->jenis_pangan ? $data->jenis_pangan->name : 'Jenis Pangan Tidak Ditemukan' }}</td>
-                                <td>{{ $data->subjenis_pangan ? $data->subjenis_pangan->name : 'Subjenis Pangan Tidak Ditemukan' }}</td>
-                                <td>{{ $data->date }}</td>
-                                <td>{{ formatRibuan($data->stok) }}</td>
-                                <td>{{ formatRibuan($data->harga) }}</td>
+                                <td>{{ $data['jenis_pangan_name'] }}</td>
+                                <td>{{ $data['name'] }}</td>
+                                <td>{{ $data['latest_date'] }}</td>
+                                <td>{{ formatRibuan($data['total_stok']) }}</td>
+                                <td>{{ formatRibuan($data['avg_harga']) }}</td>
                             </tr>
                             @php
-                            $totalStok += $data->stok;
-                            $totalHarga += $data->harga;
+                            $totalStok += $data['total_stok'];
+                            $totalHarga += $data['avg_harga'];
                             @endphp
+                            @endif
+
                             @endforeach
                         </tbody>
-                        <tfoot>
+                        {{-- <tfoot>
                             <tr>
-                                <th></th>
-                                <th></th>
-                                <th colspan="5" class="text-center">Total</th>
+                                <th colspan="4" class="text-center">Total</th>
                                 <th>{{ formatRibuan($totalStok) }}</th>
                                 <th>{{ formatRibuan($totalHarga) }}</th>
+                                <th></th>
                             </tr>
-                            @if ($groupedData && count($groupedData) > 0)
-                            @php
-                                $defaultSubjenisPanganId = 1; // Ganti dengan ID subjenis pangan default yang Anda inginkan
-                                $filteredGroupedData = $groupedData->where('subjenis_pangan_id', $defaultSubjenisPanganId);
-                                $averagePrice = $filteredGroupedData->avg('rata_rata_harga');
-                            @endphp
-                            @if ($filteredGroupedData->count() > 0)
-                            <tr>
-                                <th></th>
-                                <th colspan="3" class="text-center">Rata-rata Harga Pangan</th>
-                                <th></th>
-                                <td>
-                                    @foreach ($filteredGroupedData as $group)
-                                        {{ $group->subjenis_pangan->name }}
-                                    @endforeach
-                                </td>
-                                <th></th>
-                                <th></th>
-                                <td>
-                                    @foreach ($filteredGroupedData as $group)
-                                        {{ formatRibuan($averagePrice) }}
-                                    @endforeach
-                                </td>
-                            </tr>
-                            @else
-                                <tr>
-                                    <td colspan="5" class="text-center">Data rata-rata harga tidak tersedia untuk subjenis pangan ini.</td>
-                                </tr>
-                            @endif
-                        @endif
-                        </tfoot>
+                        </tfoot> --}}
                     </table>
                 </div>
             </div>

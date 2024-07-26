@@ -129,3 +129,18 @@
 <!-- ECharts js -->
 <script src="{{ url('/assets') }}/plugins/echarts/echarts.js"></script>
 <script src="{{ url('/assets') }}/js/echarts.js"></script>
+
+<!-- Nvd3Charts js -->
+<script src="{{ url('/assets') }}/plugins/charts-nvd3/d3.min.js"></script>
+<script src="{{ url('/assets') }}/plugins/charts-nvd3/nv.d3.js"></script>
+<script src="{{ url('/assets') }}/plugins/charts-nvd3/stream_layers.js"></script>
+
+<!-- Custom-charts js-->
+<script src="{{ url('/assets') }}/js/nvd3.js"></script>
+
+<!-- Chartist js -->
+<script src="../assets/plugins/chart/chart.bundle.js"></script>
+<script src="../assets/plugins/chart/utils.js"></script>
+
+<!-- Custom-charts js-->
+<script src="../assets/js/chart.js"></script>

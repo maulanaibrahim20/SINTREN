@@ -1,52 +1,52 @@
 /*-----nvd3-chart1-----*/
-historicalBarChart = [{
-	key: "Cumulative Return",
-	values: [{
-		"label": "A",
-		"value": 24,
-		"color": "#0052cc"
-	}, {
-		"label": "B",
-		"value": 10,
-		"color": "#45aaf2"
-	}, {
-		"label": "C",
-		"value": 35,
-		"color": "#d45c95"
-	}, {
-		"label": "D",
-		"value": 150,
-		"color": "#0099ff"
-	}, {
-		"label": "E",
-		"value": 120,
-		"color": "#2bcbba"
-	}, {
-		"label": "F",
-		"value": 95,
-		"color": "#fc7303"
-	}, {
-		"label": "G",
-		"value": 13,
-		"color": "#17a2b8"
-	}, {
-		"label": "H",
-		"value": 5,
-		"color": "#ecb403"
-	}]
-}];
-nv.addGraph(function() {
-	var chart = nv.models.discreteBarChart().x(function(d) {
-			return d.label
-		}).y(function(d) {
-			return d.value
-		}).staggerLabels(true)
-		//.staggerLabels(historicalBarChart[0].values.length > 8)
-		.showValues(true).duration(250);
-	d3.select('#nvd3-chart1 svg').datum(historicalBarChart).call(chart);
-	nv.utils.windowResize(chart.update);
-	return chart;
-});
+    historicalBarChart = [{
+        key: "Cumulative Return",
+        values: [{
+            "label": "A",
+            "value": 24,
+            "color": "#0052cc"
+        }, {
+            "label": "B",
+            "value": 10,
+            "color": "#45aaf2"
+        }, {
+            "label": "C",
+            "value": 35,
+            "color": "#d45c95"
+        }, {
+            "label": "D",
+            "value": 150,
+            "color": "#0099ff"
+        }, {
+            "label": "E",
+            "value": 120,
+            "color": "#2bcbba"
+        }, {
+            "label": "F",
+            "value": 95,
+            "color": "#fc7303"
+        }, {
+            "label": "G",
+            "value": 13,
+            "color": "#17a2b8"
+        }, {
+            "label": "H",
+            "value": 5,
+            "color": "#ecb403"
+        }]
+    }];
+    nv.addGraph(function() {
+        var chart = nv.models.discreteBarChart().x(function(d) {
+                return d.label
+            }).y(function(d) {
+                return d.value
+            }).staggerLabels(true)
+            //.staggerLabels(historicalBarChart[0].values.length > 8)
+            .showValues(true).duration(250);
+        d3.select('#nvd3-chart1 svg').datum(historicalBarChart).call(chart);
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
 /*-----nvd3-chart2-----*/
 var chart;
 nv.addGraph(function() {

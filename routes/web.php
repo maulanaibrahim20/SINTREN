@@ -188,14 +188,14 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::resource('/data/laporan_harian', LaporanPanganController::class);
             Route::get('/data/laporan_bulanan', [LaporanPanganController::class, 'bulanan'])->name('laporan_bulanan.bulanan');
             Route::get('/data/laporan_tahunan', [LaporanPanganController::class, 'tahunan'])->name('laporan_tahunan.tahunan');
-
-            Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
+            Route::get('/export/laporan/harian', [LaporanPanganController::class, 'exportHarian'])->name('export.laporan.harian');
+            Route::get('/export/laporan/bulanan', [LaporanPanganController::class, 'exportBulanan'])->name('export.laporan.bulanan');
+            Route::get('/export/laporan/tahunan', [LaporanPanganController::class, 'exportTahunan'])->name('export.laporan.tahunan');
+            // Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
             // Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPangan']);
-            Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPanganindex']);
-            Route::get('/grafik/neraca_pangan', [GrafikPanganController::class, 'grafikNeracaPanganindex']);
-            Route::get('/grafik/tren_ketahanan_pangan', [GrafikPanganController::class, 'grafikTrenKetahananPanganindex']);
-            Route::get('/grafik/harga_pangan', [GrafikPanganController::class, 'grafikHargaPanganindex']);
-
+            Route::get('/grafik/harian', [GrafikPanganController::class, 'grafikHarianindex']);
+            Route::get('/grafik/bulanan', [GrafikPanganController::class, 'grafikBulananindex']);
+            Route::get('/grafik/tahunan', [GrafikPanganController::class, 'grafikTahunanindex']);
         });
     });
 });

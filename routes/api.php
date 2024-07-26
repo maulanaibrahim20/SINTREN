@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\AdminPalawijaController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WilayahController;
 use App\Http\Controllers\Api\Pangan\JenisPanganController;
+use App\Http\Controllers\Api\Pangan\SubjenisPanganController;
 use App\Http\Controllers\Api\Pangan\DataPanganController;
 use App\Http\Controllers\Api\Penyuluh\PadiController;
 use App\Http\Controllers\Api\Penyuluh\PalawijaController;
@@ -68,6 +69,7 @@ Route::get('/kecamatan',[WilayahController::class,'getKecamatan']);
 
 // PANGAN END POINT
 Route::get('/pangan/jenis_pangan',[JenisPanganController::class,'getJenisPangan']);
+Route::get('/pangan/subjenis_pangan',[SubjenisPanganController::class,'getSubjenisPangan']);
 Route::get('/pasar', [DataPanganController::class, 'getPasar']);
 Route::post('/pangan/store', [DataPanganController::class, 'store']);
 Route::patch('/pangan/update/{id}',[DataPanganController::class,'update']);
