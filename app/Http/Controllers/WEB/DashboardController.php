@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
 use App\Models\Uptd\PenugasanPenyuluh;
 use App\Models\Pasar\PetugasPasar;
 use App\Models\Pangan\LaporanPangan;
+use App\Models\Pangan\SubjenisPangan;
+use App\Models\Pangan\JenisPangan;
+use App\Models\Pasar\Pasar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Phpml\Regression\LeastSquares;
@@ -212,7 +215,52 @@ class DashboardController extends Controller
             $jumlahPetugasPasar = PetugasPasar::count();
             // $jumlahDataPangan = LaporanPangan::count();
             $jumlahDataPangan = LaporanPangan::where('status', 1)->count();
-            return view('pangan.views.dashboard.index', compact('jumlahPetugasPasar','jumlahDataPangan'));
+
+
+            $today = now()->toDateString(); // Mendapatkan tanggal hari ini dalam format 'Y-m-d'
+
+            // Mengambil data laporan pangan dan mengelompokkan berdasarkan subjenis_pangan_id
+            $laporanpangan = LaporanPangan::select(
+                'subjenis_pangan_id',
+                DB::raw('SUM(stok) as total_stok'),
+                DB::raw('AVG(harga) as avg_harga'),
+                DB::raw('MAX(date) as latest_date')
+            )
+            ->where('status', '1')
+            ->where('date', '>=', $today)
+            ->groupBy('subjenis_pangan_id')
+            ->get();
+
+            // Mengambil data SubjenisPangan beserta informasi terkait
+            $subjenisPangan = SubjenisPangan::with('jenis_pangan')->orderBy('name', 'asc')->get();
+
+            // Membuat data yang dikelompokkan berdasarkan subjenis_pangan_id
+            $dataGroupedBySubjenis = $subjenisPangan->keyBy('id')->map(function ($subjenis) use ($laporanpangan) {
+                $laporan = $laporanpangan->firstWhere('subjenis_pangan_id', $subjenis->id);
+
+                return [
+                    'name' => $subjenis->name,
+                    'jenis_pangan_name' => $subjenis->jenis_pangan->name ?? 'Jenis Pangan Tidak Ditemukan',
+                    'gambar' => $subjenis->jenis_pangan->gambar ?? null,
+                    'total_stok' => $laporan->total_stok ?? 0,
+                    'avg_harga' => $laporan->avg_harga ?? 0,
+                    'latest_date' => $laporan->latest_date ?? null,
+                ];
+            });
+
+            $jenisPangan = JenisPangan::orderBy('name', 'asc')->get();
+            $pasarList = Pasar::orderBy('name', 'asc')->get();
+
+            $data = [
+                'title' => 'Laporan Pangan Harian',
+                'breadcrumb' => 'Dashboard',
+                'breadcrumb_active' => 'Laporan Pangan Harian',
+                'dataGroupedBySubjenis' => $dataGroupedBySubjenis,
+                'pasarList' => $pasarList,
+                'jenisPangan' => $jenisPangan,
+            ];
+
+            return view('pangan.views.dashboard.index',$data, compact('jumlahPetugasPasar','jumlahDataPangan'));
         }
 
     }

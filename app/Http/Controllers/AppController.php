@@ -14,13 +14,13 @@ class AppController extends Controller
         $sampaiTahun = 2021;
 
         $laporanPadi = DB::table('laporan_padis')
-            ->selectRaw('YEAR(date) AS tahun')
-            ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
-            ->whereYear('date', '>=', $dariTahun)
-            ->whereYear('date', '<=', $sampaiTahun)
-            ->groupBy('tahun')
-            ->orderBy('tahun', 'ASC')
-            ->get();
+        ->selectRaw('YEAR(date) AS tahun')
+        ->selectRaw('SUM(CASE WHEN tipe_data = "panen" THEN nilai ELSE 0 END) AS total_panen')
+        ->whereYear('date', '>=', $dariTahun)
+        ->whereYear('date', '<=', $sampaiTahun)
+        ->groupBy('tahun')
+        ->orderBy('tahun', 'ASC')
+        ->get();
 
         $hasilPerTahun = [];
 
@@ -95,4 +95,25 @@ class AppController extends Controller
             // 'mape' => $mape
         ]);
     }
+
+
+    //CONTOLLER PANGAN
+    public function showChart()
+    {
+        $dataGroupedBySubjenis = \DB::table('laporan_pangans')
+            ->select('subjenis_pangan.name as name', \DB::raw('AVG(harga) as avg_harga'))
+            ->join('subjenis_pangan', 'laporan_pangans.subjenis_pangan_id', '=', 'subjenis_pangan.id')
+            ->groupBy('subjenis_pangan.name')
+            ->get();
+
+        $labels = $dataGroupedBySubjenis->pluck('name');
+        $avgHarga = $dataGroupedBySubjenis->pluck('avg_harga');
+
+        return view('landing', [
+            'labels' => $labels,
+            'avgHarga' => $avgHarga,
+        ]);
+    }
+
+    
 }

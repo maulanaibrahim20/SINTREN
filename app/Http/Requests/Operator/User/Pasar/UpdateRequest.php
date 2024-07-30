@@ -27,6 +27,7 @@ class UpdateRequest extends FormRequest
             'no_telp' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:255'],
             'pasar' => ['required', 'numeric'],
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

@@ -32,7 +32,7 @@
                                 </a>
                             </div>
                             <!-- FULL-SCREEN -->
-                            <div class="dropdown d-flex notifications">
+                            {{-- <div class="dropdown d-flex notifications">
                                 <a class="nav-link icon" data-bs-toggle="dropdown"><i
                                         class="ri-notification-line"></i><span class=" pulse"></span>
                                 </a>
@@ -114,9 +114,9 @@
                                             href="notify-list.html">VIEW ALL NOTIFICATIONS</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- NOTIFICATIONS -->
-                            <div class="dropdown d-flex message">
+                            {{-- <div class="dropdown d-flex message">
                                 <a class="nav-link icon text-center" data-bs-toggle="dropdown">
                                     <i class="ri-chat-1-line"></i><span class="pulse-danger"></span>
                                 </a>
@@ -213,7 +213,7 @@
                                             ALL AS READ</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- MESSAGE-BOX -->
                             <!-- SIDE-MENU -->
                             <div class="dropdown d-flex profile-1">
@@ -254,8 +254,13 @@
                                             href="{{ url('/penyuluh/pengaturan/editProfile') }}">
                                             <i class="dropdown-icon fe fe-user"></i> Profile Saya
                                         </a>
+                                    @elseif(Auth::user()->role_id == '5')
+                                        <a class="dropdown-item text-dark fw-semibold border-top"
+                                            href="{{ url('/pangan/pengaturan/editProfile') }}">
+                                            <i class="dropdown-icon fe fe-user"></i> Profile Saya
+                                        </a>
                                     @endif
-                                    <a class="dropdown-item text-dark fw-semibold" href="email-inbox.html">
+                                    {{-- <a class="dropdown-item text-dark fw-semibold" href="email-inbox.html">
                                         <i class="dropdown-icon fe fe-mail"></i> Inbox
                                         <span class="badge bg-success float-end">3</span>
                                     </a>
@@ -265,7 +270,7 @@
                                     <a class="dropdown-item text-dark fw-semibold" href="faq.html">
                                         <i class="dropdown-icon fe fe-alert-triangle"></i>
                                         Support ?
-                                    </a>
+                                    </a> --}}
                                     <a class="dropdown-item text-dark fw-semibold"
                                         href="{{ route('web.auth.logout') }}">
                                         <i class="dropdown-icon fe fe-log-out"></i> Sign

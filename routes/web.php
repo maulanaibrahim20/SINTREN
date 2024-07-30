@@ -29,6 +29,7 @@ use App\Http\Controllers\PANGAN\SubjenisPanganController;
 use App\Http\Controllers\PANGAN\LaporanPanganController;
 use App\Http\Controllers\PANGAN\DataPanganController;
 use App\Http\Controllers\PANGAN\GrafikPanganController;
+use App\Http\Controllers\PANGAN\EditProfilePanganController;
 
 
 use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
@@ -196,6 +197,11 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/grafik/harian', [GrafikPanganController::class, 'grafikHarianindex']);
             Route::get('/grafik/bulanan', [GrafikPanganController::class, 'grafikBulananindex']);
             Route::get('/grafik/tahunan', [GrafikPanganController::class, 'grafikTahunanindex']);
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('editProfile', [EditProfilePanganController::class, 'index'])->name('editProfile');
+                Route::put('editProfile/{id}', [EditProfilePanganController::class, 'update'])->name('updateProfile');
+                Route::put('editPassword/{id}', [EditProfilePanganController::class, 'updatePassword'])->name('updatePassword');
+            });
         });
     });
 });

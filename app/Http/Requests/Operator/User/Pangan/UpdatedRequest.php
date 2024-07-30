@@ -26,6 +26,7 @@ class UpdatedRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255'],
             'no_telp' => ['required', 'string', 'max:15'],
             'alamat' => ['required', 'string', 'max:255'],
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

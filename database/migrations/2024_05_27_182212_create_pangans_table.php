@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('user_id');
             $table->text('alamat');
             $table->string('no_telp',15);
+            $table->string('gambar')->nullable();
             $table->timestamps();
         });
     }

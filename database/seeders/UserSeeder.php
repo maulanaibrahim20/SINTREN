@@ -68,7 +68,8 @@ class UserSeeder extends Seeder
         Pangan::create([
             'alamat' => 'indramayu',
             'user_id' => $pangan['id'],
-            'no_telp' => '085797288'
+            'no_telp' => '085797288',
+            'gambar' => 'image_pangan/profile.png',
         ]);
         // $petugaspasar = User::factory()->create([
         //     'username' => 'pasar',

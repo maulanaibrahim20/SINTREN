@@ -38,7 +38,7 @@
             <!-- app-Header -->
 
             <!--News Ticker-->
-            <div class="contain er-fluid bg-white news-ticker">
+            {{-- <div class="contain er-fluid bg-white news-ticker">
                 <div class="bg-white">
                     <div class="best-ticker" id="newsticker">
                         <div class="bn-news">
@@ -122,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <!--/News Ticker-->
 
             <!--App-Sidebar-->

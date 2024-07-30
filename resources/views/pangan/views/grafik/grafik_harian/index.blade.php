@@ -18,6 +18,9 @@
                     <canvas id="chartLine1" class="h-300"></canvas>
                 </div>
             </div>
+            <div class="card-footer text-center">
+                <p>Grafik Harga Rata-rata hari ini: {{ now()->format('d-m-Y') }}</p>
+            </div>
         </div>
     </div>
 </div>
@@ -87,6 +90,4 @@
         });
     });
 </script>
-
-
 @endsection

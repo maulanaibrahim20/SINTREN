@@ -49,28 +49,68 @@ class PanganController extends Controller
         return view('operator.pages.user.pangan.create', $data);
     }
 
+    // public function store(CreateRequest $request)
+    // {
+    //     try {
+    //         DB::beginTransaction();
+
+    //         $user = $this->user->create($request->all() + [
+    //             'username' => Str::slug($request->name),
+    //             'password' => bcrypt('password'),
+    //             'role_id' => Role::PANGAN,
+    //         ]);
+    //         $this->pangan->create($request->all() + [
+    //             'user_id' => $user->id,
+    //             'gambar' => $request->gambar ?? 'image_pangan/profile.png',
+    //         ]);
+
+    //         DB::commit();
+    //         Alert::success('Success', 'Pengguna Pangan Berhasil Ditambahkan');
+
+    //         return redirect('/operator/user/pangan')->with('success', 'Pengguna Pangan Berhasil Ditambahkan!');
+    //     } catch (\Exception $er) {
+    //         DB::rollback();
+    //         return back()->with('error', 'Gagal Menambahkan Pengguna Pangan' . $er->getMessage());
+    //     }
+    // }
+
 
     public function store(CreateRequest $request)
     {
         try {
             DB::beginTransaction();
+
+            // Simpan data pengguna
             $user = $this->user->create($request->all() + [
                 'username' => Str::slug($request->name),
                 'password' => bcrypt('password'),
                 'role_id' => Role::PANGAN,
             ]);
+
+            // Proses upload gambar
+            $gambarPath = 'images/profile.png'; // Default image path
+
+            if ($request->hasFile('gambar')) {
+                $image = $request->file('gambar');
+                $name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = storage_path('app/public/images'); // Simpan di direktori storage/app/public/images
+                $image->move($destinationPath, $name);
+                $gambarPath = 'images/' . $name; // Path yang disimpan di database, perhatikan 'images/' sebagai prefix
+            }
+
+            // Simpan data pangan dengan path gambar
             $this->pangan->create($request->all() + [
                 'user_id' => $user->id,
+                'gambar' => $gambarPath,
             ]);
 
             DB::commit();
-            Alert::success('Success', 'Success Data Berhasil Ditambahkan');
-            return redirect('/operator/user/pangan')->with('success', 'Data User Pangan Berhasil Ditambahkan');
-        } catch (\Exception $e) {
+            Alert::success('Success', 'Pengguna Pangan Berhasil Ditambahkan');
+
+            return redirect('/operator/user/pangan')->with('success', 'Pengguna Pangan Berhasil Ditambahkan!');
+        } catch (\Exception $er) {
             DB::rollback();
-            $errorMessage = 'Gagal Menambahkan Data: ' . $e->getMessage();
-            Alert::error('Error', $errorMessage);
-            return back()->withInput()->withErrors($errorMessage);
+            return back()->with('error', 'Gagal Menambahkan Pengguna Pangan: ' . $er->getMessage());
         }
     }
 

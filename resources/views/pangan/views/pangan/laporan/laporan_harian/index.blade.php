@@ -59,12 +59,14 @@
                             @php
                             $totalStok = 0;
                             $totalHarga = 0;
+                            $no = 1; // Penomoran manual
                             @endphp
 
                             @foreach ($dataGroupedBySubjenis as $subjenisId => $data)
                             @if ($data['total_stok'] != 0 && $data['avg_harga'] != 0)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                {{-- <td>{{ $loop->iteration }}</td> --}}
+                                <td>{{ $no++ }}</td> <!-- Penomoran manual -->
                                 <td>
                                     @if ($data['gambar'])
                                     <img src="{{ asset('storage/' . $data['gambar']) }}" alt="{{ $data['name'] }}" class="img-fluid" style="max-width: 100px;">

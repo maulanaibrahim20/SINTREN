@@ -27,6 +27,7 @@ class CreateRequest extends FormRequest
             'alamat' => ['required', 'string', 'max:255'],
             'no_telp' => ['required', 'string', 'max:255'],
             'pasar' => ['required', 'numeric'],
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }
