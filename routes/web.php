@@ -21,9 +21,9 @@ use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPadiController;
 use App\Http\Controllers\WEB\Uptd\LaporanUptdPalawijaController;
+
 use App\Http\Controllers\PANGAN\UserPasarController;
 use App\Http\Controllers\PANGAN\PasarController;
-
 use App\Http\Controllers\PANGAN\JenisPanganController;
 use App\Http\Controllers\PANGAN\SubjenisPanganController;
 use App\Http\Controllers\PANGAN\LaporanPanganController;
