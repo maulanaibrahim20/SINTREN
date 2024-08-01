@@ -20,11 +20,6 @@ class LaporanPadi extends Model
 
     protected $guarded = [''];
 
-    protected $casts = [
-        'date' => 'datetime',
-    ];
-
-
     public function desa()
     {
         return $this->belongsTo(Desa::class, 'desa_id');
