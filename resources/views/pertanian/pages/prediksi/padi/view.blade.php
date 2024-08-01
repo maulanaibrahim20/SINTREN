@@ -6,8 +6,7 @@
             <h2>Data Prediksi</h2>
         </div>
         <div class="card-body">
-            <p>Tipe Data: {{ $tipeData }}</p>
-            <canvas id="myChart" width="200" height="100"></canvas>
+            <div id="myChart" width="200" height="100"></div>
         </div>
     </div>
     <div class="row">
@@ -49,7 +48,6 @@
                                 </tr>
                                 <tr>
                                     <td>Hasil</td>
-                                    <td>Mean Absolute Percent Error (MAPE): <strong>{{ $tanpaRound }}%</strong></td>
                                     <td>Mean Absolute Percent Error (MAPE): <strong>{{ $mape }}%</strong></td>
                                 </tr>
                             </tbody>
@@ -57,19 +55,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="card mt-3">
-        <div class="card-header">
-            <h2>Detail Perhitungan Nilai</h2>
-        </div>
-        <div class="card-body">
-            <h3>Detail Perhitungan Nilai:</h3>
-            <ul>
-                @foreach ($detailedPredictions as $description)
-                    <li>{{ $description }}</li>
-                @endforeach
-            </ul>
         </div>
     </div>
 @endsection
@@ -81,55 +66,46 @@
             const labels = @json($labels);
             const actualData = @json($actualData);
             const predictedData = @json($predictedData);
-
-            // Inisialisasi data label
-            const data = {
-                labels: labels,
-                datasets: [{
-                        label: 'Nilai Aktual Tahunan',
-                        data: actualData,
-                        fill: false,
-                        borderColor: 'rgb(54, 162, 235)', // Biru untuk data aktual
-                        tension: 0.1
-                    },
-                    {
-                        label: 'Prediksi Nilai Tahunan',
-                        data: predictedData,
-                        fill: false,
-                        borderColor: 'rgb(255, 99, 132)', // Merah untuk data prediksi
-                        tension: 0.1
-                    }
-                ]
-            };
+            const tipeData = "{{ $tipeData }}"; // Ambil nilai tipeData dari Blade
 
             // Konfigurasi grafik
             const config = {
-                type: 'line',
-                data: data,
-                options: {
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Tahun'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Nilai'
-                            }
-                        }
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: 'Grafik Nilai Aktual dan Prediksi Tahunan'
+                },
+                subtitle: {
+                    text: `Tipe Data: ${tipeData}` // Tampilkan tipe data sebagai subtitle
+                },
+                xAxis: {
+                    categories: labels,
+                    title: {
+                        text: 'Tahun'
                     }
-                }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Nilai'
+                    },
+                    min: 0 // Mulai dari angka 0 pada sumbu Y
+                },
+                series: [{
+                    name: 'Nilai Aktual Tahunan',
+                    data: actualData,
+                    color: 'rgb(54, 162, 235)', // Biru untuk data aktual
+                    lineWidth: 2
+                }, {
+                    name: 'Prediksi Nilai Tahunan',
+                    data: predictedData,
+                    color: 'rgb(255, 99, 132)', // Merah untuk data prediksi
+                    lineWidth: 2,
+                }]
             };
 
-            // Render grafik ke canvas
-            const myChart = new Chart(
-                document.getElementById('myChart'),
-                config
-            );
+            // Render grafik ke div dengan id 'myChart'
+            Highcharts.chart('myChart', config);
         });
     </script>
-
 @endsection

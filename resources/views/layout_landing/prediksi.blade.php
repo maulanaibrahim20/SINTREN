@@ -11,7 +11,7 @@
                     <th>Aktual</th>
                     <th>Prediksi</th>
                     <th>Selisih</th>
-                    <th>Error MAPE</th>
+                    <th>Error</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,15 +23,15 @@
                         <td>{{ isset($predictedData[$index]) ? number_format(round($predictedData[$index]), 0, ',', '.') : 'N/A' }}
                         </td>
                         <td>
-                            @if (isset($actualData[$index]))
+                            @if (isset($actualData[$index]) && isset($predictedData[$index]))
                                 {{ number_format(round($predictedData[$index] - $actualData[$index]), 0, ',', '.') }}
                             @else
                                 N/A
                             @endif
                         </td>
                         <td>
-                            @if (isset($errors[$index]))
-                                {{ number_format($errors[$index] * 100, 2, ',', '.') }}%
+                            @if (isset($actualData[$index]) && isset($predictedData[$index]))
+                                {{ number_format($predictions[$tahun]['error'], 5, ',', '.') }}
                             @else
                                 N/A
                             @endif
@@ -39,13 +39,10 @@
                     </tr>
                 @endforeach
                 <tr>
-                    <th></th>
-                    <th colspan="3" style="text-align:right">MAPE:</th>
-                    {{-- <th>{{ $mape }}%</th> --}}
+                    <th colspan="4" style="text-align:right">MAPE:</th>
+                    <th>{{ $mape }}%</th>
                 </tr>
             </tbody>
         </table>
-
     </div>
-
 </section>

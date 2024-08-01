@@ -18,6 +18,7 @@
     <title> Sintrenayu | @yield('title')</title>
 
     @include('auth.component.style_css')
+    @yield('css')
 
 </head>
 
@@ -36,7 +37,7 @@
 
     </div>
     <!-- page End-->
-
+    @yield('script')
     @include('auth.component.style_js')
     @include('sweetalert::alert')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

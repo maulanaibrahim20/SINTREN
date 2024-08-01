@@ -351,6 +351,10 @@
                             Back To Home
                         </a>
                     @endif
+                @else
+                    <button class="btn btn-primary" onclick="window.history.back();">
+                        Back To Home
+                    </button>
                 @endauth
             </div>
         </div>

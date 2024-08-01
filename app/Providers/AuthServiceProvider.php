@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Role;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -58,6 +59,10 @@ class AuthServiceProvider extends ServiceProvider
             } else {
                 return $user->getAkses->id == Role::PANGAN;
             }
+        });
+
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+            return url("/new-password?token=$token&email=$user->email");
         });
     }
 }

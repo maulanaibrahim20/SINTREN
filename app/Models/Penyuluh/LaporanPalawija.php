@@ -37,6 +37,11 @@ class LaporanPalawija extends Model
     }
     public function verify()
     {
-        return $this->belongsTo(VerifyPalawija::class, 'id','laporan_id');
+        return $this->belongsTo(VerifyPalawija::class, 'id', 'laporan_id');
+    }
+
+    public function verifyPalawija()
+    {
+        return $this->hasOne(VerifyPalawija::class, 'laporan_id');
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WEB\Penyuluh;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Penyuluh\LaporanPadi\UpdateRequest;
+use App\Http\Requests\Penyuluh\LaporanPadiRequest;
 use App\Models\Operator\TanamanPadi;
 use App\Models\Penyuluh\LaporanPadi;
 use App\Models\Penyuluh\Pengairan;
@@ -56,14 +58,15 @@ class LaporanPadiController extends Controller
             )
             ->join('desas', 'desas.id', '=', 'laporan_padis.desa_id')
             ->groupBy('month_year', 'laporan_padis.desa_id', 'desas.name')
-            ->orderBy('month_year', 'asc')
+            ->orderBy('month_year', 'desc') // Urutkan berdasarkan month_year dari yang terbaru
             ->orderBy('laporan_padis.desa_id')
             ->get();
 
         $desaId = $this->penugasanDesa::where('user_id', Auth::user()->id)->pluck('desa_id');
         $data = [
-            'padi' => $results->whereIn('desa_id', $desaId)->sortBy('created_at'),
+            'padi' => $results->whereIn('desa_id', $desaId)->sortByDesc('created_at'), // Sortir dari yang terbaru
         ];
+
         return view('penyuluh.pages.laporan_padi.index', $data);
     }
 
@@ -80,7 +83,7 @@ class LaporanPadiController extends Controller
         return view('penyuluh.pages.laporan_padi.create', $data);
     }
 
-    public function store(Request $request)
+    public function store(LaporanPadiRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -115,7 +118,7 @@ class LaporanPadiController extends Controller
     {
         $data['desa'] = $this->laporanpadi::where('desa_id', $desa_id)->first();
         $data['verify'] = $this->verifyPadi::where('laporan_id', $data['desa']->id)->get();
-        $data['showDesa'] = $this->laporanpadi::with('verify')->where('desa_id', $desa_id)->get();
+        $data['showDesa'] = $this->laporanpadi::with('verify')->where('desa_id', $desa_id)->orderBy('created_at', 'desc')->get();
         return view('penyuluh.pages.laporan_padi.showDesa', $data)->with('success', 'Data Desa Berhasil Ditampilkan!');
     }
 
@@ -134,7 +137,7 @@ class LaporanPadiController extends Controller
         return view('penyuluh.pages.laporan_padi.update', $data);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         try {
             $laporan = $this->laporanpadi->findOrFail($id);

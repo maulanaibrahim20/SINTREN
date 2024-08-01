@@ -11,6 +11,8 @@
                     <li class="text-white">Temukan keseruan dengan Aplikasi Sintren, kini tersedia untuk Android.</li>
                     <li class="text-white">Unduh sekarang Aplikasi Sintren untuk Android dan nikmati berbagai
                         keunggulannya.</li>
+                    <li class="text-white"><a href="https://shorturl.at/RbO7E" target="_blank">Unduh Disini</a></li>
+                </ul>
                 </ul>
             </div>
             <div class="col-lg-3 cta-btn-container text-center">

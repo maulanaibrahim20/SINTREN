@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AppController;
-use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\WEB\Auth\LoginController;
 use App\Http\Controllers\WEB\Auth\LogoutController;
 use App\Http\Controllers\WEB\DashboardController;
@@ -32,15 +31,19 @@ use App\Http\Controllers\PANGAN\GrafikPanganController;
 use App\Http\Controllers\PANGAN\EditProfilePanganController;
 
 
+use App\Http\Controllers\WEB\Auth\ForgotPasswordController;
+use App\Http\Controllers\WEB\Auth\NewPasswordController;
+use App\Http\Controllers\WEB\Auth\VerificationController;
 use App\Http\Controllers\WEB\Penyuluh\EditProfileController;
 
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPadiController;
 use App\Http\Controllers\WEB\Pertanian\Data\DataLaporanPalawijaController;
 use App\Http\Controllers\WEB\Pertanian\EditProfilePertanianController;
 use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPadiController;
-use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiSpPadiController;
+use App\Http\Controllers\WEB\Pertanian\Prediksi\PrediksiPalawijaController;
 use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
+use App\Http\Controllers\WEB\Uptd\LaporanNotVerifyController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -57,30 +60,35 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['guest'])->group(function () {
+
     Route::get('/', [AppController::class, 'index']);
+    Route::post('/kotakSaran', [AppController::class, 'kotakSaran']);
+
     Route::prefix('login')->name('login.')->group(function () {
         Route::get('/', [LoginController::class, 'index'])
             ->name('index');
         Route::post('/', [LoginController::class, 'process'])
             ->name('process');
     });
-});
 
-    // Route::middleware(['guest'])->group(function () {
-    //     Route::get('/', [AppController::class, 'index']);
-    //     Route::get('/chart', [ChartController::class, 'showChart']); // Route untuk chart
-    //     Route::prefix('login')->name('login.')->group(function () {
-    //         Route::get('/', [LoginController::class, 'index'])
-    //             ->name('index');
-    //         Route::post('/', [LoginController::class, 'process'])
-    //             ->name('process');
-    //     });
-    // });
+    Route::get('lupa_password', [ForgotPasswordController::class, 'index']);
+    Route::post('lupa_password', [ForgotPasswordController::class, 'sendEmail']);
+
+    Route::prefix('new-password')->name('new-password.')->group(function () {
+        Route::get('/', [NewPasswordController::class, 'index'])->name('index');
+        Route::post('/', [NewPasswordController::class, 'process'])->name('process');
+    });
+
+    Route::get('/verification', VerificationController::class)
+        ->name('verification');
+});
 
 Route::middleware(['auth'])->name('web.')->group(function () {
     Route::get('/logout', LogoutController::class)
         ->name('auth.logout');
 });
+
+
 
 
 Route::middleware(['autentikasi'])->group(function () {
@@ -118,8 +126,9 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::prefix('prediksi')->group(function () {
                 Route::get('/padi', [PrediksiPadiController::class, 'index']);
                 Route::post('/padi', [PrediksiPadiController::class, 'menghitungRegresi']);
-                Route::get('/padiSp', [PrediksiSpPadiController::class, 'indexSP']);
-                Route::post('/padiSp', [PrediksiSpPadiController::class, 'menghitungRegresiSP']);
+
+                Route::get('/palawija', [PrediksiPalawijaController::class, 'index']);
+                Route::post('/palawija', [PrediksiPalawijaController::class, 'menghitungRegresiPalawija']);
             });
             Route::get('data_padi', [DataLaporanPadiController::class, 'index']);
             Route::get('data_padi/show/{id}', [DataLaporanPadiController::class, 'show']);
@@ -140,16 +149,20 @@ Route::middleware(['autentikasi'])->group(function () {
 
     Route::group(['middleware' => ['can:uptd']], function () {
         Route::prefix('uptd')->group(function () {
-            Route::resource('pengguna/penyuluh', UptdAkunPenyuluhController::class);
+
+            Route::get('/laporanNotVerify', [LaporanNotVerifyController::class, 'index']);
+            Route::post('/laporanNotVerify/changeStatus/{id}', [LaporanNotVerifyController::class, 'changeStatus']);
+
+            Route::resource('pengguna/penyuluhUptd', UptdAkunPenyuluhController::class);
             Route::post('pengguna/penyuluh/penugasan', [UptdAkunPenyuluhController::class, 'penugasan']);
             Route::put('pengguna/penyuluh/penugasan/{id}', [UptdAkunPenyuluhController::class, 'updatePenugasan']);
             Route::prefix('laporan')->group(function () {
                 Route::get('padi', [LaporanUptdPadiController::class, 'index']);
-                Route::get('padi/showDetailLaporan/{desa_id}', [LaporanUptdPadiController::class, 'showDetailLaporanKecamatan']);
+                Route::get('padi/showDetailLaporan/{desa_id}/{month_year}', [LaporanUptdPadiController::class, 'showDetailLaporanKecamatan']);
                 Route::post('padi/changeStatus/{id}', [LaporanUptdPadiController::class, 'changeStatus']);
 
                 Route::get('palawija', [LaporanUptdPalawijaController::class, 'index']);
-                Route::get('palawija/showDetailLaporan/{desa_id}', [LaporanUptdPalawijaController::class, 'showDetailLaporanKecamatan']);
+                Route::get('palawija/showDetailLaporan/{desa_id}/{month_year}', [LaporanUptdPalawijaController::class, 'showDetailLaporanKecamatan']);
                 Route::post('palawija/changeStatus/{id}', [LaporanUptdPalawijaController::class, 'changeStatus']);
             });
             Route::prefix('master')->group(function () {

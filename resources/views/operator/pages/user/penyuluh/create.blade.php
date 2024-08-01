@@ -40,7 +40,7 @@
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" name="email" class="form-control" value="{{ old('email') }}"
-                                    value="Otto" required>
+                                    required>
                             </div>
                         </div>
                         <div class="form-row">
@@ -62,8 +62,10 @@
                                     data-placeholder="Pilih Kecamatan">
                                     <option value="">-- pilih --</option>
                                     @foreach ($kecamatan as $data)
-                                        <option value="{{ $data->id }}">
-                                            {{ $data->name }}</option>
+                                        <option value="{{ $data->id }}"
+                                            {{ old('kecamatan') == $data->id ? 'selected' : '' }}>
+                                            {{ $data->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

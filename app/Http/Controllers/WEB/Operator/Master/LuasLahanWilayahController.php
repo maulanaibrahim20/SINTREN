@@ -29,7 +29,7 @@ class LuasLahanWilayahController extends Controller
             'button_create' => 'Tambah Luas Lahan Wilayah',
         ];
         $data = [
-            'luas_wilayah' => $this->luas_wilayah::all(),
+            'luas_wilayah' => $this->luas_wilayah::orderBy('created_at', 'desc')->get(),
         ];
         return view('operator.pages.master.luas_lahan_wilayah.index', $data, $content);
     }
@@ -56,6 +56,15 @@ class LuasLahanWilayahController extends Controller
             'lahan_sawah' => 'required',
             'lahan_non_sawah' => 'required|numeric',
         ]);
+
+        $exists = $this->luas_wilayah->where('desa_id', $request->desa)
+            ->where('kecamatan_id', $request->kecamatan)
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['desa' => 'Desa ini sudah ada dalam kecamatan yang dipilih.']);
+        }
+
         try {
             DB::beginTransaction();
             $this->luas_wilayah->create([

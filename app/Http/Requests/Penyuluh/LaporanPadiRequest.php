@@ -22,20 +22,28 @@ class LaporanPadiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'desa' => ['required', 'string', 'max:255'],
-            'jenis_padi' => ['required', 'string', 'max:255'],
-            'jenis_bantuan' => ['required', 'string', 'max:255'],
-            'tanaman_akhir_bulan_lalu' => ['required', 'numeric'],
-            'panen' => ['required', 'numeric'],
-            'tanam' => ['required', 'numeric'],
-            'rusak' => ['required', 'numeric'],
-            'tanam_akhir_bulan_laporan' => ['required', 'numeric'],
-            'pengairan' => ['required', 'string', 'max:255'],
-            'tanaman_akhir_bulan_lalu_pengairan' => ['required', 'numeric'],
-            'panen_pengairan' => ['required', 'numeric'],
-            'tanam_pengairan' => ['required', 'numeric'],
-            'rusak_pengairan' => ['required', 'numeric'],
-            'tanam_akhir_bulan_laporan_pengairan' => ['required', 'numeric'],
+            'date' => 'required|date',
+            'desa' => 'required',
+            'jenis_lahan' => 'required',
+            'jenis_bantuan' => 'required',
+            'jenis_padi' => 'required',
+            'jenis_data' => 'required',
+            'nilai' => 'required|numeric'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'date.required' => 'Tanggal wajib diisi.',
+            'date.date' => 'Format tanggal tidak valid.',
+            'desa.required' => 'Desa penugasan wajib dipilih.',
+            'jenis_lahan.required' => 'Jenis lahan wajib dipilih.',
+            'jenis_bantuan.required' => 'Jenis bantuan wajib dipilih.',
+            'jenis_padi.required' => 'Jenis padi wajib dipilih.',
+            'jenis_data.required' => 'Jenis data wajib dipilih.',
+            'nilai.required' => 'Nilai wajib diisi.',
+            'nilai.numeric' => 'Nilai harus berupa angka.'
         ];
     }
 }

@@ -39,8 +39,10 @@ class PadiController extends Controller
     public function showAllByUser($id)
     {
         try {
-            $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
-
+            // $laporanPadi = LaporanPadi::where('user_id', $id)->with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
+            $laporanPadi = LaporanPadi::whereHas('desa.users', function ($query) use ($id) {
+                $query->where('users.id', $id);
+            })->with(['desa', 'pengairan', 'padi', 'verify', 'kecamatan'])->get();
             if ($laporanPadi->isEmpty()) {
                 return response()->json([
                     'status' => 'success',

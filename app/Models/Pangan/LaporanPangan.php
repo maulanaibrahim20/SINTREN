@@ -4,7 +4,10 @@ namespace App\Models\Pangan;
 use App\Models\User;
 use App\Models\Pasar\Pasar;
 use App\Models\Pangan\JenisPangan;
+<<<<<<< HEAD
 use App\Models\Pangan\SubjenisPangan;
+=======
+>>>>>>> 0a309d320192818cbfc03bef3c87dc29ff60f80b
 
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

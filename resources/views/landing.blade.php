@@ -92,17 +92,37 @@
                 marker: {
                     symbol: 'square'
                 },
+                color: '#FF5733', // Warna oranye untuk seri 'Aktual'
                 data: {!! json_encode(array_values($actualData)) !!}
             }, {
                 name: 'Prediksi',
                 marker: {
                     symbol: 'diamond'
                 },
+                color: '#337AFF', // Warna biru untuk seri 'Prediksi'
                 data: {!! json_encode($predictedData) !!}
             }]
         });
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    @if (session('success'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: "Berhasil",
+                text: "{{ session('success') }}",
+                icon: "success"
+            });
+        </script>
+    @endif
+    @if (session('error'))
+        <script type="text/javascript">
+            Swal.fire({
+                title: "Gagal",
+                text: "{{ session('error') }}",
+                icon: "error"
+            });
+        </script>
+    @endif
 </body>
 
 </html>

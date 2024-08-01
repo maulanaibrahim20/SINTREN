@@ -50,6 +50,7 @@
                 <th>Alamat</th>
                 <th>Jenis Lahan</th>
                 <th>Tanggal Input</th>
+                <th>Nilai</th>
             </tr>
         </thead>
         <tbody>

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->enum('status', ['terima', 'tolak', 'tunggu'])->default('tunggu');
             $table->text('catatan')->nullable();
             $table->timestamps();
+
+            $table->foreign('laporan_id')->references('id')->on('laporan_padis')->onDelete('cascade');
         });
     }
 

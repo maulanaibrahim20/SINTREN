@@ -15,12 +15,20 @@
                                     <a class="header-brand1" href="{{ url('/pangan/dashboard') }}">
                 @endif
             @endauth
-            <img src="{{ url('/assets') }}/images/brand/logo-sidebar-dark.png" style="width:200px; height: auto;"
-                class="header-brand-img main-logo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/logo-sidebar-light.png" style="width:200px; height: auto;"
-                class="header-brand-img darklogo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/icon.png" class="header-brand-img icon-logo" alt="Sparic logo">
-            <img src="{{ url('/assets') }}/images/brand/icon2.png" class="header-brand-img icon-logo2"
+
+            <img src="{{ url('/landings') }}/img/imy.png"
+                style="float: left; width: 55px; height: auto; margin-right: 5px;" class="header-brand-img main-logo"
+                alt="Sparic logo">
+            <img src="{{ url('/landings') }}/img/polindra.png"
+                style="float: right; width: 55px; height: auto; margin-left: 5px;" class="header-brand-img main-logo"
+                alt="Sparic logo">
+
+
+            <img src="{{ url('/landings') }}/img/imy.png"
+                style="float: left; width: 55px; height: auto; margin-right: 5px;" class="header-brand-img darklogo"
+                alt="Sparic logo">
+            <img src="{{ url('/landings') }}/img/polindra.png"
+                style="float: right; width: 55px; height: auto; margin-left: 5px;" class="header-brand-img darklogo"
                 alt="Sparic logo">
             </a>
         </div>
@@ -228,22 +236,29 @@
                                 Saya</span></a>
                     </li>
                 @endcan
+
                 @can('uptd')
+                    @php
+                        $belumDiverifikasiPadi = DB::table('verify_padis')->where('status', 'tunggu')->count();
+                        $belumDiverifikasiPalawija = DB::table('verify_palawijas')->where('status', 'tunggu')->count();
+
+                        $verifikasi = $belumDiverifikasiPadi + $belumDiverifikasiPalawija;
+                    @endphp
                     <li class="sub-category">
                         <h3>Kelola Akun</h3>
                     </li>
                     <li>
-                        <a class="side-menu__item {{ Request::segment(3) == 'penyuluh' ? 'active' : '' }}"
-                            href="{{ url('/uptd/pengguna/penyuluh') }}"><i class="side-menu__icon fa fa-user"></i><span
-                                class="side-menu__label">Akun
+                        <a class="side-menu__item {{ Request::segment(3) == 'penyuluhUptd' ? 'active' : '' }}"
+                            href="{{ url('/uptd/pengguna/penyuluhUptd') }}"><i
+                                class="side-menu__icon fa fa-user"></i><span class="side-menu__label">Akun
                                 Penyuluh</span></a>
                     </li>
                     <li class="sub-category">
                         <h3>Laporan</h3>
                     </li>
                     <li
-                        class="slide {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' ? 'active open' : '' }}"
+                        class="slide {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' || Request::segment(2) == 'laporanNotVerify' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'padi' || Request::segment(3) == 'palawija' || Request::segment(2) == 'laporanNotVerify' ? 'active open' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon fa fa-files-o"></i>
                             <span class="side-menu__label">Laporan</span><i class="angle fe fe-chevron-right"></i></a>
@@ -263,6 +278,12 @@
                                                     <a href="{{ url('/uptd/laporan/palawija') }}"
                                                         class="slide-item {{ Request::segment(3) == 'palawija' ? 'active' : '' }}">
                                                         Laporan Palawija
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('/uptd/laporanNotVerify') }}"
+                                                        class="slide-item {{ Request::segment(2) == 'laporanNotVerify' ? 'active' : '' }}">
+                                                        Laporan Belum Di Verifikasi
                                                     </a>
                                                 </li>
                                             </ul>

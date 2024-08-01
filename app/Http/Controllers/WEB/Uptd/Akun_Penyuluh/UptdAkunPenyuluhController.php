@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\WEB\Uptd\Akun_Penyuluh;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Uptd\StorePenyuluhRequest;
+use App\Http\Requests\Uptd\UpdatePenyuluhRequest;
 use App\Models\Penyuluh\LuasLahanWilayah;
 use App\Models\Penyuluh\Penyuluh;
 use App\Models\Role;
@@ -77,7 +79,7 @@ class UptdAkunPenyuluhController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePenyuluhRequest $request)
     {
         $kecamatanId = Auth::user()->uptd->kecamatan->id;
         try {
@@ -98,7 +100,7 @@ class UptdAkunPenyuluhController extends Controller
             ]);
             DB::commit();
 
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Success data penyuluh berhasil dibuat!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Success data penyuluh berhasil dibuat!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Pengguna penyuluh gagal ditambahkan!' . $e->getMessage());
@@ -146,20 +148,40 @@ class UptdAkunPenyuluhController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'no_telp' => 'required|string|max:15',
+            'alamat' => 'required|string|max:255',
+        ]);
         try {
             DB::beginTransaction();
+
             $penyuluh = $this->penyuluh::findOrFail($id);
             $penyuluh->update([
-                'alamat' => $request['alamat'],
-                'no_telp' => $request['no_telp'],
+                'alamat' => $request->alamat,
+                'no_telp' => $request->no_telp,
             ]);
+
+            $existingUser = User::where('email', $request->email)
+                ->where('id', '<>', $penyuluh->user->id)
+                ->where('role_id', Role::PENYULUH)
+                ->first();
+
+            if ($existingUser) {
+                DB::rollback();
+                return back()->with('error', 'Email sudah digunakan.');
+            }
+
             $penyuluh->user->update([
                 'name' => $request->name,
-                'username' => Str::slug($request['name']),
-                'email' => $request['email'],
+                'username' => Str::slug($request->name),
+                'email' => $request->email,
             ]);
+
             DB::commit();
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Data penyuluh berhasil diubah!');
+
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Data penyuluh berhasil diubah!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Data penyuluh gagal diubah!' . $e->getMessage());
@@ -177,7 +199,7 @@ class UptdAkunPenyuluhController extends Controller
             $penyuluh->delete();
             $penyuluh->user->delete();
             DB::commit();
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Data penyuluh berhasil dihapus!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Data penyuluh berhasil dihapus!');
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Data penyuluh gagal dihapus!' . $e->getMessage());
@@ -224,7 +246,7 @@ class UptdAkunPenyuluhController extends Controller
             }
 
             DB::commit();
-            return redirect('/uptd/pengguna/penyuluh')->with('success', 'Penugasan Untuk Penyuluh Berhasil Diubah!');
+            return redirect('/uptd/pengguna/penyuluhUptd')->with('success', 'Penugasan Untuk Penyuluh Berhasil Diubah!');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Error: Terjadi Kesalahan - ' . $e->getMessage());

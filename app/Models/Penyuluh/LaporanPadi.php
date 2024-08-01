@@ -20,11 +20,6 @@ class LaporanPadi extends Model
 
     protected $guarded = [''];
 
-    protected $casts = [
-        'date' => 'datetime',
-    ];
-
-
     public function desa()
     {
         return $this->belongsTo(Desa::class, 'desa_id');
@@ -53,5 +48,10 @@ class LaporanPadi extends Model
     public function verify()
     {
         return $this->belongsTo(VerifyPadi::class, 'id', 'laporan_id');
+    }
+
+    public function verifyPadi()
+    {
+        return $this->hasOne(VerifyPadi::class, 'laporan_id',);
     }
 }

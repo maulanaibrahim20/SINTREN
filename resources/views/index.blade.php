@@ -18,7 +18,6 @@
     <title>Sintrenayu | @yield('title')</title>
 
     @include('template.component.style_css')
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
     @yield('css')
 
 </head>
@@ -42,84 +41,103 @@
                 <div class="bg-white">
                     <div class="best-ticker" id="newsticker">
                         <div class="bn-news">
+                            @php
+                                $totalPenyuluh = DB::table('penyuluhs')->count();
+                                $totalLaporanPadi = DB::table('laporan_padis')->count();
+                                $totalLaporanPalawija = DB::table('laporan_palawijas')->count();
+                                $totalLuasLahanWilayah = DB::table('luas_lahan_wilayah')->count();
+                                $totalPenugasan = DB::table('penugasan_penyuluh')->count();
+                                $totalKecamatan = DB::table('kecamatans')->count();
+                                $totalDesa = DB::table('desas')->count();
+                                $totalPasar = DB::table('pasars')->count();
+                                $totalPetugasPasar = DB::table('petugas_pasars')->count();
+                                $totalVerifyPadi = DB::table('verify_padis')->count();
+                                $totalVerifyPalawija = DB::table('verify_palawijas')->count();
+                                // Data statis
+                                $totalPetani = 5000;
+                                $totalAlatPertanian = 1200;
+                                $totalProduksiBeras = 300000; // dalam ton
+                                $totalPenggunaanPupuk = 10000; // dalam ton
+                            @endphp
                             <ul>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-users bg-danger-transparent text-danger mx-1"></span>
-                                    <span class="d-inline-block">Total Users</span>
-                                    <span class="bn-positive me-4">1,653</span>
+                                    <span class="fa fa-rice bg-danger-transparent text-danger mx-1"></span>
+                                    <span class="d-inline-block">Total Laporan Padi</span>
+                                    <span class="bn-positive me-4">{{ $totalLaporanPadi }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-signal bg-info-transparent text-info mx-1"></span>
-                                    <span class="d-inline-block">Total Leads</span>
-                                    <span class="bn-negative me-4">639</span>
+                                    <span class="fa fa-user bg-info-transparent text-info mx-1"></span>
+                                    <span class="d-inline-block">Total Penyuluh</span>
+                                    <span class="bn-negative me-4">{{ $totalPenyuluh }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-briefcase bg-success-transparent text-success mx-1"></span>
-                                    <span class="d-inline-block"> Total Trials </span>
-                                    <span class="bn-negative me-4">12,765</span>
+                                    <span class="fa fa-leaf bg-success-transparent text-success mx-1"></span>
+                                    <span class="d-inline-block">Total Laporan Palawija</span>
+                                    <span class="bn-negative me-4">{{ $totalLaporanPalawija }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-trophy bg-warning-transparent text-warning mx-1"></span>
-                                    <span class="d-inline-block">Total Wins</span>
-                                    <span class="bn-positive me-4">24</span>
+                                    <span class="fa fa-map bg-warning-transparent text-warning mx-1"></span>
+                                    <span class="d-inline-block">Total Luas Lahan Wilayah</span>
+                                    <span class="bn-positive me-4">{{ $totalLuasLahanWilayah }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-envelope bg-primary-transparent text-primary mx-1"></span>
-                                    <span class="d-inline-block">Active Email Accounts</span>
-                                    <span class="bn-positive me-4">74,526</span>
+                                    <span class="fa fa-briefcase bg-primary-transparent text-primary mx-1"></span>
+                                    <span class="d-inline-block">Total Penugasan</span>
+                                    <span class="bn-positive me-4">{{ $totalPenugasan }}</span>
+                                </li>
+                                <li class="text-muted fs-13 fw-semibold">
+                                    <span class="fa fa-home bg-danger-transparent text-danger mx-1"></span>
+                                    <span class="d-inline-block">Total Desa</span>
+                                    <span class="bn-positive me-4">{{ $totalDesa }}</span>
+                                </li>
+                                <li class="text-muted fs-13 fw-semibold">
+                                    <span class="fa fa-home bg-secondary-transparent text-secondary mx-1"></span>
+                                    <span class="d-inline-block">Total Kecamatan</span>
+                                    <span class="bn-positive me-4">{{ $totalKecamatan }}</span>
+                                </li>
+                                <li class="text-muted fs-13 fw-semibold">
+                                    <span class="fa fa-home bg-info-transparent text-info mx-1"></span>
+                                    <span class="d-inline-block">Total Petugas Pasar</span>
+                                    <span class="bn-positive me-4">{{ $totalPetugasPasar }}</span>
+                                </li>
+                                <li class="text-muted fs-13 fw-semibold">
+                                    <span class="fa fa-home bg-success-transparent text-success mx-1"></span>
+                                    <span class="d-inline-block">Total Pasar</span>
+                                    <span class="bn-negative me-4">{{ $totalPasar }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
                                     <span class="fa fa-check-circle bg-danger-transparent text-danger mx-1"></span>
-                                    <span class="d-inline-block">Active Requests</span>
-                                    <span class="bn-positive me-4">14,526</span>
+                                    <span class="d-inline-block">Total Laporan Padi yang Diverifikasi</span>
+                                    <span class="bn-negative me-4">{{ $totalVerifyPadi }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-envelope bg-secondary-transparent text-secondary mx-1"></span>
-                                    <span class="d-inline-block">Deactive Email Accounts</span>
-                                    <span class="bn-positive me-4">7,325 </span>
+                                    <span class="fa fa-check-circle bg-warning-transparent text-warning mx-1"></span>
+                                    <span class="d-inline-block">Total Laporan Palawija yang Diverifikasi</span>
+                                    <span class="bn-positive me-4">{{ $totalVerifyPalawija }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-times-circle bg-info-transparent text-info mx-1"></span>
-                                    <span class="d-inline-block">Deactive Requests</span>
-                                    <span class="bn-positive me-4"> 1,425 </span>
+                                    <span class="fa fa-user bg-danger-transparent text-danger mx-1"></span>
+                                    <span class="d-inline-block">Total Petani</span>
+                                    <span class="bn-negative me-4">{{ $totalPetani }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-usd bg-success-transparent text-success mx-1"></span>
-                                    <span class="d-inline-block">Total Balance</span>
-                                    <span class="bn-negative me-4">$1,52,654</span>
+                                    <span class="fa fa-gear bg-primary-transparent text-primary mx-1"></span>
+                                    <span class="d-inline-block">Total Alat Pertanian</span>
+                                    <span class="bn-negative me-4">{{ $totalAlatPertanian }}</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-shopping-cart bg-danger-transparent text-danger mx-1"></span>
-                                    <span class="d-inline-block">Total Sales</span>
-                                    <span class="bn-negative me-4">23,15,2654</span>
+                                    <span class="fa fa-tree bg-info-transparent text-info mx-1"></span>
+                                    <span class="d-inline-block">Total Produksi Beras</span>
+                                    <span class="bn-positive me-4">{{ $totalProduksiBeras }} ton</span>
                                 </li>
                                 <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-money bg-warning-transparent text-warning"></span>
-                                    <span class="d-inline-block">Total Purchase</span>
-                                    <span class="bn-positive me-4">$7,483</span>
-                                </li>
-                                <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-usd bg-danger-transparent text-danger mx-1"></span>
-                                    <span class="d-inline-block">Total Cost Reduction</span>
-                                    <span class="bn-negative me-4">$23,567</span>
-                                </li>
-                                <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-money bg-primary-transparent text-primary mx-1"></span>
-                                    <span class="d-inline-block">Total Cost Savings</span>
-                                    <span class="bn-negative me-4">15.2%</span>
-                                </li>
-                                <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-briefcase bg-info-transparent text-info mx-1"></span>
-                                    <span class="d-inline-block">Total Projects</span>
-                                    <span class="bn-positive me-4">3,456</span>
-                                </li>
-                                <li class="text-muted fs-13 fw-semibold">
-                                    <span class="fa fa-users bg-success-transparent text-success mx-1"></span>
-                                    <span class="d-inline-block">Total Employes</span>
-                                    <span class="bn-positive me-4">4,738</span>
+                                    <span class="fa fa-tree bg-success-transparent text-success mx-1"></span>
+                                    <span class="d-inline-block">Total Penggunaan Pupuk</span>
+                                    <span class="bn-positive me-4">{{ $totalPenggunaanPupuk }} ton</span>
                                 </li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div> --}}
@@ -193,6 +211,7 @@
 
     @include('template.component.style_js')
     @include('sweetalert::alert')
+    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     @if (session('success'))
         <script type="text/javascript">

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('user_id')->nullable();
             $table->string('pasar_id')->nullable();
             $table->string('jenis_pangan_id')->nullable();
-            $table->string('subjenis_pangan_id')->nullable(); 
+            $table->string('subjenis_pangan_id')->nullable();
             $table->integer('stok')->nullable();
             $table->integer('harga');
             $table->boolean('status')->default(false);

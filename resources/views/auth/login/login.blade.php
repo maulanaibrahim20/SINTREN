@@ -19,13 +19,19 @@
                                         </div>
                                     @endif
                                     <div class="text-center mb-2">
-                                        <a class="header-brand1" href="{{ url('/login') }}">
-                                            <img src="{{ url('/assets') }}/images/brand/logo-withname.png"
+                                        <a class="header-brand1" href="{{ url('/') }}">
+                                            <img src="{{ url('/landings') }}/img/imy.png"
+                                                style="height: 100px; width: auto; margin-right: 5px; margin-top:5px;"
+                                                alt="Logo Sintren">
+                                            <img src="{{ url('/landings') }}/img/polindra.png"
+                                                style="height: 100px; width: auto; margin-right: 10px; margin-top:5px;"
+                                                alt="Logo Sintren">
+                                            {{-- <img src="{{ url('/assets') }}/images/brand/logo-withname.png"
                                                 class="header-brand-img main-logo" alt="Sparic logo"
                                                 style="height: 200px; width: auto;">
                                             <img src="{{ url('/assets') }}/images/brand/logo-withname-dark.png"
                                                 class="header-brand-img darklogo" alt="Sparic logo"
-                                                style="height: 200px; width: auto;">
+                                                style="height: 200px; width: auto;"> --}}
                                         </a>
                                     </div>
                                     <h3>Login</h3>
@@ -49,8 +55,9 @@
                                                 <button type="submit" class="btn btn-primary d-grid w-100">Log in</button>
                                             </div>
                                             <div class="col-12">
-                                                <a href="forgot-password.html" class="btn btn-link box-shadow-0 px-0">Forgot
-                                                    password?</a>
+                                                <a href="{{ url('/lupa_password') }}"
+                                                    class="btn btn-link box-shadow-0 px-0">Lupa
+                                                    Password?</a>
                                             </div>
                                         </div>
                                     </form>

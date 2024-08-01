@@ -17,6 +17,15 @@
                 <div class="card-header">
                     <h3 class="mb-0 card-title">Tambah Data Laporan Padi</h3>
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form action="{{ url('/penyuluh/create/laporan_padi') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
@@ -31,6 +40,11 @@
                                         <input type="text" class="form-control" name="date" id="date"
                                             placeholder="Pilih Tanggal">
                                     </div>
+                                    @error('date')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -119,7 +133,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="select2Basic" class="form-label">Nilai</label>
-                                    <input class="form-control" type="text" name="nilai">
+                                    <input class="form-control" type="number" name="nilai">
                                 </div>
                             </div>
                         </div>
@@ -137,7 +151,6 @@
 @endsection
 
 @section('script')
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
         $(document).ready(function() {
             // Ketika nilai jenis lahan berubah
@@ -156,5 +169,18 @@
             });
         });
     </script>
+    @if ($errors->any())
+        <script type="text/javascript">
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '{{ $error }}\n';
+            @endforeach
+            Swal.fire({
+                title: "Gagal",
+                text: errorMessages,
+                icon: "error"
+            });
+        </script>
+    @endif
 
 @endsection

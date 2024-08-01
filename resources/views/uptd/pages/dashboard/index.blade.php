@@ -34,37 +34,10 @@
         <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-header custom-header d-flex justify-content-between align-items-center border-bottom">
-                    <h3 class="card-title">Trend Pertanian</h3>
-                    <div class="dropdown">
-                        <a href="javascript:void(0);"
-                            class="d-flex align-items-center bg-primary btn btn-sm mx-1 fw-semibold"
-                            data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Sort by:
-                            Weekly<i class="fe fe-chevron-down fw-semibold mx-1"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" role="menu" data-popper-placement="bottom-end">
-                            <li><a href="javascript:void(0);">Monthly</a></li>
-                            <li><a href="javascript:void(0);">Yearly</a></li>
-                        </ul>
-                    </div>
+                    <h3 class="card-title">Grafik Panen Per Desa</h3>
                 </div>
                 <div class="card-body pb-0">
-                    <div class="d-flex ms-5">
-                        <div>
-                            <p class="mb-0 fs-15 text-muted">
-                                This month
-                            </p>
-                            <span class="text-primary fs-20 fw-semibold"><i
-                                    class="fe fe-dollar-sign fs-13"></i>815,320</span>
-                        </div>
-                        <div class="ms-5">
-                            <p class="mb-0 fs-15 text-muted">
-                                Last month
-                            </p>
-                            <span class="fs-20 text-secondary fw-semibold"><i
-                                    class="fe fe-dollar-sign fs-13"></i>743,950</span>
-                        </div>
-                    </div>
-                    <div id="revenue_chart">
+                    <div id="chart-container">
                     </div>
                 </div>
             </div>
@@ -123,8 +96,8 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div>
-                                    <div class="mb-0 fw-semibold text-dark">Sessions</div>
-                                    <h3 class="mt-1 mb-1 text-dark fw-semibold">46.4K</h3>
+                                    <div class="mb-0 fw-semibold text-dark">Total Luas Lahan Wilayah</div>
+                                    <h3 class="mt-1 mb-1 text-dark fw-semibold">{{ $CountLuasLahanWilayah }}</h3>
                                     <div class="text-muted fs-12 mt-2"><i
                                             class="fe fe-arrow-up-right text-success me-1"></i>
                                         <span class="fw-bold fs-12 text-success">04.12%</span> Since last month
@@ -139,26 +112,50 @@
                 </div>
             </div>
             <div class="row row-sm">
-                <div class="col-12">
+                <div class="col-sm-12 col-lg-12">
                     <div class="card overflow-hidden">
-                        <div class="card-header pb-0 border-bottom-0">
-                            <h3 class="card-title">Deliverables</h3>
-                        </div>
-                        <div class="card-body pt-0">
-                            <div class="d-block d-sm-inline-flex align-items-center my-3">
-                                <p class="mb-0 me-5"> <span class="legend bg-blue"></span>Marketing Strategy</p>
-                                <p class="mb-0 me-5"> <span class="legend bg-teal"></span>Engaging Audience</p>
-                                <p class="mb-0 me-5"> <span class="legend bg-pink"></span>Others</p>
-                            </div>
-                            <div class="progress br-10 progress-md">
-                                <div class="progress-bar lh-1 bg-blue w-20">20%</div>
-                                <div class="progress-bar lh-1 bg-cyan w-30">30%</div>
-                                <div class="progress-bar lh-1 bg-pink w-50">50%</div>
-                            </div>
+                        <div class="card-body">
+                            <a href="{{ url('/uptd/laporanNotVerify') }}" class="d-flex">
+                                <div>
+                                    <div class="mb-0 fw-semibold text-dark">Total Yang Belum Diverifikasi</div>
+                                    <h3 class="mt-1 mb-1 text-dark fw-semibold">{{ $CountBelumVerifikasi }} Padi & Palawija
+                                    </h3>
+                                </div>
+                                <i class="fa fa-times ms-auto fs-5 my-auto bg-danger-transparent p-3 br-7 text-danger"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    <script>
+        var chartData = {!! $chartData !!};
+
+        Highcharts.chart('chart-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Total Panen per Desa'
+            },
+            xAxis: {
+                type: 'category',
+                title: {
+                    text: 'Desa dan Tahun'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Panen'
+                }
+            },
+            series: [{
+                name: 'Total Panen',
+                data: chartData
+            }]
+        });
+    </script>
 @endsection

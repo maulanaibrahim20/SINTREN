@@ -35,6 +35,8 @@ Route::post('/login', [UserController::class, 'login']);
 Route::patch('/users/{id}', [UserController::class, 'update']);
 Route::get('/getUserById/{id}', [UserController::class, 'getUserById']);
 Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
+Route::patch('/forgotPassword/{id}', [UserController::class, 'forgotPassword']);
+Route::post('/checkEmail', [UserController::class, 'searchNotelp']);
 
 // PENYULUH END POINT
 Route::get('/penyuluh/getDesa/{id}', [PenyuluhController::class, 'getDesa']);
@@ -58,7 +60,6 @@ Route::delete('/palawija/deleteDetailById/{id}', [PalawijaController::class, 'de
 Route::get('/admin/getDesa/{id}', [AdminController::class, 'getDesa']);
 Route::get('/padi/showByKecamatan/{id}', [AdminPadiController::class, 'showAllByKecamatan']);
 Route::get('/palawija/showByKecamatan/{id}', [AdminPalawijaController::class, 'showAllByKecamatan']);
-Route::get('/padi/prediksiSp', [AdminPadiController::class, 'prediksi']);
 Route::patch('/verify/{id}', [AdminController::class, 'verify']);
 Route::get('/admin/getPenyuluh/{id}', [AdminController::class, 'getPenyuluh']);
 Route::post('/admin/addPenugasan/', [AdminController::class, 'addPenugasan']);

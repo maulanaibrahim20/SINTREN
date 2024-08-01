@@ -65,7 +65,6 @@ class DataPanganController extends Controller
                 'data' => null
             ], 500);
         }
-
     }
 
     public function deleteDetailById($id)

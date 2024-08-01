@@ -25,7 +25,8 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ url('/uptd/pengguna/penyuluh') }}" method="post" class="needs-validation" novalidate>
+                    <form action="{{ url('/uptd/pengguna/penyuluhUptd') }}" method="post" class="needs-validation"
+                        novalidate>
                         @csrf
                         <div class="form-row">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
@@ -33,12 +34,14 @@
                                 <input type="text" class="form-control" id="validationCustom011" name="name"
                                     value="{{ old('name') }}" required>
                                 <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Nama lengkap wajib diisi.</div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                                 <label for="validationCustom12">Email</label>
                                 <input type="email" name="email" class="form-control" id="validationCustom12"
-                                    value="{{ old('email') }}" value="Otto" required>
+                                    value="{{ old('email') }}" required>
                                 <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Email wajib diisi dengan format yang benar.</div>
                             </div>
                         </div>
                         <div class="form-row">
@@ -46,13 +49,15 @@
                                 <label for="validationCustom13">Alamat</label>
                                 <input type="text" class="form-control" id="validationCustom13" name="alamat"
                                     value="{{ old('alamat') }}" required>
-                                <div class="invalid-feedback">Please provide a valid address.</div>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Alamat wajib diisi.</div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
                                 <label for="validationCustom15">Nomor Telepon</label>
                                 <input type="number" class="form-control" id="validationCustom15" name="no_telp"
                                     value="{{ old('no_telp') }}" required>
-                                <div class="invalid-feedback">Please provide a valid zip.</div>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Nomor telepon wajib diisi.</div>
                             </div>
                         </div>
                         @include('template.component.button')
@@ -61,4 +66,20 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    @if ($errors->any())
+        <script type="text/javascript">
+            let errorMessages = '';
+            @foreach ($errors->all() as $error)
+                errorMessages += '{{ $error }}\n';
+            @endforeach
+            Swal.fire({
+                title: "Gagal",
+                text: errorMessages,
+                icon: "error"
+            });
+        </script>
+    @endif
 @endsection

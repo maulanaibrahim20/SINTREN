@@ -23,9 +23,8 @@ class DataLaporanPalawijaController extends Controller
     }
     public function index()
     {
-        $data['laporanPalawija'] = $this->laporanPalawija->all();
+        $data['laporanPalawija'] = $this->laporanPalawija->orderBy('date', 'desc')->get();
         $data['filterKecamatan'] = $this->kecamatan::whereIn('id', $this->laporanPalawija->pluck('kecamatan_id'))->get();
-
         return view('pertanian.pages.data.palawija.index', $data);
     }
 

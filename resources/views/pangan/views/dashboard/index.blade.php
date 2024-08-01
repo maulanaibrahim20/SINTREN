@@ -6,7 +6,6 @@
         <li class="breadcrumb-item"><a href="{{ url('/pangan/dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
     </ol>
-
 </div>
 <div class="row">
     <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">

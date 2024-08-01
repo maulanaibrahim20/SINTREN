@@ -124,45 +124,45 @@ class LaporanTanamanSeeder extends Seeder
             '3212221008' => '3212221',
         ];
 
-        $startDate = Carbon::create(2013, 1, 1);
-        $endDate = Carbon::create(2023, 12, 31);
+        $startDate = Carbon::create(2010, 1, 1);
+        $endDate = Carbon::create(2021, 12, 31);
 
         $currentDate = $startDate->copy();
 
-        DB::table("laporan_padis")->truncate();
-        DB::table("verify_padis")->truncate();
+        // DB::table("laporan_padis")->truncate();
+        // DB::table("verify_padis")->truncate();
         DB::table("verify_palawijas")->truncate();
         DB::table("prediksis")->truncate();
         DB::table("prediksi_sps")->truncate();
 
-        while ($currentDate->lte($endDate)) {
-            $desa_id = array_rand($desaKecamatan);
-            $kecamatan_id = $desaKecamatan[$desa_id];
+        // while ($currentDate->lte($endDate)) {
+        //     $desa_id = array_rand($desaKecamatan);
+        //     $kecamatan_id = $desaKecamatan[$desa_id];
 
-            $laporanPadi = LaporanPadi::create([
-                'user_id' => Str::uuid(),
-                'desa_id' => strval($desa_id),
-                'kecamatan_id' => $kecamatan_id,
-                'date' => $currentDate->toDateString(),
-                'jenis_lahan' => rand(0, 1) == 1 ? 'sawah' : 'non sawah',
-                'id_jenis_padi' => rand(1, 2),
-                'jenis_bantuan' => rand(0, 1) == 1 ? 'bantuan pemerintah' : 'non bantuan pemerintah',
-                'id_jenis_pengairan' => rand(1, 3),
-                'tipe_data' => ['panen', 'tanam', 'puso/rusak'][rand(0, 2)],
-                'nilai' => rand(100, 1000),
-            ]);
+        //     $laporanPadi = LaporanPadi::create([
+        //         'user_id' => Str::uuid(),
+        //         'desa_id' => strval($desa_id),
+        //         'kecamatan_id' => $kecamatan_id,
+        //         'date' => $currentDate->toDateString(),
+        //         'jenis_lahan' => rand(0, 1) == 1 ? 'sawah' : 'non sawah',
+        //         'id_jenis_padi' => rand(1, 2),
+        //         'jenis_bantuan' => rand(0, 1) == 1 ? 'bantuan pemerintah' : 'non bantuan pemerintah',
+        //         'id_jenis_pengairan' => rand(1, 3),
+        //         'tipe_data' => ['panen', 'tanam', 'puso/rusak'][rand(0, 2)],
+        //         'nilai' => rand(100, 1000),
+        //     ]);
 
-            VerifyPadi::create([
-                'laporan_id' => $laporanPadi->id,
-                'user_id' => $laporanPadi->user_id,
-                'status' => 'tunggu',
-                'catatan' => null,
-            ]);
+        //     VerifyPadi::create([
+        //         'laporan_id' => $laporanPadi->id,
+        //         'user_id' => $laporanPadi->user_id,
+        //         'status' => 'tunggu',
+        //         'catatan' => null,
+        //     ]);
 
-            $currentDate->addDay();
-        }
+        //     $currentDate->addDay();
+        // }
 
-        $currentDate = $startDate->copy();
+        // $currentDate = $startDate->copy();
 
         DB::table("laporan_palawijas")->truncate();
 
@@ -178,7 +178,7 @@ class LaporanTanamanSeeder extends Seeder
                 'jenis_lahan' => rand(0, 1) == 1 ? 'sawah' : 'non sawah',
                 'id_jenis_palawija' => rand(1, 7),
                 'jenis_bantuan' => rand(0, 1) == 1 ? 'bantuan pemerintah' : 'non bantuan pemerintah',
-                'tipe_data' => ['panen', 'tanam', 'puso/rusak'][rand(0, 2)],
+                'tipe_data' => ['panen', 'tanam', 'puso/rusak', 'panen muda', 'panen hijauan pakan ternak'][rand(0, 4)],
                 'nilai' => rand(100, 1000),
             ]);
 

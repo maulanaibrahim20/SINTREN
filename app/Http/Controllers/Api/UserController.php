@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
@@ -146,6 +147,52 @@ class UserController extends Controller
                     'data' => null
                 ], 400);
             }
+
+            $user->update([
+                'password' => Hash::make($request->new_password),
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password berhasil diubah.',
+                'data' => null
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Password gagal diubah: ' . $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
+    }
+
+    public function searchEmail(Request $request)
+    {
+        $user = User::whereEmail($request->input('email'))->first();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email tidak ditemukan',
+            ], 404);
+        }
+        $status = Password::sendResetLink($request->only('email'));
+        if ($status == Password::RESET_LINK_SENT) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Periksa Email Anda Untuk Mendapatkan Link Reset Password'
+            ], 200);
+        }
+    }
+
+    public function forgotPassword(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'new_password' => 'required|string|min:8|different:current_password',
+                'confirm_password' => 'required|string|same:new_password',
+            ]);
+
+            $user = User::findOrFail($id);
 
             $user->update([
                 'password' => Hash::make($request->new_password),
