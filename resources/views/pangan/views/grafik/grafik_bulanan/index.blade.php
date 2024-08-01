@@ -10,8 +10,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Grafik Bulanan Pangan</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Grafik Bulanan Pangan</h4>
+                <form method="GET" action="{{ route('grafik.bulanan.index') }}" class="d-flex align-items-center">
+                    <div class="form-group mb-0 me-3">
+                        <label for="year" class="form-label mb-0">Pilih Tahun:</label>
+                        <input type="number" id="year" name="year" class="form-control" value="{{ $selectedYear }}" min="2000" max="{{ date('Y') }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Filter</button>
+                </form>
             </div>
             <div class="card-body">
                 <div class="chartjs-wrapper-demo">
@@ -29,29 +36,40 @@
         var ctx8 = document.getElementById('chartLine1').getContext('2d');
 
         // Data dari controller
-        var dataGroupedByMonth = @json($dataGroupedByMonth);
+        var dataGroupedBySubjenis = @json($dataGroupedBySubjenis);
 
-        var labels = [];
-        var data = [];
-        var subjenisNames = [];
+        // Mendapatkan bulan saat ini
+        var currentMonth = new Date().getMonth() + 1; // Bulan saat ini (1-indexed)
 
-        for (var month in dataGroupedByMonth) {
-            labels.push(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month - 1]);
-            data.push(dataGroupedByMonth[month].avg_harga);
-            subjenisNames.push(dataGroupedByMonth[month].name);
+        // Membuat array bulan hingga bulan saat ini
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].slice(0, currentMonth);
+
+        // Fungsi untuk menghasilkan warna acak
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
         }
+
+        var datasets = Object.keys(dataGroupedBySubjenis).map((subjenisId) => {
+            return {
+                label: dataGroupedBySubjenis[subjenisId].name,
+                data: months.map((_, monthIndex) => dataGroupedBySubjenis[subjenisId].data[monthIndex + 1] || 0),
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                borderColor: getRandomColor(),
+                borderWidth: 2,
+                fill: false
+            };
+        });
 
         new Chart(ctx8, {
             type: 'line',
             data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Rata-rata Harga',
-                    data: data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
+                labels: months,
+                datasets: datasets
             },
             options: {
                 maintainAspectRatio: false,
@@ -59,13 +77,14 @@
                 scales: {
                     x: {
                         ticks: {
-                            beginAtZero: true,
-                            fontSize: 10,
-                            color: "black" // Warna teks bulan
+                            font: {
+                                size: 10
+                            },
+                            color: "black"
                         },
                         title: {
                             display: false,
-                            text: 'Bulan',
+                            text: 'Bulan'
                         },
                         grid: {
                             display: true,
@@ -74,16 +93,18 @@
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         ticks: {
-                            beginAtZero: true,
-                            fontSize: 10,
-                            color: "black", // Warna teks rata-rata harga
-                            stepSize: 10,
+                            font: {
+                                size: 10
+                            },
+                            color: "black",
+                            stepSize: 5000,
                             min: 0
                         },
                         title: {
                             display: false,
-                            text: 'Rata-rata Harga',
+                            text: 'Rata-rata Harga'
                         },
                         grid: {
                             display: true,
@@ -91,20 +112,9 @@
                             drawBorder: false
                         }
                     }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            afterLabel: function(context) {
-                                var monthIndex = context.dataIndex + 1;
-                                return dataGroupedByMonth[monthIndex] ? 'Subjenis: ' + dataGroupedByMonth[monthIndex].name : '';
-                            }
-                        }
-                    }
                 }
             }
         });
     });
 </script>
-
 @endsection

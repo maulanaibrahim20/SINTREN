@@ -10,16 +10,24 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Grafik Harian Pangan</h4>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-title mb-0">Grafik Harian Pangan</h4>
+                <form method="GET" action="{{ route('grafik.harian.index') }}" class="d-flex align-items-center">
+                    <div class="form-group mb-0 me-2">
+                        <label for="date" class="form-label sr-only">Pilih Tanggal:</label>
+                        <input type="date" id="date" name="date" class="form-control" value="{{ request('date', now()->toDateString()) }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
             </div>
+
             <div class="card-body">
                 <div class="chartjs-wrapper-demo">
                     <canvas id="chartLine1" class="h-300"></canvas>
                 </div>
             </div>
             <div class="card-footer text-center">
-                <p>Grafik Harga Rata-rata hari ini: {{ now()->format('d-m-Y') }}</p>
+                <p>Grafik Harga Rata-rata pada tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d-m-Y') }}</p>
             </div>
         </div>
     </div>
@@ -53,7 +61,6 @@
                 scales: {
                     x: {
                         ticks: {
-                            beginAtZero: true,
                             fontSize: 10,
                             color: "black" // Warna teks subjenis pangan
                         },
@@ -68,11 +75,12 @@
                         }
                     },
                     y: {
+                        beginAtZero: true,
                         ticks: {
-                            beginAtZero: true,
+
                             fontSize: 10,
                             color: "black", // Warna teks rata-rata harga
-                            stepSize: 10,
+                            stepSize: 1000,
                             min: 0
                         },
                         title: {
@@ -82,7 +90,9 @@
                         grid: {
                             display: true,
                             color: 'rgba(180, 183, 197, 0.4)',
-                            drawBorder: false
+                            drawBorder: false,
+                            zeroLineColor: 'rgba(54, 162, 235, 1)',
+                            zeroLineWidth: 2
                         }
                     }
                 }

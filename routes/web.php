@@ -66,6 +66,17 @@ Route::middleware(['guest'])->group(function () {
     });
 });
 
+    // Route::middleware(['guest'])->group(function () {
+    //     Route::get('/', [AppController::class, 'index']);
+    //     Route::get('/chart', [ChartController::class, 'showChart']); // Route untuk chart
+    //     Route::prefix('login')->name('login.')->group(function () {
+    //         Route::get('/', [LoginController::class, 'index'])
+    //             ->name('index');
+    //         Route::post('/', [LoginController::class, 'process'])
+    //             ->name('process');
+    //     });
+    // });
+
 Route::middleware(['auth'])->name('web.')->group(function () {
     Route::get('/logout', LogoutController::class)
         ->name('auth.logout');
@@ -194,8 +205,8 @@ Route::middleware(['autentikasi'])->group(function () {
             Route::get('/export/laporan/tahunan', [LaporanPanganController::class, 'exportTahunan'])->name('export.laporan.tahunan');
             // Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
             // Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPangan']);
-            Route::get('/grafik/harian', [GrafikPanganController::class, 'grafikHarianindex']);
-            Route::get('/grafik/bulanan', [GrafikPanganController::class, 'grafikBulananindex']);
+            Route::get('/grafik/harian', [GrafikPanganController::class, 'grafikHarianIndex'])->name('grafik.harian.index');
+            Route::get('/grafik/bulanan', [GrafikPanganController::class, 'grafikBulananindex'])->name('grafik.bulanan.index');;
             Route::get('/grafik/tahunan', [GrafikPanganController::class, 'grafikTahunanindex']);
             Route::prefix('pengaturan')->group(function () {
                 Route::get('editProfile', [EditProfilePanganController::class, 'index'])->name('editProfile');
@@ -204,4 +215,6 @@ Route::middleware(['autentikasi'])->group(function () {
             });
         });
     });
+
+
 });

@@ -29,29 +29,14 @@
         var ctx8 = document.getElementById('chartLine1').getContext('2d');
 
         // Data dari controller
-        var dataGroupedByYear = @json($dataGroupedByYear);
-
-        var labels = [];
-        var data = [];
-        var subjenisNames = [];
-
-        for (var year in dataGroupedByYear) {
-            labels.push(year);
-            data.push(dataGroupedByYear[year].avg_harga);
-            subjenisNames.push(dataGroupedByYear[year].subjenis_pangan_name);
-        }
+        var years = @json($dataGroupedByYear);
+        var datasets = @json($datasets);
 
         new Chart(ctx8, {
             type: 'line',
             data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Rata-rata Harga',
-                    data: data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
+                labels: years,
+                datasets: datasets
             },
             options: {
                 maintainAspectRatio: false,
@@ -59,7 +44,6 @@
                 scales: {
                     x: {
                         ticks: {
-                            beginAtZero: true,
                             fontSize: 10,
                             color: "black" // Warna teks tahun
                         },
@@ -78,7 +62,7 @@
                             beginAtZero: true,
                             fontSize: 10,
                             color: "black", // Warna teks rata-rata harga
-                            stepSize: 10,
+                            stepSize: 2000,
                             min: 0
                         },
                         title: {
@@ -89,15 +73,19 @@
                             display: true,
                             color: 'rgba(180, 183, 197, 0.4)',
                             drawBorder: false
-                        }
+
+                        },
+                        suggestedMin: 0 // Menyediakan nilai minimum sumbu Y
                     }
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            afterLabel: function(context) {
-                                var yearIndex = context.dataIndex;
-                                return subjenisNames[yearIndex] ? 'Subjenis: ' + subjenisNames[yearIndex] : '';
+                            title: function(context) {
+                                return 'Tahun: ' + context[0].label;
+                            },
+                            label: function(context) {
+                                return 'Nama Pangan: ' + context.dataset.label + ' | Harga Rata-rata: ' + context.raw;
                             }
                         }
                     }
