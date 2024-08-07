@@ -6,7 +6,7 @@ import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan/components/rincian_palawija_view.dart';
-import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
+import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
 
 class RingkasanPalawijaWidget extends StatefulWidget {
   const RingkasanPalawijaWidget({
@@ -102,7 +102,7 @@ class _RingkasanPalawijaWidgetState extends State<RingkasanPalawijaWidget> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => FormPadiView(
+                                    builder: (_) => FormPalawijaView(
                                       desa: desa,
                                       onCreate: true,
                                       date: "${widget.date}-01",

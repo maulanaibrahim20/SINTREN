@@ -38,6 +38,86 @@ class AdminController {
     }
   }
 
+  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhanPeriodeIni(
+      {bool isKecamatan = false}) async {
+    try {
+      final db = await DatabaseHelper().database;
+      final role = await UserLoginModel().getRole();
+      final now = DateTime.now();
+      final currentMonth = now.month;
+      final currentYear = now.year;
+
+      // Mengidentifikasi periode MT1 dan MT2
+      final List<String> mt1Months = ['10', '11', '12', '01', '02', '03'];
+      final List<String> mt2Months = ['04', '05', '06', '07', '08', '09'];
+
+      List<String> selectedMonths;
+      String selectedYearCondition;
+      List<dynamic> args = [];
+
+      if (mt1Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedMonths = mt1Months;
+        selectedYearCondition = '''
+        (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?) OR
+        (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?)
+      ''';
+        args.addAll([
+          '10',
+          '11',
+          '12',
+          (currentYear - 1).toString(),
+          '01',
+          '02',
+          '03',
+          currentYear.toString()
+        ]);
+      } else {
+        selectedMonths = mt2Months;
+        selectedYearCondition = '''
+        strftime('%m', date) IN (${List.filled(mt2Months.length, '?').join(', ')}) AND strftime('%Y', date) = ?
+      ''';
+        args.addAll(selectedMonths);
+        args.add(currentYear.toString());
+      }
+
+      final String statusFilter =
+          role == 'PERTANIAN' ? "status = 'terima'" : "status != 'tolak'";
+
+      final String query = '''
+      SELECT
+          strftime('%Y-%m', date) AS month_year,
+          ${isKecamatan ? 'kecamatan_id AS id, kecamatan_name AS name' : 'desa_id AS id, desa_name AS name'},
+          SUM(nilai) AS total_nilai,
+          (SELECT COUNT(*) FROM (
+              SELECT date, ${isKecamatan ? 'kecamatan_id' : 'desa_id'}, status FROM detailPadi
+              UNION ALL
+              SELECT date, ${isKecamatan ? 'kecamatan_id' : 'desa_id'}, status FROM detailPalawija
+          ) AS status_data
+          WHERE $statusFilter AND
+                strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+                status_data.${isKecamatan ? 'kecamatan_id' : 'desa_id'} = combined_data.${isKecamatan ? 'kecamatan_id' : 'desa_id'}
+          ) AS total_tunggu
+      FROM (
+          SELECT date, ${isKecamatan ? 'kecamatan_id, kecamatan_name' : 'desa_id, desa_name'}, nilai FROM detailPadi
+          UNION ALL
+          SELECT date, ${isKecamatan ? 'kecamatan_id, kecamatan_name' : 'desa_id, desa_name'}, nilai FROM detailPalawija
+      ) AS combined_data
+      WHERE $selectedYearCondition
+      GROUP BY
+          ${isKecamatan ? 'kecamatan_id' : 'desa_id'}
+      ORDER BY
+          month_year DESC, ${isKecamatan ? 'kecamatan_id' : 'desa_id'};
+    ''';
+
+      final List<Map<String, dynamic>> maps = await db.rawQuery(query, args);
+
+      return maps.map((map) => HistoriPenyuluhanModel.fromJson(map)).toList();
+    } catch (e) {
+      log("Get histori penyuluhan error: $e");
+      return [];
+    }
+  }
+  
   Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan({
     required bool isMonthNow,
     bool isKecamatan = false,
@@ -150,7 +230,7 @@ class AdminController {
   Future<double> getTotalNilaiPenyuluhanBulanIni() async {
     try {
       List<HistoriPenyuluhanModel> historiList =
-          await getHistoriPenyuluhan(isMonthNow: true);
+          await getHistoriPenyuluhanPeriodeIni();
 
       double sumTotalNilai =
           historiList.fold(0, (sum, item) => sum + item.nilai);
@@ -377,7 +457,7 @@ class AdminController {
     String periode = '';
 
     if (mt1Months.contains(currentMonth.toString().padLeft(2, '0'))) {
-      periode = 'MT1 ${currentYear -1 } Oktober - $currentYear Maret';
+      periode = 'MT1 ${currentYear - 1} Oktober - $currentYear Maret';
     } else if (mt2Months.contains(currentMonth.toString().padLeft(2, '0'))) {
       periode = 'MT2 April - September $currentYear';
     } else {

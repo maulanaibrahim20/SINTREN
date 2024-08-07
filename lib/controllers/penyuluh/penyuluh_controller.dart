@@ -23,37 +23,75 @@ class PenyuluhController {
     }
   }
 
-  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan() async {
+  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhan(
+      {bool isHome = false, String? desa}) async {
     try {
       final db = await DatabaseHelper().database;
-      const String query = '''
-        SELECT
-            strftime('%Y-%m', date) AS month_year,
-            desa_id AS id,
-            desa_name AS name,
-            SUM(nilai) AS total_nilai,
-            (SELECT COUNT(*) FROM (
-                SELECT date, desa_id, desa_name, status FROM detailPadi
-                UNION ALL
-                SELECT date, desa_id, desa_name, status FROM detailPalawija
-            ) AS status_data
-            WHERE status = 'tolak' AND
-                  strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
-                  status_data.desa_id = combined_data.desa_id
-            ) AS total_tunggu
-        FROM (
-            SELECT date, desa_id, desa_name, nilai FROM detailPadi
-            UNION ALL
-            SELECT date, desa_id, desa_name, nilai FROM detailPalawija
-        ) AS combined_data
-        GROUP BY
-            month_year,
-            desa_id
-        ORDER BY
-            month_year DESC, desa_id;
-      ''';
+      final now = DateTime.now();
+      final currentMonth = now.month;
+      final currentYear = now.year;
 
-      final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+      // Mengidentifikasi periode MT1 dan MT2
+      List<String> mt1Months = ['10', '11', '12', '01', '02', '03'];
+      List<String> mt2Months = ['04', '05', '06', '07', '08', '09'];
+
+      String selectedYearCondition = '';
+      List<dynamic> args = [];
+
+      if (mt1Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedYearCondition = '''
+        (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?) OR
+        (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?)
+      ''';
+        args.addAll([
+          '10',
+          '11',
+          '12',
+          (currentYear - 1).toString(),
+          '01',
+          '02',
+          '03',
+          currentYear.toString()
+        ]);
+      } else if (mt2Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedYearCondition = '''
+        strftime('%m', date) IN (${List.filled(mt2Months.length, '?').join(', ')}) AND strftime('%Y', date) = ?
+      ''';
+        args.addAll(mt2Months);
+        args.add(currentYear.toString());
+      }
+      args.add(desa);
+
+      String baseQuery = '''
+      SELECT
+          strftime('%Y-%m', date) AS month_year,
+          desa_id AS id,
+          desa_name AS name,
+          SUM(nilai) AS total_nilai,
+          (SELECT COUNT(*) FROM (
+              SELECT date, desa_id, desa_name, status FROM detailPadi
+              UNION ALL
+              SELECT date, desa_id, desa_name, status FROM detailPalawija
+          ) AS status_data
+          WHERE status = 'tolak' AND
+                strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+                status_data.desa_id = combined_data.desa_id
+          ) AS total_tunggu
+      FROM (
+          SELECT date, desa_id, desa_name, nilai FROM detailPadi
+          UNION ALL
+          SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+      ) AS combined_data
+      ${isHome ? 'WHERE $selectedYearCondition AND desa_id = ?' : ''}
+      GROUP BY
+          month_year,
+          desa_id
+      ORDER BY
+          month_year DESC, desa_id;
+    ''';
+
+      List<Map<String, dynamic>> maps =
+          await db.rawQuery(baseQuery, isHome ? args : null);
 
       return maps.map((map) => HistoriPenyuluhanModel.fromJson(map)).toList();
     } catch (e) {
@@ -74,17 +112,56 @@ class PenyuluhController {
     }
   }
 
-  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhanBulanIni() async {
+  Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhanPeriodeIni() async {
     try {
       final db = await DatabaseHelper().database;
-      final DateTime now = DateTime.now();
-      final String currentMonthYear =
-          '${now.year}-${now.month.toString().padLeft(2, '0')}';
-      final DateTime lastMonthDate = DateTime(now.year, now.month - 1, now.day);
-      final String lastMonthYear =
-          '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
+      final now = DateTime.now();
+      final currentMonth = now.month;
+      final currentYear = now.year;
 
-      const String query = '''
+      // Mengidentifikasi periode MT1 dan MT2
+      List<String> mt1Months = ['10', '11', '12', '01', '02', '03'];
+      List<String> mt2Months = ['04', '05', '06', '07', '08', '09'];
+
+      List<String> selectedMonths = [];
+      String selectedYearCondition = '';
+
+      if (mt1Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedMonths = mt1Months;
+        // Menentukan kondisi tahun untuk MT1
+        selectedYearCondition = '''
+      (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?) OR
+      (strftime('%m', date) IN (?, ?, ?) AND strftime('%Y', date) = ?)
+      ''';
+      } else if (mt2Months.contains(currentMonth.toString().padLeft(2, '0'))) {
+        selectedMonths = mt2Months;
+        // Menentukan kondisi tahun untuk MT2
+        selectedYearCondition = '''
+      strftime('%m', date) IN (${List.filled(mt2Months.length, '?').join(', ')}) AND strftime('%Y', date) = ?
+      ''';
+      }
+
+      List<String> conditions = [selectedYearCondition];
+
+      List<dynamic> args = [];
+      if (selectedMonths == mt1Months) {
+        args.addAll([
+          '10',
+          '11',
+          '12',
+          (currentYear - 1).toString(),
+          '01',
+          '02',
+          '03',
+          currentYear.toString()
+        ]);
+      } else if (selectedMonths == mt2Months) {
+        args.addAll(selectedMonths);
+        args.add(currentYear.toString());
+      }
+      // args.add("terima");
+
+      final List<Map<String, dynamic>> maps = await db.rawQuery('''
         SELECT
             strftime('%Y-%m', date) AS month_year,
             desa_id AS id,
@@ -104,40 +181,84 @@ class PenyuluhController {
             UNION ALL
             SELECT date, desa_id, desa_name, nilai FROM detailPalawija
         ) AS combined_data
-        WHERE strftime('%Y-%m', date) = ?
+        WHERE ${conditions.join(' AND ')}
         GROUP BY
-            month_year,
             desa_id
         ORDER BY
             month_year DESC, desa_id;
-      ''';
+      ''', args);
 
-      final List<Map<String, dynamic>> mapsCurrentMonth =
-          await db.rawQuery(query, [currentMonthYear]);
-
-      final Set<String> desaIdsCurrentMonth =
-          mapsCurrentMonth.map((map) => map['id'] as String).toSet();
-
-      final List<Map<String, dynamic>> mapsLastMonth =
-          await db.rawQuery(query, [lastMonthYear]);
-
-      final List<Map<String, dynamic>> mapsFilteredLastMonth = mapsLastMonth
-          .where((map) => !desaIdsCurrentMonth.contains(map['id']))
-          .toList();
-
-      final List<Map<String, dynamic>> combinedMaps = [
-        ...mapsCurrentMonth,
-        ...mapsFilteredLastMonth
-      ];
-
-      return combinedMaps
-          .map((map) => HistoriPenyuluhanModel.fromJson(map))
-          .toList();
+      return maps.map((map) => HistoriPenyuluhanModel.fromJson(map)).toList();
     } catch (e) {
       log("Get histori penyuluhan bulan ini error: $e");
       return [];
     }
   }
+
+  // Future<List<HistoriPenyuluhanModel>> getHistoriPenyuluhanBulanIni() async {
+  //   try {
+  //     final db = await DatabaseHelper().database;
+  //     final DateTime now = DateTime.now();
+  //     final String currentMonthYear =
+  //         '${now.year}-${now.month.toString().padLeft(2, '0')}';
+  //     final DateTime lastMonthDate = DateTime(now.year, now.month - 1, now.day);
+  //     final String lastMonthYear =
+  //         '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
+
+  //     const String query = '''
+  //       SELECT
+  //           strftime('%Y-%m', date) AS month_year,
+  //           desa_id AS id,
+  //           desa_name AS name,
+  //           SUM(nilai) AS total_nilai,
+  //           (SELECT COUNT(*) FROM (
+  //               SELECT date, desa_id, desa_name, status FROM detailPadi
+  //               UNION ALL
+  //               SELECT date, desa_id, desa_name, status FROM detailPalawija
+  //           ) AS status_data
+  //           WHERE status = 'tolak' AND
+  //                 strftime('%Y-%m', status_data.date) = strftime('%Y-%m', combined_data.date) AND
+  //                 status_data.desa_id = combined_data.desa_id
+  //           ) AS total_tunggu
+  //       FROM (
+  //           SELECT date, desa_id, desa_name, nilai FROM detailPadi
+  //           UNION ALL
+  //           SELECT date, desa_id, desa_name, nilai FROM detailPalawija
+  //       ) AS combined_data
+  //       WHERE strftime('%Y-%m', date) = ?
+  //       GROUP BY
+  //           month_year,
+  //           desa_id
+  //       ORDER BY
+  //           month_year DESC, desa_id;
+  //     ''';
+
+  //     final List<Map<String, dynamic>> mapsCurrentMonth =
+  //         await db.rawQuery(query, [currentMonthYear]);
+
+  //     final Set<String> desaIdsCurrentMonth =
+  //         mapsCurrentMonth.map((map) => map['id'] as String).toSet();
+
+  //     final List<Map<String, dynamic>> mapsLastMonth =
+  //         await db.rawQuery(query, [lastMonthYear]);
+
+  //     final List<Map<String, dynamic>> mapsFilteredLastMonth = mapsLastMonth
+  //         .where((map) => !desaIdsCurrentMonth.contains(map['id']))
+  //         .toList();
+
+  //     final List<Map<String, dynamic>> combinedMaps = [
+  //       ...mapsCurrentMonth,
+  //       ...mapsFilteredLastMonth
+  //     ];
+
+  //     return combinedMaps
+  //         .map((map) => HistoriPenyuluhanModel.fromJson(map))
+  //         .toList();
+  //   } catch (e) {
+  //     log("Get histori penyuluhan bulan ini error: $e");
+  //     return [];
+  //   }
+  // }
 
   Future<void> synchronizeData(ValueNotifier<String> statusNotifier) async {
     try {

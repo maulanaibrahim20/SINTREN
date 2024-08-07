@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
-import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/admin/admin_padi_service.dart';
 import 'package:sintren_mobile/services/admin/admin_palawija_service.dart';
 import 'package:sintren_mobile/services/admin/admin_service.dart';
@@ -91,11 +89,8 @@ class _UptdPenyuluhanViewState extends State<UptdPenyuluhanView> {
         ],
         backgroundColor: ColorTheme().primaryColor,
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          adminC.getHistoriPenyuluhan(isMonthNow: true),
-          adminC.getLuasLahanDesa(),
-        ]),
+      body: FutureBuilder(
+        future: adminC.getHistoriPenyuluhan(isMonthNow: true),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -120,18 +115,7 @@ class _UptdPenyuluhanViewState extends State<UptdPenyuluhanView> {
               ),
             );
           } else {
-            final historiList =
-                snapshot.data?[0] as List<HistoriPenyuluhanModel>;
-            final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
-
-            double getLuasDesa(String id) {
-              for (LuasWilayahModel wilayah in luasDesaList) {
-                if (wilayah.id == id) {
-                  return wilayah.totalLuasLahan;
-                }
-              }
-              return 0;
-            }
+            final historiList = snapshot.data as List<HistoriPenyuluhanModel>;
 
             if (historiList.isEmpty) {
               return Center(
@@ -194,7 +178,7 @@ class _UptdPenyuluhanViewState extends State<UptdPenyuluhanView> {
                       color: ColorTheme().whiteColor,
                       child: Column(
                         children: [
-                          if (desa.totalTunggu > 0)
+                          if (desa.totalTunggu > 0) ...[
                             Align(
                               alignment: Alignment.topRight,
                               child: Container(
@@ -217,7 +201,12 @@ class _UptdPenyuluhanViewState extends State<UptdPenyuluhanView> {
                                 ),
                               ),
                             ),
-                          SizedBox(height: 10.h),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                          ] else ...[
+                            SizedBox(height: 20.h),
+                          ],
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Row(
@@ -238,64 +227,40 @@ class _UptdPenyuluhanViewState extends State<UptdPenyuluhanView> {
                                   ),
                                 ),
                                 SizedBox(width: 15.w),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      "Desa ${UserController().toCamelCase(desa.name)}",
-                                      style: StyleTheme().stylePrimary.copyWith(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      userC.convertDate(desa.date),
-                                      style: StyleTheme().styleBlack.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[700],
-                                          fontSize: 14.sp),
-                                    ),
-                                  ],
-                                )
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "Desa ${UserController().toCamelCase(desa.name)}",
+                                        style: StyleTheme()
+                                            .stylePrimary
+                                            .copyWith(
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        userC.convertDate(desa.date),
+                                        style: StyleTheme().styleBlack.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey[700],
+                                            fontSize: 14.sp),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_right,
+                                  color: ColorTheme().primaryColor,
+                                  size: 40.sp,
+                                ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 10.h),
-                          Stack(
-                            children: [
-                              Divider(thickness: 2.h, color: Colors.grey),
-                              Container(
-                                color: ColorTheme().whiteColor,
-                                margin: EdgeInsets.only(left: 20.w),
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                child: Text(
-                                  "Progres bulan ini",
-                                  style: StyleTheme()
-                                      .styleBlack
-                                      .copyWith(color: Colors.black87),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 40.w,
-                            animation: true,
-                            lineHeight: 30.h,
-                            animationDuration: 2000,
-                            percent: (desa.nilai / getLuasDesa(desa.id)) > 1
-                                ? 1
-                                : desa.nilai / getLuasDesa(desa.id),
-                            center: Text(
-                              "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai.toStringAsFixed(1)}/${getLuasDesa(desa.id).toStringAsFixed(1)})",
-                              style: StyleTheme().styleWhite.copyWith(
-                                  fontWeight: FontWeight.w500, fontSize: 14.sp),
-                            ),
-                            barRadius: Radius.circular(10.r),
-                            linearGradient: ColorTheme().progressColor,
-                          ),
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 20.h),
                         ],
                       ),
                     ),

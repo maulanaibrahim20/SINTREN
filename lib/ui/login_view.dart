@@ -150,12 +150,12 @@ class _LoginViewState extends State<LoginView> {
                                     color: ColorTheme().primaryColor,
                                     size: 25.sp,
                                   ),
-                                  hintText: "Username/Email",
-                                  labelText: "Username/Email",
+                                  hintText: "Username",
+                                  labelText: "Username",
                                 ),
                                 validator: (value) {
                                   return value == null || value.isEmpty
-                                      ? "username/email tidak boleh kosong"
+                                      ? "username tidak boleh kosong"
                                       : null;
                                 },
                               ),

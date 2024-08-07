@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/desa_model.dart';
 import 'package:sintren_mobile/models/histori_penyuluhan_model.dart';
-import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
 import 'package:sintren_mobile/services/penyuluh/palawija_service.dart';
 import 'package:sintren_mobile/services/penyuluh/penyuluh_service.dart';
@@ -17,7 +15,10 @@ import 'package:sintren_mobile/ui/penyuluh/penyuluh_home_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
-  const HistoriPenyuluhanView({super.key});
+  const HistoriPenyuluhanView({super.key, this.isHome, this.desa});
+
+  final bool? isHome;
+  final String? desa;
 
   @override
   State<HistoriPenyuluhanView> createState() => _HistoriPenyuluhanViewState();
@@ -105,11 +106,8 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
           Icons.refresh_rounded,
         ),
       ),
-      body: FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          penyuluhC.getHistoriPenyuluhan(),
-          penyuluhC.getLuasLahanDesa(),
-        ]),
+      body: FutureBuilder(
+        future: penyuluhC.getHistoriPenyuluhan(isHome: widget.isHome ?? false,desa: widget.desa),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -135,17 +133,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
             );
           } else {
             final historiList =
-                snapshot.data?[0] as List<HistoriPenyuluhanModel>;
-            final luasDesaList = snapshot.data?[1] as List<LuasWilayahModel>;
-
-            double getLuasDesa(String id) {
-              for (LuasWilayahModel wilayah in luasDesaList) {
-                if (wilayah.id == id) {
-                  return wilayah.totalLuasLahan;
-                }
-              }
-              return 0;
-            }
+                snapshot.data as List<HistoriPenyuluhanModel>;
 
             if (historiList.isEmpty) {
               return Center(
@@ -200,15 +188,15 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                       setState(() {});
                     },
                     child: Card(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 20.w, vertical: 10.h),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                       elevation: 3,
                       surfaceTintColor: ColorTheme().whiteColor,
                       color: ColorTheme().whiteColor,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (desa.totalTunggu > 0)
+                          if (desa.totalTunggu > 0) ...[
                             Align(
                               alignment: Alignment.topRight,
                               child: Container(
@@ -231,7 +219,9 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                 ),
                               ),
                             ),
-                          SizedBox(height: 10.h),
+                          ] else ...[
+                            SizedBox(height: 20.h),
+                          ],
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
                             child: Row(
@@ -275,45 +265,16 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
                                       ),
                                     ],
                                   ),
+                                ),
+                                Icon(
+                                  Icons.arrow_right,
+                                  color: ColorTheme().primaryColor,
+                                  size: 40.sp,
                                 )
                               ],
                             ),
                           ),
-                          SizedBox(height: 10.h),
-                          Stack(
-                            children: [
-                              const Divider(thickness: 2, color: Colors.grey),
-                              Container(
-                                color: ColorTheme().whiteColor,
-                                margin: EdgeInsets.only(left: 20.w),
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                child: Text(
-                                  "Progres bulan ini",
-                                  style: StyleTheme()
-                                      .styleBlack
-                                      .copyWith(color: Colors.black87),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          LinearPercentIndicator(
-                            width: MediaQuery.of(context).size.width - 40.w,
-                            animation: true,
-                            lineHeight: 30.h,
-                            animationDuration: 2000,
-                            percent: (desa.nilai / getLuasDesa(desa.id)) > 1
-                                ? 1
-                                : desa.nilai / getLuasDesa(desa.id),
-                            center: Text(
-                              "${((desa.nilai / getLuasDesa(desa.id)) * 100).toStringAsFixed(1)}% (${desa.nilai}/${getLuasDesa(desa.id)})",
-                              style: StyleTheme().styleWhite.copyWith(
-                                  fontWeight: FontWeight.w500, fontSize: 14.sp),
-                            ),
-                            barRadius: const Radius.circular(10),
-                            linearGradient: ColorTheme().progressColor,
-                          ),
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 20.h),
                         ],
                       ),
                     ),

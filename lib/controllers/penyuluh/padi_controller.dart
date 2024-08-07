@@ -41,7 +41,7 @@ class PadiController {
         "tipe_data": map['tipe_data'],
         "nilai": map['nilai'],
       };
-
+      log(data.toString());
       final response = await PadiService().store(data);
 
       if (response == null || response['status'] != 'success') {
@@ -50,6 +50,7 @@ class PadiController {
       }
 
       final responseData = response['data'];
+      log(responseData.toString());
 
       final detailPadi = DetailPadiModel.fromJson({
         ...responseData,

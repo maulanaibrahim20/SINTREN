@@ -105,7 +105,7 @@ class _DinasDesaViewState extends State<DinasDesaView> {
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          adminC.getHistoriPenyuluhan(isMonthNow: true),
+          adminC.getHistoriPenyuluhanPeriodeIni(),
           adminC.getLuasLahanDesa(),
         ]),
         builder: (context, snapshot) {
@@ -234,12 +234,24 @@ class _DinasDesaViewState extends State<DinasDesaView> {
                                   ),
                                 ),
                                 SizedBox(width: 15.w),
-                                Text(
-                                  "Desa ${UserController().toCamelCase(desa.name)}",
-                                  style: StyleTheme().stylePrimary.copyWith(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Desa ${UserController().toCamelCase(desa.name)}",
+                                      style: StyleTheme().stylePrimary.copyWith(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      UserController().getPeriode(),
+                                      style: StyleTheme().styleBlack.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700],
+                                          fontSize: 14.sp),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -253,7 +265,7 @@ class _DinasDesaViewState extends State<DinasDesaView> {
                                 padding:
                                     EdgeInsets.symmetric(horizontal: 8.0.w),
                                 child: Text(
-                                  "Progres bulan ini",
+                                  "Progres Penyuluhan",
                                   style: StyleTheme()
                                       .styleBlack
                                       .copyWith(color: Colors.black87),

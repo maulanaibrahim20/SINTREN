@@ -278,7 +278,7 @@ class DinasHomeViewState extends State<DinasHomeView>
                           fontSize: 20.sp, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      userC.dateNow(),
+                      UserController().getPeriode(),
                       style: StyleTheme().styleBlack.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[700],
@@ -298,7 +298,7 @@ class DinasHomeViewState extends State<DinasHomeView>
                 margin: EdgeInsets.only(left: 20.w),
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: Text(
-                  "Progres bulan ini",
+                  "Progres Penyuluhan",
                   style:
                       StyleTheme().styleBlack.copyWith(color: Colors.black87),
                 ),

@@ -365,10 +365,10 @@ class _FormPalawijaViewState extends State<FormPalawijaView> {
                       SizedBox(height: 10.h),
                       TextFormFieldComponent(
                         controller: value,
-                        hint: "Masukkan Nilai (hektar), Contoh : 1000",
-                        label: "Masukkan Nilai (hektar)",
+                        hint: "Masukkan Volume Lahan (hektar), Contoh : 1000",
+                        label: "Masukkan Volume Lahan (hektar)",
                         validator: (value) => value == null || value.isEmpty
-                            ? "Masukkan nilai terlebih dahulu"
+                            ? "Masukkan Volume Lahan terlebih dahulu"
                             : null,
                         inputType: TextInputType.number,
                         obsecure: false,

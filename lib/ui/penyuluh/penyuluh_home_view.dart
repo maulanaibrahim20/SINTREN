@@ -12,7 +12,6 @@ import 'package:sintren_mobile/models/luas_wilayah_model.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
-import 'package:sintren_mobile/ui/penyuluh/detail_penyuluhan_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_padi_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/form/form_palawija_view.dart';
 import 'package:sintren_mobile/ui/penyuluh/histori_penyuluhan_view.dart';
@@ -117,7 +116,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
   Widget _buildListPenyuluhan() {
     return FutureBuilder<List<dynamic>>(
       future: Future.wait([
-        penyuluhC.getHistoriPenyuluhanBulanIni(),
+        penyuluhC.getHistoriPenyuluhanPeriodeIni(),
         penyuluhC.getLuasLahanDesa(),
       ]),
       builder: (context, snapshot) {
@@ -189,12 +188,8 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => DetailPenyuluhanView(
-                        index: 0,
-                        date: desa.date,
-                        desaId: desa.id,
-                        desaName: desa.name,
-                      ),
+                      builder: (_) =>
+                          HistoriPenyuluhanView(isHome: true, desa: desa.id),
                     ),
                   ).then((value) => setState(() {}));
                 },
@@ -258,7 +253,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  userC.convertDate(desa.date),
+                                  UserController().getPeriode(),
                                   style: StyleTheme().styleBlack.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[700],
@@ -278,7 +273,7 @@ class PenyuluhHomeViewState extends State<PenyuluhHomeView> {
                             margin: EdgeInsets.only(left: 20.w),
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
                             child: Text(
-                              "Progres bulan ini",
+                              "Progres Penyuluhan",
                               style: StyleTheme()
                                   .styleBlack
                                   .copyWith(color: Colors.black87),

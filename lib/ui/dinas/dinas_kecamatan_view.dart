@@ -103,7 +103,7 @@ class _DinasKecamatanViewState extends State<DinasKecamatanView> {
       ),
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
-          adminC.getHistoriPenyuluhan(isMonthNow: true, isKecamatan: true),
+          adminC.getHistoriPenyuluhanPeriodeIni(isKecamatan: true),
           adminC.getLuasLahanDesa(isKecamatan: true),
         ]),
         builder: (context, snapshot) {
@@ -227,12 +227,24 @@ class _DinasKecamatanViewState extends State<DinasKecamatanView> {
                                   ),
                                 ),
                                 SizedBox(width: 15.w),
-                                Text(
-                                  "Kecamatan ${UserController().toCamelCase(kecamatan.kecamatanName)}",
-                                  style: StyleTheme().stylePrimary.copyWith(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Kecamatan ${UserController().toCamelCase(kecamatan.kecamatanName)}",
+                                      style: StyleTheme().stylePrimary.copyWith(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      UserController().getPeriode(),
+                                      style: StyleTheme().styleBlack.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700],
+                                          fontSize: 14.sp),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -246,7 +258,7 @@ class _DinasKecamatanViewState extends State<DinasKecamatanView> {
                                 padding:
                                     EdgeInsets.symmetric(horizontal: 8.0.w),
                                 child: Text(
-                                  "Progres bulan ini",
+                                  "Progres Penyuluhan",
                                   style: StyleTheme()
                                       .styleBlack
                                       .copyWith(color: Colors.black87),

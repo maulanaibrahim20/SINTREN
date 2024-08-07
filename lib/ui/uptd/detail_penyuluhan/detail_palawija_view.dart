@@ -295,6 +295,51 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
                                   ],
                                 )
                               ],
+                              if (data.status == "terima") ...[
+                                SizedBox(height: 5.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          bool? shouldVerify =
+                                              await _showCancelDialog(context);
+                                          if (shouldVerify == true) {
+                                            await AdminController().verify(
+                                              dataId: data.id.toString(),
+                                              map: {
+                                                "status": "tunggu",
+                                                "catatan": "dibatalkan"
+                                              },
+                                              isPalawija: true,
+                                            );
+                                            setState(() {});
+                                          }
+                                        },
+                                        icon: const Icon(Icons.cancel_outlined,
+                                            color: Colors.red),
+                                        label: Text('Batalkan',
+                                            style: StyleTheme()
+                                                .stylePrimary
+                                                .copyWith(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.red)),
+                                        style: ElevatedButton.styleFrom(
+                                          surfaceTintColor:
+                                              ColorTheme().whiteColor,
+                                          side: BorderSide(
+                                              color: Colors.red, width: 2.w),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30.r),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
                               SizedBox(height: 5.h),
                             ],
                           ),
@@ -392,6 +437,48 @@ class DetailPalawijaViewState extends State<DetailPalawijaView> {
           ),
           content: Text(
             "Apakah anda yakin ingin memverifikasi data ini?",
+            style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(false);
+              },
+              child: Text(
+                "Tidak",
+                style: StyleTheme()
+                    .stylePrimary
+                    .copyWith(fontSize: 14.sp, color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(
+                "Ya",
+                style: StyleTheme().stylePrimary.copyWith(fontSize: 14.sp),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> _showCancelDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Column(
+            children: [
+              Text('Konfirmasi Aksi'),
+              Divider(),
+            ],
+          ),
+          content: Text(
+            "Apakah anda yakin ingin membatalkan verifikasi data ini?",
             style: StyleTheme().styleBlack.copyWith(fontSize: 14.sp),
           ),
           actions: <Widget>[

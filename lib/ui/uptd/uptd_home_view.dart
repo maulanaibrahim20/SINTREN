@@ -291,9 +291,10 @@ class _UptdHomeViewState extends State<UptdHomeView>
           );
         } else {
           return GestureDetector(
-            onTap: () {
-              Navigator.push(context,
+            onTap: () async {
+              await Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const UptdVerifyView()));
+              setState(() {});
             },
             child: Container(
               width: MediaQuery.of(context).size.width.w,
@@ -380,7 +381,7 @@ class _UptdHomeViewState extends State<UptdHomeView>
                           fontSize: 20.sp, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      userC.dateNow(),
+                      UserController().getPeriode(),
                       style: StyleTheme().styleBlack.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.grey[700],
