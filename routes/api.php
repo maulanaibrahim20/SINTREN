@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\Admin\AdminPadiController;
 use App\Http\Controllers\Api\Admin\AdminPalawijaController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WilayahController;
 use App\Http\Controllers\Api\Pangan\JenisPanganController;
@@ -33,9 +34,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [UserController::class, 'login']);
 Route::patch('/users/{id}', [UserController::class, 'update']);
 Route::get('/getUserById/{id}', [UserController::class, 'getUserById']);
+Route::get('/verifyNotification/{id}{new}', [NotificationController::class, 'sendVerifyNotification']);
+Route::get('/rejectedNotification/{id}{new}', [NotificationController::class, 'sendRejectedNotification']);
 Route::patch('/changePassword/{id}', [UserController::class, 'changePassword']);
 Route::patch('/forgotPassword/{id}', [UserController::class, 'forgotPassword']);
-Route::post('/checkEmail', [UserController::class, 'searchNotelp']);
+Route::post('/checkEmail', [UserController::class, 'searchEmail']);
 
 // PENYULUH END POINT
 Route::get('/penyuluh/getDesa/{id}', [PenyuluhController::class, 'getDesa']);
