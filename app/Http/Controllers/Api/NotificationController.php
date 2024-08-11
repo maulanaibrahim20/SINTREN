@@ -12,18 +12,19 @@ use Kreait\Firebase\Factory;
 
 class NotificationController extends Controller
 {
-    protected $messaging;
+    // protected $messaging;
 
-    public function __construct()
-    {
-        $serviceAccountPath = storage_path('firebase.json');
-        $factory = (new Factory)->withServiceAccount($serviceAccountPath);
-        $this->messaging = $factory->createMessaging();
-    }
+    // public function __construct()
+    // {
+    //     $serviceAccountPath = storage_path('sintren-bfb55-firebase-adminsdk-way1a-dc8af1e4c2.json');
+    //     $factory = (new Factory)->withServiceAccount($serviceAccountPath);
+    //     $this->messaging = $factory->createMessaging();
+    // }
 
     public function sendVerifyNotification($id, $new)
     {
         try {
+            $firebase = app('firebase.messaging');
             $laporanPadi = LaporanPadi::where('kecamatan_id', $id)
                 ->whereHas('verify', function ($query) {
                     $query->where('status', 'tunggu');
@@ -46,7 +47,8 @@ class NotificationController extends Controller
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "$total Data menunggu diverifikasi"));
             }
 
-            $this->messaging->send($message);
+            // $this->messaging->send($message);
+            $firebase->send($message);
 
             return response()->json([
                 'status' => 'success',
@@ -66,6 +68,7 @@ class NotificationController extends Controller
     public function sendRejectedNotification($id, $new)
     {
         try {
+            $firebase = app('firebase.messaging');
             $laporanPadi = LaporanPadi::where('user_id', $id)
                 ->whereHas('verify', function ($query) {
                     $query->where('status', 'tolak');
@@ -88,7 +91,8 @@ class NotificationController extends Controller
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "$total Data Penyuluhan Ditolak"));
             }
 
-            $this->messaging->send($message);
+            // $this->messaging->send($message);
+            $firebase->send($message);
 
             return response()->json([
                 'status' => 'success',
