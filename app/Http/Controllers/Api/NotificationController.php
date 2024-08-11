@@ -12,15 +12,6 @@ use Kreait\Firebase\Factory;
 
 class NotificationController extends Controller
 {
-    // protected $messaging;
-
-    // public function __construct()
-    // {
-    //     $serviceAccountPath = storage_path('sintren-bfb55-firebase-adminsdk-way1a-dc8af1e4c2.json');
-    //     $factory = (new Factory)->withServiceAccount($serviceAccountPath);
-    //     $this->messaging = $factory->createMessaging();
-    // }
-
     public function sendVerifyNotification($id, $new)
     {
         try {
