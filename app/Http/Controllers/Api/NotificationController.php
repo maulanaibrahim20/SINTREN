@@ -30,7 +30,7 @@ class NotificationController extends Controller
                 ->count();
             $total = $laporanPadi + $laporanPalawija;
 
-            if ($new) {
+            if ($new == "true") {
                 $message = CloudMessage::withTarget('topic', 'verify-' . $id)
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "1 Data Baru menunggu diverifikasi"));
             } else {
@@ -38,7 +38,6 @@ class NotificationController extends Controller
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "$total Data menunggu diverifikasi"));
             }
 
-            // $this->messaging->send($message);
             $firebase->send($message);
 
             return response()->json([
@@ -74,7 +73,7 @@ class NotificationController extends Controller
                 ->count();
             $total = $laporanPadi + $laporanPalawija;
 
-            if ($new) {
+            if ($new == "true") {
                 $message = CloudMessage::withTarget('topic', 'verify-' . $id)
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "1 Data Penyuluhan Ditolak"));
             } else {
@@ -82,7 +81,6 @@ class NotificationController extends Controller
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "$total Data Penyuluhan Ditolak"));
             }
 
-            // $this->messaging->send($message);
             $firebase->send($message);
 
             return response()->json([
