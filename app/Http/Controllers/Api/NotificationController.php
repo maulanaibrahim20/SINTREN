@@ -31,10 +31,10 @@ class NotificationController extends Controller
             $total = $laporanPadi + $laporanPalawija;
 
             if ($new == "true") {
-                $message = CloudMessage::withTarget('topic', 'verify-' . $id)
+                $message = CloudMessage::withTarget('topic', $id)
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "1 Data Baru menunggu diverifikasi"));
             } else {
-                $message = CloudMessage::withTarget('topic', 'verify-' . $id)
+                $message = CloudMessage::withTarget('topic', $id)
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "$total Data menunggu diverifikasi"));
             }
 
@@ -74,10 +74,10 @@ class NotificationController extends Controller
             $total = $laporanPadi + $laporanPalawija;
 
             if ($new == "true") {
-                $message = CloudMessage::withTarget('topic', 'verify-' . $id)
+                $message = CloudMessage::withTarget('topic', $id)
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "1 Data Penyuluhan Ditolak"));
             } else {
-                $message = CloudMessage::withTarget('topic', 'verify-' . $id)
+                $message = CloudMessage::withTarget('topic', $id)
                     ->withNotification(Notification::create("Verifikasi Data Penyuluhan", "$total Data Penyuluhan Ditolak"));
             }
 
