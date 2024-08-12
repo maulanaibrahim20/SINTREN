@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:sintren_mobile/controllers/admin/admin_controller.dart';
 import 'package:sintren_mobile/controllers/penyuluh/penyuluh_controller.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
+import 'package:sintren_mobile/services/firebase_service.dart';
 import 'package:sintren_mobile/ui/dinas/dinas_landing_view.dart';
 import 'package:sintren_mobile/ui/uptd/uptd_landing_view.dart';
 import 'package:sintren_mobile/ui/login_view.dart';
@@ -58,6 +59,7 @@ class _InitializationWrapperState extends State<InitializationWrapper> {
   void initState() {
     super.initState();
     _initializeDataWithTimeout();
+    FirebaseService().initNotifications();
   }
 
   void _showRetryDialog() {

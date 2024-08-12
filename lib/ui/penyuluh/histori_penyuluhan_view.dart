@@ -16,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HistoriPenyuluhanView extends StatefulWidget {
   const HistoriPenyuluhanView({super.key, this.isHome, this.desa});
+  static const route = '/history-page';
 
   final bool? isHome;
   final String? desa;
@@ -107,7 +108,8 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
         ),
       ),
       body: FutureBuilder(
-        future: penyuluhC.getHistoriPenyuluhan(isHome: widget.isHome ?? false,desa: widget.desa),
+        future: penyuluhC.getHistoriPenyuluhan(
+            isHome: widget.isHome ?? false, desa: widget.desa),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -132,8 +134,7 @@ class _HistoriPenyuluhanViewState extends State<HistoriPenyuluhanView> {
               ),
             );
           } else {
-            final historiList =
-                snapshot.data as List<HistoriPenyuluhanModel>;
+            final historiList = snapshot.data as List<HistoriPenyuluhanModel>;
 
             if (historiList.isEmpty) {
               return Center(

@@ -9,6 +9,7 @@ import 'package:sintren_mobile/models/padi_model.dart';
 import 'package:sintren_mobile/models/pengairan_model.dart';
 import 'package:sintren_mobile/models/user_login_model.dart';
 import 'package:sintren_mobile/services/penyuluh/padi_service.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PadiController {
@@ -68,6 +69,8 @@ class PadiController {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
 
+      await UserService().verifyNotification(kecamatanId!,true);
+
       EasyLoading.showToast("Berhasil menyimpan data");
       return true;
     } catch (e) {
@@ -118,6 +121,8 @@ class PadiController {
         where: 'id = ?',
         whereArgs: [dataId],
       );
+
+      await UserService().verifyNotification(kecamatanId!,true);
 
       EasyLoading.showToast("Berhasil mengupdate data");
       return true;

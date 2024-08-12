@@ -4,12 +4,14 @@ import 'package:sintren_mobile/controllers/user_controller.dart';
 import 'package:sintren_mobile/models/detail_combined_model.dart';
 import 'package:sintren_mobile/models/detail_padi_model.dart';
 import 'package:sintren_mobile/models/detail_palawija_model.dart';
+import 'package:sintren_mobile/services/user_service.dart';
 import 'package:sintren_mobile/ui/components/color_theme.dart';
 import 'package:sintren_mobile/ui/components/style_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UptdVerifyView extends StatefulWidget {
   const UptdVerifyView({super.key});
+  static const route = '/verify-page';
 
   @override
   State<UptdVerifyView> createState() => _UptdVerifyViewState();
@@ -307,6 +309,12 @@ class _UptdVerifyViewState extends State<UptdVerifyView> {
                                                 ? false
                                                 : true,
                                           );
+                                          await UserService()
+                                              .rejectedNotification(
+                                                  item.type == "padi"
+                                                      ? dataPadi!.userId
+                                                      : dataPalawija!.userId,
+                                                  true);
                                           setState(() {});
                                         }
                                       },

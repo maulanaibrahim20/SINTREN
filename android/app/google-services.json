@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "853946888141",
+    "project_id": "sintren-bfb55",
+    "storage_bucket": "sintren-bfb55.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853946888141:android:2df204cb9409e36eaade84",
+        "android_client_info": {
+          "package_name": "com.example.sintren_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxqH6ygrkJUmZxfhIfEL_FuRXWQ6J43qc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

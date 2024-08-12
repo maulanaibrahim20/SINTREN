@@ -197,4 +197,39 @@ class UserService {
       return false;
     }
   }
+
+  Future<void> verifyNotification(String id, bool newest) async {
+    try {
+      final String url = '${ConfigApp().baseUrl}verifyNotification/$id/$newest';
+      final response = await get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        log('Notifikasi Berhasil Dikirim.');
+      } else {
+        log("HTTP request failed with status code: ${response.statusCode}");
+        throw Exception('Failed to send notification');
+      }
+    } catch (e) {
+      log('Terjadi kesalahan saat mengirim data: $e');
+      throw Exception('Failed to send notification');
+    }
+  }
+
+  Future<void> rejectedNotification(String id, bool newest) async {
+    try {
+      final String url =
+          '${ConfigApp().baseUrl}rejectedNotification/$id/$newest';
+      final response = await get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        log('Notifikasi Berhasil Dikirim.');
+      } else {
+        log("HTTP request failed with status code: ${response.statusCode}");
+        throw Exception('Failed to send notification');
+      }
+    } catch (e) {
+      log('Terjadi kesalahan saat mengirim data: $e');
+      throw Exception('Failed to send notification');
+    }
+  }
 }
