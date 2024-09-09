@@ -3,8 +3,8 @@
 @section('content')
 <div class="page-header d-sm-flex d-block">
     <ol class="breadcrumb1 br-7">
-        <li class="breadcrumb-item1"><a href="{{ url('/pangan/dashboard') }}">{{ $breadcrumb }}</a></li>
-        <li class="breadcrumb-item1"><a href="{{ url('/pangan/user/pasar') }}">{{ $breadcrumb_1 }}</a></li>
+        <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
+        <li class="breadcrumb-item1"><a href="{{ url('/operator/user/pasar') }}">{{ $breadcrumb_1 }}</a></li>
         <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
     </ol>
 </div>
@@ -29,7 +29,7 @@
                     </ul>
                 </div>
                 @endif
-                <form action="{{ url('/pangan/user/pasar') }}" method="post">
+                <form action="{{ url('/operator/user/pasar') }}" method="post">
                     @csrf
                     <div class="form-row">
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     <div class="d-flex" style="justify-content: end">
-                        <a href="{{ url('/pangan/user/pasar') }}" class="btn btn-danger mt-3"><i class="fa fa-times"></i> Cancel</a>
+                        <a href="{{ url('/operator/user/pasar') }}" class="btn btn-danger mt-3"><i class="fa fa-times"></i> Cancel</a>
                         <button class="btn btn-primary mt-3" style="margin-left: 10px" type="submit"><i class="fa fa-sign-in"></i>Submit</button>
                     </div>
                 </form>

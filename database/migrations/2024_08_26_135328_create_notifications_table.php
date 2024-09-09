@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('petugas_pasars', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('user_id', 50);
             $table->string('pasar_id', 50);
-            $table->string('alamat', 50);
-            $table->string('no_telp', 15);
-            $table->string('gambar')->nullable();
+            $table->boolean('status')->default(false);
+            $table->string('message')->default('Belum dibuat');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('petugas_pasars');
+        Schema::dropIfExists('notifications');
     }
 };

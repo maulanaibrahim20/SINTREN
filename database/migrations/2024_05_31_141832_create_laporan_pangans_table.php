@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('laporan_pangans', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->nullable();
-            $table->string('pasar_id')->nullable();
-            $table->string('jenis_pangan_id')->nullable();
-            $table->string('subjenis_pangan_id')->nullable();
+            $table->string('user_id', 50);
+            $table->string('pasar_id', 50);
+            $table->string('jenis_pangan_id', 50);
+            $table->string('subjenis_pangan_id', 50);
             $table->integer('stok')->nullable();
             $table->integer('harga');
             $table->boolean('status')->default(false);

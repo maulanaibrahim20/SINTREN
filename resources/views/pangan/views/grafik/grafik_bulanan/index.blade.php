@@ -17,6 +17,17 @@
                         <label for="year" class="form-label mb-0">Pilih Tahun:</label>
                         <input type="number" id="year" name="year" class="form-control" value="{{ $selectedYear }}" min="2000" max="{{ date('Y') }}">
                     </div>
+                    <div class="form-group mb-0 me-3">
+                        <label for="subjenis_pangan" class="form-label mb-0">Pilih Subjenis Pangan:</label>
+                        <select id="subjenis_pangan" name="subjenis_pangan" class="form-control">
+                            <option value="">Semua</option>
+                            @foreach($subjenisPangan as $subjenis)
+                            <option value="{{ $subjenis->id }}" {{ $selectedSubjenis == $subjenis->id ? 'selected' : '' }}>
+                                {{ $subjenis->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary mt-3">Filter</button>
                 </form>
             </div>
@@ -55,15 +66,33 @@
         }
 
         var datasets = Object.keys(dataGroupedBySubjenis).map((subjenisId) => {
+            var dataHarga = months.map((_, monthIndex) => dataGroupedBySubjenis[subjenisId].data[monthIndex + 1]?.avg_harga || 0);
+            var dataStok = months.map((_, monthIndex) => dataGroupedBySubjenis[subjenisId].data[monthIndex + 1]?.total_stok || 0);
+
+            if (dataHarga.every(value => value === 0)) {
+                return null;
+            }
+
             return {
                 label: dataGroupedBySubjenis[subjenisId].name,
-                data: months.map((_, monthIndex) => dataGroupedBySubjenis[subjenisId].data[monthIndex + 1] || 0),
+                data: dataHarga,
                 backgroundColor: 'rgba(0, 0, 0, 0)',
                 borderColor: getRandomColor(),
                 borderWidth: 2,
-                fill: false
+                fill: false,
+                // Menggunakan tooltip tambahan untuk stok
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var month = months[context.dataIndex];
+                            var harga = context.raw;
+                            var stok = dataStok[context.dataIndex];
+                            return `${dataGroupedBySubjenis[subjenisId].name} - ${month}: Harga Rata-rata: ${harga.toLocaleString()}, Stok: ${stok}`;
+                        }
+                    }
+                }
             };
-        });
+        }).filter(dataset => dataset !== null);
 
         new Chart(ctx8, {
             type: 'line',
@@ -74,6 +103,23 @@
             options: {
                 maintainAspectRatio: false,
                 responsive: true,
+                plugins: {
+                    legend: {
+                        display: false // Menghilangkan kotak warna-warni kecil (legend)
+                    },
+                    tooltip: {
+                        enabled: true, // Tetap menampilkan tooltip jika diperlukan
+                        callbacks: {
+                            label: function(context) {
+                                var datasetLabel = context.dataset.label || '';
+                                var month = months[context.dataIndex];
+                                var harga = context.raw;
+                                var stok = context.dataset.tooltip.callbacks.label(context).split(': ')[1].split(', ')[1].split(': ')[1];
+                                return `${datasetLabel} - ${month}: Harga Rata-rata: ${harga.toLocaleString()}, Stok: ${stok}`;
+                            }
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         ticks: {
@@ -100,7 +146,11 @@
                             },
                             color: "black",
                             stepSize: 5000,
-                            min: 0
+                            min: 0,
+                            callback: function(value) {
+                                // Format angka dengan pemisah ribuan
+                                return value.toLocaleString();
+                            }
                         },
                         title: {
                             display: false,

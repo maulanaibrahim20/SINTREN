@@ -29,7 +29,7 @@ class PasarController extends Controller
             // 'users' => $this->pasar::orderBy('created_at', 'asc')->get(),
         ];
         $pasar = $this->pasar::orderBy('name', 'asc')->get();
-        return view('pangan.views.pasar.index', compact('pasar'), $data);
+        return view('operator.pages.master.pasar.index', compact('pasar'), $data);
     }
 
     public function store(CreateRequest $request)

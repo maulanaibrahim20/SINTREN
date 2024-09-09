@@ -27,7 +27,7 @@ class CreateRequest extends FormRequest
             // 'password' => ['required', 'string', 'min:8'],
             'alamat' => ['required', 'string', 'max:255'],
             'no_telp' => ['required', 'numeric', 'min:8'],
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 }

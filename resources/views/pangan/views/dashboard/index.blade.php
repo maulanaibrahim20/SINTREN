@@ -8,22 +8,52 @@
     </ol>
 </div>
 <div class="row">
-    <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
-        <div class="card overflow-hidden">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="mb-0 fw-semibold text-dark lh-1 mb-2">Data Pengguna Pasar</p>
-                                <div class="fs-12 text-muted mb-5"> <a href="{{ url('/pangan/user/pasar') }}">Lihat</a></div>
-                                <div class="fs-12 text-muted mb-3">Total Pengguna</div>
-                                <div class="fs-30 fw-semibold mb-0 lh-1">
-                                    {{ $jumlahPetugasPasar }}
+    <div class="row">
+        <!-- Grafik Harian -->
+        <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="mb-0 fw-semibold text-dark lh-1 mb-2">Grafik Harian</p>
+                                    <div class="fs-12 text-muted mb-3">
+                                        <a href="{{ url('/pangan/grafik/harian') }}">Lihat</a>
+                                    </div>
+                                </div>
+                                <div class="text-end d-flex flex-column align-items-center">
+                                    <span class="text-secondary lh-1 fs-40">
+                                        <i class="fa fa-bar-chart"></i>
+                                    </span>
                                 </div>
                             </div>
-                            <div class="text-end d-flex flex-column align-items-center">
-                                <span class="text-secondary lh-1 mt-3 fs-26"><i class="fe fe-users"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Stok Pangan -->
+        <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="mb-0 fw-semibold text-dark lh-1 mb-2">Data Stok Pangan</p>
+                                    <div class="fs-12 text-muted mb-3">
+                                        <a href="{{ url('/pangan/create/data_pangan') }}">Lihat</a>
+                                    </div>
+                                    <div class="fs-12 text-muted mb-1">Jumlah Data</div>
+                                    <div class="fs-30 fw-semibold mb-0 lh-1">
+                                        {{ $jumlahDataPangan }}
+                                    </div>
+                                </div>
+                                <div class="text-end d-flex flex-column align-items-center">
+                                    <span class="text-warning lh-1 fs-40"><i class="fe fe-file-text"></i></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -31,30 +61,7 @@
             </div>
         </div>
     </div>
-    <!-- col end -->
-    <div class="col-sm-12 col-lg-6 col-md-6 col-xxl-3">
-        <div class="card overflow-hidden">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="mb-0 fw-semibold text-dark lh-1 mb-2">Data Stok Pangan</p>
-                                <div class="fs-12 text-muted mb-5"><a href="{{ url('/pangan/create/data_pangan') }}">Lihat</a></div>
-                                <div class="fs-12 text-muted mb-3">Jumlah Data</div>
-                                <div class="fs-30 fw-semibold mb-0 lh-1">
-                                    {{ $jumlahDataPangan }}
-                                </div>
-                            </div>
-                            <div class="text-end d-flex flex-column align-items-center">
-                                <span class="text-warning lh-1 mt-3 fs-26"><i class="fe fe-file-text"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <div class="row">
         <div class="col-lg-12">

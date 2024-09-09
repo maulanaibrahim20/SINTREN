@@ -30,19 +30,22 @@ class DashboardController extends Controller
     protected $laporanPalawija;
     protected $penugasan;
     protected $luasLahanWilayah;
+    protected $pasar;
 
     public function __construct(
         Penyuluh $penyuluh,
         LaporanPalawija $laporanPalawija,
         LaporanPadi $laporanPadi,
         PenugasanPenyuluh $penugasan,
-        LuasLahanWilayah $luasLahanWilayah
+        LuasLahanWilayah $luasLahanWilayah,
+        Pasar $pasar
     ) {
         $this->penyuluh = $penyuluh;
         $this->laporanPadi = $laporanPadi;
         $this->laporanPalawija = $laporanPalawija;
         $this->penugasan = $penugasan;
         $this->luasLahanWilayah = $luasLahanWilayah;
+        $this->pasar = $pasar;
     }
     public function operator()
     {
@@ -51,6 +54,7 @@ class DashboardController extends Controller
             'penugasan' => PenugasanPenyuluh::count(),
             'LaporanPadi' => LaporanPadi::count(),
             'luasLahanWilayah' => LuasLahanWilayah::count(),
+            'pasar' => Pasar::count(),
         ];
         return view('operator.pages.dashboard.index', $data);
     }
@@ -291,55 +295,12 @@ class DashboardController extends Controller
                 'non_sawah' => $persentaseNonSawah,
                 'has_value' => $laporanPadi->isNotEmpty()
             ];
-
-            foreach ($data as $key => $value) {
-                if ($value === null) {
-                    $data[$key] = 0;
-                }
-            }
-            return view('uptd.pages.dashboard.index', $data);
         }
 
-        public function penyuluh()
-        {
-            $userId = Auth::user()->id;
+        return view('penyuluh.pages.dashboard.index', $data);
+    }
 
-            $data['penugasan'] = $this->penugasan::where('user_id', $userId)->get();
-            $data['laporanPadi'] = $this->laporanPadi::where('user_id', $userId)->get();
-
-            $desaIds = $data['penugasan']->pluck('desa_id');
-
-            $data['luasLahanWilayah'] = $this->luasLahanWilayah::whereIn('desa_id', $desaIds)->get();
-
-            $data['perbandinganNilai'] = [];
-
-            foreach ($desaIds as $desaId) {
-                $luasLahan = $data['luasLahanWilayah']->where('desa_id', $desaId)->first();
-                $laporanPadi = $data['laporanPadi']->where('desa_id', $desaId);
-
-                $totalLahanSawah = $luasLahan ? $luasLahan->lahan_sawah : 0;
-                $totalLahanNonSawah = $luasLahan ? $luasLahan->lahan_non_sawah : 0;
-
-                $totalLaporanSawah = $laporanPadi->where('jenis_lahan', 'sawah')->sum('nilai');
-                $totalLaporanNonSawah = $laporanPadi->where('jenis_lahan', 'non sawah')->sum('nilai');
-
-                $persentaseSawah = $totalLahanSawah > 0 ? ($totalLaporanSawah / $totalLahanSawah) * 100 : 0;
-                $persentaseNonSawah = $totalLahanNonSawah > 0 ? ($totalLaporanNonSawah / $totalLahanNonSawah) * 100 : 0;
-
-                $data['perbandinganNilai'][$desaId] = [
-                    'sawah' => $persentaseSawah,
-                    'non_sawah' => $persentaseNonSawah,
-                    'has_value' => $laporanPadi->isNotEmpty()
-                ];
-            }
-
-            return view('penyuluh.pages.dashboard.index', $data);
-        }
-
-
-
-
-        public function pangan()
+    public function pangan()
         {
             $jumlahPetugasPasar = PetugasPasar::count();
             // $jumlahDataPangan = LaporanPangan::count();
@@ -391,5 +352,4 @@ class DashboardController extends Controller
 
             return view('pangan.views.dashboard.index',$data, compact('jumlahPetugasPasar','jumlahDataPangan'));
         }
-
-    }
+}

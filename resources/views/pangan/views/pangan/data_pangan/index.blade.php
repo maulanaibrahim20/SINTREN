@@ -68,8 +68,8 @@
                                 <th class="wd-20p border-bottom-0">Jenis Pangan</th>
                                 <th class="wd-20p border-bottom-0">Nama Pangan</th>
                                 <th class="wd-20p border-bottom-0">Tanggal</th>
-                                <th class="wd-20p border-bottom-0">Stok</th>
-                                <th class="wd-20p border-bottom-0">Harga</th>
+                                <th class="wd-20p border-bottom-0">Stok (Kg)</th>
+                                <th class="wd-20p border-bottom-0">Harga (Rp/Kg)</th>
                                 <th class="wd-20p border-bottom-0 text-center">Action</th>
                             </tr>
                         </thead>

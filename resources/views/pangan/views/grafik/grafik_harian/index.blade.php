@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <p>Grafik Harga Rata-rata pada tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d-m-Y') }}</p>
+                <p>Grafik Harga Rata-rata dan Stok pada tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d-m-Y') }}</p>
             </div>
         </div>
     </div>
@@ -36,68 +36,84 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(function() {
-        var ctx8 = document.getElementById('chartLine1').getContext('2d');
+$(function() {
+    var ctx8 = document.getElementById('chartLine1').getContext('2d');
 
-        // Data dari controller
-        var labels = @json($dataGroupedBySubjenis->pluck('name'));
-        var data = @json($dataGroupedBySubjenis->pluck('avg_harga'));
+    // Data dari controller
+    var labels = @json($dataGroupedBySubjenis->pluck('name'));
+    var hargaData = @json($dataGroupedBySubjenis->pluck('avg_harga')).map(harga => parseFloat(harga));
+    var stokData = @json($dataGroupedBySubjenis->pluck('total_stok'));
 
-        new Chart(ctx8, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Rata-rata Harga',
-                    data: data,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: {
-                            fontSize: 10,
-                            color: "black" // Warna teks subjenis pangan
+    new Chart(ctx8, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Rata-rata Harga',
+                data: hargaData,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false // Menonaktifkan legend
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            var index = tooltipItems[0].dataIndex;
+                            var label = labels[index];
+                            return label;
                         },
-                        title: {
-                            display: false,
-                            text: 'Subjenis Pangan',
-                        },
-                        grid: {
-                            display: true,
-                            color: 'rgba(180, 183, 197, 0.4)',
-                            drawBorder: false
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-
-                            fontSize: 10,
-                            color: "black", // Warna teks rata-rata harga
-                            stepSize: 1000,
-                            min: 0
-                        },
-                        title: {
-                            display: false,
-                            text: 'Rata-rata Harga',
-                        },
-                        grid: {
-                            display: true,
-                            color: 'rgba(180, 183, 197, 0.4)',
-                            drawBorder: false,
-                            zeroLineColor: 'rgba(54, 162, 235, 1)',
-                            zeroLineWidth: 2
+                        label: function(tooltipItem) {
+                            var index = tooltipItem.dataIndex;
+                            var harga = hargaData[index];
+                            var stok = stokData[index];
+                            return `Rata-rata Harga: ${harga.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}\nStok: ${stok.toLocaleString('id-ID')}`;
                         }
                     }
                 }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        fontSize: 10,
+                        color: "black"
+                    },
+                    grid: {
+                        display: true,
+                        color: 'rgba(180, 183, 197, 0.4)',
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        fontSize: 10,
+                        color: "black",
+                        stepSize: 1000,
+                        min: 0,
+                        callback: function(value) {
+                            return value.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        }
+                    },
+                    grid: {
+                        display: true,
+                        color: 'rgba(180, 183, 197, 0.4)',
+                        drawBorder: false,
+                        zeroLineColor: 'rgba(54, 162, 235, 1)',
+                        zeroLineWidth: 2
+                    }
+                }
             }
-        });
+        }
     });
+});
+
 </script>
 @endsection

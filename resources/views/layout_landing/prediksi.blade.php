@@ -40,7 +40,7 @@
                 @endforeach
                 <tr>
                     <th colspan="4" style="text-align:right">MAPE:</th>
-                    <th>{{ $mape }}%</th>
+                    {{-- <th>{{ $mape }}%</th> --}}
                 </tr>
             </tbody>
         </table>

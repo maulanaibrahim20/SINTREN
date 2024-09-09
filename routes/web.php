@@ -15,6 +15,7 @@ use App\Http\Controllers\WEB\Operator\Master\PengairanController;
 use App\Http\Controllers\WEB\Operator\User\UptdController;
 use App\Http\Controllers\WEB\Operator\User\PenyuluhController;
 use App\Http\Controllers\WEB\Operator\User\PanganController;
+use App\Http\Controllers\WEB\Operator\User\PetugasPasarController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPadiController;
 use App\Http\Controllers\WEB\Penyuluh\LaporanPalawijaController;
 use App\Http\Controllers\WEB\Penyuluh\Master\LuasLahanWilayahUptdController;
@@ -45,6 +46,9 @@ use App\Http\Controllers\WEB\Uptd\Akun_Penyuluh\UptdAkunPenyuluhController;
 use App\Http\Controllers\WEB\Uptd\EditProfileUptdController;
 use App\Http\Controllers\WEB\Uptd\LaporanNotVerifyController;
 use Illuminate\Support\Facades\Route;
+
+
+use Carbon\Carbon;
 
 
 
@@ -104,6 +108,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('uptd', UptdController::class);
                 Route::resource('penyuluh', PenyuluhController::class);
                 Route::resource('pangan', PanganController::class);
+                Route::resource('pasar', PetugasPasarController::class);
             });
             Route::prefix('tanaman')->group(function () {
                 Route::resource('padi', TanamanPadiController::class);
@@ -115,6 +120,7 @@ Route::middleware(['autentikasi'])->group(function () {
                 Route::resource('luas_lahan_wilayah', LuasLahanWilayahController::class);
                 Route::get('role', [RoleController::class, 'index']);
                 Route::resource('pengairan', PengairanController::class);
+                Route::resource('data_pasar', PasarController::class);
             });
             Route::get('/dashboard', [DashboardController::class, 'operator']);
         });
@@ -219,15 +225,51 @@ Route::middleware(['autentikasi'])->group(function () {
             // Route::get('/export/laporan_pangan', [LaporanPanganController::class, 'export'])->name('export.laporan.pangan');
             // Route::get('/grafik/stok_pangan', [GrafikPanganController::class, 'grafikStokPangan']);
             Route::get('/grafik/harian', [GrafikPanganController::class, 'grafikHarianIndex'])->name('grafik.harian.index');
-            Route::get('/grafik/bulanan', [GrafikPanganController::class, 'grafikBulananindex'])->name('grafik.bulanan.index');;
-            Route::get('/grafik/tahunan', [GrafikPanganController::class, 'grafikTahunanindex']);
+            Route::get('/grafik/bulanan', [GrafikPanganController::class, 'grafikBulananindex'])->name('grafik.bulanan.index');
+            Route::get('/grafik/tahunan', [GrafikPanganController::class, 'grafikTahunanindex'])->name('grafik.tahunan.index');
             Route::prefix('pengaturan')->group(function () {
                 Route::get('editProfile', [EditProfilePanganController::class, 'index'])->name('editProfile');
                 Route::put('editProfile/{id}', [EditProfilePanganController::class, 'update'])->name('updateProfile');
                 Route::put('editPassword/{id}', [EditProfilePanganController::class, 'updatePassword'])->name('updatePassword');
+
+
             });
         });
     });
 
 
+});
+
+
+Route::get('/update-notification-status', function () {
+    // Inisialisasi tanggal hari ini
+    $tanggalHariIni = Carbon::today();
+
+    // Ambil semua user_id dari tabel 'notifications'
+    $notifications = DB::table('notifications')->get();
+
+    foreach ($notifications as $notification) {
+        $userId = $notification->user_id;
+
+        // Cek apakah user_id ini memiliki entri di 'laporan_pangans' untuk hari ini
+        $userHasReportedToday = DB::table('laporan_pangans')
+            ->where('user_id', $userId)
+            ->whereDate('created_at', $tanggalHariIni)
+            ->exists();
+
+        if ($userHasReportedToday) {
+            // Update status di 'notifications' menjadi 1 (sudah input data)
+            DB::table('notifications')
+                ->where('user_id', $userId)
+                ->update(['status' => 1]);
+        } else {
+            // Update status di 'notifications' menjadi 0 (belum input data)
+            DB::table('notifications')
+                ->where('user_id', $userId)
+                ->update(['status' => 0]);
+        }
+    }
+
+    // Menampilkan pesan untuk memastikan skrip berjalan
+    return "Update status di tabel notifications telah berhasil dieksekusi.";
 });

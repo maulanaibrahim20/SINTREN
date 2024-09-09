@@ -92,50 +92,57 @@ class AppController extends Controller
         // $mape = round(($totalError / $n) * 100, 2);
 
         //pangan
-               // Mengambil data laporan pangan dan mengelompokkan berdasarkan tahun dan subjenis_pangan_id
-               $laporanpangan = LaporanPangan::select(
-                DB::raw('YEAR(date) as year'),
-                'subjenis_pangan_id',
-                DB::raw('AVG(harga) as avg_harga')
-            )
-            ->where('status', '1')
-            ->groupBy(DB::raw('YEAR(date)'), 'subjenis_pangan_id')
-            ->get();
 
-            // Mengambil data SubjenisPangan beserta informasi terkait
-            $subjenisPangan = SubjenisPangan::orderBy('name', 'asc')->get();
+        // Bagian laporan pangan
+        $laporanpangan = LaporanPangan::select(
+            DB::raw('YEAR(date) as year'),
+            'subjenis_pangan_id',
+            DB::raw('AVG(harga) as avg_harga')
+        )
+        ->where('status', '1')
+        ->groupBy(DB::raw('YEAR(date)'), 'subjenis_pangan_id')
+        ->get();
 
-            // Mengelompokkan data berdasarkan tahun
-            $dataGroupedByYear = $laporanpangan->groupBy('year');
+        $subjenisPangan = SubjenisPangan::orderBy('name', 'asc')->get();
 
-            // Mendapatkan daftar tahun untuk label sumbu X
-            $years = $dataGroupedByYear->keys()->sort()->values(); // Mengurutkan tahun secara ascending
+        $dataGroupedByYear = $laporanpangan->groupBy('year');
 
-            // Mempersiapkan dataset untuk Chart.js
-            $datasets = [];
-            foreach ($subjenisPangan as $subjenis) {
-                $datasets[] = [
-                    'label' => $subjenis->name,
-                    'data' => $years->map(function ($year) use ($subjenis, $dataGroupedByYear) {
-                        $yearData = $dataGroupedByYear->get($year, collect()); // Menghindari kesalahan jika tidak ada data untuk tahun ini
-                        $avgHarga = $yearData->where('subjenis_pangan_id', $subjenis->id)->pluck('avg_harga')->first();
-                        return $avgHarga ? round($avgHarga, 2) : 0; // Pembulatan untuk menampilkan dua desimal
-                    })->values(),
-                    'borderColor' => '#' . dechex(rand(0x000000, 0xFFFFFF)), // Warna acak untuk setiap subjenis
-                    'backgroundColor' => 'rgba(0, 0, 0, 0)',
-                    'borderWidth' => 2
-                ];
-            }
+        $years = $dataGroupedByYear->keys()->sort()->values();
 
+        $datasets = [];
+        foreach ($subjenisPangan as $subjenis) {
+            $datasets[] = [
+                'label' => $subjenis->name,
+                'data' => $years->map(function ($year) use ($subjenis, $dataGroupedByYear) {
+                    $yearData = $dataGroupedByYear->get($year, collect());
+                    $avgHarga = $yearData->where('subjenis_pangan_id', $subjenis->id)->pluck('avg_harga')->first();
+                    return $avgHarga ? round($avgHarga, 2) : 0;
+                })->values(),
+                'borderColor' => '#' . dechex(rand(0x000000, 0xFFFFFF)),
+                'backgroundColor' => 'rgba(0, 0, 0, 0)',
+                'borderWidth' => 2
+            ];
+        }
 
         return view('landing', [
             'labels' => $labels,
             'actualData' => array_values($actualData),
             'predictedData' => array_column($predictions, 'predicted_value'),
-            'mape' => $mape,
-            'predictions' => $predictions
+            // 'mape' => $mape,
+            'predictions' => $predictions,
+            'years' => $years,
+            'datasets' => $datasets
         ]);
     }
+
+    //     return view('landing', [
+    //         'labels' => $labels,
+    //         'actualData' => array_values($actualData),
+    //         'predictedData' => array_column($predictions, 'predicted_value'),
+    //         // 'mape' => $mape,
+    //         'predictions' => $predictions
+    //     ]);
+    // }
 
 
 

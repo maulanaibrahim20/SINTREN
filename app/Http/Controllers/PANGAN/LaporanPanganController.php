@@ -36,54 +36,6 @@ class LaporanPanganController extends Controller
         $this->user = $user;
     }
 
-    // public function index(Request $request)
-    // {
-    //     $today = now()->toDateString(); // Mendapatkan tanggal hari ini dalam format 'Y-m-d'
-
-    //     // Mengambil data laporan pangan dan mengelompokkan berdasarkan subjenis_pangan_id
-    //     $laporanpangan = LaporanPangan::select(
-    //         'subjenis_pangan_id',
-    //         DB::raw('SUM(stok) as total_stok'),
-    //         DB::raw('AVG(harga) as avg_harga'),
-    //         DB::raw('MAX(date) as latest_date')
-    //     )
-    //     ->where('status', '1')
-    //     ->where('date', '>=', $today)
-    //     ->groupBy('subjenis_pangan_id')
-    //     ->get();
-
-    //     // Mengambil data SubjenisPangan beserta informasi terkait
-    //     $subjenisPangan = SubjenisPangan::with('jenis_pangan')->orderBy('name', 'asc')->get();
-
-    //     // Membuat data yang dikelompokkan berdasarkan subjenis_pangan_id
-    //     $dataGroupedBySubjenis = $subjenisPangan->keyBy('id')->map(function ($subjenis) use ($laporanpangan) {
-    //         $laporan = $laporanpangan->firstWhere('subjenis_pangan_id', $subjenis->id);
-
-    //         return [
-    //             'name' => $subjenis->name,
-    //             'jenis_pangan_name' => $subjenis->jenis_pangan->name ?? 'Jenis Pangan Tidak Ditemukan',
-    //             'gambar' => $subjenis->jenis_pangan->gambar ?? null,
-    //             'total_stok' => $laporan->total_stok ?? 0,
-    //             'avg_harga' => $laporan->avg_harga ?? 0,
-    //             'latest_date' => $laporan->latest_date ?? null,
-    //         ];
-    //     });
-
-    //     $jenisPangan = JenisPangan::orderBy('name', 'asc')->get();
-    //     $pasarList = Pasar::orderBy('name', 'asc')->get();
-
-    //     $data = [
-    //         'title' => 'Laporan Pangan Harian',
-    //         'breadcrumb' => 'Dashboard',
-    //         'breadcrumb_active' => 'Laporan Pangan Harian',
-    //         'dataGroupedBySubjenis' => $dataGroupedBySubjenis,
-    //         'pasarList' => $pasarList,
-    //         'jenisPangan' => $jenisPangan,
-    //     ];
-
-    //     return view('pangan.views.pangan.laporan.laporan_harian.index', $data);
-    // }
-
     public function index(Request $request)
     {
         $selectedDate = $request->input('date', now()->toDateString()); // Mendapatkan tanggal yang dipilih, default ke hari ini
@@ -97,6 +49,7 @@ class LaporanPanganController extends Controller
         )
         ->where('status', '1')
         ->whereDate('date', $selectedDate) // Menggunakan tanggal yang dipilih
+        ->whereHas('jenis_pangan') // Pastikan hanya data dengan jenis_pangan yang ada
         ->groupBy('subjenis_pangan_id')
         ->get();
 
@@ -175,48 +128,6 @@ class LaporanPanganController extends Controller
         // Mengatur data yang akan diekspor
         return Excel::download(new ExportLaporanPangan($dataGroupedBySubjenis), $fileName);
     }
-
-
-
-    // public function exportHarian(Request $request)
-    // {
-    //     $today = now()->toDateString(); // Mendapatkan tanggal hari ini dalam format 'Y-m-d'
-
-    //     // Mengambil data laporan pangan dan mengelompokkan berdasarkan subjenis_pangan_id
-    //     $laporanpangan = LaporanPangan::select(
-    //         'subjenis_pangan_id',
-    //         DB::raw('SUM(stok) as total_stok'),
-    //         DB::raw('AVG(harga) as avg_harga'),
-    //         DB::raw('MAX(date) as latest_date')
-    //     )
-    //     ->where('status', '1')
-    //     ->where('date', '>=', $today)
-    //     ->groupBy('subjenis_pangan_id')
-    //     ->get();
-
-    //     // Mengambil data SubjenisPangan beserta informasi terkait
-    //     $subjenisPangan = SubjenisPangan::with('jenis_pangan')->orderBy('name', 'asc')->get();
-
-    //     // Membuat data yang dikelompokkan berdasarkan subjenis_pangan_id
-    //     $dataGroupedBySubjenis = $subjenisPangan->keyBy('id')->map(function ($subjenis) use ($laporanpangan) {
-    //         $laporan = $laporanpangan->firstWhere('subjenis_pangan_id', $subjenis->id);
-
-    //         return [
-    //             'name' => $subjenis->name,
-    //             'jenis_pangan_name' => $subjenis->jenis_pangan->name ?? 'Jenis Pangan Tidak Ditemukan',
-    //             'total_stok' => $laporan->total_stok ?? 0,
-    //             'avg_harga' => $laporan->avg_harga ?? 0,
-    //             'latest_date' => $laporan->latest_date ?? null,
-    //         ];
-    //     });
-    //   // Mengatur nama file dengan tanggal hari ini
-    //   $fileName = 'laporan_pangan_harian_' . Carbon::now()->format('Y_m_d') . '.xlsx';
-
-    //   // Mengatur data yang akan diekspor
-    //   return Excel::download(new ExportLaporanPangan($dataGroupedBySubjenis), $fileName);
-    //     // Mengatur data yang akan diekspor
-    //     // return Excel::download(new ExportLaporanPangan($dataGroupedBySubjenis), 'laporan_pangan_harian.xlsx');
-    // }
 
     public function bulanan(Request $request)
     {

@@ -26,7 +26,7 @@ class EditProfilePanganController extends Controller
     {
         $panganId = Auth::user()->id;
         $data['pangan'] = $this->pangan::where('user_id', $panganId)->first();
-        return view('pangan.views.pangan.edit_profile.index', $data);
+        return view('pangan.views.edit_profile.index', $data);
     }
 
     public function update(Request $request, $id)

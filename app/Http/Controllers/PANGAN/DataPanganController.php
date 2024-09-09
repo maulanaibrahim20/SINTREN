@@ -35,81 +35,40 @@ class DataPanganController extends Controller
             $this->user = $user;
         }
 
-        // public function index(Request $request)
-        // {
-        //     $query = $this->laporanpangan::with('pasar', 'jenis_pangan', 'subjenis_pangan')
-        //         ->where('user_id', Auth::user()->id)
-        //         ->where('status', true); // Tambahkan kondisi ini untuk hanya mengambil laporan yang terkirim
-
-        //     if ($request->has('start_date') && $request->start_date) {
-        //         $query->where('date', '>=', $request->start_date);
-        //     }
-
-        //     if ($request->has('end_date') && $request->end_date) {
-        //         $query->where('date', '<=', $request->end_date);
-        //     }
-
-        //     if ($request->has('pasar_id') && $request->pasar_id) {
-        //         $query->where('pasar_id', $request->pasar_id);
-        //     }
-
-        //     // Ambil data laporan pangan dan urutkan berdasarkan status dan tanggal
-        //     $datapangan = $query->orderBy('status', 'asc')
-        //         ->orderBy('date', 'desc')
-        //         ->get();
-        //     dd($datapangan);
-        //     // Ambil daftar pasar untuk filter
-        //     $pasarList = $this->pasar::all();
-
-
-        //     $data = [
-        //         'title' => 'Data Stok Pangan',
-        //         'breadcrumb' => 'Dashboard',
-        //         'breadcrumb_active' => 'Data Stok Pangan',
-        //         'button_create' => 'Tambah Data Stok Pangan',
-        //         'datapangan' => $datapangan,
-        //         'pasarList' => $pasarList,
-        //     ];
-
-        //     return view('pangan.views.pangan.data_pangan.index', $data);
-        // }
-
         public function index(Request $request)
         {
-            $query = LaporanPangan::with(['pasar', 'jenis_pangan', 'subjenis_pangan'])
+        $query = LaporanPangan::with(['pasar', 'jenis_pangan', 'subjenis_pangan'])
             ->where('status', '1') // Filter hanya data dengan status '1' (terkirim)
+            ->whereHas('jenis_pangan') // Pastikan hanya data dengan jenis_pangan yang ada
             ->orderBy('date', 'desc');
-            // ->orderBy('pasar.name', 'asc'); // Urutkan pasar berdasarkan nama (A-Z)
 
-            // Filter berdasarkan tanggal mulai dan akhir jika tersedia
-            if ($request->has('start_date') && $request->has('end_date')) {
-                $query->whereBetween('date', [$request->get('start_date'), $request->get('end_date')]);
-            }
-
-            // Filter berdasarkan pasar jika dipilih
-            if ($request->has('pasar_id') && $request->pasar_id) {
-                $query->where('pasar_id', $request->pasar_id);
-            }
-
-
-            // Ambil data laporan pangan
-            $datapangan = $query->get();
-
-            // Ambil daftar pasar untuk filter
-            $pasarList = Pasar::orderBy('name', 'asc')->get();
-
-            $data = [
-                'title' => 'Data Stok Pangan',
-                'breadcrumb' => 'Dashboard',
-                'breadcrumb_active' => 'Data Stok Pangan',
-                'button_create' => 'Tambah Data Stok Pangan',
-                'datapangan' => $datapangan,
-                'pasarList' => $pasarList,
-            ];
-
-            return view('pangan.views.pangan.data_pangan.index', $data);
+        // Filter berdasarkan tanggal mulai dan akhir jika tersedia
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $query->whereBetween('date', [$request->get('start_date'), $request->get('end_date')]);
         }
 
+        // Filter berdasarkan pasar jika dipilih
+        if ($request->has('pasar_id') && $request->pasar_id) {
+            $query->where('pasar_id', $request->pasar_id);
+        }
+
+        // Ambil data laporan pangan
+        $datapangan = $query->get();
+
+        // Ambil daftar pasar untuk filter
+        $pasarList = Pasar::orderBy('name', 'asc')->get();
+
+        $data = [
+            'title' => 'Data Stok Pangan',
+            'breadcrumb' => 'Dashboard',
+            'breadcrumb_active' => 'Data Stok Pangan',
+            'button_create' => 'Tambah Data Stok Pangan',
+            'datapangan' => $datapangan,
+            'pasarList' => $pasarList,
+        ];
+
+        return view('pangan.views.pangan.data_pangan.index', $data);
+        }
 
         public function create()
         {
@@ -189,8 +148,8 @@ class DataPanganController extends Controller
                 $laporanpangan->update([
                     'stok' => $request->stok,
                     'harga' => $request->harga,
-                    'subjenis_pangan_id' => $request->subjenis_pangan_id,
-                    'jenis_pangan_id' => $request->jenis_pangan_id,
+                    // 'subjenis_pangan_id' => $request->subjenis_pangan_id,
+                    // 'jenis_pangan_id' => $request->jenis_pangan_id,
                     'status' => true, // Pastikan status diset ke true saat mengupdate data
                 ]);
 
@@ -217,4 +176,4 @@ class DataPanganController extends Controller
                 return back()->with('error', 'Error Data Stok Pangan Gagal Dihapus! ' . $e->getMessage());
             }
         }
-    }
+}

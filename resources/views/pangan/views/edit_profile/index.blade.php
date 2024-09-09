@@ -7,17 +7,12 @@
         <div class="col-xl-12">
             <div class="card overflow-hidden">
                 <div class="card-body">
-                    <div class="py-4 position-relative mt-4">
-                        <div class="profile-img mt-6">
-                            <img src="{{ asset('storage/' . $pangan->gambar) }}" class="avatar avatar-xxl br-7" alt="person-image">
-                        </div>
-                        <div class="mt-5 pt-5 d-sm-flex align-items-center">
-                            <div>
-                                <h3 class="fw-semibold mb-1">{{ $pangan->user->name }}</h3>
-                                <p class="mb-0 fw-semibold text-muted-dark">Alamat: {{ $pangan->alamat }}</p>
-                                <div class="mb-2">
-                                    <span class="badge badge-light fw-semibold text-dark fs-12 me-2">{{ $pangan->user->getAkses->name }}</span>
-                                </div>
+                    <div class="mt-2 pt-2 d-sm-flex align-items-center">
+                        <div>
+                            <h3 class="fw-semibold mb-1">{{ $pangan->user->name }}</h3>
+                            <p class="mb-0 fw-semibold text-muted-dark">Alamat: {{ $pangan->alamat }}</p>
+                            <div class="mb-2">
+                                <span class="badge badge-light fw-semibold text-dark fs-12 me-2">{{ $pangan->user->getAkses->name }}</span>
                             </div>
                         </div>
                     </div>
@@ -81,21 +76,6 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <input type="text" class="form-control" name="email" placeholder="Masukan Email" value="{{ old('email', $pangan->user->email) }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row row-sm">
-                                                <div class="col-md-3">
-                                                    <h6 class="text-uppercase fw-semibold mb-0">Your Photo</h6>
-                                                    <span class="text-muted-dark">This will be displayed on Your Profile</span>
-                                                </div>
-                                                <div class="col-md-9 d-flex justify-content-between">
-                                                    <img src="{{ asset('storage/' . $pangan->gambar) }}" class="avatar avatar-xl br-7" alt="person-image">
-                                                    <div class="d-flex">
-                                                        <input type="file" name="gambar" class="form-control">
-                                                        <a href="javascript:void(0);" class="mb-0 fw-semibold mx-2">Change</a>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,16 +1,15 @@
 @extends('index')
-@section('title', 'View Pengguna Pangan')
+@section('title', 'View Pengguna Pasar')
 @section('content')
     <div class="page-header d-sm-flex d-block">
         <ol class="breadcrumb1 br-7">
-            <!-- breadcrumb -->
             <li class="breadcrumb-item1"><a href="{{ url('/operator/dashboard') }}">{{ $breadcrumb }}</a></li>
-            <li class="breadcrumb-item1"><a href="{{ url('/operator/user/pangan') }}">{{ $breadcrumb_1 }}</a></li>
+            <li class="breadcrumb-item1"><a href="{{ url('/operator/user/pasar') }}">{{ $breadcrumb_1 }}</a></li>
             <li class="breadcrumb-item1 active">{{ $breadcrumb_active }}</li>
-        </ol><!-- End breadcrumb -->
+        </ol>
     </div>
     <div class="row">
-        <div class="col-xl-8">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Detail User : {{ $user->user->name }}</h3>
@@ -23,6 +22,11 @@
                             <td>
                                 {{ $user->user->name }}
                             </td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Pasar</td>
+                            <td>:</td>
+                            <td><span class="badge bg-primary">{{ $user->pasar->name }}</span></td>
                         </tr>
                         <tr>
                             <td class="text-right">Username</td>
@@ -39,6 +43,13 @@
                             </td>
                         </tr>
                         <tr>
+                            <td class="text-right">Nomor Telepon</td>
+                            <td>:</td>
+                            <td>
+                                {{ $user->no_telp }}
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="text-right">Role</td>
                             <td>:</td>
                             <td>
@@ -52,16 +63,23 @@
                                 {{ $user->alamat }}
                             </td>
                         </tr>
+                        <tr>
+                            <td class="text-right">Password Default</td>
+                            <td>:</td>
+                            <td>
+                                password
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="card-footer">
-                    <a href="{{ url('/operator/user/pangan') }}" class="btn btn-warning">
+                    <a href="{{ url('/operator/user/pasar') }}" class="btn btn-warning">
                         <i class="fa fa-arrow-left"></i> Kembali
                     </a>
                 </div>
             </div>
         </div>
-        {{-- <div class="col-xl-4">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Gambar</h3>
@@ -69,20 +87,18 @@
                 <div class="card-body">
                     <div class="">
                         <div class="d-flex overflow-visible">
-                            <a href="blog-details.html" class="card-recent-post cover-image">
-                                <img src="{{ url('/assets') }}/images/photos/9.jpg" class="br-7" alt="image">
+                            <a href="#" class="card-recent-post cover-image">
+                                <img src="{{ asset($user->gambar ?? 'image_pangan/profile.png') }}" style="height: 200px; width: auto" class="br-7" alt="image">
                             </a>
                             <div class="ps-3 flex-column">
                                 <span class="badge bg-primary me-1 mb-1 mt-1">{{ $user->user->name }}</span>
-                                <h6 class="fw-semibold"><a href=""> Role
-                                        {{ $user->user->getAkses->name }}</a>
-                                </h6>
-                                <div class="text-muted-dark">{{ $user->user->alamat }}</div>
+                                <h6 class="fw-semibold"><a href=""> Role {{ $user->user->getAkses->name }}</a></h6>
+                                <div class="text-muted-dark">{{ $user->alamat }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </div>
 @endsection

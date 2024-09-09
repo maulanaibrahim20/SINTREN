@@ -80,8 +80,8 @@
                         <h3>Kelola Data Pengguna</h3>
                     </li>
                     <li
-                        class="slide {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' || Request::segment(3) == 'pangan' ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' || Request::segment(3) == 'pangan' ? 'active open' : '' }}"
+                        class="slide {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' || Request::segment(3) == 'pangan' || Request::segment(3) == 'pasar' ? 'is-expanded' : '' }}">
+                        <a class="side-menu__item {{ Request::segment(3) == 'pertanian' || Request::segment(3) == 'uptd' || Request::segment(3) == 'penyuluh' || Request::segment(3) == 'pangan' || Request::segment(3) == 'pasar' ? 'active open' : '' }}"
                             data-bs-toggle="slide" href="javascript:void(0)">
                             <i class="side-menu__icon ti ti-user"></i>
                             <span class="side-menu__label">Data Pengguna</span><i class="angle fe fe-chevron-right"></i></a>
@@ -108,6 +108,12 @@
                                                 <li><a href="{{ url('/operator/user/pangan') }}"
                                                         class="slide-item {{ Request::segment(3) == 'pangan' ? 'active' : '' }}">Pengguna
                                                         Pangan</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ url('/operator/user/pasar') }}"
+                                                        class="slide-item {{ Request::segment(3) == 'pasar' ? 'active' : '' }}">
+                                                        Pengguna Pasar
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -154,6 +160,12 @@
                             href="{{ url('/operator/master/pengairan') }}"><i
                                 class="side-menu__icon fe fe-droplet"></i><span
                                 class="side-menu__label">Pengairan</span></a>
+                    </li>
+                    <li>
+                        <a class="side-menu__item {{ Request::segment(3) == 'data_pasar' ? 'active' : '' }}"
+                            href="{{ url('/operator/master/data_pasar') }}"><i
+                                class="side-menu__icon fe fe-file"></i><span
+                                class="side-menu__label">Data Pasar</span></a>
                     </li>
                     <li>
                         <a class="side-menu__item {{ Request::segment(3) == 'wilayah' ? 'active' : '' }}"
@@ -358,7 +370,7 @@
 
                 {{-- yuan diana --}}
                 @can('pangan')
-                <li class="sub-category">
+                {{-- <li class="sub-category">
                     <h3>Pasar</h3>
                 </li>
                 <li class="slide {{ Request::segment(3) == 'pasar' || Request::segment(3) == 'data_pasar' ? 'is-expanded' : '' }}">
@@ -393,7 +405,7 @@
                             </div>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
                 <li class="sub-category">
                     <h3>Pangan</h3>
                 </li>
